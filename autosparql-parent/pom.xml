@@ -8,6 +8,7 @@
 
 	<modules>
 		<module>autosparql</module>
+		<module>autosparql-lite</module>
 	</modules>
 
 	<properties>
