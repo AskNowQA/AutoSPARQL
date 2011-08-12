@@ -1,0 +1,473 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.dllearner</groupId>
+	<artifactId>autosparql-parent</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>autosparql</module>
+	</modules>
+
+	<properties>
+		<!-- tell the compiler we can use 1.6 -->
+		<compiler.version>1.6</compiler.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- convenience to define GWT version in one place -->
+		<gwt.version>2.3.0</gwt.version>
+		<gxt.version>2.2.3</gxt.version>
+
+		<!--Define the AKSW dependency version -->
+		<aksw.version>0.2-SNAPSHOT</aksw.version>
+	</properties>
+	
+	<build>
+		<!-- - Plugin Management defines the plugins that the child components 
+			can use - It's good practice to do this as we can ensure all children use 
+			common versions - of the plugins, and we can look in one place to see all 
+			plugin dependencies. -->
+		<pluginManagement>
+			<plugins>
+				<!--Surefire - for JUnits -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.4.3</version>
+				</plugin>
+				<!--Maven Compiler Plugin -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.0.2</version>
+					<configuration>
+						<!--We use 1.6 -->
+						<source>${compiler.version}</source>
+						<target>${compiler.version}</target>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+
+				<!-- - Maven Jar Plugin - if you want to create and/or sign jars. - I'm 
+					putting this in so we can create a jar for the test classes - in components 
+					core so that other components' tests can leverage them -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+				<!--JAR the Sources -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>gwt-maven-plugin</artifactId>
+					<version>${gwt.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.16</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.extjs</groupId>
+				<artifactId>gxt</artifactId>
+				<version>${gxt.version}</version>
+			</dependency>
+
+			<!--Available via central, we use the latest with minor mods to DL Learner 
+				source (IE Dig related code) -->
+			<dependency>
+				<groupId>com.hp.hpl.jena</groupId>
+				<artifactId>jena</artifactId>
+				<version>2.6.4</version>
+			</dependency>
+			<!--SwingX is in central -->
+
+			<dependency>
+				<groupId>org.json</groupId>
+				<artifactId>json</artifactId>
+				<version>20090211</version>
+			</dependency>
+
+			<!--Used in NKE interfaces for now -->
+			<dependency>
+				<groupId>com.googlecode.json-simple</groupId>
+				<artifactId>json-simple</artifactId>
+				<version>1.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.jopt-simple</groupId>
+				<artifactId>jopt-simple</artifactId>
+				<version>3.3</version>
+				<!--This version is the one released with DL-Learner 2048 -->
+			</dependency>
+
+			<!--Lucene is in Central -->
+
+			<dependency>
+				<groupId>org.ini4j</groupId>
+				<artifactId>ini4j</artifactId>
+				<version>0.5.2</version>
+				<!--This version is the one released with DL-Learner 2048 -->
+			</dependency>
+
+
+			<dependency>
+				<groupId>xmlbeans</groupId>
+				<artifactId>xbean</artifactId>
+				<version>2.2.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.jamonapi</groupId>
+				<artifactId>jamon</artifactId>
+				<version>2.7</version>
+			</dependency>
+
+
+			<!--JENA ARQ is in central - we use the latest -->
+			<dependency>
+				<groupId>com.hp.hpl.jena</groupId>
+				<artifactId>arq</artifactId>
+				<version>2.8.8</version>
+			</dependency>
+
+			<!--Junits -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.8.1</version>
+				<scope>test</scope>
+			</dependency>
+
+
+
+
+
+			<!--Dependencies that are generated as part of this parent pom -->
+			<dependency>
+				<groupId>org.dllearner</groupId>
+				<artifactId>components-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!--This is the jar of the tests from components-core -->
+			<dependency>
+				<groupId>org.dllearner</groupId>
+				<artifactId>components-core</artifactId>
+				<version>${project.version}</version>
+				<classifier>tests</classifier>
+			</dependency>
+
+			<dependency>
+				<groupId>org.dllearner</groupId>
+				<artifactId>components-ext</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+
+
+
+			<dependency>
+				<groupId>org.aksw.commons</groupId>
+				<artifactId>sparql</artifactId>
+				<version>${aksw.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.aksw.commons</groupId>
+				<artifactId>sparql-scala</artifactId>
+				<version>${aksw.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.aksw.commons</groupId>
+				<artifactId>model</artifactId>
+				<version>${aksw.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.aksw.commons</groupId>
+				<artifactId>util</artifactId>
+				<version>${aksw.version}</version>
+			</dependency>
+
+
+			<dependency>
+				<groupId>net.sourceforge.secondstring</groupId>
+				<artifactId>secondstring</artifactId>
+				<version>20060615</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.jgoodies</groupId>
+				<artifactId>looks</artifactId>
+				<version>2.2.2</version>
+			</dependency>
+
+
+
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>1.2.143</version>
+			</dependency>
+
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>5.1.13</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>1.6</version>
+			</dependency>
+
+			<!--GWT Dependencies -->
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-servlet</artifactId>
+				<version>${gwt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-user</artifactId>
+				<version>${gwt.version}</version>
+			</dependency>
+
+
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>r07</version>
+			</dependency>
+
+			<!--used in the webservice in interfaces -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.4</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>2.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jstl</artifactId>
+				<version>1.0.3</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<dependency>
+			<groupId>info.bliki.wiki</groupId>
+			<artifactId>bliki-core</artifactId>
+			<version>3.0.16</version>
+		</dependency>
+		<dependency>
+			<groupId>opennlp</groupId>
+			<artifactId>tools</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+
+
+		<!-- Jars for SIMBA stuff from Axel -->
+
+		<dependency>
+			<groupId>uk.ac.shef.wit</groupId>
+			<artifactId>simmetrics</artifactId>
+			<version>1.6.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>stax</groupId>
+			<artifactId>stax-api</artifactId>
+			<version>1.0.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>woodstox</groupId>
+			<artifactId>wstx-api</artifactId>
+			<version>3.2.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>edu.stanford</groupId>
+			<artifactId>postagger</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>lbj</groupId>
+			<artifactId>library</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>lbj</groupId>
+			<artifactId>core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>lbj</groupId>
+			<artifactId>ner</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>jaws</groupId>
+			<artifactId>core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-rio-api</artifactId>
+			<version>2.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-rio-ntriples</artifactId>
+			<version>2.3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>org.openrdf</groupId>
+			<artifactId>sesame</artifactId>
+			<version>1.2.7</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+
+
+		
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-core</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.5</version>
+		</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
+
+	<repositories>
+
+
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/</url>
+			<layout>default</layout>
+		</repository>
+
+		<repository>
+			<id>maven.aksw.internal</id>
+			<name>University Leipzig, AKSW Maven2 Repository</name>
+			<url>http://prod1.aksw.org:8081/archiva/repository/internal</url>
+		</repository>
+
+		<repository>
+			<id>maven.aksw.snapshots</id>
+			<name>University Leipzig, AKSW Maven2 Repository</name>
+			<url>http://prod1.aksw.org:8081/archiva/repository/snapshots</url>
+		</repository>
+
+		<!-- This repository contains the pellet jars -->
+		<repository>
+			<id>pellet_etc</id>
+			<url>http://on.cs.unibas.ch/maven/repository/</url>
+		</repository>
+
+		<!-- This repository contains the jars for the project lombok jars -->
+		<repository>
+			<id>projectlombok.org</id>
+			<url>http://projectlombok.org/mavenrepo</url>
+		</repository>
+
+		<repository>
+			<id>GXT</id>
+			<url>http://maven.jahia.org/maven2/</url>
+		</repository>
+
+		<!-- - This is so we can get the 1.3-SNAPSHOT of GWT Maven Plugin cause 
+			1.2 is broken on the hudson - - Here's a good place to browse the repository: 
+			https://nexus.codehaus.org -->
+		<repository>
+			<id>maven.codehaus.snapshots</id>
+			<name>Codehaus repository Repository</name>
+			<url>https://nexus.codehaus.org/content/repositories/public</url>
+		</repository>
+
+		<repository>
+			<id>google-maven-snapshot-repository</id>
+			<name>Google Maven Snapshot Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/google-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<!-- This repository contains the jars for pdb2rdf -->
+		<repository>
+			<id>semanticscience.org</id>
+			<name>Semanticscience projects</name>
+			<url>http://s1.semanticscience.org:8080/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
+</project>
