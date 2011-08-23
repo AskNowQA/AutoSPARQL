@@ -1,0 +1,8 @@
+AutoSPARQL is a graphical user interface, which allows to answer natural
+language queries over RDF knowledge bases. It is based on algorithms
+implemented in the DL-Learner Semantic Web machine learning framework.
+Currently, there are two user interfaces 1.) a full-fledged UI closely
+aligned to the unterlying algorithms and 2.) a simple UI which should be
+easy to use for anyone.
+
+TODO: Provide a nicer README.
