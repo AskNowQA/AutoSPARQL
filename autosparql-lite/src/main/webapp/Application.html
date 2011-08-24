@@ -1,64 +1,90 @@
 <!doctype html>
-<!-- The DOCTYPE declaration above will set the    -->
-<!-- browser's rendering engine into               -->
-<!-- "Standards Mode". Replacing this declaration  -->
-<!-- with a "Quirks Mode" doctype may lead to some -->
-<!-- differences in layout.                        -->
+<!-- uses template http://html5boilerplate.com/ -->
 
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <!--                                                               -->
-    <!-- Consider inlining CSS to reduce the number of requested files -->
-    <!--                                                               -->
-    <link type="text/css" rel="stylesheet" href="ExtGWT/css/gxt-all.css">
+	<title></title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<link rel="stylesheet" href="css/style.css">
+   <link type="text/css" rel="stylesheet" href="ExtGWT/css/gxt-all.css">
     <link type="text/css" rel="stylesheet" href="Application.css">
+ 
+	<script src="js/libs/modernizr-2.0.6.min.js"></script>
+  <script type="text/javascript" language="javascript" src="Application/Application.nocache.js"></script>
+ 
+</head>
+<body>
 
-    <!--                                           -->
-    <!-- Any title is fine                         -->
-    <!--                                           -->
-    <title>AutoSPARQL-Lite</title>
-
-    <!--                                           -->
-    <!-- This script loads your compiled module.   -->
-    <!-- If you add any GWT meta tags, they must   -->
-    <!-- be added before this line.                -->
-    <!--                                           -->
-    <script type="text/javascript" language="javascript" src="Application/Application.nocache.js"></script>
-  </head>
-
-  <!--                                           -->
-  <!-- The body can have arbitrary html, or      -->
-  <!-- you can leave the body empty if you want  -->
-  <!-- to create a completely dynamic UI.        -->
-  <!--                                           -->
-  <body>
-
-    <!-- OPTIONAL: include this if you want history support -->
-    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
-
-    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+<div id="container">
+	<header>
+	<h1>AutoSPARQL  <i>&#x2605;</i> Lite </h1>
+	</header>
+<div id="main" role="main">
+	   <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
     <noscript>
       <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
         Your web browser must have JavaScript enabled
         in order for this application to display correctly.
       </div>
     </noscript>
+   
+<form style="text-align:center">
+  <input type="search" name="query" placeholder="Enter your query" autofocus required>
+  <label for="use_dbpedia_live">use DBpedia Live</label>
+  <input type="checkbox" id="use_dbpedia_live"/>
+<!--  <input type="input"  name="endpoint" list="endpoints" value="on DBpedia" readonly="readonly">
+ <datalist id=endpoints>
+ <option value="on DBpedia"></option>
+ <option value="on DBpedia live"></option>
+</datalist>-->
+  <input type="submit" value="Query">
+</form>
+</br>
+<div id="examples" style="text-align:center;border-top:1px solid blue;border-bottom:1px solid blue;">
+<a class="example" href="Application.html?query=European+Union+Countries">European Union Countries</a>
+<a class="example" href="Application.html?query=books+written+by+Dan+Brown">books written by Dan Brown</a>
+<a class="example" href="Application.html?query=films+starring+Brad+Pitt">films starring Brad Pitt</a>
+<a class="example" href="Application.html?query=soccer+clubs+in+Premier+League">soccer clubs in Premier League</a>
+</div>
 
-    <h1>Web Application Starter Project</h1>
+<div id="gwt-table">
+</div>    
 
-    <table align="center">
-      <tr>
-        <td colspan="2" style="font-weight:bold;">Please enter your name:</td>
-      </tr>
-      <tr>
-        <td id="nameFieldContainer"></td>
-        <td id="sendButtonContainer"></td>
-      </tr>
-      <tr>
-        <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
-      </tr>
-    </table>
-  </body>
+</div> <!--! end of #main -->
+
+<footer>
+</footer>
+</div> <!--! end of #container -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.js"><\/script>')</script>
+
+<!-- scripts concatenated and minified via ant build script-->
+<script src="js/plugins.js"></script>
+<script src="js/script.js"></script>
+<!-- end scripts-->
+
+<script>
+	var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']]; // Change UA-XXXXX-X to be your site's ID
+	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+<!--[if lt IE 7 ]>
+	<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
+	<script>window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"})})</script>
+<![endif]-->
+
+</body>
 </html>
