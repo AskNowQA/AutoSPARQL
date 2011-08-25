@@ -194,7 +194,7 @@
 			<artifactId>core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>lbj</groupId>
+			<groupId>lbj</groupId>war
 			<artifactId>ner</artifactId>
 		</dependency>
 		<dependency>
@@ -291,6 +291,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+			
 		</dependency>
 	</dependencies>
 
