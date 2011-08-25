@@ -15,14 +15,16 @@ public class Application implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
-	public void onModuleLoad() {
+	public void onModuleLoad(){
 		GXT.setDefaultTheme(Theme.GRAY, true);
-
+		
+		AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
+		
 		Dispatcher dispatcher = Dispatcher.get();
-		dispatcher.addController(new ApplicationController());
+		dispatcher.addController(new ApplicationController(service));
 
 		Dispatcher.forwardEvent(AppEvents.Init);
-		AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
+		
 
 		GXT.hideLoadingPanel("loading");
 	}

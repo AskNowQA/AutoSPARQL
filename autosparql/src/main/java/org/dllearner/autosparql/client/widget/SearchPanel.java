@@ -270,10 +270,6 @@ public class SearchPanel extends ContentPanel {
 //			     });
 		
 		
-		
-
-		
-
 	}
 	
 	public void search(){
@@ -291,9 +287,6 @@ public class SearchPanel extends ContentPanel {
 	public void setFocus(){
 		inputField.focus();
 	}
-	
-	
-	  
 	
 
 }

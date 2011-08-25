@@ -1,18 +1,27 @@
 package org.autosparql.client.controller;
 
+import java.util.List;
+
 import org.autosparql.client.AppEvents;
+import org.autosparql.client.AutoSPARQLServiceAsync;
 import org.autosparql.client.view.ApplicationView;
 import org.autosparql.client.widget.ErrorDialog;
+import org.autosparql.shared.Example;
 
 import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
+import com.extjs.gxt.ui.client.widget.Label;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class ApplicationController extends Controller {
-
+public class ApplicationController extends Controller
+{
+	AutoSPARQLServiceAsync service;
 	private ApplicationView appView;
 
-	public ApplicationController() {
+	public ApplicationController(AutoSPARQLServiceAsync service)
+	{
+		this.service = service;
 		registerEventTypes(AppEvents.Init);
 		registerEventTypes(AppEvents.Error);
 	}
@@ -26,7 +35,33 @@ public class ApplicationController extends Controller {
 		}
 	}
 
-	public void initialize() {
+	public void initialize()
+	{
+		String query = com.google.gwt.user.client.Window.Location.getParameter("query");
+		if(query==null||query.isEmpty())
+		{
+			
+		}
+		else
+		{
+			service.getExamples(query, new AsyncCallback<List<Example>>() {
+				
+				@Override
+				public void onSuccess(List<Example> arg0)
+				{
+					
+					
+				}
+				
+				@Override
+				public void onFailure(Throwable arg0)
+				{
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			        	
+		}
 		appView = new ApplicationView(this);
 	}
 

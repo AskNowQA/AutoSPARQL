@@ -6,6 +6,7 @@ import java.util.List;
 import org.autosparql.client.TestData;
 import org.autosparql.shared.Example;
 
+import com.extjs.gxt.ui.client.Style.Orientation;
 import com.extjs.gxt.ui.client.core.XTemplate;
 import com.extjs.gxt.ui.client.data.BasePagingLoader;
 import com.extjs.gxt.ui.client.data.ModelData;
@@ -25,7 +26,9 @@ import com.extjs.gxt.ui.client.widget.grid.Grid;
 import com.extjs.gxt.ui.client.widget.grid.GridCellRenderer;
 import com.extjs.gxt.ui.client.widget.grid.RowExpander;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 public class SearchResultPanel extends ContentPanel {
 	
@@ -82,11 +85,25 @@ public class SearchResultPanel extends ContentPanel {
 			public Object render(final Example model, String property,
 					ColumnData config, int rowIndex, int colIndex,
 					ListStore<Example> store, Grid<Example> grid) {
-				VerticalPanel p = new VerticalPanel();
-				p.setSize(25, 50);
+				//ContentPanel p = new ContentPanel();
+				//VerticalPanel p = new VerticalPanel();
+				FlowPanel p = new FlowPanel();
+				//p.setLayoutData(null);
+				//p.add(new Button("+"));
+				//p.add(new Button("-"));
+				//p.add(new Button("test3"));
+				
+				//p.set
+				//p.setLayout(new RowLayout(Orientation.VERTICAL));
+				//VerticalPanel p = new VerticalPanel();
+				//p.getLa
+				
+				//p.setBorders(true);
+				//p.setSize(100, 100);
 				Button addPosButton = new Button("+");
                                 addPosButton.addStyleName("button-positive");
-				addPosButton.setSize(20, 20);
+				addPosButton.setSize(40, 40);
+				
 				addPosButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 					@Override
 					public void componentSelected(ButtonEvent ce) {
@@ -95,15 +112,17 @@ public class SearchResultPanel extends ContentPanel {
 				});
 				Button addNegButton = new Button("&ndash;");
                                 addNegButton.addStyleName("button-negative");
-				addNegButton.setSize(20, 20);
+				addNegButton.setSize(40, 40);
 				addNegButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 					@Override
 					public void componentSelected(ButtonEvent ce) {
 						
 					}
 				});
+				//p.setVerticalAlign(VerticalAlignment.MIDDLE);
 				p.add(addPosButton);
 				p.add(addNegButton);
+				
 				return p;
 			}
 		
