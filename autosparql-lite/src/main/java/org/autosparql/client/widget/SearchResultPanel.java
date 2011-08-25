@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 
 public class SearchResultPanel extends ContentPanel {
 	
-	private ListStore<Example> gridStore;
+	public ListStore<Example> gridStore;
 	
 	private PagingLoader<PagingLoadResult<ModelData>> loader;
 	private PagingModelMemoryProxy proxy;

@@ -398,11 +398,11 @@
 			<artifactId>solr-core</artifactId>
 			<version>3.3.0</version>
 		</dependency>
-		<dependency>
+<!--	<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.5.5</version>
-		</dependency>
+		</dependency>-->
 
 		</dependencies>
 

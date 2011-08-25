@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.autosparql.client.AppEvents;
 import org.autosparql.client.widget.SearchResultPanel;
+import org.autosparql.shared.Example;
 
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
@@ -30,9 +31,10 @@ public class ApplicationView extends View {
 		super.initialize();
 	}
 
-	public void display(List<String> examples)
+	public void display(List<Example> examples)
 	{
-		
+		for(Example example: examples)
+		center.gridStore.add(example);
 	}
 	
 	private void initUI()
@@ -70,6 +72,12 @@ public class ApplicationView extends View {
 		if (event.getType() == AppEvents.Init) {
 			initUI();
 		}
+	}
+
+	public void showError(String string)
+	{
+		
+		
 	}
 
 }

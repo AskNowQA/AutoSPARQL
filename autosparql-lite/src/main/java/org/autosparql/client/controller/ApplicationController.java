@@ -47,15 +47,17 @@ public class ApplicationController extends Controller
 			service.getExamples(query, new AsyncCallback<List<Example>>() {
 				
 				@Override
-				public void onSuccess(List<Example> arg0)
+				public void onSuccess(List<Example> examples)
 				{
-					
-					
+					//new Example("testuri", "testlabel", "testimageurl", "testcomment");
+					appView.display(examples);
 				}
 				
 				@Override
 				public void onFailure(Throwable arg0)
 				{
+					com.google.gwt.user.client.Window.alert(arg0.getMessage());
+					//appView.showError("could not get examples");
 					// TODO Auto-generated method stub
 					
 				}
