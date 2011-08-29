@@ -1,5 +1,11 @@
 /** Add css rules here for your application. */
 
+/** grid rows now wrap around text (default is "white-space: nowrap;") **/
+
+.x-grid3-cell-inner {
+  white-space: normal !important;
+}
+
 h1, h2, h3 { text-align: center;}
 
 h1 { font-size: 5em; cursor: default; color: #ffaa00; }

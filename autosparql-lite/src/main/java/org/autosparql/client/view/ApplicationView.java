@@ -10,10 +10,10 @@ import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
 import com.extjs.gxt.ui.client.mvc.View;
-import com.extjs.gxt.ui.client.widget.Label;
 import com.extjs.gxt.ui.client.widget.Viewport;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
+import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class ApplicationView extends View {
@@ -33,8 +33,10 @@ public class ApplicationView extends View {
 
 	public void display(List<Example> examples)
 	{
-		for(Example example: examples)
-		center.gridStore.add(example);
+//		for(Example example: examples)
+//		center.gridStore.add(example);
+		center.setResult(examples);
+		//Window.alert("display");
 	}
 	
 	private void initUI()
@@ -65,6 +67,7 @@ public class ApplicationView extends View {
 
 	private void createCenter() {
 		center = new SearchResultPanel();
+		//viewport.add(center.grid, new BorderLayoutData(LayoutRegion.CENTER));
 		viewport.add(center, new BorderLayoutData(LayoutRegion.CENTER));
 	}
 

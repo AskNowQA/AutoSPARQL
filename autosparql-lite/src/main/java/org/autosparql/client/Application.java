@@ -16,7 +16,7 @@ public class Application implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad(){
-		GXT.setDefaultTheme(Theme.GRAY, true);
+		GXT.setDefaultTheme(Theme.BLUE, true);
 		
 		AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
 		

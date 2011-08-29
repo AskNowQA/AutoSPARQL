@@ -5,14 +5,17 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
 import org.autosparql.client.AutoSPARQLService;
+import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.util.Endpoints;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
@@ -20,9 +23,13 @@ import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
 import org.dllearner.kb.sparql.SparqlEndpoint;
+import org.dllearner.kb.sparql.SparqlQuery;
 import org.ini4j.InvalidFileFormatException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService {
 	
@@ -68,14 +75,14 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		List<Example> examples = new ArrayList<Example>();
 		try {
 			AutoSPARQLSession session = getAutoSPARQLSession();
-			for(String resource : session.getResources(query)){
-				examples.add(new Example(resource, "", "", ""));
+			return session.getExamples(query);
+//			for(String resource : session.getResources(query)){
+//				examples.add(new Example(resource, "", "", ""));
 			}
-		} catch (Exception e) {
+		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return examples;
+		return null;
 	}
 	
 	private HttpSession getHttpSession(){

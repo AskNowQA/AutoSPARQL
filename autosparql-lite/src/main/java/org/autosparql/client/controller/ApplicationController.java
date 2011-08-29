@@ -12,6 +12,7 @@ import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
 import com.extjs.gxt.ui.client.widget.Label;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class ApplicationController extends Controller
@@ -44,8 +45,7 @@ public class ApplicationController extends Controller
 		}
 		else
 		{
-			service.getExamples(query, new AsyncCallback<List<Example>>() {
-				
+			service.getExamples(query, new AsyncCallback<List<Example>>() {				
 				@Override
 				public void onSuccess(List<Example> examples)
 				{
