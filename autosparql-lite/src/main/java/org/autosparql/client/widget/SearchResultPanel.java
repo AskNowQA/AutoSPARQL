@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.autosparql.shared.Example;
-
 import com.extjs.gxt.ui.client.data.BasePagingLoadConfig;
 import com.extjs.gxt.ui.client.data.BasePagingLoader;
 import com.extjs.gxt.ui.client.data.PagingLoadResult;
@@ -16,7 +15,6 @@ import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.Grid;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
 
 public class SearchResultPanel extends ContentPanel {
@@ -29,142 +27,140 @@ public class SearchResultPanel extends ContentPanel {
 	public SearchResultPanel() {
 		setHeading("Result");
 		setCollapsible(false);
-		setLayout(new FitLayout());
 
 		Grid<Example> grid = createExampleGrid();
+//		grid.setHeight(500);
 		add(grid);
-
+		
+		//grid.setAutoHeight(true);
 		final PagingToolBar toolbar = new PagingToolBar(5);
 		toolbar.bind(loader);
-		setBottomComponent(toolbar);
-//add(toolbar);
-	
-		//setResult(TestData.getDummyExamples());
+		setTopComponent(toolbar);
 	}
 
-	private Grid<Example> createExampleGrid(){
-		//		proxy = new PagingModelMemoryProxy(null);
-		//	loader = new BasePagingLoader<PagingLoadResult<ModelData>>(proxy);
-		//		loader.setRemoteSort(true);
+	private Grid<Example> createExampleGrid()
+	{
+//				proxy = new PagingModelMemoryProxy(null);
+//				loader = new BasePagingLoader<PagingLoadResult<Example>>(proxy);
+//				loader.setRemoteSort(true);
+//				gridStore = new ListStore<Example>(loader);
+//				
+//				ArrayList<ColumnConfig> columns = new ArrayList<ColumnConfig>();
+//				
+//				XTemplate tpl = XTemplate.create("<p><b>Comment:</b><br>{comment}</p><p><a href = \"{uri}\" target=\"_blank\"/>Link to resource page</a>");
+//				RowExpander expander = new RowExpander();
+//				expander.setTemplate(tpl);
+//				columns.add(expander);
+//				
+//				GridCellRenderer<Example> imageRender = new ImageCellRenderer();
+//				
+//				ColumnConfig c = new ColumnConfig();
+//				c.setId("imageURL");
+//				columns.add(c);
+//				c.setWidth(50);
+//				c.setRenderer(imageRender);
+//				
+//				c = new ColumnConfig();
+//				c.setId("label");
+//				columns.add(c);
+//				
+//				GridCellRenderer<Example> buttonRender = new GridCellRenderer<Example>() {
+//		
+//					@Override
+//					public Object render(final Example model, String property,
+//							ColumnData config, int rowIndex, int colIndex,
+//							ListStore<Example> store, Grid<Example> grid) {
+//						//ContentPanel p = new ContentPanel();
+//						//VerticalPanel p = new VerticalPanel();
+//						FlowPanel p = new FlowPanel();
+//						//p.setLayoutData(null);
+//						//p.add(new Button("+"));
+//						//p.add(new Button("-"));
+//						//p.add(new Button("test3"));
+//						
+//						//p.set
+//						//p.setLayout(new RowLayout(Orientation.VERTICAL));
+//						//VerticalPanel p = new VerticalPanel();
+//						//p.getLa
+//						
+//						//p.setBorders(true);
+//						//p.setSize(100, 100);
+//						Button addPosButton = new Button("+");
+//		                                addPosButton.addStyleName("button-positive");
+//						addPosButton.setSize(40, 40);
+//						
+//						addPosButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+//							@Override
+//							public void componentSelected(ButtonEvent ce) {
+//								
+//							}
+//						});
+//						Button addNegButton = new Button("&ndash;");
+//		                                addNegButton.addStyleName("button-negative");
+//						addNegButton.setSize(40, 40);
+//						addNegButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+//							@Override
+//							public void componentSelected(ButtonEvent ce) {
+//								
+//							}
+//						});
+//						//p.setVerticalAlign(VerticalAlignment.MIDDLE);
+//						p.add(addPosButton);
+//						p.add(addNegButton);
+//						
+//						return p;
+//					}
+//				
+//				};
+//				
+//				c = new ColumnConfig();
+//				c.setId("");
+//				c.setWidth(50);
+//				c.setRenderer(buttonRender);
+//				columns.add(c);
+//		
+//				ColumnModel cm = new ColumnModel(columns);
+//				
+//				Grid<Example> grid = new Grid<Example>(gridStore, cm);
+//				grid.setHideHeaders(true);
+//				grid.setAutoExpandColumn("label");
+//				grid.setLoadMask(true);
+//				grid.addPlugin(expander);
+//				grid.getView().setEmptyText("");
+//				
+//				return grid;
 
-		//		gridStore = new ListStore<Example>(loader);
-		//		
-		//		ArrayList<ColumnConfig> columns = new ArrayList<ColumnConfig>();
-		//		
-		//		XTemplate tpl = XTemplate.create("<p><b>Comment:</b><br>{comment}</p><p><a href = \"{uri}\" target=\"_blank\"/>Link to resource page</a>");
-		//		RowExpander expander = new RowExpander();
-		//		expander.setTemplate(tpl);
-		//		columns.add(expander);
-		//		
-		//		GridCellRenderer<Example> imageRender = new ImageCellRenderer();
-		//		
-		//		ColumnConfig c = new ColumnConfig();
-		//		c.setId("imageURL");
-		//		columns.add(c);
-		//		c.setWidth(50);
-		//		c.setRenderer(imageRender);
-		//		
-		//		c = new ColumnConfig();
-		//		c.setId("label");
-		//		columns.add(c);
-		//		
-		//		GridCellRenderer<Example> buttonRender = new GridCellRenderer<Example>() {
-		//
-		//			@Override
-		//			public Object render(final Example model, String property,
-		//					ColumnData config, int rowIndex, int colIndex,
-		//					ListStore<Example> store, Grid<Example> grid) {
-		//				//ContentPanel p = new ContentPanel();
-		//				//VerticalPanel p = new VerticalPanel();
-		//				FlowPanel p = new FlowPanel();
-		//				//p.setLayoutData(null);
-		//				//p.add(new Button("+"));
-		//				//p.add(new Button("-"));
-		//				//p.add(new Button("test3"));
-		//				
-		//				//p.set
-		//				//p.setLayout(new RowLayout(Orientation.VERTICAL));
-		//				//VerticalPanel p = new VerticalPanel();
-		//				//p.getLa
-		//				
-		//				//p.setBorders(true);
-		//				//p.setSize(100, 100);
-		//				Button addPosButton = new Button("+");
-		//                                addPosButton.addStyleName("button-positive");
-		//				addPosButton.setSize(40, 40);
-		//				
-		//				addPosButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-		//					@Override
-		//					public void componentSelected(ButtonEvent ce) {
-		//						
-		//					}
-		//				});
-		//				Button addNegButton = new Button("&ndash;");
-		//                                addNegButton.addStyleName("button-negative");
-		//				addNegButton.setSize(40, 40);
-		//				addNegButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
-		//					@Override
-		//					public void componentSelected(ButtonEvent ce) {
-		//						
-		//					}
-		//				});
-		//				//p.setVerticalAlign(VerticalAlignment.MIDDLE);
-		//				p.add(addPosButton);
-		//				p.add(addNegButton);
-		//				
-		//				return p;
-		//			}
-		//		
-		//		};
-		//		
-		//		c = new ColumnConfig();
-		//		c.setId("");
-		//		c.setWidth(50);
-		//		c.setRenderer(buttonRender);
-		//		columns.add(c);
-		//
-		//		ColumnModel cm = new ColumnModel(columns);
-		//		
-		//		Grid<Example> grid = new Grid<Example>(gridStore, cm);
-		//		grid.setHideHeaders(true);
-		//		grid.setAutoExpandColumn("label");
-		//		grid.setLoadMask(true);
-		//		grid.addPlugin(expander);
-		//		grid.getView().setEmptyText("");
-		//		
-		//		return grid;
-
-	//	Example leipzig = new Example("dbpedia.org/Leipzig", "Leipzig", "leipzig.png", "a beautiful city.");
+		//	Example leipzig = new Example("dbpedia.org/Leipzig", "Leipzig", "leipzig.png", "a beautiful city.");
 
 
-		ArrayList<Example> examples = new ArrayList<Example>();
-		for(int i=0;i<10;i++)
-		{
-			Example leipzig = new Example("dbpedia.org/Leipzig"+i, "Leipzig"+i, "leipzig.png", "a beautiful city.");
-			examples.add(leipzig);
-		}
-		List<ColumnConfig> configs = new LinkedList<ColumnConfig>();
-		configs.add(new ColumnConfig("uri", "url", 200));
-		configs.add(new ColumnConfig("label", "label", 100));
-		configs.add(new ColumnConfig("comment", "comment", 200));
-
-		proxy = new PagingModelMemoryProxy(examples);
-		BasePagingLoadConfig config = new BasePagingLoadConfig(0, 5);
-
-		//		Window.alert(proxy.getData().toString());
-		//		proxy.setData(examples);
-
-		//DataProxy<Example> proxy = new MemoryProxy<Example>(examples);
-
-		loader = new BasePagingLoader<PagingLoadResult<Example>>(proxy);
-	
-
-		ListStore<Example> store = new ListStore<Example>(loader);
-		//store.add();
-		ColumnModel cm = new ColumnModel(configs);
-		Grid<Example> grid = new Grid<Example>(store,cm);
-		loader.load(config);
-		return grid;
+				ArrayList<Example> examples = new ArrayList<Example>();
+				for(int i=0;i<10;i++)
+				{
+					Example leipzig = new Example("dbpedia.org/Leipzig"+i, "Leipzig"+i, "leipzig.png", "a beautiful city.");
+					examples.add(leipzig);
+				}
+				List<ColumnConfig> configs = new LinkedList<ColumnConfig>();
+				configs.add(new ColumnConfig("uri", "url", 200));
+				configs.add(new ColumnConfig("label", "label", 100));
+				configs.add(new ColumnConfig("comment", "comment", 200));
+		
+				proxy = new PagingModelMemoryProxy(examples);
+				BasePagingLoadConfig config = new BasePagingLoadConfig(0, 5);
+		
+				//		Window.alert(proxy.getData().toString());
+				//		proxy.setData(examples);
+		
+				//DataProxy<Example> proxy = new MemoryProxy<Example>(examples);
+		
+				loader = new BasePagingLoader<PagingLoadResult<Example>>(proxy);
+			
+		
+				ListStore<Example> store = new ListStore<Example>(loader);
+				//store.add();
+				ColumnModel cm = new ColumnModel(configs);
+				Grid<Example> grid = new Grid<Example>(store,cm);
+				loader.load(config);
+				return grid;
 	}
 
 	public void setResult(List<Example> result){
