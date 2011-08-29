@@ -100,8 +100,7 @@ public class SPARQLQueryResultPanel extends ContentPanel{
 		loader.setRemoteSort(true);
 		
 		final PagingToolBar toolbar = new PagingToolBar(10);
-		toolbar.bind(loader);
-		
+		toolbar.bind(loader);		
 		
 		store = new ListStore<Example>(loader);
 		
