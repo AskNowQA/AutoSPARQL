@@ -1,7 +1,9 @@
 package org.autosparql.client;
 
 import java.util.List;
+import java.util.Map;
 
+import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
 
@@ -27,4 +29,6 @@ public interface AutoSPARQLService extends RemoteService {
 	List<Endpoint> getEndpoints();
 	
 	List<Example> getExamples(String query);
+
+	Map<String, String> getProperties(String query) throws AutoSPARQLException;
 }

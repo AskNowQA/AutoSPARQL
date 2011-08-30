@@ -6,18 +6,20 @@ import java.util.List;
 
 import org.autosparql.shared.Example;
 
-import com.extjs.gxt.ui.client.data.BasePagingLoadConfig;
+import com.extjs.gxt.ui.client.Style.Orientation;
 import com.extjs.gxt.ui.client.data.BasePagingLoader;
 import com.extjs.gxt.ui.client.data.PagingLoadResult;
 import com.extjs.gxt.ui.client.data.PagingLoader;
 import com.extjs.gxt.ui.client.data.PagingModelMemoryProxy;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.Grid;
-import com.extjs.gxt.ui.client.widget.grid.GridView;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
 
 public class SearchResultPanel extends ContentPanel {
@@ -26,22 +28,59 @@ public class SearchResultPanel extends ContentPanel {
 	public Grid<Example> grid;
 	private PagingLoader<PagingLoadResult<Example>> loader;
 	private PagingModelMemoryProxy proxy;
+	
+	private LinkedList<Example> positives = new LinkedList<Example>();
+	private LinkedList<Example> negatives = new LinkedList<Example>();	
+	
+	private Button relearnButton = new Button("relearn");
+	
+	private SearchResultPanelSelectionListener listener = new SearchResultPanelSelectionListener();
 
-	public SearchResultPanel() {
+	class SearchResultPanelSelectionListener extends SelectionListener<ButtonEvent>
+	{
+		@Override
+		public void componentSelected(ButtonEvent ce)
+		{
+			if(ce.getSource()==relearnButton)
+			{
+				
+			}
+		}		
+	}
+	
+	public SearchResultPanel()
+	{
 		setHeading("Result");
 		setCollapsible(false);
-		setLayout(new FitLayout());
-		final PagingToolBar toolbar = new PagingToolBar(5);
-		toolbar.bind(loader);
-		setBottomComponent(toolbar);
+		//setLayout(new FitLayout());
+		setLayout(new RowLayout(Orientation.VERTICAL));
+		
+		//setBottomComponent(toolbar);
 		
 		grid = createExampleGrid();
-		
-//		grid.setHeight(500);
+		grid.setHeight(500);
 		add(grid);
+		final PagingToolBar toolbar = new PagingToolBar(5);
+		setTopComponent(toolbar);
+
+		toolbar.bind(loader);
+		relearnButton.addSelectionListener(listener);
+		add(relearnButton );
 		
+		setBottomComponent(new Button("bottom"));
 		//grid.setAutoHeight(true);
-	
+	}
+
+	public void markPositive(Example e)
+	{
+		positives.add(e);
+	}
+
+	public void markNegative(Example e)
+	{
+		negatives.add(e);
+		gridStore.remove(e);
+		//Window.alert("removing "+e);
 	}
 
 	private Grid<Example> createExampleGrid()
@@ -145,14 +184,20 @@ public class SearchResultPanel extends ContentPanel {
 					Example leipzig = new Example("dbpedia.org/Leipzig"+i, "Leipzig"+i, "leipzig.png", "a beautiful city.");
 					examples.add(leipzig);
 				}
+				
 				List<ColumnConfig> configs = new LinkedList<ColumnConfig>();
+				
+				ColumnConfig buttonConfig = new ColumnConfig("button", "", 30);
+				buttonConfig.setRenderer(new PlusMinusButtonCellRender(this));
+				configs.add(buttonConfig);
+
 				//configs.add(new ColumnConfig("uri", "url", 200));
-				ColumnConfig labelConfig = new ColumnConfig("label", "label", 20);
+				ColumnConfig labelConfig = new ColumnConfig("label", "label", 100);
 				labelConfig.setResizable(true);
 				configs.add(labelConfig);
 				
-				ColumnConfig imageConfig = new ColumnConfig("imageURL", "imageURL", 20);
-				imageConfig.setRenderer(new ImageCellRenderer());
+				ColumnConfig imageConfig = new ColumnConfig("imageURL", "imageURL", 100);
+				imageConfig.setRenderer(new ImageCellRenderer(100,100));
 				configs.add(imageConfig);
 				
 				ColumnConfig commentConfig = new ColumnConfig("comment", "comment", 100);
@@ -161,7 +206,7 @@ public class SearchResultPanel extends ContentPanel {
 
 				
 				proxy = new PagingModelMemoryProxy(examples);//
-				BasePagingLoadConfig config = new BasePagingLoadConfig(0, 5);
+//				BasePagingLoadConfig config = new BasePagingLoadConfig(0, 5);
 		
 				//		Window.alert(proxy.getData().toString());
 				//		proxy.setData(examples);
@@ -170,13 +215,16 @@ public class SearchResultPanel extends ContentPanel {
 		
 				loader = new BasePagingLoader<PagingLoadResult<Example>>(proxy);
 			
-				ListStore<Example> store = new ListStore<Example>(loader);
+				gridStore = new ListStore<Example>(loader);
+
 				//store.add();
 				ColumnModel cm = new ColumnModel(configs);
-				Grid<Example> grid = new Grid<Example>(store,cm);
-				GridView view = grid.getView();
-				view.setAutoFill(true);
-				view.setForceFit(true);
+				grid = new Grid<Example>(gridStore,cm);
+				
+
+//				GridView view = grid.getView();
+//				view.setAutoFill(true);
+//				view.setForceFit(true);
 				//grid.set
 				
 //				grid.setAutoHeight(true);
@@ -189,9 +237,10 @@ public class SearchResultPanel extends ContentPanel {
 //				grid.setAutoExpandColumn("uri");
 //				grid.setAutoExpandColumn("label");
 //				grid.setAutoExpandColumn("imageURL");
-//				grid.setAutoExpandColumn("comment");
-				loader.load(config);
-				return grid;
+				grid.setAutoExpandColumn("comment");
+				//loader.load(config);
+
+return grid;
 	}
 
 	public void setResult(List<Example> result){

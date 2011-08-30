@@ -109,7 +109,11 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		l.learnSPARQLQueries();
 	}
 
-	
+	@Override
+	public Map<String, String> getProperties(String query) throws AutoSPARQLException {
+		//logger.debug("Loading properties (" + getSession().getId() + ")");
+		return getAutoSPARQLSession().getProperties(query);
+	}
 
 	
 }
