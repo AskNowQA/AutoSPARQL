@@ -2,8 +2,32 @@
 
 /** grid rows now wrap around text (default is "white-space: nowrap;") **/
 
-.x-grid3-cell-inner {
-  white-space: normal !important;
+.row-Style-Odd {
+    background-color: #eaeaea;
+}
+
+.row-Style-Even {
+    
+}
+
+.row-Style-Positive {
+    background-color: #bbffbb;
+}
+
+.row-Style-Negative {
+    background-color: red;
+}
+
+.x-grid3-cell-inner
+{
+ white-space: normal !important;
+ font-size: 10pt;
+ line-height: 12pt;
+}
+
+.x-component
+{
+ font-size: 10pt; !important	
 }
 
 h1, h2, h3 { text-align: center;}

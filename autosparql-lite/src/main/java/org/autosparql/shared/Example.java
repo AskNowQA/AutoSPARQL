@@ -9,6 +9,18 @@ public class Example extends BaseModel {
 	public Example(){
 	}
 	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(o!=null&&o instanceof Example) return this.equals((Example)o);
+		return false;
+	}
+	
+	public boolean equals(Example e)
+	{
+		return get("uri").toString().equals(e.get("uri").toString());
+	}
+	
 	public Example(String uri, String label, String imageURL, String comment){
 		set("uri", uri);
 		set("label", label);
