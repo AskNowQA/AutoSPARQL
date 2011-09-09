@@ -72,7 +72,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	
 	@Override
 	public List<Example> getExamples(String query) {
-		List<Example> examples = new ArrayList<Example>();
+		//List<Example> examples = new ArrayList<Example>();
 		try {
 			AutoSPARQLSession session = getAutoSPARQLSession();
 			return session.getExamples(query);

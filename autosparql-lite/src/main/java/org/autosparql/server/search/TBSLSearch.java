@@ -3,6 +3,8 @@ package org.autosparql.server.search;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.autosparql.shared.Example;
@@ -12,21 +14,22 @@ import org.dllearner.algorithm.tbsl.sparql.Template;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.InvalidFileFormatException;
 
+import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 public class TBSLSearch implements Search{
-	
+
 	private static final String OPTIONS_FILE = "org/autosparql/server/tbsl.properties";
-	
+
 	private static final int LIMIT = 10;
 	private static final int OFFSET = 0;
-	
+
 	private static final String QUERY_PREFIX = "Give me all ";
-	
+
 	private SPARQLTemplateBasedLearner tbsl;
 	private SparqlEndpoint endpoint;
-	
+
 	public TBSLSearch(SparqlEndpoint endpoint){
 		this.endpoint = endpoint;
 		try {
@@ -53,7 +56,7 @@ public class TBSLSearch implements Search{
 	@Override
 	public List<String> getResources(String query, int limit, int offset) {
 		List<String> resources = new ArrayList<String>();
-		
+
 		tbsl.setEndpoint(endpoint);
 		tbsl.setQuestion(QUERY_PREFIX + query);
 		try {
@@ -63,8 +66,8 @@ public class TBSLSearch implements Search{
 		}
 		//get SPARQL query which returned result, if exists
 		String learnedQuery = tbsl.getBestSPARQLQuery();
-		
-		
+
+
 		return resources;
 	}
 
@@ -81,7 +84,7 @@ public class TBSLSearch implements Search{
 	@Override
 	public List<Example> getExamples(String query, int limit, int offset) {
 		List<Example> examples = new ArrayList<Example>();
-		
+
 		tbsl.setEndpoint(endpoint);
 		tbsl.setQuestion(QUERY_PREFIX + query);
 		try {
@@ -91,11 +94,31 @@ public class TBSLSearch implements Search{
 		}
 		//get SPARQL query which returned result, if exists
 		String learnedQuery = tbsl.getBestSPARQLQuery();
-		
-		
+		try
+		{
+			ResultSet rs = executeQuery(learnedQuery);
+			while(rs.hasNext())
+			{
+				QuerySolution qs = rs.next();
+				Example example = new Example();
+				example.set("tblSearch","tblSearch");
+				for(Iterator<String> it = qs.varNames();it.hasNext();)
+				{
+					String varName = it.next();
+					example.set(varName, qs.get(varName).toString());
+				}
+				examples.add(example);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.out.println("Error was thrown by query: "+learnedQuery);
+			return Collections.<Example>emptyList();
+		}
 		return examples;
 	}
-	
+
 	public List<String> getLexicalAnswerType(){
 		for(Template t : tbsl.getTemplates()){
 			if(t.getLexicalAnswerType() != null){
@@ -104,9 +127,9 @@ public class TBSLSearch implements Search{
 		}
 		return null;
 	}
-	
+
 	private ResultSet executeQuery(String query){
-		
+
 		QueryEngineHTTP queryExecution = new QueryEngineHTTP(endpoint.getURL().toString(), query);
 		for (String dgu : endpoint.getDefaultGraphURIs()) {
 			queryExecution.addDefaultGraph(dgu);

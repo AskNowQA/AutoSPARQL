@@ -1,6 +1,7 @@
 package org.autosparql.client.widget;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,13 +26,16 @@ import com.extjs.gxt.ui.client.widget.grid.Grid;
 import com.extjs.gxt.ui.client.widget.grid.GridViewConfig;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
-import com.google.gwt.user.client.Window;
 
 public class SearchResultPanel extends ContentPanel
 {
+	private static final Set<String> defaultProperties = new HashSet<String>(Arrays.asList(new String[] {"label","imageURL","comment","uri"}));
+
 	private static final boolean HIGHLIGHT_POSITIVES = true;
 
 	public ListStore<Example> gridStore;
+	private List<ColumnConfig> columnConfigs = new LinkedList<ColumnConfig>();
+;
 	public Grid<Example> grid;
 	private PagingLoader<PagingLoadResult<Example>> loader;
 	private PagingModelMemoryProxy proxy;
@@ -52,11 +56,16 @@ public class SearchResultPanel extends ContentPanel
 		{
 			if(ce.getSource()==relearnButton)
 			{
-
+				relearn();
 			}
 		}		
 	}
 
+	void relearn()
+	{
+		
+	}
+	
 	public SearchResultPanel()
 	{
 		setHeading("Result");
@@ -68,6 +77,7 @@ public class SearchResultPanel extends ContentPanel
 
 		grid = createExampleGrid();
 		grid.setHeight(500);
+		grid.setWidth(2000);
 		add(grid);
 		final PagingToolBar toolbar = new PagingToolBar(5);
 		setTopComponent(toolbar);
@@ -196,25 +206,24 @@ public class SearchResultPanel extends ContentPanel
 			examples.add(leipzig);
 		}
 
-		List<ColumnConfig> configs = new LinkedList<ColumnConfig>();
-
 		ColumnConfig buttonConfig = new ColumnConfig("button", "", 35);
 		buttonConfig.setRenderer(new PlusMinusButtonCellRender(this));
-		configs.add(buttonConfig);
+		columnConfigs.add(buttonConfig);
 
 		//configs.add(new ColumnConfig("uri", "url", 200));
 		ColumnConfig labelConfig = new ColumnConfig("label", "label", 100);
 		labelConfig.setResizable(true);
-		configs.add(labelConfig);
+		columnConfigs.add(labelConfig);
 
 		ColumnConfig imageConfig = new ColumnConfig("imageURL", "imageURL", 100);
 		imageConfig.setRenderer(new ImageCellRenderer(100,100));
-		configs.add(imageConfig);
+		columnConfigs.add(imageConfig);
 
 		ColumnConfig commentConfig = new ColumnConfig("comment", "comment", 100);
 		//				commentConfig.addS
-		configs.add(commentConfig);
-
+		columnConfigs.add(commentConfig);
+		
+		
 
 		proxy = new PagingModelMemoryProxy(examples);//
 		//				BasePagingLoadConfig config = new BasePagingLoadConfig(0, 5);
@@ -229,9 +238,9 @@ public class SearchResultPanel extends ContentPanel
 		gridStore = new ListStore<Example>(loader);
 
 		//store.add();
-		ColumnModel cm = new ColumnModel(configs);
+		ColumnModel cm = new ColumnModel(columnConfigs);
 		grid = new Grid<Example>(gridStore,cm);
-
+		
 
 		//				GridView view = grid.getView();
 		//				view.setAutoFill(true);
@@ -239,7 +248,7 @@ public class SearchResultPanel extends ContentPanel
 		//grid.set
 
 		//				grid.setAutoHeight(true);
-		//				grid.setAutoWidth(true);
+		grid.setAutoWidth(true);
 		grid.setColumnResize(true);
 		grid.setColumnLines(true);
 		grid.setColumnReordering(true);
@@ -277,9 +286,52 @@ public class SearchResultPanel extends ContentPanel
 
 	public void setResult(List<Example> result)
 	{
+		columnConfigs.clear();
+		
+		ColumnConfig buttonConfig = new ColumnConfig("button", "", 35);
+		buttonConfig.setRenderer(new PlusMinusButtonCellRender(this));
+		columnConfigs.add(buttonConfig);
+
+		//configs.add(new ColumnConfig("uri", "url", 200));
+		ColumnConfig labelConfig = new ColumnConfig("label", "label", 100);
+		labelConfig.setResizable(true);
+		columnConfigs.add(labelConfig);
+
+		ColumnConfig imageConfig = new ColumnConfig("imageURL", "imageURL", 100);
+		imageConfig.setRenderer(new ImageCellRenderer(100,100));
+		columnConfigs.add(imageConfig);
+
+		ColumnConfig commentConfig = new ColumnConfig("comment", "comment", 100);
+		//				commentConfig.addS
+		columnConfigs.add(commentConfig);
+		
+		
+		Set<String> properties = new HashSet<String>();
+		for(Example example: result)
+		{	
+			properties.addAll(example.getProperties().keySet());
+		}
+		for(String property: properties)
+		{
+			if(defaultProperties.contains(property)) {continue;}
+			ColumnConfig config = new ColumnConfig(property,property,100);
+			columnConfigs.add(config);
+		}
+
 		//Window.alert(result.toString());
+		
 		proxy.setData(result);
 		loader.load();
+		
+		ColumnModel cm = new ColumnModel(columnConfigs);
+		grid.reconfigure(gridStore, cm);
+		//grid.setColumnResize(true);
+		grid.setColumnLines(true);
+		grid.setColumnReordering(true);
+		grid.setAutoExpandColumn("comment");
+		//grid.setAutoWidth(true);
+		
+		updateRowStyle();
 		layout();
 	}
 

@@ -69,6 +69,7 @@ public class ApplicationView extends View {
 		center = new SearchResultPanel();
 		//viewport.add(center.grid, new BorderLayoutData(LayoutRegion.CENTER));
 		viewport.add(center, new BorderLayoutData(LayoutRegion.CENTER));
+		
 	}
 
 	protected void handleEvent(AppEvent event) {

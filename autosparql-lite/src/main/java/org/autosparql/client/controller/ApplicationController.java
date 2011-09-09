@@ -11,8 +11,6 @@ import org.autosparql.shared.Example;
 import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
-import com.extjs.gxt.ui.client.widget.Label;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class ApplicationController extends Controller
@@ -27,7 +25,8 @@ public class ApplicationController extends Controller
 		registerEventTypes(AppEvents.Error);
 	}
 
-	public void handleEvent(AppEvent event) {
+	public void handleEvent(AppEvent event)
+	{
 		EventType type = event.getType();
 		if (type == AppEvents.Init) {
 			onInit(event);

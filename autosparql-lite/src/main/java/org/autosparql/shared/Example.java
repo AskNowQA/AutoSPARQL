@@ -2,12 +2,13 @@ package org.autosparql.shared;
 
 import com.extjs.gxt.ui.client.data.BaseModel;
 
+/** Can hold more than just the properties with the get-methods (should include all triples for the resource).
+ * @author originally by Lorenz Bühmann, extended by Konrad Höffner */
 public class Example extends BaseModel {
 
 	private static final long serialVersionUID = 6955538657940009581L;
 	
-	public Example(){
-	}
+	public Example(){}
 	
 	@Override
 	public boolean equals(Object o)
@@ -21,7 +22,8 @@ public class Example extends BaseModel {
 		return get("uri").toString().equals(e.get("uri").toString());
 	}
 	
-	public Example(String uri, String label, String imageURL, String comment){
+	public Example(String uri, String label, String imageURL, String comment)
+	{
 		set("uri", uri);
 		set("label", label);
 		set("imageURL", imageURL);

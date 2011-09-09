@@ -139,16 +139,25 @@ public class SolrSearch implements Search{
 		try {
 			QueryResponse response = server.query(q);
 			SolrDocumentList docList = response.getResults();
-			String uri;
-			String label;
-			String imageURL;
-			String comment;
-			for(SolrDocument d : docList){
-				uri = (String) d.get("uri");
-				label = (String) d.get("label");
-				imageURL = (String) d.get("imageURL");
-				comment = (String) d.get("comment");
-				resources.add(new Example(uri, label, imageURL, comment));
+//			String uri;
+//			String label;
+//			String imageURL;
+//			String comment;
+			for(SolrDocument d : docList)
+			{
+				//if(true) throw new RuntimeException("solSearch");
+//				uri = (String) d.get("uri");
+//				label = (String) d.get("label");
+//				imageURL = (String) d.get("imageURL");
+//				comment = (String) d.get("comment");
+				Example example  = new Example();
+				System.out.println("map:"+d.getFieldValueMap());
+				example.set("solSearch","solSearch");
+				for(String property: d.getFieldNames())
+				{
+					example.set(property, d.getFieldValue(property));
+				}
+				resources.add(example);
 			}
 		} catch (SolrServerException e) {
 			e.printStackTrace();
