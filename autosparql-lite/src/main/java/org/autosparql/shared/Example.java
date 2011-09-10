@@ -10,6 +10,12 @@ public class Example extends BaseModel {
 	
 	public Example(){}
 	
+	@Override public int hashCode()
+	{
+		return get("uri").hashCode();
+	}
+	
+	
 	@Override
 	public boolean equals(Object o)
 	{

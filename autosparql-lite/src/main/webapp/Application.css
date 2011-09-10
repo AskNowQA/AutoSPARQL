@@ -3,7 +3,7 @@
 /** grid rows now wrap around text (default is "white-space: nowrap;") **/
 
 .row-Style-Odd {
-    background-color: #eaeaea;
+    background-color: #eaeaea !important; 
 }
 
 .row-Style-Even {
@@ -11,11 +11,11 @@
 }
 
 .row-Style-Positive {
-    background-color: #bbffbb;
+    background-color: #bbffbb !important;
 }
 
 .row-Style-Negative {
-    background-color: red;
+    background-color: red !important;
 }
 
 .x-grid3-cell-inner

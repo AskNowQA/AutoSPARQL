@@ -13,7 +13,7 @@ import com.extjs.gxt.ui.client.mvc.View;
 import com.extjs.gxt.ui.client.widget.Viewport;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class ApplicationView extends View {
@@ -21,7 +21,7 @@ public class ApplicationView extends View {
 
 	private Viewport viewport;
 //	private InputPanel north;
-	private SearchResultPanel center;
+	private SearchResultPanel center = null;
 
 	public ApplicationView(Controller controller) {
 		super(controller);
@@ -33,6 +33,8 @@ public class ApplicationView extends View {
 
 	public void display(List<Example> examples)
 	{
+		
+		if(center==null) {createCenter();RootPanel.get("gwt-table").add(viewport);}
 //		for(Example example: examples)
 //		center.gridStore.add(example);
 		center.setResult(examples);
@@ -44,7 +46,7 @@ public class ApplicationView extends View {
 		viewport = new Viewport();
 		viewport.setLayout(new BorderLayout());
 
-        String query = com.google.gwt.user.client.Window.Location.getParameter("query");
+        //String query = com.google.gwt.user.client.Window.Location.getParameter("query");
 //        if(query==null||query.isEmpty())
 //        {
 //        	viewport.add(new Label("no query asked"));
@@ -54,10 +56,9 @@ public class ApplicationView extends View {
 //        	
 //    		createCenter();        	
 //        }
-        createCenter();
 //		createNorth();
 
-		RootPanel.get("gwt-table").add(viewport);
+		//RootPanel.get("gwt-table").add(viewport);
 	}
 
 //	private void createNorth() {
@@ -69,7 +70,6 @@ public class ApplicationView extends View {
 		center = new SearchResultPanel();
 		//viewport.add(center.grid, new BorderLayoutData(LayoutRegion.CENTER));
 		viewport.add(center, new BorderLayoutData(LayoutRegion.CENTER));
-		
 	}
 
 	protected void handleEvent(AppEvent event) {
