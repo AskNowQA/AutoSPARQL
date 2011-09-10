@@ -1,6 +1,5 @@
 package org.autosparql.client.widget;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -8,8 +7,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.autosparql.shared.Example;
+import org.springframework.util.DefaultPropertiesPersister;
 
 import com.extjs.gxt.ui.client.Style.Orientation;
+import com.extjs.gxt.ui.client.core.FastSet;
 import com.extjs.gxt.ui.client.data.BasePagingLoader;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.PagingLoadResult;
@@ -27,19 +28,25 @@ import com.extjs.gxt.ui.client.widget.grid.GridView;
 import com.extjs.gxt.ui.client.widget.grid.GridViewConfig;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
-import com.google.gwt.user.client.Window;
 
 public class SearchResultPanel extends ContentPanel
 {
-	private static final Set<String> defaultProperties = new HashSet<String>(Arrays.asList(new String[] {"label","imageURL","comment","uri"}));
+	private static final Set defaultProperties = defaultProperties();
 
+	private static Set defaultProperties()
+	{
+		Set defaultProperties = new FastSet();
+		for(String s : new String[] {"label","imageURL","comment","uri"}) {defaultProperties.add(s);}
+		return defaultProperties;
+	}
+	
 	private static final boolean HIGHLIGHT_POSITIVES = true;
 
 	public Grid<Example> grid = null;
 	ListStore<Example> gridStore = null;
 
-	private final Set<Example> positives = new HashSet<Example>();
-	private final Set<Example> negatives = new HashSet<Example>();
+	private final FastSet positives = new FastSet();
+	private final FastSet negatives = new FastSet();
 
 	private final PagingToolBar toolbar;
 	private Button relearnButton = new Button("relearn");
@@ -86,13 +93,13 @@ public class SearchResultPanel extends ContentPanel
 	public void markPositive(Example e)
 	{
 		grid.getView().refresh(true);
-		positives.add(e);
+		positives.add(e.getURI());
 		updateRowStyle();
 	}
 
 	public void markNegative(Example e)
 	{
-		negatives.add(e);
+		negatives.add(e.getURI());
 		if(gridStore!=null) {gridStore.remove(e);}
 		//Window.alert("removing "+e);
 	}
@@ -174,7 +181,7 @@ public class SearchResultPanel extends ContentPanel
 					//Window.alert(model.get("uri").toString());
 					System.out.println(positives);
 					System.out.println(model.get("uri"));
-					if(HIGHLIGHT_POSITIVES&&positives.contains(new Example(model.get("uri").toString(),"","","")))	{return "row-Style-Positive";}
+					if(HIGHLIGHT_POSITIVES&&positives.contains(model.get("uri")))	{return "row-Style-Positive";}
 					else if(rowIndex % 2 == 0)		{return "row-Style-Odd";}	
 					return "row-Style-Even";
 				}
