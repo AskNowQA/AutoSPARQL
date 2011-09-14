@@ -23,8 +23,7 @@ public class Application implements EntryPoint {
 		Dispatcher dispatcher = Dispatcher.get();
 		dispatcher.addController(new ApplicationController(service));
 
-		Dispatcher.forwardEvent(AppEvents.Init);
-		
+		Dispatcher.forwardEvent(AppEvents.Init);		
 
 		GXT.hideLoadingPanel("loading");
 	}
