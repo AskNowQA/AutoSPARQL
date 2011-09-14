@@ -19,7 +19,8 @@
 		<!-- Convenience property to set the GWT version -->
 		<gwtVersion>2.3.0</gwtVersion>
 		<!-- GWT needs at least java 1.5 -->
-		<webappDirectory>${project.build.directory}/test</webappDirectory>
+		<webappDirectory>war</webappDirectory>
+<!--		 evil : so geht deploy nicht weil Application directory sonst nicht gebaut wird <webappDirectory>${project.build.directory}/test</webappDirectory>-->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -55,10 +56,18 @@
 	</dependencies>
 
 	<build>
+<!--<outputDirectory>war/WEB-INF/classes</outputDirectory>-->
 		<!-- Generate compiled stuff in the folder used for developing mode -->
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 		<resources>
-         <resource>
+                        <resource>
+                                <directory>src/main/java</directory>
+                                <includes>
+                                        <include>**/*.java</include>
+                                        <include>**/*.gwt.xml</include>
+                                </includes>
+                        </resource>
+                       <resource>
           <directory>src/main/resources</directory>
           <filtering>true</filtering>
          </resource>
@@ -66,22 +75,59 @@
 
 		<plugins>
 		
-		
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.0-beta-1</version>
+				<configuration>
+
+					<server>local</server>
+					<url>http://127.0.0.1:8080/manager</url>
+				</configuration>
+			</plugin>
 
 			<!-- GWT Maven Plugin -->
-			<plugin>
+	<!--<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+								<executions>
+							<execution>
+								<configuration>
+									<module>org.autosparql.Application</module>
+								</configuration>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<hostedWebapp>war</hostedWebapp>
+							<runTarget>org.autosparql.Application/Application.html</runTarget>
+							<modules>
+								<module>org.autosparql.Application</module>
+							</modules>
+							<localWorkers>6</localWorkers>
+						</configuration>
+
+</plugin>-->			
+
+<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
 				<executions>
 					<execution>
+						<configuration>
+							<module>org.autosparql.Application</module>
+						</configuration>
 						<goals>
 							<goal>compile</goal>
 						</goals>
 					</execution>
 				</executions>
-				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
-					documentation at codehaus.org -->
 				<configuration>
+					<modules>
+						<module>org.autosparql.Application</module>
+					</modules>
 					<runTarget>Application.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<extraJvmArgs>-Xmx1024m</extraJvmArgs>
@@ -90,7 +136,7 @@
 			</plugin>
 
 			<!-- Copy static web files before executing gwt:run -->
-			<plugin>
+		<!--	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.0</version>
@@ -103,18 +149,21 @@
 					</execution>
 				</executions>
 				<configuration>
+					<hostedWebapp>${webappDirectory}</hostedWebapp>
+					<extraJvmArgs>-Xmx1024m</extraJvmArgs>
 					<webappDirectory>${webappDirectory}</webappDirectory>
 				</configuration>
-			</plugin>
-			<plugin>
+			</plugin>-->
+		<!--	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
+					<webappDirectory>${webappDirectory}</webappDirectory>
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
-			</plugin>
+			</plugin>-->
 		</plugins>
 		<pluginManagement>
 			<plugins>
