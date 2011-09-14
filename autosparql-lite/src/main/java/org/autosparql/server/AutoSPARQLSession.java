@@ -51,9 +51,11 @@ public class AutoSPARQLSession {
 	
 	public List<String> getResources(String query){
 		List<String> resources = new ArrayList<String>();
-		
+		// primary search DBpedia bzw. DBpedia live
 		resources = primarySearch.getResources(query);
-		if(resources.isEmpty()){
+		if(resources.isEmpty())
+		{
+			// fallback: string in solr index hauen und zurückgeben was da rauskommt
 			List<String> answerType = primarySearch.getLexicalAnswerType();
 			List<String> types = secondarySearch.getTypes(answerType.get(0));
 			
@@ -70,9 +72,10 @@ public class AutoSPARQLSession {
 	
 	public List<Example> getExamples(String query){
 		List<Example> examples = new ArrayList<Example>();
-		
+		// primary search DBpedia bzw. DBpedia live	
 		examples = primarySearch.getExamples(query);
 		if(examples.isEmpty()){
+			// fallback: string in solr index hauen und zurückgeben was da rauskommt
 			List<String> answerType = primarySearch.getLexicalAnswerType();
 			List<String> types = secondarySearch.getTypes(answerType.get(0));
 			

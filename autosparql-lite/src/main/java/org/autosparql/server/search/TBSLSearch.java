@@ -94,6 +94,11 @@ public class TBSLSearch implements Search{
 		}
 		//get SPARQL query which returned result, if exists
 		String learnedQuery = tbsl.getBestSPARQLQuery();
+		if(learnedQuery==null)
+		{
+			System.err.println("No query learned with original query: "+query);
+			return Collections.<Example>emptyList();
+		}
 		try
 		{
 			ResultSet rs = executeQuery(learnedQuery);
@@ -128,7 +133,8 @@ public class TBSLSearch implements Search{
 		return null;
 	}
 
-	private ResultSet executeQuery(String query){
+	private ResultSet executeQuery(String query)
+	{
 
 		QueryEngineHTTP queryExecution = new QueryEngineHTTP(endpoint.getURL().toString(), query);
 		for (String dgu : endpoint.getDefaultGraphURIs()) {

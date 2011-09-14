@@ -33,7 +33,7 @@ public class ApplicationView extends View {
 
 	public void display(List<Example> examples)
 	{
-		
+		if(examples.isEmpty()) {RootPanel.get("gwt-table").clear();return;}
 		if(center==null) {createCenter();RootPanel.get("gwt-table").add(viewport);}
 //		for(Example example: examples)
 //		center.gridStore.add(example);

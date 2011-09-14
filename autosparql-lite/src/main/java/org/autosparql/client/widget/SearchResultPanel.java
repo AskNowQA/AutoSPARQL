@@ -182,6 +182,7 @@ public class SearchResultPanel extends ContentPanel
 					System.out.println(positives);
 					System.out.println(model.get("uri"));
 					if(HIGHLIGHT_POSITIVES&&positives.contains(model.get("uri")))	{return "row-Style-Positive";}
+					else if(model instanceof Example&&((Example)model).containsSolrData) {return "row-Style-SolrData";}
 					else if(rowIndex % 2 == 0)		{return "row-Style-Odd";}	
 					return "row-Style-Even";
 				}

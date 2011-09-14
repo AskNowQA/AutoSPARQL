@@ -105,7 +105,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	
 	public static void main(String[] args) throws InvalidFileFormatException, FileNotFoundException, IOException, NoTemplateFoundException {
 		SPARQLTemplateBasedLearner l = new SPARQLTemplateBasedLearner(AutoSPARQLServiceImpl.class.getClassLoader().getResource("org/autosparql/server/tbsl.properties").getPath());
-		l.setQuestion("Give me all cities in Canada");
+		l.setQuestion("Give me all books written by Dan Brown");
 		l.learnSPARQLQueries();
 	}
 

@@ -7,6 +7,9 @@ import com.extjs.gxt.ui.client.data.BaseModel;
 public class Example extends BaseModel {
 
 	private static final long serialVersionUID = 6955538657940009581L;
+
+	/** sorl is used as a fallback if the normal endpoint does not work */
+	public boolean containsSolrData = false;
 	
 	public Example(){}
 	
