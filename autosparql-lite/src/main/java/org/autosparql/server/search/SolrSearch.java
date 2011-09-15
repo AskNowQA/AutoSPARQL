@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.BinaryRequestWriter;
@@ -13,8 +14,10 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.autosparql.shared.Example;
 
-public class SolrSearch implements Search{
-	
+public class SolrSearch implements Search
+{
+	private static Logger logger = Logger.getLogger(SolrSearch.class);
+
 	private static final int LIMIT = 10;
 	private static final int OFFSET = 0;
 	
@@ -98,7 +101,7 @@ public class SolrSearch implements Search{
 	@Override
 	public List<Example> getExamples(String query, int limit, int offset) {
 		List<Example> resources = new ArrayList<Example>();
-		
+		logger.info("Using SolrSearch.getExamples()");
 		SolrQuery q = new SolrQuery(buildQueryString(query));
 		q.setRows(limit);
 		q.setStart(offset);
@@ -151,12 +154,12 @@ public class SolrSearch implements Search{
 				imageURL = (String) d.get("imageURL");
 				comment = (String) d.get("comment");
 				Example example  = new Example();
-				System.out.println("map:"+d.getFieldValueMap());
+				logger.trace("SolrSearch Field Value Map:"+d.getFieldValueMap());
 				example.set("solSearch","fallback search used");
-//				for(String property: d.getFieldNames())
-//				{
-//					example.set(property, d.getFieldValue(property));
-//				}
+				for(String property: d.getFieldNames())
+				{
+					example.set(property, d.getFieldValue(property));
+				}
 				resources.add(example);
 			}
 		} catch (SolrServerException e) {

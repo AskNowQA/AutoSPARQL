@@ -141,6 +141,7 @@ public class SearchResultPanel extends ContentPanel
 
 	private Grid<Example> createGrid(List<Example> examples)
 	{
+		System.out.println(examples);
 		PagingModelMemoryProxy proxy = new PagingModelMemoryProxy(examples);
 		PagingLoader<PagingLoadResult<Example>> loader = new BasePagingLoader<PagingLoadResult<Example>>(proxy);
 
@@ -156,7 +157,7 @@ public class SearchResultPanel extends ContentPanel
 		//		grid.setColumnLines(true);
 		//		//grid.setColumnReordering(true);
 		grid.setAutoExpandColumn("comment");
-		//		//grid.setAutoHeight(true);
+		grid.setAutoHeight(true);
 		//		grid.setAutoWidth(true);
 		//		grid.setColumnResize(true);
 		//		grid.setColumnLines(true);
@@ -194,7 +195,7 @@ public class SearchResultPanel extends ContentPanel
 	{
 		if(grid!=null) {this.remove(grid);}
 		grid = createGrid(examples);
-		grid.setHeight(500);
+	//	grid.setHeight(500);
 		add(grid);
 		layout();
 	}

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.autosparql.shared.Example;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
@@ -18,8 +19,9 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
-public class TBSLSearch implements Search{
-
+public class TBSLSearch implements Search
+{
+	private static Logger logger = Logger.getLogger(TBSLSearch.class);
 	private static final String OPTIONS_FILE = "org/autosparql/server/tbsl.properties";
 
 	private static final int LIMIT = 10;
@@ -86,7 +88,7 @@ public class TBSLSearch implements Search{
 	@Override
 	public List<Example> getExamples(String query, int limit, int offset) {
 		List<Example> examples = new ArrayList<Example>();
-
+		logger.info("Using TBSLSearch.getExamples() with query \""+query+"\"...");
 		tbsl.setEndpoint(endpoint);
 		if(!query.startsWith(QUERY_PREFIX)) {query=QUERY_PREFIX+query;}
 		tbsl.setQuestion(query);
@@ -99,7 +101,8 @@ public class TBSLSearch implements Search{
 		String learnedQuery = tbsl.getBestSPARQLQuery();
 		if(learnedQuery==null)
 		{
-			System.err.println("No query learned with original query: "+query);
+			logger.info("...unsuccessfully");
+			logger.warn("No query learned by TBSLSearch with original query: "+query);
 			return Collections.<Example>emptyList();
 		}
 		try
@@ -120,8 +123,9 @@ public class TBSLSearch implements Search{
 		}
 		catch(Exception e)
 		{
+			logger.info("...unsuccessfully");
 			e.printStackTrace();
-			System.out.println("Error was thrown by query: "+learnedQuery);
+			logger.warn("TBSLSearch: Error was thrown by query: "+learnedQuery);
 			return Collections.<Example>emptyList();
 		}
 		return examples;

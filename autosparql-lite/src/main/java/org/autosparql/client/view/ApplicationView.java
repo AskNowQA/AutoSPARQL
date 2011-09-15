@@ -23,11 +23,13 @@ public class ApplicationView extends View {
 	//	private InputPanel north;
 	private SearchResultPanel center = null;
 
-	public ApplicationView(Controller controller) {
+	public ApplicationView(Controller controller)
+	{
 		super(controller);
 	}
 
-	protected void initialize() {
+	protected void initialize()	
+	{
 		super.initialize();
 	}
 
@@ -35,9 +37,11 @@ public class ApplicationView extends View {
 	{
 		if(examples==null||examples.isEmpty())
 		{
+			System.err.println("No Examples found.");
 			//if(RootPanel.get("gwt-table")!=null) {RootPanel.get("gwt-table").clear();}
 			return;
 		}
+		System.out.println("displaying "+examples);
 		if(center==null) {createCenter();RootPanel.get("gwt-table").add(viewport);}
 		//		for(Example example: examples)
 		//		center.gridStore.add(example);
@@ -84,7 +88,6 @@ public class ApplicationView extends View {
 
 	public void showError(String string)
 	{
-
 
 	}
 
