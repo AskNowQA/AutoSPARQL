@@ -20,7 +20,7 @@ public class ApplicationView extends View {
 
 
 	private Viewport viewport;
-//	private InputPanel north;
+	//	private InputPanel north;
 	private SearchResultPanel center = null;
 
 	public ApplicationView(Controller controller) {
@@ -33,38 +33,42 @@ public class ApplicationView extends View {
 
 	public void display(List<Example> examples)
 	{
-		if(examples.isEmpty()) {RootPanel.get("gwt-table").clear();return;}
+		if(examples==null||examples.isEmpty())
+		{
+			//if(RootPanel.get("gwt-table")!=null) {RootPanel.get("gwt-table").clear();}
+			return;
+		}
 		if(center==null) {createCenter();RootPanel.get("gwt-table").add(viewport);}
-//		for(Example example: examples)
-//		center.gridStore.add(example);
+		//		for(Example example: examples)
+		//		center.gridStore.add(example);
 		center.setResult(examples);
 		//Window.alert("display");
 	}
-	
+
 	private void initUI()
 	{
 		viewport = new Viewport();
 		viewport.setLayout(new BorderLayout());
 
-        //String query = com.google.gwt.user.client.Window.Location.getParameter("query");
-//        if(query==null||query.isEmpty())
-//        {
-//        	viewport.add(new Label("no query asked"));
-//        }
-//        else
-//        {
-//        	
-//    		createCenter();        	
-//        }
-//		createNorth();
+		//String query = com.google.gwt.user.client.Window.Location.getParameter("query");
+		//        if(query==null||query.isEmpty())
+		//        {
+		//        	viewport.add(new Label("no query asked"));
+		//        }
+		//        else
+		//        {
+		//        	
+		//    		createCenter();        	
+		//        }
+		//		createNorth();
 
 		//RootPanel.get("gwt-table").add(viewport);
 	}
 
-//	private void createNorth() {
-//		north = new InputPanel();
-//		viewport.add(north, new BorderLayoutData(LayoutRegion.NORTH));
-//	}
+	//	private void createNorth() {
+	//		north = new InputPanel();
+	//		viewport.add(north, new BorderLayoutData(LayoutRegion.NORTH));
+	//	}
 
 	private void createCenter() {
 		center = new SearchResultPanel();
@@ -80,8 +84,8 @@ public class ApplicationView extends View {
 
 	public void showError(String string)
 	{
-		
-		
+
+
 	}
 
 }

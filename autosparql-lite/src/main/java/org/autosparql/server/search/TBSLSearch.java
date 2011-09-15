@@ -32,7 +32,8 @@ public class TBSLSearch implements Search{
 
 	public TBSLSearch(SparqlEndpoint endpoint){
 		this.endpoint = endpoint;
-		try {
+		try
+		{
 			tbsl = new SPARQLTemplateBasedLearner(this.getClass().getClassLoader().getResource(OPTIONS_FILE).getPath());
 		} catch (InvalidFileFormatException e) {
 			e.printStackTrace();
@@ -58,7 +59,8 @@ public class TBSLSearch implements Search{
 		List<String> resources = new ArrayList<String>();
 
 		tbsl.setEndpoint(endpoint);
-		tbsl.setQuestion(QUERY_PREFIX + query);
+		if(!query.startsWith(QUERY_PREFIX)) {query=QUERY_PREFIX+query;}
+		tbsl.setQuestion(query);
 		try {
 			tbsl.learnSPARQLQueries();
 		} catch (NoTemplateFoundException e) {
@@ -86,7 +88,8 @@ public class TBSLSearch implements Search{
 		List<Example> examples = new ArrayList<Example>();
 
 		tbsl.setEndpoint(endpoint);
-		tbsl.setQuestion(QUERY_PREFIX + query);
+		if(!query.startsWith(QUERY_PREFIX)) {query=QUERY_PREFIX+query;}
+		tbsl.setQuestion(query);
 		try {
 			tbsl.learnSPARQLQueries();
 		} catch (NoTemplateFoundException e) {
