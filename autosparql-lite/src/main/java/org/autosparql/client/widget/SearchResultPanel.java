@@ -1,13 +1,11 @@
 package org.autosparql.client.widget;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.autosparql.shared.Example;
-import org.springframework.util.DefaultPropertiesPersister;
 
 import com.extjs.gxt.ui.client.Style.Orientation;
 import com.extjs.gxt.ui.client.core.FastSet;
@@ -21,10 +19,10 @@ import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.grid.BufferView;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.Grid;
-import com.extjs.gxt.ui.client.widget.grid.GridView;
 import com.extjs.gxt.ui.client.widget.grid.GridViewConfig;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
@@ -39,7 +37,7 @@ public class SearchResultPanel extends ContentPanel
 		for(String s : new String[] {"label","imageURL","comment","uri"}) {defaultProperties.add(s);}
 		return defaultProperties;
 	}
-	
+
 	private static final boolean HIGHLIGHT_POSITIVES = true;
 
 	public Grid<Example> grid = null;
@@ -144,20 +142,25 @@ public class SearchResultPanel extends ContentPanel
 		System.out.println(examples);
 		PagingModelMemoryProxy proxy = new PagingModelMemoryProxy(examples);
 		PagingLoader<PagingLoadResult<Example>> loader = new BasePagingLoader<PagingLoadResult<Example>>(proxy);
-
 		toolbar.bind(loader);	
-
 		gridStore = new ListStore<Example>(loader);
 		grid = new Grid<Example>(gridStore,new ColumnModel(columnConfigs(examples)));
+		grid.setHeight(1000);
+//		BufferView view = new BufferView();
+//		view.ensureVisible(4, 0, false);
+//		view.setRowHeight(100);
+//		//view.setForceFit(true);
+//		grid.setView(view);
 		loader.load();
-
-		GridView view = grid.getView();
-		view.setAutoFill(true);
+		
+		//		GridView view = grid.getView();
+		//		view.setAutoFill(true);
 		//		//view.setForceFit(true);
 		//		grid.setColumnLines(true);
 		//		//grid.setColumnReordering(true);
 		grid.setAutoExpandColumn("comment");
-		grid.setAutoHeight(true);
+		//grid.setAutoHeight(true);
+
 		//		grid.setAutoWidth(true);
 		//		grid.setColumnResize(true);
 		//		grid.setColumnLines(true);
@@ -195,7 +198,7 @@ public class SearchResultPanel extends ContentPanel
 	{
 		if(grid!=null) {this.remove(grid);}
 		grid = createGrid(examples);
-	//	grid.setHeight(500);
+		
 		add(grid);
 		layout();
 	}

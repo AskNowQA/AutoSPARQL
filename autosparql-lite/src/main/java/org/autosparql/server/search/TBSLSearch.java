@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -17,6 +16,7 @@ import org.ini4j.InvalidFileFormatException;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 public class TBSLSearch implements Search
@@ -102,23 +102,29 @@ public class TBSLSearch implements Search
 		if(learnedQuery==null)
 		{
 			logger.info("...unsuccessfully");
-			logger.warn("No query learned by TBSLSearch with original query: "+query);
+			logger.warn("No query learned by TBSLSearch with original query: \""+query+"\". Thus, no examples could be found.");
 			return Collections.<Example>emptyList();
 		}
 		try
 		{
+			learnedQuery.replace("SELECT ?y","SELECT distinct ?y");
 			ResultSet rs = executeQuery(learnedQuery);
 			while(rs.hasNext())
 			{
 				QuerySolution qs = rs.next();
-				Example example = new Example();
-				example.set("tblSearch","tblSearch");
-				for(Iterator<String> it = qs.varNames();it.hasNext();)
+				Resource resource = qs.getResource(qs.varNames().next());
+				if(resource.isURIResource())
 				{
-					String varName = it.next();
-					example.set(varName, qs.get(varName).toString());
+					Example example = new Example();
+					example.set("origin","TBSLSearch");
+					example.set("uri", resource.getURI());
+					examples.add(example);
 				}
-				examples.add(example);
+//				for(Iterator<String> it = qs.varNames();it.hasNext();)
+//				{
+//					String varName = it.next();
+//					example.set(varName, qs.get(varName).toString());
+//				}
 			}
 		}
 		catch(Exception e)

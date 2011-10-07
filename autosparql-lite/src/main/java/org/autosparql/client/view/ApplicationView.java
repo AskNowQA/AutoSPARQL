@@ -37,7 +37,6 @@ public class ApplicationView extends View {
 	{
 		if(examples==null||examples.isEmpty())
 		{
-			System.err.println("No Examples found.");
 			//if(RootPanel.get("gwt-table")!=null) {RootPanel.get("gwt-table").clear();}
 			return;
 		}
