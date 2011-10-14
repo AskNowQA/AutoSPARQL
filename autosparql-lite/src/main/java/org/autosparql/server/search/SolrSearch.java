@@ -25,7 +25,6 @@ public class SolrSearch implements Search
 
 	private CommonsHttpSolrServer server;
 
-
 	public SolrSearch(String serverURL){
 		try {
 			server = new CommonsHttpSolrServer(serverURL);

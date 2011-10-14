@@ -57,7 +57,8 @@ public class TBSLSearch implements Search
 	}
 
 	@Override
-	public List<String> getResources(String query, int limit, int offset) {
+	public List<String> getResources(String query, int limit, int offset)
+	{
 		List<String> resources = new ArrayList<String>();
 
 		tbsl.setEndpoint(endpoint);

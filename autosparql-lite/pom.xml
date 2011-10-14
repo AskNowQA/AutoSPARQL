@@ -15,6 +15,18 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>AutoSPARQL Lite</name>
 
+	<repositories>
+	 <repository>
+    <id>sourceforge</id>
+    <url>http://oss.sonatype.org/</url>
+    <releases>
+      <enabled>true</enabled>
+    </releases>
+    <snapshots>
+      <enabled>true</enabled>
+    </snapshots>
+  </repository>
+	</repositories>
 	<properties>
 		<!-- Convenience property to set the GWT version -->
 		<gwtVersion>2.3.0</gwtVersion>
@@ -25,6 +37,12 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+	<groupId>net.sf.ehcache</groupId>
+	<artifactId>ehcache</artifactId>
+	<version>2.4.5</version>
+	<type>pom</type>
+	</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
@@ -135,8 +153,8 @@
 				</configuration>
 			</plugin>
 
-			<!-- Copy static web files before executing gwt:run -->
-		<!--	<plugin>
+			<!-- Copy static web files (like Application.html) before executing gwt:run -->
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.0</version>
@@ -153,7 +171,7 @@
 					<extraJvmArgs>-Xmx1024m</extraJvmArgs>
 					<webappDirectory>${webappDirectory}</webappDirectory>
 				</configuration>
-			</plugin>-->
+			</plugin>
 		<!--	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

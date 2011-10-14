@@ -21,6 +21,9 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+/** @author Konrad Höffner
+
+ */
 public class AutoSPARQLSession
 {
 	private static Logger logger = Logger.getLogger(AutoSPARQLSession.class);

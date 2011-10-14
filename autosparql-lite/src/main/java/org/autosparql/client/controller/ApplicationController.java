@@ -15,7 +15,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class ApplicationController extends Controller
 {
-	AutoSPARQLServiceAsync service;
+	final AutoSPARQLServiceAsync service;
 	private ApplicationView appView;
 
 	public ApplicationController(AutoSPARQLServiceAsync service)

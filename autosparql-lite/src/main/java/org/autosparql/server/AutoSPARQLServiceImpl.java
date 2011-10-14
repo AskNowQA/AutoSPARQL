@@ -4,15 +4,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
@@ -23,13 +26,9 @@ import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
 import org.dllearner.kb.sparql.SparqlEndpoint;
-import org.dllearner.kb.sparql.SparqlQuery;
 import org.ini4j.InvalidFileFormatException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService {
 	
@@ -70,18 +69,23 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		return new ArrayList<Endpoint>(endpointsMap.keySet());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Example> getExamples(String query) {
-		//List<Example> examples = new ArrayList<Example>();
+	public List<Example> getExamples(String query)
+	{
+		Cache cache = CacheManager.getInstance().getCache("examples");
+		{
+			Element e = cache.get(query);
+			if(e!=null) {return (List<Example>)e.getValue();}
+		}
 		try {
 			AutoSPARQLSession session = getAutoSPARQLSession();
-			return session.getExamples(query);
-//			for(String resource : session.getResources(query)){
-//				examples.add(new Example(resource, "", "", ""));
+			List<Example> examples = session.getExamples(query);
+			cache.put(new Element(query,examples));
+			cache.flush();
+			return examples;
 			}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		catch (Exception e) {e.printStackTrace();}
 		return null;
 	}
 	

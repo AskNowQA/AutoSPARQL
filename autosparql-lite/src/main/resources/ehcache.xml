@@ -1,0 +1,8 @@
+<ehcache maxBytesLocalOnHeap="200m" maxBytesLocalOffHeap="400m" maxBytesLocalDisk="1g" >
+<diskStore path="cache"/>
+<cache name="examples"
+ diskPersistent="true"
+		eternal="true"
+        maxElementsInMemory="1000">
+</cache>
+</ehcache>

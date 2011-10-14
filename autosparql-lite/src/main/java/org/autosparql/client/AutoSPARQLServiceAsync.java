@@ -9,9 +9,8 @@ import org.autosparql.shared.Example;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface AutoSPARQLServiceAsync {
-
-
+public interface AutoSPARQLServiceAsync
+{
 	void getEndpoints(AsyncCallback<List<Endpoint>> callback);
 
 	void getExamples(String query, AsyncCallback<List<Example>> callback);

@@ -8,7 +8,7 @@ import com.extjs.gxt.ui.client.util.Theme;
 import com.google.gwt.core.client.EntryPoint;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * Entry point.
  */
 public class Application implements EntryPoint {
 
