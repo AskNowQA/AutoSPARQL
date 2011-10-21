@@ -6,6 +6,7 @@ import org.autosparql.client.AppEvents;
 import org.autosparql.client.AutoSPARQLServiceAsync;
 import org.autosparql.client.view.ApplicationView;
 import org.autosparql.client.widget.ErrorDialog;
+import org.autosparql.client.widget.WaitDialog;
 import org.autosparql.shared.Example;
 
 import com.extjs.gxt.ui.client.event.EventType;
@@ -34,7 +35,12 @@ public class ApplicationController extends Controller
 			onError((Throwable)event.getData());
 		}
 	}
-
+	
+//	public void learn()
+//	{
+//		
+//	}
+	
 	public void initialize()
 	{
 		String query = com.google.gwt.user.client.Window.Location.getParameter("query");
@@ -44,17 +50,21 @@ public class ApplicationController extends Controller
 		}
 		else
 		{
+			final WaitDialog wait = new WaitDialog("Creating table");
+			wait.show();
 			service.getExamples(query, new AsyncCallback<List<Example>>() {				
 				@Override
 				public void onSuccess(List<Example> examples)
 				{
 					//new Example("testuri", "testlabel", "testimageurl", "testcomment");
 					appView.display(examples);
+					wait.hide();
 				}
 				
 				@Override
 				public void onFailure(Throwable arg0)
 				{
+					wait.hide();
 					com.google.gwt.user.client.Window.alert(arg0.getMessage());
 					//appView.showError("could not get examples");
 					// TODO Auto-generated method stub

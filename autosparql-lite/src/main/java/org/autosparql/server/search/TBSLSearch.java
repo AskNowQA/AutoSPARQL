@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -108,25 +109,46 @@ public class TBSLSearch implements Search
 		}
 		try
 		{
-			learnedQuery.replace("SELECT ?y","SELECT distinct ?y");
+			System.out.println(learnedQuery);
+			
+			learnedQuery = learnedQuery.replace("WHERE {","WHERE {?y ?p1 ?y0. ");
+
+			learnedQuery = learnedQuery.replace("SELECT ?y","SELECT distinct *");
+			//learnedQuery =  learnedQuery.replace("SELECT ?y","SELECT *");
+			System.out.println(learnedQuery);
 			ResultSet rs = executeQuery(learnedQuery);
+			String uri;
+			String lastURI = null;
+			Example example = null;
 			while(rs.hasNext())
 			{
+				//TODO: finish
 				QuerySolution qs = rs.next();
-				Resource resource = qs.getResource(qs.varNames().next());
-				if(resource.isURIResource())
+				uri = qs.get("?y").asResource().getURI();
+				if(uri!=lastURI)
 				{
-					Example example = new Example();
-					example.set("origin","TBSLSearch");
-					example.set("uri", resource.getURI());
-					examples.add(example);
+					if(example!=null) {examples.add(example);}
+					example = new Example();
 				}
+				example.set(qs.get("p1").toString(), qs.get("y0").toString());
+				lastURI = uri;
+				
+//				Resource resource = qs.getResource(qs.varNames().next());
+//				Example example = new Example();
+//				examples.add(example);
+//				if(resource.isURIResource())
+//				{			
+//					example.set("origin","TBSLSearch");
+//					example.set("uri", resource.getURI());
+//					
+//				}
 //				for(Iterator<String> it = qs.varNames();it.hasNext();)
 //				{
 //					String varName = it.next();
 //					example.set(varName, qs.get(varName).toString());
 //				}
 			}
+			if(example!=null) {examples.add(example);}
 		}
 		catch(Exception e)
 		{

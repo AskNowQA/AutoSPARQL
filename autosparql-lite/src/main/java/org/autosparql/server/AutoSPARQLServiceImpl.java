@@ -4,10 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -32,15 +33,12 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService {
 	
-	enum SessionAttributes{
-		AUTOSPARQL_SESSION
-	}
+	enum SessionAttributes{AUTOSPARQL_SESSION}
 	
 	private Map<Endpoint, SPARQLEndpointEx> endpointsMap;
 	
-	public AutoSPARQLServiceImpl() {
-		
-	}
+	public AutoSPARQLServiceImpl() {}
+	private Set<String> questionWords = new HashSet<String>();
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -65,7 +63,8 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	}
 
 	@Override
-	public List<Endpoint> getEndpoints() {
+	public List<Endpoint> getEndpoints()
+	{
 		return new ArrayList<Endpoint>(endpointsMap.keySet());
 	}
 	
@@ -73,11 +72,14 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	@Override
 	public List<Example> getExamples(String query)
 	{
+		String[] tokens = query.split("\\s");
+		questionWords.clear();
+		for(String token: tokens) {questionWords.add(token);}
 		Cache cache = CacheManager.getInstance().getCache("examples");
-		{
-			Element e = cache.get(query);
-			if(e!=null) {return (List<Example>)e.getValue();}
-		}
+//		{
+//			Element e = cache.get(query);
+//			if(e!=null) {return (List<Example>)e.getValue();}
+//		}
 		try {
 			AutoSPARQLSession session = getAutoSPARQLSession();
 			List<Example> examples = session.getExamples(query);
@@ -94,7 +96,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	}
 	
 	private AutoSPARQLSession createAutoSPARQLSession(SPARQLEndpointEx endpoint){
-		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources");
+		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpedia(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources");
 		getHttpSession().setAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString(), session);
 		return session;
 	}
@@ -105,6 +107,12 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 			session = createAutoSPARQLSession(null);
 		}
 		return session;
+	}
+	
+	@Override
+	public List<Example> getExamplesByQTL(List<String> positives,List<String> negatives)
+	{
+		return getAutoSPARQLSession().getExamplesByQTL(positives, negatives,questionWords);
 	}
 	
 	public static void main(String[] args) throws InvalidFileFormatException, FileNotFoundException, IOException, NoTemplateFoundException {

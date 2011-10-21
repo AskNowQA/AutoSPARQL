@@ -131,7 +131,7 @@ public class SolrSearch implements Search
 			{
 				uri = (String) d.get("uri");
 				label = (String) d.get("label");
-				imageURL = (String) d.get("imageURL");
+				imageURL = (String) d.get("imageURL").toString();
 				comment = (String) d.get("comment");
 				Example example = new Example(uri, label, imageURL, comment);
 				example.set("origin","SolrSearch");

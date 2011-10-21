@@ -40,7 +40,7 @@ public class ImageCellRenderer implements GridCellRenderer<Example>{
 			ListStore<Example> store, Grid<Example> grid) {
 
 		String imageURL = model.getImageURL();
-		if(imageURL.isEmpty()){
+		if(image==null||imageURL.isEmpty()){
 			return null;
 		} else {
 			image = new Image(imageURL);

@@ -17,7 +17,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- convenience to define GWT version in one place -->
 		<gwt.version>2.3.0</gwt.version>
-		<gxt.version>2.2.3</gxt.version>
+		<gxt.version>2.2.5</gxt.version>
 
 		<!--Define the AKSW dependency version -->
 		<aksw.version>0.2-SNAPSHOT</aksw.version>

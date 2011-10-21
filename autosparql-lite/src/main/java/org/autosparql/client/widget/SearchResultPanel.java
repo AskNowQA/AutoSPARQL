@@ -1,10 +1,14 @@
 package org.autosparql.client.widget;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.autosparql.client.Application;
+import org.autosparql.client.AutoSPARQLService;
+import org.autosparql.client.AutoSPARQLServiceAsync;
 import org.autosparql.shared.Example;
 
 import com.extjs.gxt.ui.client.Style.Orientation;
@@ -19,16 +23,17 @@ import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.grid.BufferView;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.Grid;
 import com.extjs.gxt.ui.client.widget.grid.GridViewConfig;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SearchResultPanel extends ContentPanel
 {
+	AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
 	private static final Set defaultProperties = defaultProperties();
 
 	private static Set defaultProperties()
@@ -82,7 +87,7 @@ public class SearchResultPanel extends ContentPanel
 
 		setBottomComponent(new Button("bottom"));
 
-		toolbar = new PagingToolBar(5);
+		toolbar = new PagingToolBar(10);
 		setTopComponent(toolbar);
 
 		//grid.setAutoHeight(true);
@@ -90,6 +95,7 @@ public class SearchResultPanel extends ContentPanel
 
 	public void markPositive(Example e)
 	{
+		negatives.remove(e);
 		grid.getView().refresh(true);
 		positives.add(e.getURI());
 		updateRowStyle();
@@ -97,6 +103,7 @@ public class SearchResultPanel extends ContentPanel
 
 	public void markNegative(Example e)
 	{
+		positives.remove(e);
 		negatives.add(e.getURI());
 		if(gridStore!=null) {gridStore.remove(e);}
 		//Window.alert("removing "+e);
@@ -128,6 +135,8 @@ public class SearchResultPanel extends ContentPanel
 		{
 			if(defaultProperties.contains(property)) {continue;}
 			ColumnConfig config = new ColumnConfig(property,property,100);
+			if(property.contains("image")) {config.setRenderer(new ImageCellRenderer(100,100));}
+
 			columnConfigs.add(config);
 		}
 
@@ -201,6 +210,31 @@ public class SearchResultPanel extends ContentPanel
 		
 		add(grid);
 		layout();
+	}
+
+	public void learn()
+	{
+		final WaitDialog waiting  = new WaitDialog("Learning the new examples");
+		waiting.show();
+		AsyncCallback<List<Example>> callback = new AsyncCallback<List<Example>>()
+		{
+			@Override
+			public void onSuccess(List<Example> examples)
+			{
+				//if(1==1)throw new RuntimeException(examples.toString());
+				setResult(examples);
+				waiting.hide();
+			}
+			
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				waiting.hide();
+				throw new RuntimeException(caught);				
+			}
+		};
+	
+		service.getExamplesByQTL(new ArrayList<String>(positives), new ArrayList<String>(negatives), callback);
 	}
 
 }

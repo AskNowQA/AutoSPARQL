@@ -12,8 +12,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface AutoSPARQLServiceAsync
 {
 	void getEndpoints(AsyncCallback<List<Endpoint>> callback);
-
 	void getExamples(String query, AsyncCallback<List<Example>> callback);
 	void getProperties(String query,AsyncCallback<Map<String, String>> callback);
 
+	void getExamplesByQTL(List<String> positives, List<String> negatives,AsyncCallback<List<Example>> callback);
 }

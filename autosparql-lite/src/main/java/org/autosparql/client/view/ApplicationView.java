@@ -7,13 +7,16 @@ import org.autosparql.client.widget.SearchResultPanel;
 import org.autosparql.shared.Example;
 
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
 import com.extjs.gxt.ui.client.mvc.View;
+import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Viewport;
+import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class ApplicationView extends View {
@@ -73,10 +76,24 @@ public class ApplicationView extends View {
 	//		viewport.add(north, new BorderLayoutData(LayoutRegion.NORTH));
 	//	}
 
-	private void createCenter() {
+	private void createCenter()
+	{
 		center = new SearchResultPanel();
 		//viewport.add(center.grid, new BorderLayoutData(LayoutRegion.CENTER));
 		viewport.add(center, new BorderLayoutData(LayoutRegion.CENTER));
+		HorizontalPanel buttonPanel = new HorizontalPanel();
+		viewport.add(buttonPanel, new BorderLayoutData(LayoutRegion.SOUTH));
+		Button learnButton = new Button("learn");
+		buttonPanel.add(learnButton);
+		learnButton.addSelectionListener(new SelectionListener<ButtonEvent>(
+				)
+				{		
+			@Override
+			public void componentSelected(ButtonEvent ce)
+			{
+				center.learn();
+			}
+				});
 	}
 
 	protected void handleEvent(AppEvent event) {

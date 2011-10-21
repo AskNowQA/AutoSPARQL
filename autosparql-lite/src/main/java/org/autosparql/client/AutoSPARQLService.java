@@ -31,4 +31,6 @@ public interface AutoSPARQLService extends RemoteService {
 	List<Example> getExamples(String query);
 
 	Map<String, String> getProperties(String query) throws AutoSPARQLException;
+
+	List<Example> getExamplesByQTL(List<String> positives,List<String> negatives);
 }
