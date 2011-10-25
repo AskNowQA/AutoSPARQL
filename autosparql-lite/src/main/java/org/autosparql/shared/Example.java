@@ -1,18 +1,15 @@
 package org.autosparql.shared;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.extjs.gxt.ui.client.core.FastMap;
-import com.extjs.gxt.ui.client.core.FastSet;
 import com.extjs.gxt.ui.client.data.BaseModel;
 import com.extjs.gxt.ui.client.data.NestedModelUtil;
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+import com.extjs.gxt.ui.client.data.RpcMap;
 
 /** Can hold more than just the properties with the get-methods (should include all triples for the resource).
  * @author originally by Lorenz Bühmann, extended by Konrad Höffner */
+
 public class Example extends BaseModel
 {
 	private static final long serialVersionUID = 6955538657940009581L;
@@ -34,6 +31,82 @@ public class Example extends BaseModel
 		return get("uri").hashCode();
 	}
 
+	// ** COPIED OVER FROM BASEMODEL AND BASEMODELDATA ********************************************************************************
+	  // copied over from BaseModelData in order to disable "allowNestedValues" (fields cannot be overridden)
+	  @SuppressWarnings({"unchecked", "rawtypes"})
+	  public <X> X get(String property) {
+	    if (allowNestedValues && NestedModelUtil.isNestedProperty(property)) {
+	      return (X) NestedModelUtil.getNestedValue(this, property);
+	    }
+	    if (map == null) {
+	      return null;
+	    }
+	    int start = property.indexOf("[");
+	    int end = property.indexOf("]");
+	    X obj = null;
+	    if (start > -1 && end > -1) {
+	      Object o = map.get(property.substring(0, start));
+	      String p = property.substring(start + 1, end);
+	      if (o instanceof Object[]) {
+	        obj = (X) ((Object[]) o)[Integer.valueOf(p)];
+	      } else if (o instanceof List) {
+	        obj = (X) ((List) o).get(Integer.valueOf(p));
+	      } else if (o instanceof Map) {
+	        obj = (X) ((Map) o).get(p);
+	      }
+	    } else {
+	      obj = (X) map.get(property);
+	    }
+	    return obj;
+	  }
+	  
+	  // copied from BaseModel
+	  @Override
+	  public <X> X set(String name, X value) {
+	    X oldValue = setFromBaseModelData(name, value);
+	    notifyPropertyChanged(name, value, oldValue);
+	    return oldValue;
+	  }
+	  
+	  @SuppressWarnings({"unchecked", "rawtypes"})
+	  public <X> X setFromBaseModelData(String property, X value) {
+	    if (allowNestedValues && NestedModelUtil.isNestedProperty(property)) {
+	      return (X) NestedModelUtil.setNestedValue(this, property, value);
+	    }
+	    if (map == null) {
+	      map = new RpcMap();
+	    }
+
+	    int start = property.indexOf("[");
+	    int end = property.indexOf("]");
+
+	    if (start > -1 && end > -1) {
+	      Object o = get(property.substring(0, start));
+	      String p = property.substring(start + 1, end);
+	      if (o instanceof Object[]) {
+	        int i = Integer.valueOf(p);
+	        Object[] oa = (Object[]) o;
+	        X old = (X) oa[i];
+	        oa[i] = value;
+	        return old;
+	      } else if (o instanceof List) {
+	        int i = Integer.valueOf(p);
+	        List list = (List) o;
+	        return (X) list.set(i, value);
+	      } else if (o instanceof Map) {
+	        Map map = (Map) o;
+	        return (X) map.put(p, value);
+	      } else {
+	        // not supported
+	        return null;
+	      }
+	    } else {
+	      return (X) map.put(property, value);
+	    }
+	  }
+	// ** END COPIED OVER FROM BASEMODEL AND BASEMODELDATA ****************************************************************************
+
+	  
 	@Override
 	public boolean equals(Object o)
 	{
@@ -49,28 +122,16 @@ public class Example extends BaseModel
 	public Example(String uri, String label, String imageURL, String comment)
 	{
 		set("uri", uri);
-		set("label", label);
+		set(LABEL, label);
 		set(IMAGE_URL, imageURL);
 		set(COMMENT, comment);
 	}
 
-	// dots trigger nested properties which we don't want, thus escape them
-	protected static final String ESCAPED_DOT = "###DOT###";
 
-	@Override
-	public <X> X get(String property) {
-		return super.get(property.replace(".", ESCAPED_DOT));
-	}
-
-	@Override
-	public <X> X set(String name, X value)
+	public Example(String uri)
 	{
-		name = name.replace(".", ESCAPED_DOT);
-		X oldValue = super.set(name, value);
-		notifyPropertyChanged(name, value, oldValue);
-		return oldValue;
+		set("uri",uri);
 	}
-	// --------------------------------------------------
 
 	public String getURI(){
 		return (String)get("uri");
@@ -88,25 +149,6 @@ public class Example extends BaseModel
 	public String getComment(){
 		return (String)get(COMMENT);
 	}
-
-	@Override
-	public Collection<String> getPropertyNames() {
-		Set<String> set = new FastSet();
-		if (map != null) {
-			for(String key: map.keySet())
-			set.add(key.replace(ESCAPED_DOT,"."));
-		}
-		return set;
-	}
-	
-	  public Map<String, Object> getProperties() {
-		    Map<String, Object> newMap = new FastMap<Object>();
-		    if (map != null) {
-				for(String key: map.keySet()) {newMap.put(key.replace(ESCAPED_DOT,"."),map.get(key));}
-		      newMap.putAll(map.getTransientMap());
-		    }
-		    return newMap;
-		  }
 
 	@Override
 	public String toString() {

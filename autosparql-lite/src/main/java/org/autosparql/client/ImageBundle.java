@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011, SAIM team at the MOLE research
+ * Copyright (C) 2010, SAIM team at the MOLE research
  * group at AKSW / University of Leipzig
  *
  * This file is part of SAIM (Semi-Automatic Instance Matcher).
@@ -17,35 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.autosparql.client.widget;
+package org.autosparql.client;
 
-import org.autosparql.client.ImageBundle;
-
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /** @author Konrad Höffner */
-public class WaitDialog extends DialogBox
-{	
-	HTML html;
-	
-	public void setText(String text)
-	{
-		html.setHTML("<CENTER>"+text+"</CENTER>");
-	}
-	
-	public WaitDialog(String text)
-	{
-		FlowPanel panel = new FlowPanel();
-		this.setWidget(panel);
-		html = new HTML();
-		html.setText(text);
-		panel.add(html);
-		Image image = new Image(ImageBundle.INSTANCE.waiting());
-		image.setStyleName("center");
-		panel.add(image);	
-		this.center();
-	}
+public interface ImageBundle extends ClientBundle
+{
+	public static final ImageBundle INSTANCE = GWT.create(ImageBundle.class);
+
+	@Source("images/wait_animation_128.gif")
+	public ImageResource waiting();
 }

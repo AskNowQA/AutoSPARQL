@@ -9,6 +9,7 @@ import java.util.Set;
 import org.autosparql.client.Application;
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.AutoSPARQLServiceAsync;
+import org.autosparql.client.Transformer;
 import org.autosparql.shared.Example;
 
 import com.extjs.gxt.ui.client.Style.Orientation;
@@ -72,7 +73,7 @@ public class SearchResultPanel extends ContentPanel
 	{
 
 	}
-
+	
 	public SearchResultPanel()
 	{
 		setHeading("Result");
@@ -134,7 +135,7 @@ public class SearchResultPanel extends ContentPanel
 		for(String property: properties)
 		{
 			if(defaultProperties.contains(property)) {continue;}
-			ColumnConfig config = new ColumnConfig(property,property,100);
+			ColumnConfig config = new ColumnConfig(property,Transformer.displayProperty(property),100);
 			if(property.contains("image")) {config.setRenderer(new ImageCellRenderer(100,100));}
 
 			columnConfigs.add(config);

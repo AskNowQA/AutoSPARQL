@@ -60,7 +60,7 @@ public class ApplicationController extends Controller
 					appView.display(examples);
 					wait.hide();
 				}
-				
+			
 				@Override
 				public void onFailure(Throwable arg0)
 				{
