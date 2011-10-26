@@ -1,7 +1,10 @@
 package org.autosparql.server;
 
+import static org.junit.Assert.*;
+
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import org.autosparql.shared.Example;
@@ -11,6 +14,15 @@ import org.junit.Test;
 public class AutoSPARQLSessionTest
 {
 	static final AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources");
+	
+	@Test
+	public void testFillExamples()
+	{
+		LinkedList<Example> examples = new LinkedList<Example>(Arrays.asList(new Example[] {new Example("http://dbpedia.org/resource/Leipzig")}));
+		session.fillExamples(examples);
+		assertTrue(examples.getFirst().get("http://dbpedia.org/ontology/postalCode").equals("04001-04357@en"));
+		//System.out.println(examples.getFirst());
+	}
 	
 	@Test
 	public void testGetExamples()

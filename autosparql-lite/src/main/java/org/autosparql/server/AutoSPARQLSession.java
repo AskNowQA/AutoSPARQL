@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.aksw.commons.sparql.SPARQL;
 import org.apache.log4j.Logger;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
@@ -86,32 +89,35 @@ public class AutoSPARQLSession
 		String query = qtl.getBestSPARQLQuery();
 		// get all triples belonging to the subjects
 		query = query.replace("SELECT ?x0 WHERE {", "SELECT ?x0 ?p ?o WHERE {?x0 ?p ?o. ");
+		query = query.replace("?x0", "?s");
 		System.out.println(query);
 		try
 		{
 			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));
-			Map<String,Example> examples = new HashMap<String,Example>();
-			LanguageResolver resolver = new LanguageResolver();
-			for(QuerySolution qs=rs.next(); rs.hasNext();qs=rs.next())
-			{
-				String property = qs.getResource("p").getURI();
-				if(BlackList.dbpedia.contains(property)) {continue;}
-				String uri = qs.getResource("x0").getURI();
+			return fillExamples(null, rs);
 
-				Example e=examples.containsKey(uri)?examples.get(uri):new Example(uri);
-				examples.put(uri,e);
-
-				String object = qs.get("o").toString();
-		
-				String oldObject=e.get(property);
-				if(oldObject!=null)
-				{
-					e.set(property, resolver.resolve(oldObject, object));
-				}
-				
-				e.set(property,object.toString());
-			}
-			return new ArrayList<Example>(examples.values());
+			//			Map<String,Example> examples = new HashMap<String,Example>();
+//			LanguageResolver resolver = new LanguageResolver();
+//			for(QuerySolution qs=rs.next(); rs.hasNext();qs=rs.next())
+//			{
+//				String property = qs.getResource("p").getURI();
+//				if(BlackList.dbpedia.contains(property)) {continue;}
+//				String uri = qs.getResource("x0").getURI();
+//
+//				Example e=examples.containsKey(uri)?examples.get(uri):new Example(uri);
+//				examples.put(uri,e);
+//
+//				String object = qs.get("o").toString();
+//
+//				String oldObject=e.get(property);
+//				if(oldObject!=null)
+//				{
+//					e.set(property, resolver.resolve(oldObject, object));
+//				}
+//
+//				e.set(property,object.toString());
+//			}
+//			return new ArrayList<Example>(examples.values());
 		}
 		catch(Exception e)
 		{
@@ -144,6 +150,59 @@ public class AutoSPARQLSession
 		return resources;
 	}
 
+
+	/** @param examples the list of existing examples. if null a new one will be created. examples not contained will be created.
+	/** @param rs a resultset whose variables have to be "s", "p" and "o"
+	/** @return the original list if non-null (else a new one) filled with the properties and one object per property from the resultset.*/
+	public List<Example> fillExamples(List<Example> examples, ResultSet rs)
+	{
+		if(examples==null) {examples = new ArrayList<Example>();}
+		if(!rs.hasNext()) {return examples;}
+
+		LanguageResolver resolver = new LanguageResolver();
+		Map<String,Example> uriToExample = new HashMap<String,Example>();
+		for(Example example: examples) {uriToExample.put(example.getURI(), example);}
+		for(QuerySolution qs=rs.next();rs.hasNext();qs=rs.next())
+		{
+			String property = qs.getResource("p").getURI();
+			if(BlackList.dbpedia.contains(property)) {continue;}
+			String uri = qs.getResource("?s").getURI();
+
+			Example e=uriToExample.containsKey(uri)?uriToExample.get(uri):new Example(uri);
+			uriToExample.put(uri,e);
+
+			String object = qs.get("o").toString();
+
+			String oldObject=e.get(property);
+			if(oldObject!=null)
+			{
+				e.set(property, resolver.resolve(oldObject, object));
+			}
+
+			e.set(property,object.toString());
+		}
+		examples.addAll(uriToExample.values());
+		return examples;
+	}
+
+	/** Adds all existing properties for the uris in the examples and one object for each one (depending on the languages)
+	 * @param examples */
+	public void fillExamples(List<Example> examples)
+	{
+		List<String> uris = new LinkedList<String>();
+		for(Example example: examples)
+		{
+			uris.add(example.getURI());
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT * { ?s ?p ?o. FILTER(");
+		for(String uri:uris) {sb.append("?s = "+SPARQL.quoteOrNote(uri)+"||");}
+		// remove last "||"-substring
+		String query = sb.substring(0,sb.length()-2)+")}";
+		ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));
+		fillExamples(examples,rs);
+	}
+
 	public List<Example> getExamples(String query)
 	{
 		List<Example> examples = new ArrayList<Example>();
@@ -171,6 +230,7 @@ public class AutoSPARQLSession
 		//				}
 		//			}
 		//		}
+		fillExamples(examples);
 		if(examples.isEmpty()) {logger.warn("AutoSPARQLSession found no examples for query \""+query+"\". :-(");}
 		return examples;
 	}

@@ -1,12 +1,11 @@
 package org.autosparql.client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 public class TransformerTest
 {
-
 	@Test
 	public void testDisplayProperty()
 	{
@@ -19,5 +18,4 @@ public class TransformerTest
 		assertTrue(Transformer.displayObject("http://dbpedia.org/Hardcover").equals("Hardcover"));
 		assertTrue(Transformer.displayObject("First edition cover").equals("First edition cover"));
 	}
-
 }
