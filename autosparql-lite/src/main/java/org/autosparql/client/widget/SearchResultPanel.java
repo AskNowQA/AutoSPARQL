@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.autosparql.client.Application;
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.AutoSPARQLServiceAsync;
 import org.autosparql.client.Transformer;
@@ -24,6 +23,7 @@ import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.grid.BufferView;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.Grid;
@@ -119,13 +119,16 @@ public class SearchResultPanel extends ContentPanel
 		columnConfigs.add(buttonConfig);
 
 		//configs.add(new ColumnConfig("uri", "url", 200));
-		ColumnConfig labelConfig = new ColumnConfig("label", "label", 100);
+		ColumnConfig labelConfig = new ColumnConfig("http://www.w3.org/2000/01/rdf-schema#label", "label", 100);
 		labelConfig.setResizable(true);
 		columnConfigs.add(labelConfig);
 
-		ColumnConfig imageConfig = new ColumnConfig("imageURL", "imageURL", 100);
+		ColumnConfig imageConfig = new ColumnConfig("http://xmlns.com/foaf/0.1/depiction", "imageURLxyz", 100);
 		imageConfig.setRenderer(new ImageCellRenderer(100,100));
 		columnConfigs.add(imageConfig);
+		
+		ColumnConfig commentConfig = new ColumnConfig("http://www.w3.org/2000/01/rdf-schema#comment", "comment", 100);
+		columnConfigs.add(commentConfig);
 
 		Set<String> properties = new HashSet<String>();
 		for(Example example: examples)
@@ -141,8 +144,10 @@ public class SearchResultPanel extends ContentPanel
 			columnConfigs.add(config);
 		}
 
-		ColumnConfig commentConfig = new ColumnConfig("comment", "comment", 100);
-		columnConfigs.add(commentConfig);
+		// TODO: strange bug : it freezes when those two are not present. why?
+		ColumnConfig commentConfig2 = new ColumnConfig("comment", "comment", 100);
+		columnConfigs.add(commentConfig2);
+
 
 		return columnConfigs;
 	}
@@ -156,11 +161,11 @@ public class SearchResultPanel extends ContentPanel
 		gridStore = new ListStore<Example>(loader);
 		grid = new Grid<Example>(gridStore,new ColumnModel(columnConfigs(examples)));
 		grid.setHeight(1000);
-//		BufferView view = new BufferView();
+		BufferView view = new BufferView();
 //		view.ensureVisible(4, 0, false);
-//		view.setRowHeight(100);
+		view.setRowHeight(100);
 //		//view.setForceFit(true);
-//		grid.setView(view);
+		grid.setView(view);
 		loader.load();
 		
 		//		GridView view = grid.getView();

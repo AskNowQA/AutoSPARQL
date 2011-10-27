@@ -2,15 +2,19 @@ package org.autosparql.server;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 import org.aksw.commons.sparql.SPARQL;
 import org.apache.log4j.Logger;
@@ -29,7 +33,6 @@ import org.dllearner.kb.sparql.SparqlQuery;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /** @author Konrad Höffner */
@@ -45,6 +48,7 @@ public class AutoSPARQLSession
 	private final ExtractionDBCache selectCache;
 
 	public static final List<String> languages = Arrays.asList(new String[] {"de","en"});
+	String lastQuery = null;
 
 	// public AutoSPARQLSession(SPARQLEndpointEx endpoint, String cacheDir,
 	// String servletContextPath, String solrURL, QuestionProcessor
@@ -75,11 +79,16 @@ public class AutoSPARQLSession
 		secondarySearch = new SolrSearch(solrServerURL);
 	}
 
-
 	/** learns new examples and processes them by removing blacklisted properties and choosing the ideal language in case there are multiple candidates 
 	 * with different language tags for the same URI and property*/
 	public List<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
+		Cache cache = CacheManager.getInstance().getCache("qtl");
+		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
+		{
+			Element e;
+			if((e=cache.get(parameters))!=null) {return (List<Example>)e.getValue();}
+		}
 		QTL qtl = new QTL(endpoint, selectCache);
 		qtl.setExamples(positives, negatives);
 		if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
@@ -94,30 +103,34 @@ public class AutoSPARQLSession
 		try
 		{
 			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));
-			return fillExamples(null, rs);
+			List<Example> examples = fillExamples(null, rs);
+			cache.put(new Element(parameters,examples));
+			cache.flush();
+			return examples;
+
 
 			//			Map<String,Example> examples = new HashMap<String,Example>();
-//			LanguageResolver resolver = new LanguageResolver();
-//			for(QuerySolution qs=rs.next(); rs.hasNext();qs=rs.next())
-//			{
-//				String property = qs.getResource("p").getURI();
-//				if(BlackList.dbpedia.contains(property)) {continue;}
-//				String uri = qs.getResource("x0").getURI();
-//
-//				Example e=examples.containsKey(uri)?examples.get(uri):new Example(uri);
-//				examples.put(uri,e);
-//
-//				String object = qs.get("o").toString();
-//
-//				String oldObject=e.get(property);
-//				if(oldObject!=null)
-//				{
-//					e.set(property, resolver.resolve(oldObject, object));
-//				}
-//
-//				e.set(property,object.toString());
-//			}
-//			return new ArrayList<Example>(examples.values());
+			//			LanguageResolver resolver = new LanguageResolver();
+			//			for(QuerySolution qs=rs.next(); rs.hasNext();qs=rs.next())
+			//			{
+			//				String property = qs.getResource("p").getURI();
+			//				if(BlackList.dbpedia.contains(property)) {continue;}
+			//				String uri = qs.getResource("x0").getURI();
+			//
+			//				Example e=examples.containsKey(uri)?examples.get(uri):new Example(uri);
+			//				examples.put(uri,e);
+			//
+			//				String object = qs.get("o").toString();
+			//
+			//				String oldObject=e.get(property);
+			//				if(oldObject!=null)
+			//				{
+			//					e.set(property, resolver.resolve(oldObject, object));
+			//				}
+			//
+			//				e.set(property,object.toString());
+			//			}
+			//			return new ArrayList<Example>(examples.values());
 		}
 		catch(Exception e)
 		{
@@ -205,17 +218,25 @@ public class AutoSPARQLSession
 
 	public List<Example> getExamples(String query)
 	{
+		Cache cache = CacheManager.getInstance().getCache("examples");
+		// TODO: reactivate cache after it works (maybe serialisation of class Example is somehow wrong)
+		//		{
+		//			Element e;
+		//			if((e=cache.get(query))!=null) {System.out.println("cache hit with query \""+query+"\"");return (List<Example>)e.getValue();}
+		//			else{System.out.println("cache miss with query \""+query+"\"");}
+		//		}
 		List<Example> examples = new ArrayList<Example>();
 		// primary search DBpedia bzw. DBpedia live
-		//		examples = primarySearch.getExamples(query);
-		//		if (examples.isEmpty())
-		//		{
-		////			 fallback: string in solr index hauen und zurückgeben was da
-		////			 rauskommt
-		//			List<String> answerType = primarySearch.getLexicalAnswerType();
-		//			if(answerType==null)
-		//			{
+//				examples = primarySearch.getExamples(query);
+//				if (examples.isEmpty())
+//				{
+//		//			 fallback: string in solr index hauen und zurückgeben was da
+//		//			 rauskommt
+//					List<String> answerType = primarySearch.getLexicalAnswerType();
+//					if(answerType==null)
+//					{
 		examples = secondarySearch.getExamples(query);
+		lastQuery=query;
 		//			}
 		//			else
 		//			{
@@ -232,6 +253,9 @@ public class AutoSPARQLSession
 		//		}
 		fillExamples(examples);
 		if(examples.isEmpty()) {logger.warn("AutoSPARQLSession found no examples for query \""+query+"\". :-(");}
+		cache.put(new Element(query,examples));
+		cache.flush();
+
 		return examples;
 	}
 

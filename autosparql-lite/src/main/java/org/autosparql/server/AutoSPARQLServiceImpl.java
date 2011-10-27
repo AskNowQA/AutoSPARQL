@@ -75,16 +75,10 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		String[] tokens = query.split("\\s");
 		questionWords.clear();
 		for(String token: tokens) {questionWords.add(token);}
-		Cache cache = CacheManager.getInstance().getCache("examples");
-//		{
-//			Element e = cache.get(query);
-//			if(e!=null) {return (List<Example>)e.getValue();}
-//		}
+	
 		try {
 			AutoSPARQLSession session = getAutoSPARQLSession();
 			List<Example> examples = session.getExamples(query);
-			cache.put(new Element(query,examples));
-			cache.flush();
 			return examples;
 			}
 		catch (Exception e) {e.printStackTrace();}
