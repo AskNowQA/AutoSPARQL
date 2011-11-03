@@ -3,9 +3,11 @@ package org.autosparql.client.widget;
 import java.util.ArrayList;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -43,7 +45,7 @@ public class SearchResultPanel extends ContentPanel
 	AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
 	private static final Set<String> defaultProperties = defaultProperties();
 	private static final Logger log = Logger.getLogger(SearchResultPanel.class.toString());
-	
+
 	private static final Set<String> imageProperties = new HashSet<String>(Arrays.asList(new String[]
 			{
 			"http://dbpedia.org/ontology/thumbnail",
@@ -135,9 +137,9 @@ public class SearchResultPanel extends ContentPanel
 		columnConfigs.add(buttonConfig);
 
 		//configs.add(new ColumnConfig("uri", "url", 200));
-		ColumnConfig labelConfig = new ColumnConfig("http://www.w3.org/2000/01/rdf-schema#label", "label", 100);
+		ColumnConfig labelConfig = new ColumnConfig("http://www.w3.org/2000/01/rdf-schema#label", "label", 200);
 		labelConfig.setRenderer(new LabelRenderer());
-		labelConfig.setResizable(true);
+		//labelConfig.setResizable(true);
 		columnConfigs.add(labelConfig);
 
 		ColumnConfig imageConfig = new ColumnConfig("http://xmlns.com/foaf/0.1/depiction", "image", 100);
@@ -145,64 +147,88 @@ public class SearchResultPanel extends ContentPanel
 		columnConfigs.add(imageConfig);
 
 		ColumnConfig commentConfig = new ColumnConfig("http://www.w3.org/2000/01/rdf-schema#comment", "comment", 300);
+		commentConfig.setRenderer(new CommentRenderer());
 		columnConfigs.add(commentConfig);
-		
 
 		SortedSet<String> properties = new TreeSet<String>();
 		for(Example example: examples)
 		{	
 			properties.addAll(example.getProperties().keySet());
 		}
-		
+
+		// Remove rare properties ******************************************
+		Map<String,Integer> propertyCounts = new HashMap<String,Integer>();
 		for(String property: properties)
 		{
+			propertyCounts.put(property,0);
+		}
+		for(Example example: examples)
+		{
+			for(String property: example.getPropertyNames())
+			{
+				String object = example.get(property);
+				if(object!=null&&!object.isEmpty()) {propertyCounts.put(property,propertyCounts.get(property)+1);}
+			}
+		}
+		// remove all properties with occurrence < 0.5
+		List<String> initialProperties = new LinkedList<String>();
+		for(String property : properties)
+		{
+			if(propertyCounts.get(property)>examples.size()/2) {initialProperties.add(property);}
+		}
+		// End Remove rare properties ******************************************
+		log.info("Shrinked initial properties from "+properties.size()+" to "+initialProperties.size()+".");
+		for(String property: initialProperties)
+		{
 			if(defaultProperties.contains(property)) {continue;}
-			//if(imageProperties.contains(property)) {continue;}
-			ColumnConfig config = new ColumnConfig(property,Transformer.displayProperty(property),100);
+			if(imageProperties.contains(property)) {continue;}
+			ColumnConfig config = new ColumnConfig(property,Transformer.displayProperty(property),150);
+			config.setRenderer(new LiteralRenderer());
+
 			//if(property.contains("image")) {config.setRenderer(new ImageCellRenderer(100,100));}
 
 			columnConfigs.add(config);
 		}
-		
+
 		return columnConfigs;
 	}
 
 	private Grid<Example> createGrid(List<Example> examples)
 	{
 		//for(Example example: examples) if(!example.getURI().equals("http://dbpedia.org/resource/Digital_Fortress")) examples.remove(example);
-				log.info("Creating grid with examples: "+abbreviate(examples.toString(),100));
-				PagingModelMemoryProxy proxy = new PagingModelMemoryProxy(examples);
-				PagingLoader<PagingLoadResult<Example>> loader = new BasePagingLoader<PagingLoadResult<Example>>(proxy);
-				toolbar.bind(loader);	
-				gridStore = new ListStore<Example>(loader);
-				grid = new Grid<Example>(gridStore,new ColumnModel(columnConfigs(examples)));
-				grid.setHeight(1000);
-				BufferView view = new BufferView();
-				//		view.ensureVisible(4, 0, false);
-				view.setRowHeight(100);
-				//		//view.setForceFit(true);
-				grid.setView(view);
-				loader.load();
+		log.info("Creating grid with examples: "+abbreviate(examples.toString(),100));
+		PagingModelMemoryProxy proxy = new PagingModelMemoryProxy(examples);
+		PagingLoader<PagingLoadResult<Example>> loader = new BasePagingLoader<PagingLoadResult<Example>>(proxy);
+		toolbar.bind(loader);	
+		gridStore = new ListStore<Example>(loader);
+		grid = new Grid<Example>(gridStore,new ColumnModel(columnConfigs(examples)));
+		grid.setHeight(1000);
+		BufferView view = new BufferView();
+		//		view.ensureVisible(4, 0, false);
+		view.setRowHeight(100);
+		//		//view.setForceFit(true);
+		grid.setView(view);
+		loader.load();
 
-				//		GridView view = grid.getView();
-				//		view.setAutoFill(true);
-				//		//view.setForceFit(true);
-				//		grid.setColumnLines(true);
-				//		//grid.setColumnReordering(true);
-				//grid.setAutoExpandColumn("http://www.w3.org/2000/01/rdf-schema#comment");
-				//grid.setAutoHeight(true);
+		//		GridView view = grid.getView();
+		//		view.setAutoFill(true);
+		//		//view.setForceFit(true);
+		//		grid.setColumnLines(true);
+		//		//grid.setColumnReordering(true);
+		//grid.setAutoExpandColumn("http://www.w3.org/2000/01/rdf-schema#comment");
+		//grid.setAutoHeight(true);
 
-				//		grid.setAutoWidth(true);
-				//		grid.setColumnResize(true);
-				//		grid.setColumnLines(true);
-				//		grid.setColumnReordering(true);
-				//		//grid.setStripeRows(true);
-				//		//grid.setAutoExpandColumn("uri");
-				//		//grid.setAutoExpandColumn("label");
-				//		//grid.setAutoExpandColumn("imageURL");
-				updateRowStyle();
+		//		grid.setAutoWidth(true);
+		//		grid.setColumnResize(true);
+		//		grid.setColumnLines(true);
+		//		grid.setColumnReordering(true);
+		//		//grid.setStripeRows(true);
+		//		//grid.setAutoExpandColumn("uri");
+		//		//grid.setAutoExpandColumn("label");
+		//		//grid.setAutoExpandColumn("imageURL");
+		updateRowStyle();
 
-				return grid;
+		return grid;
 	}
 
 	private void updateRowStyle()

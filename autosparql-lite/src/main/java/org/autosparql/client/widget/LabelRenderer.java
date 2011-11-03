@@ -23,9 +23,10 @@ public class LabelRenderer implements GridCellRenderer<Example>
 	{	
 		//String imageURL = model.getImageURL();
 		String literal = model.get(property);
+		
 		// Remove language tag
 		if(!SHOW_LANGUAGE_TAG&&literal.contains("@")) {literal = literal.substring(0,literal.lastIndexOf('@'));}
-		literal = "<a href=\""+model.getURI().replace("dbpedia.org/resource/","en.wikipedia.org/wiki/")+"\">"+literal+"</a>";
+		literal = "<a target=\"_blank\" href=\""+model.getURI().replace("dbpedia.org/resource/","en.wikipedia.org/wiki/")+"\">"+literal+"</a>";
 		return new HTML(literal);
 	}
 }

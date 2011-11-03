@@ -12,11 +12,11 @@ import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 
-public class LiteralRenderer implements GridCellRenderer<Example>
+public class CommentRenderer implements GridCellRenderer<Example>
 {
 	static final boolean SHOW_LANGUAGE_TAG = false;
-
-	public LiteralRenderer()
+	
+	public CommentRenderer()
 	{
 
 	}
@@ -25,21 +25,10 @@ public class LiteralRenderer implements GridCellRenderer<Example>
 	public Object render(Example model, String property, ColumnData config, int rowIndex, int colIndex,
 			ListStore<Example> store, Grid<Example> grid)
 	{	
-		//String imageURL = model.getImageURL();
 		String literal = model.get(property);
-		if(literal==null) {return null;}
-		if(literal.startsWith("http://dbpedia.org/resource/"))
-		{
-			String link = literal.replace("http://dbpedia.org/resource/", "http://en.wikipedia.org/wiki/");
-			String show = literal.replace("http://dbpedia.org/resource/", "").replace("_"," "); 
-			literal= "<a target=\"_blank\" href=\""+link+"\">"+show+"</a>";	
-		}
 		// Remove language tag
-		else
-		{
-			if(!SHOW_LANGUAGE_TAG&&literal.contains("@")) {literal = literal.substring(0,literal.lastIndexOf('@'));}
-			literal = StringUtils.abbreviate(literal,200);
-		}
+		if(!SHOW_LANGUAGE_TAG&&literal.contains("@")) {literal = literal.substring(0,literal.lastIndexOf('@'));}
+		literal = StringUtils.abbreviate(literal,200);
 		return new HTML(literal);
 	}
 }

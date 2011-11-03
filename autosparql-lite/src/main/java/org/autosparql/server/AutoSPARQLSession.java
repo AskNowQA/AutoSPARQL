@@ -195,6 +195,7 @@ public class AutoSPARQLSession
 			e.set(property,object.toString());
 		}
 		examples.addAll(uriToExample.values());
+		
 		return examples;
 	}
 
@@ -208,7 +209,7 @@ public class AutoSPARQLSession
 			uris.add(example.getURI());
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT * { ?s ?p ?o. FILTER(");
+		sb.append("SELECT * from <http://dbpedia.org> { ?s ?p ?o. FILTER(");
 		for(String uri:uris) {sb.append("?s = "+SPARQL.quoteOrNote(uri)+"||");}
 		// remove last "||"-substring
 		String query = sb.substring(0,sb.length()-2)+")}";
