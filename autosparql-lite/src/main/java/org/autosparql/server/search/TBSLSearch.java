@@ -109,7 +109,7 @@ public class TBSLSearch implements Search
 		}
 		try
 		{
-			System.out.println(learnedQuery);
+			logger.info("Learned Query by TBSL: "+learnedQuery);
 			
 			learnedQuery = learnedQuery.replace("WHERE {","WHERE {?y ?p1 ?y0. ");
 

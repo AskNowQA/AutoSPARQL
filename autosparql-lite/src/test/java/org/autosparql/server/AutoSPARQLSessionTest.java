@@ -46,7 +46,6 @@ public class AutoSPARQLSessionTest
 		
 		Set<Example> examples = new HashSet<Example>(session.getExamplesByQTL(Arrays.asList(positives), Arrays.asList(negatives),new HashSet<String>(Arrays.asList(new String[] {"film","starring","Brad Pitt"}))));
 		//for(Example example: examples) System.out.println(example.getURI());
-		System.out.println(examples);
 	}
 
 }

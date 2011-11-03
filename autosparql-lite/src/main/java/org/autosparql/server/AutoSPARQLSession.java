@@ -99,7 +99,7 @@ public class AutoSPARQLSession
 		// get all triples belonging to the subjects
 		query = query.replace("SELECT ?x0 WHERE {", "SELECT ?x0 ?p ?o WHERE {?x0 ?p ?o. ");
 		query = query.replace("?x0", "?s");
-		System.out.println(query);
+
 		try
 		{
 			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));

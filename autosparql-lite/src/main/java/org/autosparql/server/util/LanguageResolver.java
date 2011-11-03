@@ -3,7 +3,8 @@ package org.autosparql.server.util;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
+import java.util.logging.Logger;
+import static org.autosparql.shared.StringUtils.*;
 import static org.autosparql.server.util.TieBreaker.TIEBREAKER;
 
 /** Resolves conflicts (chooses one) between objects of different language tags. Also implements the comparator interface (rating the chosen one smaller).
@@ -17,6 +18,7 @@ import static org.autosparql.server.util.TieBreaker.TIEBREAKER;
  * */
 public class LanguageResolver implements Comparator<String>
 {
+	Logger log = Logger.getLogger(LanguageResolver.class.toString());
 	public static 	final List<String> DEFAULT_LANGUAGES = Arrays.asList(new String[] {"de","en"});
 	public 			final List<String> languages;
 	public final Comparator<String> tiebreaker;
@@ -28,10 +30,12 @@ public class LanguageResolver implements Comparator<String>
 		this.languages = languages;
 		tiebreaker = TIEBREAKER;
 	}
-
+	
 	public String resolve(String s,String t)
 	{
-		return compare(s,t)==-1?s:t;
+		String result = compare(s,t)==-1?s:t;
+	//	log.info("LanguageResolver comparing \""+abbreviate(s)+"\" and \""+abbreviate(t)+"\". Choosing "+abbreviate(result));
+		return result;
 	}
 
 	/** returns -1 if <tt>s</tt> has the better language tag then <tt>t</tt>, 1 if it is the other way around.

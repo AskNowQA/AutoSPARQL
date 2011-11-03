@@ -90,7 +90,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	}
 	
 	private AutoSPARQLSession createAutoSPARQLSession(SPARQLEndpointEx endpoint){
-		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpedia(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources");
+		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources");
 		getHttpSession().setAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString(), session);
 		return session;
 	}

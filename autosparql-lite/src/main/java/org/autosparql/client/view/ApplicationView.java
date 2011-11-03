@@ -43,7 +43,6 @@ public class ApplicationView extends View {
 			//if(RootPanel.get("gwt-table")!=null) {RootPanel.get("gwt-table").clear();}
 			return;
 		}
-		System.out.println("displaying "+examples);
 		if(center==null) {createCenter();RootPanel.get("gwt-table").add(viewport);}
 		//		for(Example example: examples)
 		//		center.gridStore.add(example);

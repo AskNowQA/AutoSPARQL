@@ -17,5 +17,6 @@ public class BlackList
 "http://dbpedia.org/property/lonDeg",
 "http://dbpedia.org/property/lonMin",
 "http://dbpedia.org/property/lonSec",
+"http://dbpedia.org/ontology/abstract" // too long for autosparql
 			}));
 }

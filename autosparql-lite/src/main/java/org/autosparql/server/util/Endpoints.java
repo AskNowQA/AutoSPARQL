@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -15,8 +16,9 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 
-public class Endpoints {
-	
+public class Endpoints
+{
+	static private Logger log = Logger.getLogger(Endpoints.class.toString());
 	
 	public static List<SPARQLEndpointEx> loadEndpoints(String configPath){
 		List<SPARQLEndpointEx> endpoints = new ArrayList<SPARQLEndpointEx>();
@@ -48,13 +50,12 @@ public class Endpoints {
 			List<String> predicateFilters = endpointConf.getList("predicateFilters.predicate");
 			
 			return new SPARQLEndpointEx(url, Collections.singletonList(defaultGraphURI), namedGraphURIs, label, prefix, new HashSet<String>(predicateFilters));
-		} catch (MalformedURLException e) {
-			System.err.println("Could not parse URL from SPARQL endpoint.");
+		} catch (MalformedURLException e)
+		{
+			log.warning("Could not parse URL from SPARQL endpoint.");
 			e.printStackTrace();
 		}
-		return null;
-	
+		return null;	
 	}
 	
 }
-
