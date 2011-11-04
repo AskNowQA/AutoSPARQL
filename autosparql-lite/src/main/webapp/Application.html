@@ -15,7 +15,7 @@
 
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 
- 	<link rel="stylesheet" href="css/style.css">
+ 	<!-- <link rel="stylesheet" href="css/style.css"> -->
    <link type="text/css" rel="stylesheet" href="gxt/css/gxt-all.css">
      <link type="text/css" rel="stylesheet" href="Application.css">
  
@@ -27,7 +27,8 @@
 
 <div id="container">
 	<header>
-	<h1>AutoSPARQL Lite </h1>
+	<h1>AutoSPARQL TBSL</h1>
+
 <!--  	<h1>AutoSPARQL  <i>&#x2605;</i> Lite </h1>-->
 
 	</header>
@@ -43,7 +44,7 @@
 <form style="text-align:center">
 <!-- code server is only for hosted mode in development -->
   <input type="hidden" name="gwt.codesvr" value="127.0.0.1:9997" /> 
-  <input type="search" name="query" placeholder="Enter your query" autofocus required>
+  <input type="search" name="query" size="50" placeholder="Enter your query" autofocus required>
   <label for="use_dbpedia_live">use DBpedia Live</label>
   <input type="checkbox" id="use_dbpedia_live"/>
 <!--  <input type="input"  name="endpoint" list="endpoints" value="on DBpedia" readonly="readonly">
@@ -67,6 +68,24 @@
 </div> <!--! end of #main -->
 
 <footer>
+</br>
+<div style="float:left;width:25%;text-align:center;"><a href="http://dbpedia.org"><img src="img/dbpedia_logo.svg" width="150"></a></div>
+<div style="float:left;width:25%;text-align:center;"><a href="http://dl-learner.org"><img src="img/dl_learner_logo.gif" width="150"></a></div>
+<div style="float:left;width:25%;text-align:center;"><a href="http://aksw.org"><img src="img/aksw_logo.svg" width="150"></a></div>
+<div style="float:left;width:25%;text-align:center;"><a href="http://www.cit-ec.de"><img src="img/citec_logo.gif"></a></div>
+<div style="float:clear;">&nbsp;</div>
+</br>
+powered by DL-Learner question answering engine and the DBpedia knowledge base
+</br>
+<a href="http://www.sc.cit-ec.uni-bielefeld.de/people/cunger">Christina Unger</a>,
+<a href="http://bis.informatik.uni-leipzig.de/LorenzBuehmann">Lorenz Bühmann</a>,
+<a href="http://www.jens-lehmann.org/">Jens Lehmann</a>,
+<a href="http://konradhoeffner.de">Konrad Höffner</a>,
+<a href="http://bis.uni-leipzig.de/AxelNgonga">Axel-Cyrill Ngonga Ngomo</a>,
+<a href="http://www.informatik.uni-trier.de/~ley/db/indices/a-tree/g/Gerber:Daniel.html">Daniel Gerber</a> and
+<a href="http://www.cimiano.de">Philipp Cimiano</a>
+
+
 </footer>
 </div> <!--! end of #container -->
 

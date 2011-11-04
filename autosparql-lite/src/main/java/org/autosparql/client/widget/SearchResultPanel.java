@@ -18,6 +18,7 @@ import org.autosparql.client.AutoSPARQLServiceAsync;
 import org.autosparql.client.Transformer;
 import org.autosparql.shared.Example;
 
+import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.Orientation;
 import com.extjs.gxt.ui.client.core.FastSet;
 import com.extjs.gxt.ui.client.data.BasePagingLoader;
@@ -132,7 +133,8 @@ public class SearchResultPanel extends ContentPanel
 		log.info("Creating column configs");
 		List<ColumnConfig> columnConfigs = new LinkedList<ColumnConfig>();
 
-		ColumnConfig buttonConfig = new ColumnConfig("button", "", 35);
+		ColumnConfig buttonConfig = new ColumnConfig("button", "", 55);
+		buttonConfig.setAlignment(HorizontalAlignment.LEFT);
 		buttonConfig.setRenderer(new PlusMinusButtonCellRender(this));
 		columnConfigs.add(buttonConfig);
 

@@ -21,13 +21,22 @@ package org.autosparql.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 /** @author Konrad Höffner */
-public interface ImageBundle extends ClientBundle
+@SuppressWarnings("deprecation")
+public interface ImageBundle extends ClientBundle//com.google.gwt.user.client.ui.ImageBundle
 {
 	public static final ImageBundle INSTANCE = GWT.create(ImageBundle.class);
 
+	@Source("images/yes_crystal_clear_32.png")
+	public ImageResource yes();	
+//
+	@Source("images/no_crystal_clear_32.png")
+	public ImageResource no();	
+
 	@Source("images/wait_animation_128.gif")
-	public ImageResource waiting();
+	public ImageResource waiting();	
 }

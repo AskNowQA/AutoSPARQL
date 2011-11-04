@@ -1,5 +1,8 @@
 /** Add css rules here for your application. */
 
+.icon-yes { background: url(img/yes.svg) no-repeat center center; background-size:1.5em;}
+.icon-no  { background: url(img/no.svg) no-repeat center center; background-size:1.5em;}
+
 /** grid rows now wrap around text (default is "white-space: nowrap;") **/
 
 .row-Style-Odd {
@@ -35,9 +38,9 @@
  font-size: 10pt; !important	
 }
 
-h1, h2, h3 { text-align: left;}
+h1, h2, h3 { text-align: center;}
 
-h1 { font-size: 5em; cursor: default; color: #ffaa00; }
+h1 { font-size: 4em; cursor: default; color: #ffaa00; }
 h1:hover { color: #ffcc00; }
 
 .example {width: 18em;display:inline-block}
@@ -81,3 +84,8 @@ input
     vertical-align: middle;
 }
 
+footer
+{
+	text-align:center;
+	color:grey;
+}

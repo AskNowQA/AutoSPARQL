@@ -59,7 +59,7 @@ public class ImageCellRenderer implements GridCellRenderer<Example>{
 			containsImage = true;
 			break;
 		}
-		if(!containsImage){return new HTML("No image");}
+		if(!containsImage){return new HTML("");}//{return new HTML("No image");}
 //		if(image==null){return new HTML("Error rendering URL <br/>\""+imageURL+"\"");}
 
 		log.info("rendering "+imageURL);

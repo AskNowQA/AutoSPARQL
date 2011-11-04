@@ -1,18 +1,22 @@
 package org.autosparql.client.widget;
 
+import org.autosparql.client.ImageBundle;
 import org.autosparql.shared.Example;
 
 import com.extjs.gxt.ui.client.Style.Orientation;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.grid.ColumnData;
 import com.extjs.gxt.ui.client.widget.grid.Grid;
 import com.extjs.gxt.ui.client.widget.grid.GridCellRenderer;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.extjs.gxt.ui.client.widget.layout.RowData;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 public class PlusMinusButtonCellRender implements GridCellRenderer<Example>
 {
@@ -30,16 +34,18 @@ public class PlusMinusButtonCellRender implements GridCellRenderer<Example>
 			final ListStore<Example> store, Grid<Example> grid) {
 		
 		LayoutContainer p = new LayoutContainer(new RowLayout(Orientation.VERTICAL));
-
+	
 		p.setLayoutData(new FitLayout());
-		p.setSize("2.5em", "4.2em");
+		//p.setSize("2.5em", "4.2em");
 		Button[] buttons = new Button[2];		
 		for(int i=0;i<buttons.length;i++)
 		{
 			final Button button = (buttons[i] = new Button());
-			button.setSize("2em","2em");
-			p.add(button);
-			button.setText(i==0?"+":"&ndash;");
+			button.setSize("35px","35px");
+			
+			p.add(button,new RowData(-1,-1,new Margins(5)));
+			button.setIcon(AbstractImagePrototype.create(i==0?ImageBundle.INSTANCE.yes():ImageBundle.INSTANCE.no()));
+			//button.setIconStyle("img/icon-yes.svg");
 			final int iCopy = i;
 			button.addSelectionListener(new SelectionListener<ButtonEvent>() {
 				@Override

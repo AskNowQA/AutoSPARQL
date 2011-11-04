@@ -34,6 +34,10 @@ public class LiteralRenderer implements GridCellRenderer<Example>
 			String show = literal.replace("http://dbpedia.org/resource/", "").replace("_"," "); 
 			literal= "<a target=\"_blank\" href=\""+link+"\">"+show+"</a>";	
 		}
+		else if(literal.contains("^^"))
+		{
+			// datatype property
+		}
 		// Remove language tag
 		else
 		{
