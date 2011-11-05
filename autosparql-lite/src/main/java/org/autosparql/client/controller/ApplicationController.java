@@ -1,5 +1,6 @@
 package org.autosparql.client.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -53,6 +54,7 @@ public class ApplicationController extends Controller
 		}
 		else
 		{
+			//appView.display(Collections.<Example>emptyList());
 			final WaitDialog wait = new WaitDialog("Creating table");
 			wait.show();
 			log.info("Getting initial examples...");
@@ -70,9 +72,11 @@ public class ApplicationController extends Controller
 				@Override
 				public void onFailure(Throwable arg0)
 				{
-					log.warning(arg0.getMessage());
+					log.severe(arg0.getMessage());
+					//log.severe(arg0.getCause().toString());
 					wait.hide();
 					com.google.gwt.user.client.Window.alert(arg0.getMessage());
+					
 					//appView.showError("could not get examples");
 					// TODO Auto-generated method stub
 					

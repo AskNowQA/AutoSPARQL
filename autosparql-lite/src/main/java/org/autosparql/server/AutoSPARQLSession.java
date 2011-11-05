@@ -16,7 +16,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.aksw.commons.sparql.SPARQL;
 import org.apache.log4j.Logger;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
@@ -30,6 +29,7 @@ import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
+import org.aksw.commons.sparql.SPARQL;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -228,9 +228,9 @@ public class AutoSPARQLSession
 		//		}
 		List<Example> examples = new ArrayList<Example>();
 		// primary search DBpedia bzw. DBpedia live
-//				examples = primarySearch.getExamples(query);
-//				if (examples.isEmpty())
-//				{
+				examples = primarySearch.getExamples(query);
+				if (examples.isEmpty())
+				{
 //		//			 fallback: string in solr index hauen und zurückgeben was da
 //		//			 rauskommt
 //					List<String> answerType = primarySearch.getLexicalAnswerType();
@@ -238,7 +238,7 @@ public class AutoSPARQLSession
 //					{
 		examples = secondarySearch.getExamples(query);
 		lastQuery=query;
-		//			}
+					}
 		//			else
 		//			{
 		//				List<String> types = secondarySearch.getTypes(answerType.get(0));

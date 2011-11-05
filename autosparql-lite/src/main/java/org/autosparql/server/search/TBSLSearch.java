@@ -11,9 +11,11 @@ import org.apache.log4j.Logger;
 import org.autosparql.shared.Example;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
+import org.dllearner.algorithm.tbsl.nlp.ApachePartOfSpeechTagger;
 import org.dllearner.algorithm.tbsl.sparql.Template;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Options;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -37,7 +39,7 @@ public class TBSLSearch implements Search
 		this.endpoint = endpoint;
 		try
 		{
-			tbsl = new SPARQLTemplateBasedLearner(this.getClass().getClassLoader().getResource(OPTIONS_FILE).getPath());
+			tbsl = new SPARQLTemplateBasedLearner(new Options(getClass().getClassLoader().getResource(OPTIONS_FILE)), new ApachePartOfSpeechTagger());
 		} catch (InvalidFileFormatException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
