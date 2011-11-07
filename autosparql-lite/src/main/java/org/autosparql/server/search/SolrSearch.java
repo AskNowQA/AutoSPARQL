@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -90,32 +92,32 @@ public class SolrSearch implements Search
 	}
 
 	@Override
-	public List<Example> getExamples(String query) {
+	public SortedSet<Example> getExamples(String query) {
 		return getExamples(query, LIMIT, OFFSET);
 	}
 
 	@Override
-	public List<Example> getExamples(String query, int limit) {
+	public SortedSet<Example> getExamples(String query, int limit) {
 		return getExamples(query, limit, OFFSET);
 	}
 
 	@Override
-	public List<Example> getExamples(String query, int limit, int offset)
+	public SortedSet<Example> getExamples(String query, int limit, int offset)
 	{
 		return getExamples(query,null,limit,offset);
 	}
 
-	public List<Example> getExamples(String query, String type) {
+	public SortedSet<Example> getExamples(String query, String type) {
 		return getExamples(query, type, LIMIT, OFFSET);
 	}
 
-	public List<Example> getExamples(String query, String type, int limit) {
+	public SortedSet<Example> getExamples(String query, String type, int limit) {
 		return getExamples(query, type, limit, OFFSET);
 	}
 
-	public List<Example> getExamples(String query, String type, int limit, int offset)
+	public SortedSet<Example> getExamples(String query, String type, int limit, int offset)
 	{
-		List<Example> examples = new ArrayList<Example>();
+		SortedSet<Example> examples = new TreeSet<Example>();
 		logger.info("Using SolrSearch.getExamples()");
 		SolrQuery q = (type==null)?new SolrQuery(buildQueryString(query)):new SolrQuery(buildQueryString(query, type));
 		q.setRows(limit);
@@ -145,13 +147,13 @@ public class SolrSearch implements Search
 			if(examples.isEmpty())
 			{
 				logger.warn("No query learned by SolrSearch with original query: "+query);
-				return Collections.<Example>emptyList();
+				return new TreeSet<Example>();
 			}
 		} catch (SolrServerException e) {
 			logger.error("SolrSearch.getExamples() with query "+query+"yielded the following exception:");
 			logger.error(e);
 			logger.error(Arrays.toString(e.getStackTrace()));
-			return Collections.<Example>emptyList();
+			return new TreeSet<Example>();
 		}
 		return examples;
 	}

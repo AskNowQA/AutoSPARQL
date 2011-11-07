@@ -13,11 +13,11 @@
   
   <servlet-mapping>
   	<servlet-name>AutoSPARQLService</servlet-name>
-  	<url-pattern>/Application/AutoSPARQLService</url-pattern>
+  	<url-pattern>/app/AutoSPARQLService</url-pattern>
   </servlet-mapping>
   
   <welcome-file-list>
-    <welcome-file>Application.html</welcome-file>
+    <welcome-file>index.html</welcome-file>
   </welcome-file-list>
 
 </web-app>

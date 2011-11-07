@@ -1,6 +1,7 @@
 package org.autosparql.client.widget;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.shared.Endpoint;
@@ -98,7 +99,7 @@ public class InputPanel extends LayoutContainer {
 	}
 	
 	private void onQuery(){
-		AutoSPARQLService.Util.getInstance().getExamples(queryField.getValue(), new AsyncCallback<List<Example>>() {
+		AutoSPARQLService.Util.getInstance().getExamples(queryField.getValue(), new AsyncCallback<SortedSet<Example>>() {
 
 			@Override
 			public void onFailure(Throwable arg0) {
@@ -107,7 +108,7 @@ public class InputPanel extends LayoutContainer {
 			}
 
 			@Override
-			public void onSuccess(List<Example> examples) {
+			public void onSuccess(SortedSet<Example> examples) {
 				for(Example ex : examples){
 					System.out.println(ex.getURI());
 				}

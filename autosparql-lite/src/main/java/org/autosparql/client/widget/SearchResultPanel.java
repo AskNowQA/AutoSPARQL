@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -62,6 +63,7 @@ public class SearchResultPanel extends ContentPanel
 	}
 
 	private static final boolean HIGHLIGHT_POSITIVES = true;
+	private static final double MIN_OCCURRENCE = 0.7;
 
 	public Grid<Example> grid = null;
 	ListStore<Example> gridStore = null;
@@ -71,6 +73,7 @@ public class SearchResultPanel extends ContentPanel
 
 	private final PagingToolBar toolbar;
 	private Button relearnButton = new Button("relearn");
+	private int newPositives = 0;
 
 	private SearchResultPanelSelectionListener listener = new SearchResultPanelSelectionListener();
 
@@ -104,7 +107,7 @@ public class SearchResultPanel extends ContentPanel
 		addButton(relearnButton );
 
 
-		toolbar = new PagingToolBar(5);
+		toolbar = new PagingToolBar(10);
 		setBottomComponent(toolbar);
 
 		//		setTopComponent(toolbar);
@@ -116,8 +119,12 @@ public class SearchResultPanel extends ContentPanel
 	{
 		negatives.remove(e);
 		grid.getView().refresh(true);
-		positives.add(e.getURI());
-		updateRowStyle();
+		if(!positives.contains(e))
+		{
+			newPositives++;
+			positives.add(e.getURI());
+			if(newPositives>1) {learn();} else {updateRowStyle();}
+		}
 	}
 
 	public void markNegative(Example e)
@@ -176,7 +183,7 @@ public class SearchResultPanel extends ContentPanel
 		List<String> initialProperties = new LinkedList<String>();
 		for(String property : properties)
 		{
-			if(propertyCounts.get(property)>examples.size()/2) {initialProperties.add(property);}
+			if(propertyCounts.get(property)>=examples.size()*MIN_OCCURRENCE) {initialProperties.add(property);}
 		}
 		// End Remove rare properties ******************************************
 		log.info("Shrinked initial properties from "+properties.size()+" to "+initialProperties.size()+".");
@@ -197,8 +204,9 @@ public class SearchResultPanel extends ContentPanel
 
 	private Grid<Example> createGrid(List<Example> examples)
 	{
+		//LinkedList<Example> examples = new LinkedList<Example>(examples1);
 		//for(Example example: examples) if(!example.getURI().equals("http://dbpedia.org/resource/Digital_Fortress")) examples.remove(example);
-		log.info("Creating grid with examples: "+abbreviate(examples.toString(),100));
+		log.info("Creating grid with examples: "+abbreviate(Example.getURIs(examples).toString(),100));
 		PagingModelMemoryProxy proxy = new PagingModelMemoryProxy(examples);
 		PagingLoader<PagingLoadResult<Example>> loader = new BasePagingLoader<PagingLoadResult<Example>>(proxy);
 		toolbar.bind(loader);	
@@ -264,13 +272,14 @@ public class SearchResultPanel extends ContentPanel
 	{
 		final WaitDialog waiting  = new WaitDialog("Updating the table");
 		waiting.show();
-		AsyncCallback<List<Example>> callback = new AsyncCallback<List<Example>>()
+		AsyncCallback<SortedSet<Example>> callback = new AsyncCallback<SortedSet<Example>>()
 				{
 			@Override
-			public void onSuccess(List<Example> examples)
+			public void onSuccess(SortedSet<Example> examples)
 			{
 				//if(1==1)throw new RuntimeException(examples.toString());
-				setResult(examples);
+				newPositives = 0;
+				setResult(new LinkedList<Example>(examples));
 				waiting.hide();
 			}
 

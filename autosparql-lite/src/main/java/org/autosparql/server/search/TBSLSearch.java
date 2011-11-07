@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 import org.autosparql.shared.Example;
@@ -80,18 +82,18 @@ public class TBSLSearch implements Search
 	}
 
 	@Override
-	public List<Example> getExamples(String query) {
+	public SortedSet<Example> getExamples(String query) {
 		return getExamples(query, LIMIT, OFFSET);
 	}
 
 	@Override
-	public List<Example> getExamples(String query, int limit) {
+	public SortedSet<Example> getExamples(String query, int limit) {
 		return getExamples(query, limit, OFFSET);
 	}
 
 	@Override
-	public List<Example> getExamples(String query, int limit, int offset) {
-		List<Example> examples = new ArrayList<Example>();
+	public SortedSet<Example> getExamples(String query, int limit, int offset) {
+		SortedSet<Example> examples = new TreeSet<Example>();
 		logger.info("Using TBSLSearch.getExamples() with query \""+query+"\"...");
 		tbsl.setEndpoint(endpoint);
 		if(!query.startsWith(QUERY_PREFIX)) {query=QUERY_PREFIX+query;}
@@ -106,16 +108,15 @@ public class TBSLSearch implements Search
 		if(learnedQuery==null)
 		{
 			logger.info("...unsuccessfully");
-			logger.warn("No query learned by TBSLSearch with original query: \""+query+"\". Thus, no examples could be found.");
-			return Collections.<Example>emptyList();
+			logger.warn("No query learned by TBSLSearch with original query: \""+query+"\" at endpoint "+endpoint+". Thus, no examples could be found.");
+			return new TreeSet<Example>();
 		}
 		try
 		{
 			logger.info("Learned Query by TBSL: "+learnedQuery);
 			
-			learnedQuery = learnedQuery.replace("WHERE {","WHERE {?y ?p1 ?y0. ");
-
-			learnedQuery = learnedQuery.replace("SELECT ?y","SELECT distinct *");
+//			learnedQuery = learnedQuery.replace("WHERE {","WHERE {?y ?p1 ?y0. ");
+//			learnedQuery = learnedQuery.replace("SELECT ?y","SELECT distinct *");
 			//learnedQuery =  learnedQuery.replace("SELECT ?y","SELECT *");
 			System.out.println(learnedQuery);
 			ResultSet rs = executeQuery(learnedQuery);
@@ -131,8 +132,9 @@ public class TBSLSearch implements Search
 				{
 					if(example!=null) {examples.add(example);}
 					example = new Example();
+					example.set("uri", uri);
 				}
-				example.set(qs.get("p1").toString(), qs.get("y0").toString());
+				//example.set(qs.get("p1").toString(), qs.get("y0").toString());
 				lastURI = uri;
 				
 //				Resource resource = qs.getResource(qs.varNames().next());
@@ -157,7 +159,7 @@ public class TBSLSearch implements Search
 			logger.info("...unsuccessfully");
 			e.printStackTrace();
 			logger.warn("TBSLSearch: Error was thrown by query: "+learnedQuery);
-			return Collections.<Example>emptyList();
+			return new TreeSet<Example>();
 		}
 		return examples;
 	}

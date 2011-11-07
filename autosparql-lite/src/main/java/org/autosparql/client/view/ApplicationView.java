@@ -1,28 +1,29 @@
 package org.autosparql.client.view;
 
-import java.util.List;
+import java.util.LinkedList;
+import java.util.SortedSet;
+import java.util.logging.Logger;
 
 import org.autosparql.client.AppEvents;
 import org.autosparql.client.widget.SearchResultPanel;
 import org.autosparql.shared.Example;
 
-import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
 import com.extjs.gxt.ui.client.mvc.View;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
-import com.extjs.gxt.ui.client.widget.Viewport;
+import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class ApplicationView extends View {
+public class ApplicationView extends View
+{
+private final Logger log = Logger.getLogger(ApplicationView.class.toString());
 
-
-	private Viewport viewport;
+	//private Viewport viewport;
+	private VerticalPanel panel = new VerticalPanel();
 	//	private InputPanel north;
 	private SearchResultPanel center = null;
 
@@ -36,24 +37,25 @@ public class ApplicationView extends View {
 		super.initialize();
 	}
 
-	public void display(List<Example> examples)
+	public void display(SortedSet<Example> examples)
 	{
 		if(examples==null||examples.isEmpty())
 		{
+			log.severe("No examples to display");
 			//if(RootPanel.get("gwt-table")!=null) {RootPanel.get("gwt-table").clear();}
 			return;
 		}
-		if(center==null) {createCenter();RootPanel.get("gwt-table").add(viewport);}
+		if(center==null) {createCenter();RootPanel.get("gwt-table").add(panel);}
 		//		for(Example example: examples)
 		//		center.gridStore.add(example);
-		center.setResult(examples);
+		center.setResult(new LinkedList<Example>(examples));
 		//Window.alert("display");
 	}
 
 	private void initUI()
 	{
-		viewport = new Viewport();
-		viewport.setLayout(new BorderLayout());
+//		viewport = new Viewport();
+//		viewport.setLayout(new BorderLayout());
 
 		//String query = com.google.gwt.user.client.Window.Location.getParameter("query");
 		//        if(query==null||query.isEmpty())
@@ -79,9 +81,12 @@ public class ApplicationView extends View {
 	{
 		center = new SearchResultPanel();
 		//viewport.add(center.grid, new BorderLayoutData(LayoutRegion.CENTER));
-		viewport.add(center, new BorderLayoutData(LayoutRegion.CENTER));
+		//viewport.add(center, new BorderLayoutData(LayoutRegion.CENTER));
+		panel.add(center);
+		
 		HorizontalPanel buttonPanel = new HorizontalPanel();
-		viewport.add(buttonPanel, new BorderLayoutData(LayoutRegion.SOUTH));
+		//viewport.add(buttonPanel, new BorderLayoutData(LayoutRegion.SOUTH));
+		panel.add(buttonPanel);
 		Button learnButton = new Button("learn");
 		buttonPanel.add(learnButton);
 		learnButton.addSelectionListener(new SelectionListener<ButtonEvent>(

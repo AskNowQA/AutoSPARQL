@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.autosparql.shared.Example;
 import org.dllearner.kb.sparql.SparqlEndpoint;
@@ -14,14 +16,15 @@ import org.junit.Test;
 
 public class AutoSPARQLSessionTest
 {
-	final AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpedia(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources");
+	final AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources");
 	
-	//@Test
+	@Test
 	public void testFillExamples()
 	{
-		LinkedList<Example> examples = new LinkedList<Example>(Arrays.asList(new Example[] {new Example("http://dbpedia.org/resource/Leipzig")}));
+		SortedSet<Example> examples = new TreeSet<Example>(Arrays.asList(new Example[] {new Example("http://dbpedia.org/resource/Leipzig")}));
 		session.fillExamples(examples);
-		assertTrue(examples.getFirst().get("http://dbpedia.org/ontology/postalCode").equals("04001-04357@en"));
+		System.out.println(examples);
+		assertTrue(examples.iterator().next().get("http://dbpedia.org/ontology/postalCode").equals("04001-04357@en"));
 		//System.out.println(examples.getFirst());
 	}
 	
@@ -29,12 +32,13 @@ public class AutoSPARQLSessionTest
 	public void testGetExamples()
 	{
 		//System.out.println(session.getExamples("European Union countries"));
-		List<Example> examples = session.getExamples("Books written by Dan Brown");
-		assertTrue(examples.contains(new Example("http://dbpedia.org/resource/Angels_&_Demons")));
+		SortedSet<Example> examples = session.getExamples("Books written by Dan Brown");
+		for(Example example: examples) System.out.println(example.getURI());
+		assertTrue(examples.contains(new Example("http://dbpedia.org/resource/Digital_Fortress")));
 		//for(Example example: examples) System.out.println(example.getURI());
 	}
 	
-	//@Test
+	@Test
 	public void testGetExamplesByQTL()
 	{
 //		String[] positives = {"http://dbpedia.org/resource/Angels_&_Demons","http://dbpedia.org/resource/Digital_Fortress"};
@@ -47,5 +51,4 @@ public class AutoSPARQLSessionTest
 		Set<Example> examples = new HashSet<Example>(session.getExamplesByQTL(Arrays.asList(positives), Arrays.asList(negatives),new HashSet<String>(Arrays.asList(new String[] {"film","starring","Brad Pitt"}))));
 		//for(Example example: examples) System.out.println(example.getURI());
 	}
-
 }

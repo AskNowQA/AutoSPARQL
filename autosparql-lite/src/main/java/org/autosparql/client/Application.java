@@ -18,10 +18,8 @@ public class Application implements EntryPoint {
 	public void onModuleLoad(){
 		GXT.setDefaultTheme(Theme.BLUE, true);
 		
-		AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
-		
 		Dispatcher dispatcher = Dispatcher.get();
-		dispatcher.addController(new ApplicationController(service));
+		dispatcher.addController(new ApplicationController());
 
 		Dispatcher.forwardEvent(AppEvents.Init);		
 

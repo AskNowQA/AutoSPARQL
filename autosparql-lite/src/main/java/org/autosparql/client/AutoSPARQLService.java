@@ -2,6 +2,7 @@ package org.autosparql.client;
 
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.shared.Endpoint;
@@ -28,9 +29,9 @@ public interface AutoSPARQLService extends RemoteService {
 	
 	List<Endpoint> getEndpoints();
 	
-	List<Example> getExamples(String query);
+	SortedSet<Example> getExamples(String query);
 
 	Map<String, String> getProperties(String query) throws AutoSPARQLException;
 
-	List<Example> getExamplesByQTL(List<String> positives,List<String> negatives);
+	SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives);
 }

@@ -1,16 +1,15 @@
 package org.autosparql.client.controller;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.SortedSet;
 import java.util.logging.Logger;
 
 import org.autosparql.client.AppEvents;
+import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.AutoSPARQLServiceAsync;
 import org.autosparql.client.view.ApplicationView;
 import org.autosparql.client.widget.ErrorDialog;
 import org.autosparql.client.widget.WaitDialog;
 import org.autosparql.shared.Example;
-import org.openjena.atlas.logging.Log;
 
 import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
@@ -19,13 +18,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class ApplicationController extends Controller
 {
-	final AutoSPARQLServiceAsync service;
 	private ApplicationView appView;
 	private Logger log = Logger.getLogger(ApplicationController.class.toString());
 
-	public ApplicationController(AutoSPARQLServiceAsync service)
+	public ApplicationController()
 	{
-		this.service = service;
 		registerEventTypes(AppEvents.Init);
 		registerEventTypes(AppEvents.Error);
 	}
@@ -47,7 +44,15 @@ public class ApplicationController extends Controller
 	
 	public void initialize()
 	{
+		
 		String query = com.google.gwt.user.client.Window.Location.getParameter("query");
+		boolean useDBpediaLive = com.google.gwt.user.client.Window.Location.getParameter("dbpedialive") == "on";
+		boolean useFastSearch = com.google.gwt.user.client.Window.Location.getParameter("fastsearch") == "on";
+
+		final AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
+		
+		//useDBpediaLive,useFastSearch
+		
 		if(query==null||query.isEmpty())
 		{
 			
@@ -58,13 +63,13 @@ public class ApplicationController extends Controller
 			final WaitDialog wait = new WaitDialog("Creating table");
 			wait.show();
 			log.info("Getting initial examples...");
-			service.getExamples(query, new AsyncCallback<List<Example>>() {				
+			service.getExamples(query, new AsyncCallback<SortedSet<Example>>() {				
 				@Override
-				public void onSuccess(List<Example> examples)
+				public void onSuccess(SortedSet<Example> examples)
 				{
 					//new Example("testuri", "testlabel", "testimageurl", "testcomment");
 					wait.hide();
-					log.info("successfully gotten the initial examples, displaying them now.");
+					log.info("successfully gotten "+examples.size()+" initial examples, displaying them now.");
 					appView.display(examples);
 					log.info("successfully displayed the initial examples");
 				}
@@ -72,7 +77,7 @@ public class ApplicationController extends Controller
 				@Override
 				public void onFailure(Throwable arg0)
 				{
-					log.severe(arg0.getMessage());
+					log.severe(arg0.getCause().getMessage());
 					//log.severe(arg0.getCause().toString());
 					wait.hide();
 					com.google.gwt.user.client.Window.alert(arg0.getMessage());

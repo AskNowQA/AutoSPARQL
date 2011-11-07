@@ -9,14 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
-
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
 
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
@@ -70,7 +67,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Example> getExamples(String query)
+	public SortedSet<Example> getExamples(String query)
 	{
 		String[] tokens = query.split("\\s");
 		questionWords.clear();
@@ -78,7 +75,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	
 		//try {
 			AutoSPARQLSession session = getAutoSPARQLSession();
-			List<Example> examples = session.getExamples(query);
+			SortedSet<Example> examples = session.getExamples(query);
 			return examples;
 		//	}
 		//catch (Exception e) {e.printStackTrace();}
@@ -104,7 +101,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	}
 	
 	@Override
-	public List<Example> getExamplesByQTL(List<String> positives,List<String> negatives)
+	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives)
 	{
 		return getAutoSPARQLSession().getExamplesByQTL(positives, negatives,questionWords);
 	}

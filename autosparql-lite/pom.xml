@@ -28,7 +28,6 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>gwt-maven-plugin</artifactId>
-						<version>2.1.0</version>
 						<executions>
 							<execution>
 								<configuration>
@@ -43,7 +42,7 @@
 						</executions>
 						<configuration>
 							<hostedWebapp>war</hostedWebapp>
-							<runTarget>org.autosparql.Application/index.html</runTarget>
+							<runTarget>org.autosparql/index.html</runTarget>
 							<modules>
 								<module>org.autosparql.Application_production</module>
 							</modules>
@@ -54,7 +53,76 @@
 				</plugins>
 			</build>
 		</profile>
+	<profile>
+			<id>hosted</id>
+			<activation>
+				<property>
+					<name>hosted</name>
+				</property>
+			</activation>
+			<build>
+		<!-- Generate compiled stuff in the folder used for developing mode -->
+	 	
+	  	<resources>
+                        <resource>
+                                <directory>src/main/java</directory>
+                                <includes>
+                                        <include>**/*.java</include>
+                                        <include>**/*.gwt.xml</include>
+                                </includes>
+                        </resource>
+                       <resource>
+          <directory>src/main/resources</directory>
+          <filtering>true</filtering>
+         </resource>
+        </resources>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<configuration>
+									<module>org.autosparql.Application</module>
+								</configuration>
+								<goals>
+									<goal>compile</goal>
+									<!-- <goal>generateAsync</goal> -->
+									<!--<goal>test</goal> -->
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<hostedWebapp>war</hostedWebapp>
+							<runTarget>index.html</runTarget>
+							<modules>
+								<module>org.autosparql.Application</module>
+							</modules>
+							<localWorkers>6</localWorkers>
+						</configuration>
 
+					</plugin>
+					 <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.0</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>exploded</goal>
+						</goals>
+					</execution>
+				</executions> 
+				 <configuration>
+					<hostedWebapp>${webappDirectory}</hostedWebapp>
+					<extraJvmArgs>-Xmx1024m</extraJvmArgs>
+					<webappDirectory>${webappDirectory}</webappDirectory>
+				</configuration>
+		 	</plugin> 
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 	
 	<repositories>
@@ -116,7 +184,7 @@
 	</dependencies>
 
 	<build>
-<!--<outputDirectory>war/WEB-INF/classes</outputDirectory>-->
+<outputDirectory>war/WEB-INF/classes</outputDirectory>
 		<!-- Generate compiled stuff in the folder used for developing mode -->
 	<!-- 	<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 	  	<resources>
@@ -163,8 +231,8 @@
 							</execution>
 						</executions>
 						<configuration>
-							<hostedWebapp>war</hostedWebapp>
-							<runTarget>org.autosparql.Application.html</runTarget>
+						<hostedWebapp>war</hostedWebapp>
+							<runTarget>org.autosparql/index.html</runTarget>
 							<modules>
 								<module>org.autosparql.Application</module>
 							</modules>

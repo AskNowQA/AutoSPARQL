@@ -1,7 +1,10 @@
 package org.autosparql.shared;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.extjs.gxt.ui.client.data.BaseModel;
 import com.extjs.gxt.ui.client.data.NestedModelUtil;
@@ -10,7 +13,7 @@ import com.extjs.gxt.ui.client.data.RpcMap;
 /** Can hold more than just the properties with the get-methods (should include all triples for the resource).
  * @author originally by Lorenz Bühmann, extended by Konrad Höffner */
 
-public class Example extends BaseModel
+public class Example extends BaseModel implements Comparable<Example>
 {
 	private static final long serialVersionUID = 6955538657940009581L;
 
@@ -26,6 +29,13 @@ public class Example extends BaseModel
 
 	public Example(){}
 
+	public static Collection<String> getURIs(Collection<Example> examples)
+	{
+		SortedSet<String> uris = new TreeSet<String>();
+		for(Example example: examples) {uris.add(example.getURI());}
+		return uris;
+	}
+	
 	@Override public int hashCode()
 	{
 		return get("uri").hashCode();
@@ -160,6 +170,12 @@ public class Example extends BaseModel
 			sb.append(',');
 		}
 		return sb.substring(0,sb.length()-1)+")";
+	}
+
+	@Override
+	public int compareTo(Example e)
+	{
+		return getURI().compareTo(e.getURI());
 	}
 
 }
