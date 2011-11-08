@@ -34,4 +34,8 @@ public interface AutoSPARQLService extends RemoteService {
 	Map<String, String> getProperties(String query) throws AutoSPARQLException;
 
 	SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives);
+	void setFastSearch(Boolean fastSearch);
+	void setUseDBpediaLive(Boolean useDBpediaLive);
+	
+	
 }

@@ -2,6 +2,7 @@ package org.autosparql.server.search;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -14,6 +15,7 @@ import org.autosparql.shared.Example;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
 import org.dllearner.algorithm.tbsl.nlp.ApachePartOfSpeechTagger;
+import org.dllearner.algorithm.tbsl.nlp.WordNet;
 import org.dllearner.algorithm.tbsl.sparql.Template;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.InvalidFileFormatException;
@@ -27,8 +29,10 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 public class TBSLSearch implements Search
 {
 	private static Logger logger = Logger.getLogger(TBSLSearch.class);
-	private static final String OPTIONS_FILE = "org/autosparql/server/tbsl.properties";
-
+	private final URL options = getClass().getClassLoader().getResource("tbsl/tbsl.properties");
+	//private final URL wordnet = getClass().getClassLoader().getResource("tbsl/wordnet_properties.xml").;
+	private final String wordnet = "tbsl/wordnet_properties.xml";
+	
 	private static final int LIMIT = 10;
 	private static final int OFFSET = 0;
 
@@ -37,11 +41,14 @@ public class TBSLSearch implements Search
 	private SPARQLTemplateBasedLearner tbsl;
 	private SparqlEndpoint endpoint;
 
-	public TBSLSearch(SparqlEndpoint endpoint){
+	public TBSLSearch(SparqlEndpoint endpoint, String cacheDir){
 		this.endpoint = endpoint;
+		System.out.println(options);
+		System.out.println(wordnet);
 		try
 		{
-			tbsl = new SPARQLTemplateBasedLearner(new Options(getClass().getClassLoader().getResource(OPTIONS_FILE)), new ApachePartOfSpeechTagger());
+			tbsl = new SPARQLTemplateBasedLearner(new Options(options), new ApachePartOfSpeechTagger(),
+					new WordNet(wordnet), cacheDir);
 		} catch (InvalidFileFormatException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {

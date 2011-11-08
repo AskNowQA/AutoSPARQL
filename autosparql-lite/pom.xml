@@ -9,7 +9,6 @@
 		<groupId>org.dllearner</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.dllearner</groupId>
 	<artifactId>autosparql-lite</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
@@ -25,6 +24,16 @@
 			</activation>
 			<build>
 				<plugins>
+					<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.0-beta-1</version>
+				<configuration>
+
+					<server>local</server>
+					<url>http://127.0.0.1:8080/manager</url>
+				</configuration>
+			</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>gwt-maven-plugin</artifactId>
@@ -62,7 +71,7 @@
 			</activation>
 			<build>
 		<!-- Generate compiled stuff in the folder used for developing mode -->
-	 	
+	 	<!-- 
 	  	<resources>
                         <resource>
                                 <directory>src/main/java</directory>
@@ -75,7 +84,7 @@
           <directory>src/main/resources</directory>
           <filtering>true</filtering>
          </resource>
-        </resources>
+        </resources>-->
 				<plugins>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
@@ -92,7 +101,7 @@
 								</goals>
 							</execution>
 						</executions>
-						<configuration>
+				<!-- 		<configuration>
 							<hostedWebapp>war</hostedWebapp>
 							<runTarget>index.html</runTarget>
 							<modules>
@@ -100,9 +109,9 @@
 							</modules>
 							<localWorkers>6</localWorkers>
 						</configuration>
-
+ -->
 					</plugin>
-					 <plugin>
+<!-- 					 <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.0</version>
@@ -119,7 +128,18 @@
 					<extraJvmArgs>-Xmx1024m</extraJvmArgs>
 					<webappDirectory>${webappDirectory}</webappDirectory>
 				</configuration>
-		 	</plugin> 
+		 	</plugin>  -->
+		 				<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.0-beta-1</version>
+				<configuration>
+
+					<server>local</server>
+					<url>http://127.0.0.1:8080/manager</url>
+				</configuration>
+			</plugin>
+		 	
 				</plugins>
 			</build>
 		</profile>
@@ -147,22 +167,25 @@
 	</properties>
 
 	<dependencies>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>2.3.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>2.3.0</version>
+      <scope>provided</scope>
+    </dependency>
+ 
 		<dependency>
 	<groupId>net.sf.ehcache</groupId>
 	<artifactId>ehcache</artifactId>
 	<version>2.4.5</version>
 	<type>pom</type>
 	</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-servlet</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-user</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -205,16 +228,7 @@
  -->
 		<plugins>
 	<!-- 	
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>tomcat-maven-plugin</artifactId>
-				<version>1.0-beta-1</version>
-				<configuration>
-
-					<server>local</server>
-					<url>http://127.0.0.1:8080/manager</url>
-				</configuration>
-			</plugin>
+		
  -->
 			<!-- GWT Maven Plugin -->
 	<plugin>

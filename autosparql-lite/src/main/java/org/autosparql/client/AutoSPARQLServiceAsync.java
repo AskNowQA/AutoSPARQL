@@ -17,4 +17,6 @@ public interface AutoSPARQLServiceAsync
 	void getProperties(String query,AsyncCallback<Map<String, String>> callback);
 
 	void getExamplesByQTL(List<String> positives, List<String> negatives,AsyncCallback<SortedSet<Example>> callback);
+	void setFastSearch(Boolean fastSearch, AsyncCallback<Void> callback);
+	void setUseDBpediaLive(Boolean useDBpediaLive, AsyncCallback<Void> callback);
 }

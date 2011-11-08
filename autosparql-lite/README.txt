@@ -20,3 +20,7 @@ grant codeBase "file:${catalina.base}/webapps/-"
 
 3. mkdir /var/lib/tomcat6/cache
 
+4. You need the directory /opt/wordnet/dict (which is a copy of src/main/resources/tbsl/dict).
+Alternatively modify your local copy of src/main/resources/tbsl/wordnet_properties.xml
+and change the following to an absolute path containing those files:
+<param name="dictionary_path" value="/opt/wordnet/dict"/> 

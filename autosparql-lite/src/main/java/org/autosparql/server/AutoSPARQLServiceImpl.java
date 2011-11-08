@@ -27,9 +27,13 @@ import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.InvalidFileFormatException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.hp.hpl.jena.tdb.sys.Session;
 
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService {
 	
+	/** */
+	private static final long serialVersionUID = 1;
+
 	enum SessionAttributes{AUTOSPARQL_SESSION}
 	
 	private Map<Endpoint, SPARQLEndpointEx> endpointsMap;
@@ -87,7 +91,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	}
 	
 	private AutoSPARQLSession createAutoSPARQLSession(SPARQLEndpointEx endpoint){
-		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources");
+		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources", getServletContext().getRealPath("cache"));
 		getHttpSession().setAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString(), session);
 		return session;
 	}
@@ -118,5 +122,17 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		return getAutoSPARQLSession().getProperties(query);
 	}
 
-	
+
+	@Override
+	public void setFastSearch(Boolean fastSearch)
+	{
+		getAutoSPARQLSession().setFastSearch(fastSearch);	
+	}
+
+
+	@Override
+	public void setUseDBpediaLive(Boolean useDBpediaLive)
+	{
+		getAutoSPARQLSession().setUseDBpediaLive(useDBpediaLive);	
+	}
 }

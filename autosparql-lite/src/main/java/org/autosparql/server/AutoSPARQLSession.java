@@ -101,12 +101,12 @@ public class AutoSPARQLSession
 		logger.info("setting fast search to "+fastSearch);
 	}
 
-	public AutoSPARQLSession(SparqlEndpoint endpoint, String solrServerURL)
+	public AutoSPARQLSession(SparqlEndpoint endpoint, String solrServerURL, String cacheDir)
 	{
 		this.endpoint= new SPARQLEndpointEx(endpoint,endpoint.toString(),null,Collections.<String>emptySet());
 		selectCache = new ExtractionDBCache(cacheDir + "/" + this.endpoint.getBaseURI()+ "/select-cache");
 
-		primarySearch = new TBSLSearch(endpoint);
+		primarySearch = new TBSLSearch(endpoint, cacheDir);
 		secondarySearch = new SolrSearch(solrServerURL);
 	}
 
