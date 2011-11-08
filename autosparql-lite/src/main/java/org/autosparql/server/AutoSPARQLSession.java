@@ -16,10 +16,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
-
 import org.apache.log4j.Logger;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
@@ -114,12 +110,12 @@ public class AutoSPARQLSession
 	 * with different language tags for the same URI and property*/
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
-		Cache cache = CacheManager.getInstance().getCache("qtl");
-		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
-		{
-			Element e;
-			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
-		}
+//		Cache cache = CacheManager.getInstance().getCache("qtl");
+//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
+//		{
+//			Element e;
+//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
+//		}
 		QTL qtl = new QTL(endpoint, selectCache);
 		qtl.setExamples(positives, negatives);
 		if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
@@ -135,8 +131,8 @@ public class AutoSPARQLSession
 		{
 			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));
 			SortedSet<Example> examples = fillExamples(null, rs);
-			cache.put(new Element(parameters,examples));
-			cache.flush();
+//			cache.put(new Element(parameters,examples));
+//			cache.flush();
 			return examples;
 
 
@@ -250,7 +246,7 @@ public class AutoSPARQLSession
 
 	public SortedSet<Example> getExamples(String query)
 	{
-		Cache cache = CacheManager.getInstance().getCache("examples");
+		//Cache cache = CacheManager.getInstance().getCache("examples");
 		// TODO: reactivate cache after it works (maybe serialisation of class Example is somehow wrong)
 		//		{
 		//			Element e;
@@ -285,8 +281,8 @@ public class AutoSPARQLSession
 		//		}
 		fillExamples(examples);
 		if(examples.isEmpty()) {logger.warn("AutoSPARQLSession found no examples for query \""+query+"\". :-(");}
-		cache.put(new Element(query,examples));
-		cache.flush();
+//		cache.put(new Element(query,examples));
+//		cache.flush();
 
 		return examples;
 	}
