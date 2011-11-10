@@ -46,9 +46,10 @@ public class ApplicationController extends Controller
 	{
 		
 		String query = com.google.gwt.user.client.Window.Location.getParameter("query");
-		boolean useDBpediaLive = com.google.gwt.user.client.Window.Location.getParameter("dbpedialive") == "on";
-		boolean fastSearch = com.google.gwt.user.client.Window.Location.getParameter("fastsearch") == "on";
-
+		boolean useDBpediaLive = com.google.gwt.user.client.Window.Location.getParameter("dbpedialive").equals("on");
+		boolean fastSearch = com.google.gwt.user.client.Window.Location.getParameter("fastsearch").equals("on");
+		log.info("dbpedia live: "+useDBpediaLive);
+		log.info("fastsearch: "+fastSearch);
 		final AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
 		
 		AsyncCallback<Void> callback = new AsyncCallback<Void>()

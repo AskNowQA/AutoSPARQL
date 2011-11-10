@@ -68,10 +68,10 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		return new ArrayList<Endpoint>(endpointsMap.keySet());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public SortedSet<Example> getExamples(String query)
 	{
+
 		String[] tokens = query.split("\\s");
 		questionWords.clear();
 		for(String token: tokens) {questionWords.add(token);}

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.autosparql.server.AutoSPARQLServiceImpl;
 import org.autosparql.server.AutoSPARQLSession;
 import org.autosparql.shared.Example;
 import org.dllearner.kb.sparql.SparqlEndpoint;
@@ -29,9 +30,15 @@ public class LanguageResolverTest
 	
 	@Test
 	public void test2() throws Exception {
-		final AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),
-				"http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources",
+		
+		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpedia(), 
+				"http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources", 
 				"cache");
+
+//		final AutoSPARQLSession session;
+//		session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),
+//				"http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources",
+//				"cache");
 		session.setFastSearch(true);
 		List<String> uris = Arrays.asList(new String[]{
 				"http://dbpedia.org/resource/Angels_&_Demons",

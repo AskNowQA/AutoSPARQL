@@ -136,7 +136,7 @@ public class SolrSearch implements Search
 				imageURL = (String) d.get("imageURL").toString();
 				comment = (String) d.get("comment");
 				Example example = new Example(uri, label, imageURL, comment);
-				example.set("origin","SolrSearch");
+				//example.set("origin","SolrSearch");
 				logger.trace("SolrSearch Field Value Map:"+d.getFieldValueMap());
 //				for(String property: d.getFieldNames())
 //				{

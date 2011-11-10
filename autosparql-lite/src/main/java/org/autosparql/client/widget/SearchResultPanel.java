@@ -1,7 +1,8 @@
 package org.autosparql.client.widget;
 
-import java.util.ArrayList;
+import static org.autosparql.shared.StringUtils.abbreviate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -40,7 +40,6 @@ import com.extjs.gxt.ui.client.widget.grid.GridViewConfig;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import static org.autosparql.shared.StringUtils.*;
 
 public class SearchResultPanel extends ContentPanel
 {
@@ -58,7 +57,7 @@ public class SearchResultPanel extends ContentPanel
 	private static Set<String> defaultProperties()
 	{
 		Set<String> defaultProperties = new FastSet();
-		for(String s : new String[] {"label","imageURL","comment","uri"}) {defaultProperties.add(s);}
+		for(String s : new String[] {"http://www.w3.org/2000/01/rdf-schema#label","imageURL","http://www.w3.org/2000/01/rdf-schema#comment","uri"}) {defaultProperties.add(s);}
 		return defaultProperties;
 	}
 
@@ -180,20 +179,21 @@ public class SearchResultPanel extends ContentPanel
 			}
 		}
 		// remove all properties with occurrence < 0.5
-		List<String> initialProperties = new LinkedList<String>();
+		Set<String> initialProperties = new FastSet();
+		
 		for(String property : properties)
 		{
 			if(propertyCounts.get(property)>=examples.size()*MIN_OCCURRENCE) {initialProperties.add(property);}
 		}
 		// End Remove rare properties ******************************************
 		log.info("Shrinked initial properties from "+properties.size()+" to "+initialProperties.size()+".");
-		for(String property: initialProperties)
+		for(String property: properties)
 		{
 			if(defaultProperties.contains(property)) {continue;}
 			if(imageProperties.contains(property)) {continue;}
 			ColumnConfig config = new ColumnConfig(property,Transformer.displayProperty(property),150);
 			config.setRenderer(new LiteralRenderer());
-
+			config.setHidden(!initialProperties.contains(property));
 			//if(property.contains("image")) {config.setRenderer(new ImageCellRenderer(100,100));}
 
 			columnConfigs.add(config);
@@ -212,6 +212,7 @@ public class SearchResultPanel extends ContentPanel
 		toolbar.bind(loader);	
 		gridStore = new ListStore<Example>(loader);
 		grid = new Grid<Example>(gridStore,new ColumnModel(columnConfigs(examples)));
+		//grid.setWidth("100%");
 		grid.setHeight(1000);
 		BufferView view = new BufferView();
 		//		view.ensureVisible(4, 0, false);

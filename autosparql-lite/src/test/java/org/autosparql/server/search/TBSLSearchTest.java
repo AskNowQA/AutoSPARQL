@@ -22,7 +22,7 @@ public class TBSLSearchTest
 	@Test
 	public void testGetExamples() throws MalformedURLException
 	{
-		TBSLSearch search = new TBSLSearch(new SparqlEndpoint(new URL("http://live.dbpedia.org/sparql")),"cache");
+		TBSLSearch search = new TBSLSearch(new SparqlEndpoint(new URL("http://dbpedia.org/sparql")),"cache");
 		//List<Example> examples = search.getExamples("soccer clubs in Premier League");
 		SortedSet<Example> examples = search.getExamples("books written by Dan Brown");
 		//System.out.println(examples);

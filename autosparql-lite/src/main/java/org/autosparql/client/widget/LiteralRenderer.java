@@ -37,6 +37,7 @@ public class LiteralRenderer implements GridCellRenderer<Example>
 		else if(literal.contains("^^"))
 		{
 			// datatype property
+			literal = literal.substring(0,literal.indexOf('^'));
 		}
 		// Remove language tag
 		else

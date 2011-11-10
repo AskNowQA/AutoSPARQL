@@ -1,7 +1,10 @@
 package org.autosparql.server;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -110,12 +113,12 @@ public class AutoSPARQLSession
 	 * with different language tags for the same URI and property*/
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
-//		Cache cache = CacheManager.getInstance().getCache("qtl");
-//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
-//		{
-//			Element e;
-//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
-//		}
+		//		Cache cache = CacheManager.getInstance().getCache("qtl");
+		//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
+		//		{
+		//			Element e;
+		//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
+		//		}
 		QTL qtl = new QTL(endpoint, selectCache);
 		qtl.setExamples(positives, negatives);
 		if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
@@ -131,8 +134,8 @@ public class AutoSPARQLSession
 		{
 			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));
 			SortedSet<Example> examples = fillExamples(null, rs);
-//			cache.put(new Element(parameters,examples));
-//			cache.flush();
+			//			cache.put(new Element(parameters,examples));
+			//			cache.flush();
 			return examples;
 
 
@@ -199,7 +202,7 @@ public class AutoSPARQLSession
 		if(examples==null) {examples = new TreeSet<Example>();}
 		if(!rs.hasNext()) {return new TreeSet<Example>(examples);}
 
-		LanguageResolver resolver = new LanguageResolver();
+		LanguageResolver resolver = new LanguageResolver(new String[] {"en","de","es"});
 		Map<String,Example> uriToExample = new HashMap<String,Example>();
 		for(Example example: examples) {uriToExample.put(example.getURI(), example);}
 		for(QuerySolution qs=rs.next();rs.hasNext();qs=rs.next())
@@ -212,14 +215,16 @@ public class AutoSPARQLSession
 			uriToExample.put(uri,e);
 
 			String object = qs.get("o").toString();
-
+			try{object = URLDecoder.decode(object,"UTF-8");} catch (UnsupportedEncodingException e1){throw new RuntimeException(e1);}
 			String oldObject=e.get(property);
-			if(oldObject!=null && property.equals(RDFS.label.getURI()))
+			if(oldObject!=null)
 			{
 				e.set(property, resolver.resolve(oldObject, object));
 			}
-
-			e.set(property,object.toString());
+			else
+			{
+				e.set(property,object.toString());
+			}
 		}
 		examples.addAll(uriToExample.values());
 
@@ -281,8 +286,8 @@ public class AutoSPARQLSession
 		//		}
 		fillExamples(examples);
 		if(examples.isEmpty()) {logger.warn("AutoSPARQLSession found no examples for query \""+query+"\". :-(");}
-//		cache.put(new Element(query,examples));
-//		cache.flush();
+		//		cache.put(new Element(query,examples));
+		//		cache.flush();
 
 		return examples;
 	}

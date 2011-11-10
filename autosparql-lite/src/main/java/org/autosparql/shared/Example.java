@@ -177,5 +177,16 @@ public class Example extends BaseModel implements Comparable<Example>
 	{
 		return getURI().compareTo(e.getURI());
 	}
+	
+//	private synchronized void writeObject( java.io.ObjectOutputStream s ) throws IOException
+//	{
+//		//s.writeObject(obj)
+//	}
+//
+//	private synchronized void readObject( java.io.ObjectInputStream s ) throws IOException, ClassNotFoundException
+//	{
+//		
+//	}
+//	
 
 }

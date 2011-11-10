@@ -30,7 +30,9 @@ public class LanguageResolver implements Comparator<String>
 		this.languages = languages;
 		tiebreaker = TIEBREAKER;
 	}
-	
+
+	public LanguageResolver(String[] languages) {this(Arrays.asList(languages));}
+
 	public String resolve(String s,String t)
 	{
 		String result = compare(s,t)==-1?s:t;
