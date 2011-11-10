@@ -214,7 +214,7 @@ public class AutoSPARQLSession
 			String object = qs.get("o").toString();
 
 			String oldObject=e.get(property);
-			if(oldObject!=null)
+			if(oldObject!=null && property.equals(RDFS.label.getURI()))
 			{
 				e.set(property, resolver.resolve(oldObject, object));
 			}

@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.hp.hpl.jena.vocabulary.RDF;
+
 public class BlackList
 {
 	public static final Set<String> dbpedia=new HashSet<String>(Arrays.asList(new String[]{
@@ -17,6 +19,7 @@ public class BlackList
 "http://dbpedia.org/property/lonDeg",
 "http://dbpedia.org/property/lonMin",
 "http://dbpedia.org/property/lonSec",
-"http://dbpedia.org/ontology/abstract" // too long for autosparql
+"http://dbpedia.org/ontology/abstract",// too long for autosparql
+"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"// TODO maybe visualized later in another view
 			}));
 }
