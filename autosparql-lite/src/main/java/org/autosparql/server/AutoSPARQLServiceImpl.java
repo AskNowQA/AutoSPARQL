@@ -27,7 +27,6 @@ import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.InvalidFileFormatException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.hp.hpl.jena.tdb.sys.Session;
 
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService {
 	

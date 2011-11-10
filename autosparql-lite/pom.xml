@@ -101,7 +101,7 @@
 								</goals>
 							</execution>
 						</executions>
-				<!-- 		<configuration>
+				 		<configuration>
 							<hostedWebapp>war</hostedWebapp>
 							<runTarget>index.html</runTarget>
 							<modules>
@@ -109,7 +109,7 @@
 							</modules>
 							<localWorkers>6</localWorkers>
 						</configuration>
- -->
+ 
 					</plugin>
 <!-- 					 <plugin>
 				<groupId>org.apache.maven.plugins</groupId>

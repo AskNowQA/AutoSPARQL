@@ -20,7 +20,7 @@ public class AutoSPARQLSessionTest
 			"http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources",
 			"cache");
 	
-	@Test
+	//@Test
 	public void testFillExamples()
 	{
 		SortedSet<Example> examples = new TreeSet<Example>(Arrays.asList(new Example[] {new Example("http://dbpedia.org/resource/Leipzig")}));
@@ -36,11 +36,15 @@ public class AutoSPARQLSessionTest
 		//System.out.println(session.getExamples("European Union countries"));
 		SortedSet<Example> examples = session.getExamples("Books written by Dan Brown");
 		for(Example example: examples) System.out.println(example.getURI());
-		assertTrue(examples.contains(new Example("http://dbpedia.org/resource/Digital_Fortress")));
+		assertTrue(examples.contains(new Example("http://dbpedia.org/resource/Digital_Fortress")));	
+		for(Example example : examples)
+		{
+			
+		}
 		//for(Example example: examples) System.out.println(example.getURI());
 	}
 	
-	@Test
+	//@Test
 	public void testGetExamplesByQTL()
 	{
 //		String[] positives = {"http://dbpedia.org/resource/Angels_&_Demons","http://dbpedia.org/resource/Digital_Fortress"};
