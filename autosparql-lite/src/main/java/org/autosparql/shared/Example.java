@@ -13,7 +13,7 @@ import com.extjs.gxt.ui.client.data.RpcMap;
 /** Can hold more than just the properties with the get-methods (should include all triples for the resource).
  * @author originally by Lorenz Bühmann, extended by Konrad Höffner */
 
-public class Example extends BaseModel implements Comparable<Example>
+public class Example extends BaseModel implements Comparable<Example>, com.google.gwt.user.client.rpc.IsSerializable
 {
 	private static final long serialVersionUID = 6955538657940009581L;
 
