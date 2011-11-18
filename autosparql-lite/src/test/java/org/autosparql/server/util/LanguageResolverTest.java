@@ -17,8 +17,6 @@ import org.junit.Test;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class LanguageResolverTest
-
-
 {
 	@Test
 	public void test()

@@ -58,7 +58,7 @@ public class ApplicationController extends Controller
 			}
 
 			@Override
-			public void close() throws SecurityException
+			public void close() 
 			{
 				// 
 			
