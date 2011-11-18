@@ -135,12 +135,14 @@ public class Example extends BaseModel implements Comparable<Example>, com.googl
 		set(LABEL, label);
 		set(IMAGE_URL, imageURL);
 		set(COMMENT, comment);
+		setAllowNestedValues(allowNestedValues);
 	}
 
 
 	public Example(String uri)
 	{
 		set("uri",uri);
+		setAllowNestedValues(allowNestedValues);
 	}
 
 	public String getURI(){
