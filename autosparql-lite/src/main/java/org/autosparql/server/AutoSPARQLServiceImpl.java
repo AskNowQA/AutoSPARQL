@@ -77,8 +77,14 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		for(String token: tokens) {questionWords.add(token);}
 	
 		//try {
-			AutoSPARQLSession session = getAutoSPARQLSession();
-			SortedSet<Example> examples = session.getExamples(query);
+			SortedSet<Example> examples = null;
+			try {
+				AutoSPARQLSession session = getAutoSPARQLSession();
+				examples = session.getExamples(query);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return examples;
 		//	}
 		//catch (Exception e) {e.printStackTrace();}
