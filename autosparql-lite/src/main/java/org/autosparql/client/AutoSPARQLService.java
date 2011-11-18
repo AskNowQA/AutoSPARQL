@@ -37,5 +37,4 @@ public interface AutoSPARQLService extends RemoteService {
 	void setFastSearch(Boolean fastSearch);
 	void setUseDBpediaLive(Boolean useDBpediaLive);
 	
-	
 }
