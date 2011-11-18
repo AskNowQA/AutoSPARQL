@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <!--  <module rename-to='app'>-->
+ 
+ <module rename-to='app'>
+ 
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User' />
   <inherits name="com.google.gwt.logging.Logging"/>
   
 
-      <set-property name="user.agent" value="safari" />
+   <set-property name="user.agent" value="gecko1_8" />
 
   <!-- Inherit the default GWT style sheet.  You can change       -->
   <!-- the theme of your GWT application by uncommenting          -->
@@ -21,8 +23,8 @@
   <entry-point class='org.autosparql.client.Application' />
 
   <!-- Specify the paths for translatable code                    -->
-  <source path='src/main/client' />
-  <source path='shared' />
+ <!--   <source path='client' />
+  <source path='shared' />-->
   <!--  <public path=""/>-->
   <stylesheet src='gxt/css/gxt-all.css' />
   <stylesheet src='Application.css' />
