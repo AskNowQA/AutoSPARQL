@@ -1,6 +1,10 @@
 package org.autosparql.client.controller;
 
 import java.util.SortedSet;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import org.autosparql.client.AppEvents;
@@ -14,18 +18,57 @@ import org.autosparql.shared.Example;
 import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
+import com.google.gwt.logging.client.HtmlLogFormatter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
+
 
 public class ApplicationController extends Controller
 {
 	private ApplicationView appView;
 	private Logger log = Logger.getLogger(ApplicationController.class.toString());
 
+	
 	public ApplicationController()
 	{
-		registerEventTypes(AppEvents.Init);
+		// configure logging
+		final HTML html = new HTML();
+		Logger.getLogger("").addHandler(new Handler() {
+			  {
+			    // set the formatter, in this case HtmlLogFormatter
+			    setFormatter(new HtmlLogFormatter(true));
+			    setLevel(Level.ALL);
+			  }
+
+			  @Override
+			  public void publish(LogRecord record) {
+			    if (!isLoggable(record)) {
+			      Formatter formatter = getFormatter();
+			      String msg = formatter.format(record);
+
+			      html.setHTML(msg);
+			    }
+			  }
+
+			@Override
+			public void flush()
+			{
+				
+				
+			}
+
+			@Override
+			public void close() throws SecurityException
+			{
+				// 
+			
+			}});
+		
+		 registerEventTypes(AppEvents.Init);
+		
 		registerEventTypes(AppEvents.Error);
-	}
+			
+			}
 
 	public void handleEvent(AppEvent event)
 	{
@@ -107,3 +150,4 @@ public class ApplicationController extends Controller
 	}
 
 }
+
