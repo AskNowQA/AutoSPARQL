@@ -4,8 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -34,6 +32,7 @@ public class AutoSPARQLSessionTest
 	public void testGetExamples()
 	{
 		//System.out.println(session.getExamples("European Union countries"));
+		session.setFastSearch(true);
 		SortedSet<Example> examples = session.getExamples("Books written by Dan Brown");
 		for(Example example: examples) System.out.println(example.getURI());
 		assertTrue(examples.contains(new Example("http://dbpedia.org/resource/Digital_Fortress")));	

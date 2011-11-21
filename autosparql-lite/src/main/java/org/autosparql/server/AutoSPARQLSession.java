@@ -19,6 +19,10 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
 import org.apache.log4j.Logger;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
@@ -57,6 +61,16 @@ public class AutoSPARQLSession
 	String lastQuery = null;
 	PrefixMapping x = new PrefixMappingImpl();
 	private boolean fastSearch = false;
+
+	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
+	 * after each method dealing with the cache,
+	 * thus preventing corruptions of the cache (which Ehcache is *really* susceptible to, even if no write or even read is written)*/
+	public static CacheManager getCacheManager()
+	{
+		CacheManager cm = CacheManager.getInstance();
+		if(cm==null) {cm=CacheManager.create();}
+		return cm;
+	}
 
 	// public AutoSPARQLSession(SPARQLEndpointEx endpoint, String cacheDir,
 	// String servletContextPath, String solrURL, QuestionProcessor
@@ -113,12 +127,12 @@ public class AutoSPARQLSession
 	 * with different language tags for the same URI and property*/
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
-		//		Cache cache = CacheManager.getInstance().getCache("qtl");
-		//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
-		//		{
-		//			Element e;
-		//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
-		//		}
+//		Cache cache = getCacheManager().getCache("qtl");
+//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
+//		{
+//			Element e;
+//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
+//		}
 		QTL qtl = new QTL(endpoint, selectCache);
 		qtl.setExamples(positives, negatives);
 		if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
@@ -209,6 +223,8 @@ public class AutoSPARQLSession
 		{
 			String property = qs.getResource("p").getURI();
 			if(BlackList.dbpedia.contains(property)) {continue;}
+			// TODO: extend blacklist with regular expressions so that this can be made through the blacklist
+			if(property.startsWith("http://dbpedia.org/property/")) {continue;}
 			String uri = qs.getResource("?s").getURI();
 
 			Example e=uriToExample.containsKey(uri)?uriToExample.get(uri):new Example(uri);
@@ -249,15 +265,56 @@ public class AutoSPARQLSession
 		fillExamples(examples,rs);
 	}
 
+	public static SortedSet<Example> mapsToExamples(List<Map<String,Object>> maps)
+	{
+		SortedSet<Example> examples = new TreeSet<Example>();
+		for(Map<String,Object> map: maps)
+		{
+			Example example = new Example();
+			for(String property : map.keySet()) {example.set(property,map.get(property).toString());}
+			//example.setProperties(map);
+			examples.add(example);
+		}
+		return examples;
+	}
+
+	public static List<Map<String,Object>> examplesToMaps(Collection<Example> examples)
+	{
+		LinkedList<Map<String,Object>> maps = new LinkedList<Map<String,Object>>();
+		for(Example example : examples)
+		{
+			// this line gives errors with gxt:
+			// maps.add(example.getProperties());
+			// thus do it with individual toString to prevent gxt objects from sneaking in
+			Map<String,Object> map = new HashMap<String,Object>();
+			for(String property : example.getProperties().keySet())
+			{
+				map.put(property,example.get(property).toString());
+			}
+			maps.add(map);
+		}
+		return maps;
+	}
+
+	public static String cacheKey(String query, boolean fastSearch)
+	{
+		return query+"+fastsearch="+(fastSearch?"on":"off");
+	}
+	
+	@SuppressWarnings("unchecked")
 	public SortedSet<Example> getExamples(String query)
 	{
-		//Cache cache = CacheManager.getInstance().getCache("examples");
-		// TODO: reactivate cache after it works (maybe serialisation of class Example is somehow wrong)
-		//		{
-		//			Element e;
-		//			if((e=cache.get(query))!=null) {System.out.println("cache hit with query \""+query+"\"");return (List<Example>)e.getValue();}
-		//			else{System.out.println("cache miss with query \""+query+"\"");}
-		//		}
+		Cache cache = getCacheManager().getCache("examples");
+		{try{
+			Element e=cache.get(cacheKey(query,fastSearch));
+			//System.out.println(e);
+			if(e!=null) {
+				logger.info("cache hit with query \""+query+"\"");
+				getCacheManager().shutdown();
+				return mapsToExamples((List<Map<String,Object>>)e.getValue());}
+			else{logger.info("cache miss with query \""+query+"\"");}
+		}	catch(Exception e) {System.err.println("Error getting cache element.");e.printStackTrace();}
+		}
 		SortedSet<Example> examples = null;// = new ArrayList<Example>();
 		//		 primary search DBpedia bzw. DBpedia live
 		if(!fastSearch) {examples = primarySearch.getExamples(query);}
@@ -286,14 +343,13 @@ public class AutoSPARQLSession
 		//		}
 		fillExamples(examples);
 		if(examples.isEmpty()) {logger.warn("AutoSPARQLSession found no examples for query \""+query+"\". :-(");}
-		//		cache.put(new Element(query,examples));
-		//		cache.flush();
-
+		cache.put(new Element(cacheKey(query,fastSearch),examplesToMaps(examples)));
+		cache.flush();
+		getCacheManager().shutdown();
 		return examples;
 	}
 
-	public Map<String, String> getProperties(String query)
-			throws AutoSPARQLException
+	public Map<String, String> getProperties(String query) throws AutoSPARQLException
 			{
 		property2LabelMap = new TreeMap<String, String>();
 
@@ -326,5 +382,5 @@ public class AutoSPARQLSession
 		property2LabelMap.put(RDFS.label.getURI(), "label");
 
 		return property2LabelMap;
-			}
+	}
 }

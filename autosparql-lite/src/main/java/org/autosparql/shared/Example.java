@@ -117,6 +117,7 @@ public class Example extends BaseModel implements Comparable<Example>, com.googl
 	// ** END COPIED OVER FROM BASEMODEL AND BASEMODELDATA ****************************************************************************
 
 	  
+	/** return true iff o instanceof Example and both have the same URI	 **/
 	@Override
 	public boolean equals(Object o)
 	{
@@ -124,11 +125,18 @@ public class Example extends BaseModel implements Comparable<Example>, com.googl
 		return false;
 	}
 
+	/** return true iff both have the same URI	 **/
 	public boolean equals(Example e)
 	{
 		return get("uri").toString().equals(e.get("uri").toString());
 	}
 
+	/** return true iff their property map is equal **/
+	public boolean deepEquals(Example e)
+	{
+		return this.getProperties().equals(e.getProperties());
+	}
+	
 	public Example(String uri, String label, String imageURL, String comment)
 	{
 		set("uri", uri);
