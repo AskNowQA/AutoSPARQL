@@ -69,6 +69,18 @@ public class CachingTest
 		assertTrue(e2.deepEquals(retrieved.last()));
 	}
 	
+	@Test
+	public void testGetCacheManager()
+	{
+		for(int i=0;i<10;i++)
+		{
+			CacheManager.create().getCache("test");
+			//getCacheManager().getCache("test");
+			//getCacheManager().shutdown();
+			
+		}
+	}
+	
 //	//@Test
 //	public void testSave()
 //	{

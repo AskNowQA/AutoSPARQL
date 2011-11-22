@@ -17,6 +17,11 @@ grant codeBase "file:${catalina.base}/webapps/-"
  permission java.security.AllPermission;
 };
 
+If this does not work then (this may be unsafe):
+sudo chmod -R a+wr /var/lib/tomcat6/webapps
+sudo chmod -R a+wr /var/lib/tomcat6/cache
+
+
 
 3. mkdir /var/lib/tomcat6/cache
 
