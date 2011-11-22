@@ -30,9 +30,17 @@ public class CommentRenderer implements GridCellRenderer<Example>
 		//literal = SafeHtmlUtils.htmlEscape(literal);
 		// Remove language tag
 		if(!SHOW_LANGUAGE_TAG&&literal.contains("@")) {literal = literal.substring(0,literal.lastIndexOf('@'));}
-		literal = StringUtils.abbreviate(literal,200);
-		String title="xxxxxxxxxxxxxxx";
+		
+		String shortLiteral = StringUtils.abbreviate(literal,200);
+		String title=literal;
 		//return new HTML("<div title=\""+title+"\" alt=\""+title+">"+literal+"</div>");
-		return new HTML(literal);
+		if(shortLiteral.length()<literal.length())
+		{
+		return new HTML("<div title="+title+" alt="+title+">"+shortLiteral+"</div>");
+		}
+		else
+		{
+			return new HTML(shortLiteral);
+		}
 	}
 }
