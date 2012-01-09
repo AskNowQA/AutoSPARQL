@@ -36,7 +36,7 @@ public class TBSLSearch implements Search
 	private static final int LIMIT = 10;
 	private static final int OFFSET = 0;
 
-	private static final String QUERY_PREFIX = "Give me all ";
+	private static final String QUERY_PREFIX = "";//"Give me all ";
 
 	private SPARQLTemplateBasedLearner tbsl;
 	private SparqlEndpoint endpoint;

@@ -3,6 +3,7 @@
 .icon-yes { background: url(img/yes.svg) no-repeat center center; background-size:1.5em;}
 .icon-no  { background: url(img/no.svg) no-repeat center center; background-size:1.5em;}
 
+.test { background-color: #bbffbb !important; color: yellow; size:50%;}
 /** grid rows now wrap around text (default is "white-space: nowrap;") **/
 
 .row-Style-Odd {
@@ -23,7 +24,7 @@
 }
 
 .row-Style-Negative {
-    background-color: red !important;
+    background-color: #ffbbbb !important;
 }
 
 .x-grid3-cell-inner

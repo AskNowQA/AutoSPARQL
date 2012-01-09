@@ -43,7 +43,7 @@ public class AutoSPARQLSessionTest
 		//for(Example example: examples) System.out.println(example.getURI());
 	}
 	
-	//@Test
+	@Test
 	public void testGetExamplesByQTL()
 	{
 //		String[] positives = {"http://dbpedia.org/resource/Angels_&_Demons","http://dbpedia.org/resource/Digital_Fortress"};

@@ -13,9 +13,12 @@ import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
 import com.extjs.gxt.ui.client.mvc.View;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class ApplicationView extends View
@@ -23,7 +26,9 @@ public class ApplicationView extends View
 private final Logger log = Logger.getLogger(ApplicationView.class.toString());
 
 	//private Viewport viewport;
-	private VerticalPanel panel = new VerticalPanel();
+	//private VerticalPanel panel = new VerticalPanel();
+	//private ContentPanel panel = new ContentPanel();
+	private ContentPanel panel;
 	//	private InputPanel north;
 	private SearchResultPanel center = null;
 
@@ -54,6 +59,7 @@ private final Logger log = Logger.getLogger(ApplicationView.class.toString());
 
 	private void initUI()
 	{
+		//panel.setStyleAttribute("background", "#eeeeee");
 //		viewport = new Viewport();
 //		viewport.setLayout(new BorderLayout());
 
@@ -80,24 +86,34 @@ private final Logger log = Logger.getLogger(ApplicationView.class.toString());
 	private void createCenter()
 	{
 		center = new SearchResultPanel();
+		panel = center;
+//		panel.setFrame(false);
+//		panel.setLayout(new FitLayout());
+//		panel.setTopComponent(null);
+//
+//		center.setFrame(false);
+//	    center.setLayout(new FitLayout());
+//	    center.setHeight(1000);
 		//viewport.add(center.grid, new BorderLayoutData(LayoutRegion.CENTER));
 		//viewport.add(center, new BorderLayoutData(LayoutRegion.CENTER));
-		panel.add(center);
+//		panel.add(center);
 		
+		//panel.setAutoWidth(true);
+		//center.setAutoWidth(true);
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		//viewport.add(buttonPanel, new BorderLayoutData(LayoutRegion.SOUTH));
 		panel.add(buttonPanel);
-		Button learnButton = new Button("learn");
-		buttonPanel.add(learnButton);
-		learnButton.addSelectionListener(new SelectionListener<ButtonEvent>(
-				)
-				{		
-			@Override
-			public void componentSelected(ButtonEvent ce)
-			{
-				center.learn();
-			}
-				});
+//		Button learnButton = new Button("learn");
+//		buttonPanel.add(learnButton);
+//		learnButton.addSelectionListener(new SelectionListener<ButtonEvent>(
+//				)
+//				{		
+//			@Override
+//			public void componentSelected(ButtonEvent ce)
+//			{
+//				center.learn();
+//			}
+//				});
 	}
 
 	protected void handleEvent(AppEvent event) {

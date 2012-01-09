@@ -4,6 +4,7 @@ import static org.autosparql.shared.StringUtils.abbreviate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -31,6 +32,7 @@ import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Label;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.grid.BufferView;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
@@ -39,6 +41,8 @@ import com.extjs.gxt.ui.client.widget.grid.Grid;
 import com.extjs.gxt.ui.client.widget.grid.GridViewConfig;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SearchResultPanel extends ContentPanel
@@ -61,8 +65,9 @@ public class SearchResultPanel extends ContentPanel
 		return defaultProperties;
 	}
 
-	private static final boolean HIGHLIGHT_POSITIVES = true;
+	private static final boolean HIGHLIGHT_POSITIVES_AND_NEGATIVES = true;
 	private static final double MIN_OCCURRENCE = 0.7;
+	private static final int NUMBER_OF_POSITIVES_FOR_RELEARN = 3;
 
 	public Grid<Example> grid = null;
 	ListStore<Example> gridStore = null;
@@ -70,9 +75,12 @@ public class SearchResultPanel extends ContentPanel
 	private final FastSet positives = new FastSet();
 	private final FastSet negatives = new FastSet();
 
+	private final FastSet newPositives = new FastSet();
+	private final FastSet newNegatives = new FastSet();
+
 	private final PagingToolBar toolbar;
-	private Button relearnButton = new Button("relearn");
-	private int newPositives = 0;
+	//private Button relearnButton = new Button("relearn");
+	//private int newPositives = 0;
 
 	private SearchResultPanelSelectionListener listener = new SearchResultPanelSelectionListener();
 
@@ -81,17 +89,13 @@ public class SearchResultPanel extends ContentPanel
 		@Override
 		public void componentSelected(ButtonEvent ce)
 		{
-			if(ce.getSource()==relearnButton)
-			{
-				relearn();
-			}
+			//			if(ce.getSource()==relearnButton)
+			//			{
+			//				relearn();
+			//			}
 		}		
 	}
 
-	void relearn()
-	{
-
-	}
 
 	public SearchResultPanel()
 	{
@@ -102,11 +106,16 @@ public class SearchResultPanel extends ContentPanel
 
 		//setBottomComponent(toolbar);
 
-		relearnButton.addSelectionListener(listener);
-		addButton(relearnButton );
+		//		relearnButton.addSelectionListener(listener);
+		//		addButton(relearnButton );
 
 
 		toolbar = new PagingToolBar(10);
+		Button relearnButton = new Button("Relearn");
+		toolbar.add(relearnButton);
+		relearnButton.addSelectionListener(new SelectionListener<ButtonEvent>()
+		{ @Override public void componentSelected(ButtonEvent ce) {learn();}});
+
 		setBottomComponent(toolbar);
 
 		//		setTopComponent(toolbar);
@@ -114,24 +123,39 @@ public class SearchResultPanel extends ContentPanel
 		//grid.setAutoHeight(true);
 	}
 
-	public void markPositive(Example e)
+	public void markPositive(Example e, int rowIndex)
 	{
-		negatives.remove(e);
-		grid.getView().refresh(true);
-		if(!positives.contains(e))
+		if(!newPositives.contains(e.getURI()))
 		{
-			newPositives++;
-			positives.add(e.getURI());
-			if(newPositives>1) {learn();} else {updateRowStyle();}
+			newNegatives.remove(e.getURI());
+			grid.getView().getRow(rowIndex).removeClassName("row-Style-Negative");
+			grid.getView().getRow(rowIndex).removeClassName("row-Style-Even");
+			grid.getView().getRow(rowIndex).removeClassName("row-Style-Odd");
+			grid.getView().getRow(rowIndex).addClassName("row-Style-Positive");
+			if(!positives.contains(e.getURI()))
+			{
+				newPositives.add(e.getURI());
+				//log.info("Added positive example <"+e.getURI()+">. "+newPositives.size());
+				if(newPositives.size()>=NUMBER_OF_POSITIVES_FOR_RELEARN) {log.info("Relearning"); learn();}
+			}
 		}
 	}
 
-	public void markNegative(Example e)
+	public void markNegative(Example e, int rowIndex)
 	{
-		positives.remove(e);
-		negatives.add(e.getURI());
-		if(gridStore!=null) {gridStore.remove(e);}
-		//Window.alert("removing "+e);
+		if(!newNegatives.contains(e.getURI()))
+		{
+			newPositives.remove(e.getURI());
+			grid.getView().getRow(rowIndex).removeClassName("row-Style-Positive");
+			grid.getView().getRow(rowIndex).removeClassName("row-Style-Even");
+			grid.getView().getRow(rowIndex).removeClassName("row-Style-Odd");
+			grid.getView().getRow(rowIndex).addClassName("row-Style-Negative");
+			if(!negatives.contains(e.getURI()))
+			{
+				newNegatives.add(e.getURI());
+			}
+		}
+		//if(gridStore!=null) {gridStore.remove(e);}
 	}
 
 	private List<ColumnConfig> columnConfigs(List<Example> examples)
@@ -180,15 +204,21 @@ public class SearchResultPanel extends ContentPanel
 		}
 		// remove all properties with occurrence < 0.5
 		Set<String> initialProperties = new FastSet();
-		
+
 		for(String property : properties)
 		{
 			if(propertyCounts.get(property)>=examples.size()*MIN_OCCURRENCE) {initialProperties.add(property);}
 		}
 		// End Remove rare properties ******************************************
 		log.info("Shrinked initial properties from "+properties.size()+" to "+initialProperties.size()+".");
-		for(String property: properties)
+		// Sort properties by their alphabetically ascending by their displayed form
+		Map<String,String> transformedToOriginalProperty = new HashMap<String,String>();
+		for(String property: properties) {transformedToOriginalProperty.put(Transformer.displayProperty(property),property);}
+		List<String> transformedProperties = new ArrayList<String>(transformedToOriginalProperty.keySet());
+		Collections.sort(transformedProperties);
+		for(String transformedProperty: transformedProperties)
 		{
+			String property = transformedToOriginalProperty.get(transformedProperty);
 			if(defaultProperties.contains(property)) {continue;}
 			if(imageProperties.contains(property)) {continue;}
 			ColumnConfig config = new ColumnConfig(property,Transformer.displayProperty(property),150);
@@ -213,7 +243,12 @@ public class SearchResultPanel extends ContentPanel
 		gridStore = new ListStore<Example>(loader);
 		grid = new Grid<Example>(gridStore,new ColumnModel(columnConfigs(examples)));
 		//grid.setWidth("100%");
-		grid.setHeight(1000);
+		grid.setAutoWidth(false);
+		grid.setHeight(1050);
+		//grid.setAutoHeight(true);
+
+		grid.getView().setAutoFill(true);
+
 		BufferView view = new BufferView();
 		//		view.ensureVisible(4, 0, false);
 		view.setRowHeight(100);
@@ -251,7 +286,8 @@ public class SearchResultPanel extends ContentPanel
 				public String getRowStyle(ModelData model, int rowIndex,ListStore<ModelData> ds)
 				{
 					//Window.alert(model.get("uri").toString());
-					if(HIGHLIGHT_POSITIVES&&positives.contains(model.get("uri")))	{return "row-Style-Positive";}
+					if(HIGHLIGHT_POSITIVES_AND_NEGATIVES&&positives.contains(model.get("uri")))	{return "row-Style-Positive";}
+					else if(HIGHLIGHT_POSITIVES_AND_NEGATIVES&&negatives.contains(model.get("uri")))	{return "row-Style-Negative";}
 					else if(model instanceof Example&&((Example)model).containsSolrData) {return "row-Style-SolrData";}
 					else if(rowIndex % 2 == 0)		{return "row-Style-Odd";}	
 					return "row-Style-Even";
@@ -271,6 +307,14 @@ public class SearchResultPanel extends ContentPanel
 
 	public void learn()
 	{
+		positives.addAll(newPositives);
+		positives.removeAll(newNegatives);
+		negatives.addAll(newNegatives);
+		negatives.removeAll(newPositives);
+		newPositives.clear();
+		newNegatives.clear();
+		log.info("Learning...");
+
 		final WaitDialog waiting  = new WaitDialog("Updating the table");
 		waiting.show();
 		AsyncCallback<SortedSet<Example>> callback = new AsyncCallback<SortedSet<Example>>()
@@ -278,8 +322,9 @@ public class SearchResultPanel extends ContentPanel
 			@Override
 			public void onSuccess(SortedSet<Example> examples)
 			{
+				log.info("Learning successfull, found "+examples.size()+" examples.");
 				//if(1==1)throw new RuntimeException(examples.toString());
-				newPositives = 0;
+				
 				setResult(new LinkedList<Example>(examples));
 				waiting.hide();
 			}
@@ -287,6 +332,7 @@ public class SearchResultPanel extends ContentPanel
 			@Override
 			public void onFailure(Throwable caught)
 			{
+				log.info("Learning failed: "+caught.getLocalizedMessage());
 				waiting.hide();
 				throw new RuntimeException(caught);				
 			}

@@ -30,7 +30,7 @@ public class PlusMinusButtonCellRender implements GridCellRenderer<Example>
 		
 	@Override
 	public Object render(final Example example, String property,
-			ColumnData config, int rowIndex, int colIndex,
+			ColumnData config, final int rowIndex,final  int colIndex,
 			final ListStore<Example> store, Grid<Example> grid) {
 		
 		LayoutContainer p = new LayoutContainer(new RowLayout(Orientation.VERTICAL));
@@ -53,10 +53,10 @@ public class PlusMinusButtonCellRender implements GridCellRenderer<Example>
 				{
 					if(iCopy==0)
 						{
-							button.setEnabled(false);
-							panel.markPositive(example);
+							//button.setEnabled(false);
+							panel.markPositive(example,rowIndex);
 						}
-					else panel.markNegative(example);
+					else panel.markNegative(example,rowIndex);
 				}
 			});
 		}

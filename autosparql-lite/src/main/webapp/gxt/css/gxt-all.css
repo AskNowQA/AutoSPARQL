@@ -1,3 +1,10 @@
+.x-grid3-row-over {
+/*  border-color: #ddd;
+  background-color: #efefef;
+  background-image: url(../images/default/grid/row-over.gif);*/
+}
+
+
 html,body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,p,blockquote,th,td{margin:0;padding:0;}img,body,html{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}ol,ul {list-style:none;}caption,th {text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;}q:before,q:after{content:'';}
 .x-contrast-test {
   background: url(../images/default/s.gif);
@@ -6561,11 +6568,6 @@ ul.x-tab-strip-bottom{
   background-color: #fafafa;
 }
 
-.x-grid3-row-over {
-  border-color: #ddd;
-  background-color: #efefef;
-  background-image: url(../images/default/grid/row-over.gif);
-}
 
 .x-grid3-resize-proxy {
   background-color: #777;
