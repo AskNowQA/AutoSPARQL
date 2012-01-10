@@ -31,6 +31,7 @@ import org.autosparql.server.util.DefaultPrefixMapping;
 import org.autosparql.server.util.LanguageResolver;
 import org.autosparql.shared.BlackList;
 import org.autosparql.shared.Example;
+import org.autosparql.shared.SPARQLException;
 import org.dllearner.algorithm.qtl.QTL;
 import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
@@ -58,6 +59,7 @@ public class AutoSPARQLSession
 	private final ExtractionDBCache selectCache;
 
 	public static final List<String> languages = Arrays.asList(new String[] {"de","en"});
+	private static final int MAX_NUMBER_OF_EXAMPLES = 20;
 	String lastQuery = null;
 	PrefixMapping x = new PrefixMappingImpl();
 	private boolean fastSearch = false;
@@ -127,6 +129,7 @@ public class AutoSPARQLSession
 	 * with different language tags for the same URI and property*/
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
+		logger.info("getExamplesByQTL("+positives+","+negatives+","+questionWords+")");
 //		Cache cache = getCacheManager().getCache("qtl");
 //		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
 //		{
@@ -150,6 +153,7 @@ public class AutoSPARQLSession
 			SortedSet<Example> examples = fillExamples(null, rs);
 			//			cache.put(new Element(parameters,examples));
 			//			cache.flush();
+			if(examples.size()>MAX_NUMBER_OF_EXAMPLES) {return new TreeSet<Example>(new LinkedList<Example>(examples).subList(0, MAX_NUMBER_OF_EXAMPLES-1));}
 			return examples;
 
 
@@ -178,7 +182,7 @@ public class AutoSPARQLSession
 		}
 		catch(Exception e)
 		{
-			throw new RuntimeException("Error with query "+query,e);
+			throw new SPARQLException(e,query,endpoint.toString());
 		}
 	}
 

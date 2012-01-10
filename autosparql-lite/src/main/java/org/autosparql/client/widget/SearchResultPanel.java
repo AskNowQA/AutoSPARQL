@@ -136,7 +136,9 @@ public class SearchResultPanel extends ContentPanel
 			{
 				newPositives.add(e.getURI());
 				//log.info("Added positive example <"+e.getURI()+">. "+newPositives.size());
-				if(newPositives.size()>=NUMBER_OF_POSITIVES_FOR_RELEARN) {log.info("Relearning"); learn();}
+				FastSet union = positives;
+				union.addAll(newPositives);
+				if(union.size()>=NUMBER_OF_POSITIVES_FOR_RELEARN) {log.info("Relearning"); learn();}
 			}
 		}
 	}
@@ -298,6 +300,7 @@ public class SearchResultPanel extends ContentPanel
 
 	public void setResult(List<Example> examples)
 	{
+		log.info("setResult: "+examples.toString());
 		if(grid!=null) {this.remove(grid);}
 		grid = createGrid(examples);
 
@@ -324,8 +327,8 @@ public class SearchResultPanel extends ContentPanel
 			{
 				log.info("Learning successfull, found "+examples.size()+" examples.");
 				//if(1==1)throw new RuntimeException(examples.toString());
-				
 				setResult(new LinkedList<Example>(examples));
+
 				waiting.hide();
 			}
 

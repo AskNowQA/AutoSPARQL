@@ -39,6 +39,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	
 	public AutoSPARQLServiceImpl() {}
 	private Set<String> questionWords = new HashSet<String>();
+	AutoSPARQLSession session = null;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -95,16 +96,21 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		return getThreadLocalRequest().getSession();
 	}
 	
-	private AutoSPARQLSession createAutoSPARQLSession(SPARQLEndpointEx endpoint){
-		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources", getServletContext().getRealPath("cache"));
-		getHttpSession().setAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString(), session);
+	private AutoSPARQLSession createAutoSPARQLSession(/*SPARQLEndpointEx endpoint*/)
+	{
+		String cacheDir = null;
+		try{cacheDir=getServletContext().getRealPath("cache");}
+		catch(Throwable t) {cacheDir="cache";}
+		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources", cacheDir);
+		this.session = session;
+		//getHttpSession().setAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString(), session);
 		return session;
 	}
 	
-	private AutoSPARQLSession getAutoSPARQLSession(){
-		AutoSPARQLSession session = (AutoSPARQLSession) getHttpSession().getAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString());
+	public AutoSPARQLSession getAutoSPARQLSession(){
+		//AutoSPARQLSession session = (AutoSPARQLSession) getHttpSession().getAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString());
 		if(session == null){
-			session = createAutoSPARQLSession(null);
+			session = createAutoSPARQLSession();
 		}
 		return session;
 	}

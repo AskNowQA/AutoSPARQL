@@ -14,10 +14,11 @@ import org.junit.Test;
 
 public class AutoSPARQLSessionTest
 {
-	final AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),
-			"http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources",
-			"cache");
-	
+//	final AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),
+//			"http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources",
+//			"cache");
+	final AutoSPARQLSession session = new AutoSPARQLServiceImpl().getAutoSPARQLSession();
+
 	//@Test
 	public void testFillExamples()
 	{
@@ -55,5 +56,13 @@ public class AutoSPARQLSessionTest
 		
 		Set<Example> examples = new HashSet<Example>(session.getExamplesByQTL(Arrays.asList(positives), Arrays.asList(negatives),new HashSet<String>(Arrays.asList(new String[] {"film","starring","Brad Pitt"}))));
 		//for(Example example: examples) System.out.println(example.getURI());
+		assertTrue(examples.contains(new Example("http://dbpedia.org/resource/Inglourious_Basterds")));
+		
+		positives = new String[] {"http://dbpedia.org/resource/Angels_&_Demons"};
+		negatives = new String[] {"http://dbpedia.org/resource/Arthur%27s_Teacher_Trouble"};
+		examples = new HashSet<Example>(session.getExamplesByQTL(Arrays.asList(positives), Arrays.asList(negatives),new HashSet<String>(Arrays.asList(new String[] {"film","starring","Brad Pitt"}))));
+		for(Example example: examples) System.out.println(example.getURI());
+
+		
 	}
 }

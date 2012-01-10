@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.SortedSet;
 
+import org.autosparql.server.AutoSPARQLServiceImpl;
 import org.autosparql.server.AutoSPARQLSession;
 import org.autosparql.shared.Example;
 import org.dllearner.kb.sparql.SparqlEndpoint;
@@ -15,7 +16,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TBSLSearchTest
 {
-	final AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),
+			AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),
 			"http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources",
 			"cache");
 	@Test

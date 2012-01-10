@@ -18,6 +18,7 @@ import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -54,6 +55,7 @@ private final Logger log = Logger.getLogger(ApplicationView.class.toString());
 		//		for(Example example: examples)
 		//		center.gridStore.add(example);
 		center.setResult(new LinkedList<Example>(examples));
+
 		//Window.alert("display");
 	}
 
