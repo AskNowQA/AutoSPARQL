@@ -294,7 +294,9 @@ public class AutoSPARQLSession
 			Example example = new Example();
 			for(String property : map.keySet()) {example.set(property,map.get(property).toString());}
 			//example.setProperties(map);
+			example.setSameAsLinks((List<String>) map.get(OWL.sameAs.getURI()));
 			examples.add(example);
+			
 		}
 		return examples;
 	}
@@ -312,6 +314,7 @@ public class AutoSPARQLSession
 			{
 				map.put(property,example.get(property).toString());
 			}
+			map.put(OWL.sameAs.getURI(), example.getSameAsLinks());
 			maps.add(map);
 		}
 		return maps;
