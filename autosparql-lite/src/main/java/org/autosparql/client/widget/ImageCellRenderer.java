@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 
 public class ImageCellRenderer implements GridCellRenderer<Example>{
-	boolean shrinkImage = false;
+	boolean shrinkImage = true;
 	Integer maxWidth;
 	Integer maxHeight;
 	private static final Logger log = Logger.getLogger(SearchResultPanel.class.toString());
@@ -76,7 +76,7 @@ public class ImageCellRenderer implements GridCellRenderer<Example>{
 		if(shrinkImage&&image != null&&(image.getWidth()>maxWidth||image.getHeight()>maxHeight))
 		{
 			//double aspectRatio = image.getWidth() / image.getHeight();
-			double shrinkFactor = Math.max((double)maxWidth/image.getWidth(),(double)maxHeight/image.getHeight());
+			double shrinkFactor = Math.min((double)maxWidth/image.getWidth(),(double)maxHeight/image.getHeight());
 			image.setPixelSize((int)((double)image.getWidth()*shrinkFactor),(int)((double)image.getHeight()*shrinkFactor));
 			//image.setPixelSize(40, 40);
 		}
