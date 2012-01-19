@@ -146,4 +146,9 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	{
 		getAutoSPARQLSession().setUseDBpediaLive(useDBpediaLive);	
 	}
+	
+	@Override
+	public List<String> getSameAsLinks(String resourceURI) {
+		return getAutoSPARQLSession().getSameAsLinks(resourceURI);
+	}
 }

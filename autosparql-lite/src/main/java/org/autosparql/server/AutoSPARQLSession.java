@@ -1,8 +1,10 @@
 package org.autosparql.server;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +35,7 @@ import org.autosparql.server.util.LanguageResolver;
 import org.autosparql.shared.BlackList;
 import org.autosparql.shared.Example;
 import org.autosparql.shared.SPARQLException;
+import org.autosparql.shared.SameAsWhiteList;
 import org.dllearner.algorithm.qtl.QTL;
 import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
@@ -42,8 +46,13 @@ import org.openjena.atlas.logging.Log;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.shared.impl.PrefixMappingImpl;
+import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /** @author Konrad Höffner */
@@ -63,6 +72,8 @@ public class AutoSPARQLSession
 	String lastQuery = null;
 	PrefixMapping x = new PrefixMappingImpl();
 	private boolean fastSearch = false;
+	
+	private static final String sameAsURI = "http://sameas.org/rdf?uri=";
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
 	 * after each method dealing with the cache,
@@ -226,24 +237,29 @@ public class AutoSPARQLSession
 		for(QuerySolution qs=rs.next();rs.hasNext();qs=rs.next())
 		{
 			String property = qs.getResource("p").getURI();
+			
 			if(BlackList.dbpedia.contains(property)) {continue;}
 			// TODO: extend blacklist with regular expressions so that this can be made through the blacklist
-			if(property.startsWith("http://dbpedia.org/property/")) {continue;}
+			if(property.startsWith("http://dbpedia.org/property/") || property.startsWith("http://dbpedia.org/resource/")) {continue;}
 			String uri = qs.getResource("?s").getURI();
 
 			Example e=uriToExample.containsKey(uri)?uriToExample.get(uri):new Example(uri);
 			uriToExample.put(uri,e);
 
-			String object = qs.get("o").toString();
-			try{object = URLDecoder.decode(object,"UTF-8");} catch (UnsupportedEncodingException e1){throw new RuntimeException(e1);}
+			RDFNode object = qs.get("o");
+			String objectString = object.toString();
+			if(object.isURIResource()){
+				try{objectString = URLDecoder.decode(objectString,"UTF-8");} catch (UnsupportedEncodingException e1){throw new RuntimeException(e1);}
+			}
+			
 			String oldObject=e.get(property);
 			if(oldObject!=null)
 			{
-				e.set(property, resolver.resolve(oldObject, object));
+				e.set(property, resolver.resolve(oldObject, objectString));
 			}
 			else
 			{
-				e.set(property,object.toString());
+				e.set(property,objectString);
 			}
 		}
 		examples.addAll(uriToExample.values());
@@ -257,8 +273,9 @@ public class AutoSPARQLSession
 	{
 		List<String> uris = new LinkedList<String>();
 		for(Example example: examples)
-		{
+		{System.out.println("TEST: " + example);
 			uris.add(example.getURI());
+			example.setSameAsLinks(getSameAsLinks(example.getURI()));
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT * from <http://dbpedia.org> { ?s ?p ?o. FILTER(");
@@ -386,5 +403,32 @@ public class AutoSPARQLSession
 		property2LabelMap.put(RDFS.label.getURI(), "label");
 
 		return property2LabelMap;
+	}
+	
+	public List<String> getSameAsLinks(String resourceURI) {
+		List<String> sameAsLinks = new ArrayList<String>();
+		try {
+			String requestURI = sameAsURI + URLEncoder.encode(resourceURI, "UTF-8");
+			URLConnection conn = new URL(requestURI).openConnection();
+			Model model = ModelFactory.createDefaultModel();
+			model.read(conn.getInputStream(), null);
+			String url;
+			Set<String> used = new HashSet<String>();
+			for(Statement st : model.listStatements(null, OWL.sameAs, (RDFNode)null).toList()){
+				url = st.getObject().asResource().getURI();
+				String prefix;
+				if((prefix = SameAsWhiteList.isAllowed(url)) != null && used.add(prefix)){
+					sameAsLinks.add(url);
+				}
+			}
+			sameAsLinks.add(resourceURI.replace("http://dbpedia.org/resource/", "http://en.wikipedia.org/wiki/"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return sameAsLinks;
 	}
 }

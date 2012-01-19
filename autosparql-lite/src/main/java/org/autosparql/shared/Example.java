@@ -23,6 +23,8 @@ public class Example extends BaseModel implements Comparable<Example>, com.googl
 
 	// else there are problems with dots in the names
 	protected boolean allowNestedValues = false;
+	
+	private List<String> sameAsLinks;
 
 	/** sorl is used as a fallback if the normal endpoint does not work */
 	public boolean containsSolrData = false;
@@ -168,6 +170,14 @@ public class Example extends BaseModel implements Comparable<Example>, com.googl
 
 	public String getComment(){
 		return (String)get(COMMENT);
+	}
+
+	public List<String> getSameAsLinks() {
+		return sameAsLinks;
+	}
+
+	public void setSameAsLinks(List<String> sameAsLinks) {
+		this.sameAsLinks = sameAsLinks;
 	}
 
 	@Override
