@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.HTML;
 
 public class ApplicationController extends Controller
 {
+	private static final boolean USE_DBPEDIA_LIVE_DEFAULT = true;
 	private ApplicationView appView;
 	private Logger log = Logger.getLogger(ApplicationController.class.toString());
 
@@ -88,7 +89,8 @@ public class ApplicationController extends Controller
 	public void initialize()
 	{
 		String query = com.google.gwt.user.client.Window.Location.getParameter("query");
-		boolean useDBpediaLive = "on".equals(com.google.gwt.user.client.Window.Location.getParameter("dbpedialive"));
+		String useDBpediaLiveParameter = com.google.gwt.user.client.Window.Location.getParameter("dbpedialive");
+		boolean useDBpediaLive = useDBpediaLiveParameter==null?USE_DBPEDIA_LIVE_DEFAULT:"on".equals(useDBpediaLiveParameter);
 		boolean fastSearch = "on".equals(com.google.gwt.user.client.Window.Location.getParameter("fastsearch"));
 		log.info("dbpedia live: "+useDBpediaLive);
 		log.info("fastsearch: "+fastSearch);
