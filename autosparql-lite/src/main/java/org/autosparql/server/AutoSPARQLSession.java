@@ -130,7 +130,13 @@ public class AutoSPARQLSession
 	public AutoSPARQLSession(SparqlEndpoint endpoint, String solrServerURL, String cacheDir)
 	{
 		this.endpoint= new SPARQLEndpointEx(endpoint,endpoint.toString(),null,Collections.<String>emptySet());
-		selectCache = new ExtractionDBCache(cacheDir + "/" + this.endpoint.getBaseURI()+ "/select-cache");
+		String dir = cacheDir;
+		try {
+			dir = cacheDir + "/" + URLEncoder.encode(this.endpoint.getURL().toString(), "UTF-8")+ "/select-cache";
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		selectCache = new ExtractionDBCache(dir);
 
 		primarySearch = new TBSLSearch(endpoint, cacheDir);
 		secondarySearch = new SolrSearch(solrServerURL);

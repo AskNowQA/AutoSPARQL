@@ -36,7 +36,7 @@ public class CommentRenderer implements GridCellRenderer<Example>
 		//return new HTML("<div title=\""+title+"\" alt=\""+title+">"+literal+"</div>");
 		if(shortLiteral.length()<literal.length())
 		{
-		return new HTML("<div title="+title+" alt="+title+">"+shortLiteral+"</div>");
+		return new HTML("<div title=\""+title+"\" alt=\""+title+"\">"+shortLiteral+"</div>");
 		}
 		else
 		{
