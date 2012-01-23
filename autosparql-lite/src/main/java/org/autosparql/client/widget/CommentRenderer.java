@@ -27,6 +27,10 @@ public class CommentRenderer implements GridCellRenderer<Example>
 			ListStore<Example> store, Grid<Example> grid)
 	{	
 		String literal = model.get(property);
+		//TODO workaround as some resources have no RDF comment
+		if(literal == null){
+			literal = "";
+		}
 		//literal = SafeHtmlUtils.htmlEscape(literal);
 		// Remove language tag
 		if(!SHOW_LANGUAGE_TAG&&literal.contains("@")) {literal = literal.substring(0,literal.lastIndexOf('@'));}

@@ -33,7 +33,6 @@ public class LabelRenderer implements GridCellRenderer<Example>
 		html.append(dbpediaLink + "<br/>");
 		
 		for(String sameAsLink : model.getSameAsLinks()){
-			System.out.println(sameAsLink);
 			html.append("<a style='padding-top=5px' target=\"_blank\" href=\""+sameAsLink+"\">"+SameAsWhiteList.getImageLink(sameAsLink)+"</a> &nbsp;");
 		}
 		
