@@ -291,13 +291,6 @@
 		<!-- Jars for SIMBA stuff from Axel -->
 
 		<dependency>
-			<groupId>uk.ac.shef.wit</groupId>
-			<artifactId>simmetrics</artifactId>
-			<version>1.6.2</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>stax</groupId>
 			<artifactId>stax-api</artifactId>
 			<version>1.0.1</version>
@@ -477,10 +470,5 @@
 			</snapshots>
 		</repository>
 		<!-- This repository contains the jars for pdb2rdf -->
-		<repository>
-			<id>semanticscience.org</id>
-			<name>Semanticscience projects</name>
-			<url>http://s1.semanticscience.org:8080/nexus/content/groups/public/</url>
-		</repository>
 	</repositories>
 </project>
