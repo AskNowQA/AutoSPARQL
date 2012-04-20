@@ -59,21 +59,21 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class AutoSPARQLSession
 {
 	private static Logger logger = Logger.getLogger(AutoSPARQLSession.class);
-	private Map<String, String> property2LabelMap;
-	private TBSLSearch primarySearch;
-	private SolrSearch secondarySearch;
+	protected Map<String, String> property2LabelMap;
+	protected TBSLSearch primarySearch;
+	protected SolrSearch secondarySearch;
 
-	private final String cacheDir = "cache";
-	private SPARQLEndpointEx endpoint;
-	private final ExtractionDBCache selectCache;
+	protected final String cacheDir = "cache";
+	protected SPARQLEndpointEx endpoint;
+	protected final ExtractionDBCache selectCache;
 
 	public static final List<String> languages = Arrays.asList(new String[] {"de","en"});
-	private static final int MAX_NUMBER_OF_EXAMPLES = 20;
+	protected static final int MAX_NUMBER_OF_EXAMPLES = 20;
 	String lastQuery = null;
 	PrefixMapping x = new PrefixMappingImpl();
-	private boolean fastSearch = false;
+	protected boolean fastSearch = false;
 	
-	private static final String sameAsURI = "http://sameas.org/rdf?uri=";
+	protected static final String sameAsURI = "http://sameas.org/rdf?uri=";
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
 	 * after each method dealing with the cache,
@@ -276,7 +276,9 @@ public class AutoSPARQLSession
 	/** Adds all existing properties for the uris in the examples and one object for each one (depending on the languages)
 	 * @param examples */
 	public void fillExamples(SortedSet<Example> examples)
-	{
+	{		
+		if(examples==null) {examples= new TreeSet<Example>();}
+		if(examples.isEmpty()) {System.err.println("Examples are empty.");return;}
 		List<String> uris = new LinkedList<String>();
 		for(Example example: examples)
 		{System.out.println("TEST: " + example);
@@ -284,6 +286,7 @@ public class AutoSPARQLSession
 			example.setSameAsLinks(getSameAsLinks(example.getURI()));
 		}
 		StringBuilder sb = new StringBuilder();
+
 		sb.append("SELECT * from <http://dbpedia.org> { ?s ?p ?o. FILTER(");
 		for(String uri:uris) {sb.append("?s = <"+DefaultPrefixMapping.INSTANCE.expandPrefix(uri)+">||");}
 		// remove last "||"-substring
@@ -320,7 +323,8 @@ public class AutoSPARQLSession
 			{
 				map.put(property,example.get(property).toString());
 			}
-			map.put(OWL.sameAs.getURI(), example.getSameAsLinks());
+			if(example.getSameAsLinks()!=null&&!example.getSameAsLinks().isEmpty())
+			{map.put(OWL.sameAs.getURI(), example.getSameAsLinks());}
 			maps.add(map);
 		}
 		return maps;

@@ -189,7 +189,7 @@ public class Example extends BaseModel implements Comparable<Example>, com.googl
 			sb.append(name+"->"+this.getProperties().get(name));
 			sb.append(',');
 		}
-		return sb.substring(0,sb.length()-1)+")";
+		return sb.substring(0,Math.max(1,sb.length())-1)+")";
 	}
 
 	@Override

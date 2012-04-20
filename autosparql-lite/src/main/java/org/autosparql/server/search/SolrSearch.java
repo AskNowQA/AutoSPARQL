@@ -25,6 +25,8 @@ public class SolrSearch implements Search
 	private static final int LIMIT = 10;
 	private static final int OFFSET = 0;
 
+	private static final String SOLR_DBPEDIA_CLASSES = "http://dbpedia.aksw.org:8080/solr/dbpedia_classes";
+
 	private CommonsHttpSolrServer server;
 
 	public SolrSearch(String serverURL){
@@ -161,7 +163,7 @@ public class SolrSearch implements Search
 	public List<String> getTypes(String term){
 		List<String> types = new ArrayList<String>();
 		try {
-			CommonsHttpSolrServer server = new CommonsHttpSolrServer("http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_classes");
+			CommonsHttpSolrServer server = new CommonsHttpSolrServer(SOLR_DBPEDIA_CLASSES);
 			server.setRequestWriter(new BinaryRequestWriter());
 			SolrQuery q = new SolrQuery("label:" + term);
 			QueryResponse response = server.query(q);

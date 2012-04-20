@@ -179,10 +179,6 @@
 		<!-- Jars for SIMBA stuff from Axel -->
 
 		<dependency>
-			<groupId>uk.ac.shef.wit</groupId>
-			<artifactId>simmetrics</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>stax</groupId>
 			<artifactId>stax-api</artifactId>
 		</dependency>

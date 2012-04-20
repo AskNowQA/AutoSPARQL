@@ -1,4 +1,4 @@
 <module rename-to="app">
 <inherits name="org.autosparql.Application"/>
-<set-property name="user.agent" value="safari" />
+<set-property name="user.agent" value="gecko1_8" />
 </module>

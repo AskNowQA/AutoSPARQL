@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
+import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.Endpoints;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
@@ -29,25 +30,26 @@ import org.ini4j.InvalidFileFormatException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService {
-	
+
 	/** */
 	private static final long serialVersionUID = 1;
 
 	enum SessionAttributes{AUTOSPARQL_SESSION}
-	
+
 	private Map<Endpoint, SPARQLEndpointEx> endpointsMap;
-	
+
 	public AutoSPARQLServiceImpl() {}
 	private Set<String> questionWords = new HashSet<String>();
-	AutoSPARQLSession session = null;
-	
+
+	final AutoSPARQLSession session = createAutoSPARQLSession();
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		loadEndpoints();
 	}
-	
-	
+
+
 	private void loadEndpoints() {
 		try {
 			List<SPARQLEndpointEx> endpoints = Endpoints.loadEndpoints(getServletContext().getResource(
@@ -68,7 +70,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	{
 		return new ArrayList<Endpoint>(endpointsMap.keySet());
 	}
-	
+
 	@Override
 	public SortedSet<Example> getExamples(String query)
 	{
@@ -76,51 +78,48 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		String[] tokens = query.split("\\s");
 		questionWords.clear();
 		for(String token: tokens) {questionWords.add(token);}
-	
+
 		//try {
-			SortedSet<Example> examples = null;
-			try {
-				AutoSPARQLSession session = getAutoSPARQLSession();
-				examples = session.getExamples(query);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return examples;
+		SortedSet<Example> examples = null;
+		try {
+			AutoSPARQLSession session = getAutoSPARQLSession();
+			examples = session.getExamples(query);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return examples;
 		//	}
 		//catch (Exception e) {e.printStackTrace();}
-	//	return null;
+		//	return null;
 	}
-	
+
 	private HttpSession getHttpSession(){
 		return getThreadLocalRequest().getSession();
 	}
-	
+
 	private AutoSPARQLSession createAutoSPARQLSession(/*SPARQLEndpointEx endpoint*/)
 	{
 		String cacheDir = null;
 		try{cacheDir=getServletContext().getRealPath("cache");}
 		catch(Throwable t) {cacheDir="cache";}
-		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources", cacheDir);
-		this.session = session;
+		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES, cacheDir);
 		//getHttpSession().setAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString(), session);
 		return session;
 	}
 	
-	public AutoSPARQLSession getAutoSPARQLSession(){
-		//AutoSPARQLSession session = (AutoSPARQLSession) getHttpSession().getAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString());
-		if(session == null){
-			session = createAutoSPARQLSession();
-		}
-		return session;
+	public AutoSPARQLSession getAutoSPARQLSession()
+	{
+			//AutoSPARQLSession session = (AutoSPARQLSession) getHttpSession().getAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString());
+			return session;	
 	}
-	
+
 	@Override
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives)
 	{
 		return getAutoSPARQLSession().getExamplesByQTL(positives, negatives,questionWords);
 	}
-	
+
 	public static void main(String[] args) throws InvalidFileFormatException, FileNotFoundException, IOException, NoTemplateFoundException {
 		SPARQLTemplateBasedLearner l = new SPARQLTemplateBasedLearner(AutoSPARQLServiceImpl.class.getClassLoader().getResource("org/autosparql/server/tbsl.properties").getPath());
 		l.setQuestion("Give me all books written by Dan Brown");
@@ -146,7 +145,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	{
 		getAutoSPARQLSession().setUseDBpediaLive(useDBpediaLive);	
 	}
-	
+
 	@Override
 	public List<String> getSameAsLinks(String resourceURI) {
 		return getAutoSPARQLSession().getSameAsLinks(resourceURI);

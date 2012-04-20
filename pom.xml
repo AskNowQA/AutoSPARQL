@@ -86,14 +86,12 @@
 				<artifactId>gxt</artifactId>
 				<version>${gxt.version}</version>
 			</dependency>
+<dependency>
+  <groupId>org.apache.jena</groupId>
+  <artifactId>jena-arq</artifactId>
+  <version>2.9.1-incubating-SNAPSHOT</version>
+</dependency>
 
-			<!--Available via central, we use the latest with minor mods to DL Learner 
-				source (IE Dig related code) -->
-			<dependency>
-				<groupId>com.hp.hpl.jena</groupId>
-				<artifactId>jena</artifactId>
-				<version>2.6.4</version>
-			</dependency>
 			<!--SwingX is in central -->
 
 			<dependency>
@@ -402,6 +400,20 @@
 	</dependencyManagement>
 
 	<repositories>
+<repository>
+  <id>apache-repo-releases</id>
+  <url>https://repository.apache.org/content/repositories/releases/</url>
+  <releases>
+   <enabled>true</enabled>
+  </releases>
+</repository>
+<repository>
+  <id>apache-repo-snapshots</id>
+  <url>https://repository.apache.org/content/repositories/snapshots/</url>
+  <snapshots>
+   <enabled>true</enabled>
+  </snapshots>
+</repository>
 
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
@@ -471,4 +483,36 @@
 		</repository>
 		<!-- This repository contains the jars for pdb2rdf -->
 	</repositories>
+<dependencies>
+<dependency>
+    <groupId>org.apache.jena</groupId>
+    <artifactId>jena-core</artifactId>
+    <version>2.7.1-incubating-SNAPSHOT</version>
+  </dependency>
+<dependency>
+ <groupId>org.apache.jena</groupId>
+ <artifactId>jena-iri</artifactId>
+ <version>0.9.1-incubating-SNAPSHOT</version>
+ <scope>compile</scope>
+</dependency>
+<!--<dependency>
+    <groupId>xerces</groupId>
+    <artifactId>xercesImpl</artifactId>
+    <version>2.6.0</version>
+</dependency>-->
+	<dependency>
+		<groupId>org.dllearner</groupId>
+		<artifactId>components-ext</artifactId>
+		<exclusions>
+			<exclusion>
+				<artifactId>slf4j-log4j12</artifactId>
+				<groupId>org.slf4j</groupId>
+			</exclusion>
+			<exclusion>
+				<artifactId>jena</artifactId>
+				<groupId>com.hp.hpl.jena</groupId>
+			</exclusion>
+		</exclusions>
+	</dependency>
+</dependencies>
 </project>

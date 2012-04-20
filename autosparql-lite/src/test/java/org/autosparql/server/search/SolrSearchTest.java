@@ -14,7 +14,7 @@ public class SolrSearchTest
 	@Test
 	public void testGetExamples() throws MalformedURLException
 	{
-		SolrSearch search = new SolrSearch("http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources");
+		SolrSearch search = new SolrSearch(TBSLSearch.SOLR_DBPEDIA_RESOURCES);
 		SortedSet<Example> examples = search.getExamples("books written by Dan Brown");
 		System.out.println(examples);
 		assertTrue(examples.contains(new Example("http://dbpedia.org/resource/Digital_Fortress",null,null,null)));

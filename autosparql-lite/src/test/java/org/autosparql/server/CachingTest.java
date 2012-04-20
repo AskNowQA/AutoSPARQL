@@ -3,6 +3,7 @@ import static org.junit.Assert.assertTrue;
 import static org.autosparql.server.AutoSPARQLSession.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -28,14 +29,15 @@ public class CachingTest
 	{
 		e1.set("rdfs:label", "Berlin");
 		e2.set("rdfs:label", "Leipzig");
-		examples = new TreeSet<Example>(Arrays.asList(new Example[]{e1,e2}));
+		examples = Collections.<Example>unmodifiableSortedSet(new TreeSet<Example>(Arrays.asList(new Example[]{e1,e2})));
 	}
 
 	@Test
 	public void testExampleToMapToExample()
 	{
 		//System.out.println(AutoSPARQLSession.examplesToMaps(examples));
-		SortedSet<Example> converted = AutoSPARQLSession.mapsToExamples(AutoSPARQLSession.examplesToMaps(examples));
+		List<Map<String, Object>> maps = AutoSPARQLSession.examplesToMaps(examples);
+		SortedSet<Example> converted = AutoSPARQLSession.mapsToExamples(maps);
 		//System.out.println(converted);
 		// it's sorted, so Berlin should be first
 		assertTrue(e1.deepEquals(converted.first()));
