@@ -72,7 +72,7 @@ public class AutoSPARQLSession
 	String lastQuery = null;
 	PrefixMapping x = new PrefixMappingImpl();
 	protected boolean fastSearch = false;
-	
+
 	protected static final String sameAsURI = "http://sameas.org/rdf?uri=";
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
@@ -84,7 +84,7 @@ public class AutoSPARQLSession
 		if(cm==null) {cm=CacheManager.create();}
 		return cm;
 	}
-
+	
 	// public AutoSPARQLSession(SPARQLEndpointEx endpoint, String cacheDir,
 	// String servletContextPath, String solrURL, QuestionProcessor
 	// questionPreprocessor){
@@ -147,12 +147,12 @@ public class AutoSPARQLSession
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
 		logger.info("getExamplesByQTL("+positives+","+negatives+","+questionWords+")");
-//		Cache cache = getCacheManager().getCache("qtl");
-//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
-//		{
-//			Element e;
-//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
-//		}
+		//		Cache cache = getCacheManager().getCache("qtl");
+		//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
+		//		{
+		//			Element e;
+		//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
+		//		}
 		QTL qtl = new QTL(endpoint, selectCache);
 		qtl.setExamples(positives, negatives);
 		if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
@@ -232,7 +232,7 @@ public class AutoSPARQLSession
 	/** @param examples the list of existing examples. if null a new one will be created. examples not contained will be created.
 	/** @param rs a resultset whose variables have to be "s", "p" and "o"
 	/** @return the original list if non-null (else a new one) filled with the properties and one object per property from the resultset.*/
-	public SortedSet<Example> fillExamples(SortedSet<Example> examples, ResultSet rs)
+	public static SortedSet<Example> fillExamples(SortedSet<Example> examples, ResultSet rs)
 	{
 		if(examples==null) {examples = new TreeSet<Example>();}
 		if(!rs.hasNext()) {return new TreeSet<Example>(examples);}
@@ -243,7 +243,7 @@ public class AutoSPARQLSession
 		for(QuerySolution qs=rs.next();rs.hasNext();qs=rs.next())
 		{
 			String property = qs.getResource("p").getURI();
-			
+
 			if(BlackList.dbpedia.contains(property)) {continue;}
 			// TODO: extend blacklist with regular expressions so that this can be made through the blacklist
 			if(property.startsWith("http://dbpedia.org/property/") || property.startsWith("http://dbpedia.org/resource/")) {continue;}
@@ -257,7 +257,7 @@ public class AutoSPARQLSession
 			if(object.isURIResource()){
 				try{objectString = URLDecoder.decode(objectString,"UTF-8");} catch (UnsupportedEncodingException e1){throw new RuntimeException(e1);}
 			}
-			
+
 			String oldObject=e.get(property);
 			if(oldObject!=null)
 			{
@@ -281,7 +281,8 @@ public class AutoSPARQLSession
 		if(examples.isEmpty()) {System.err.println("Examples are empty.");return;}
 		List<String> uris = new LinkedList<String>();
 		for(Example example: examples)
-		{System.out.println("TEST: " + example);
+		{
+			//	System.out.println("TEST: " + example);
 			uris.add(example.getURI());
 			example.setSameAsLinks(getSameAsLinks(example.getURI()));
 		}
@@ -305,7 +306,7 @@ public class AutoSPARQLSession
 			//example.setProperties(map);
 			example.setSameAsLinks((List<String>) map.get(OWL.sameAs.getURI()));
 			examples.add(example);
-			
+
 		}
 		return examples;
 	}
@@ -334,7 +335,7 @@ public class AutoSPARQLSession
 	{
 		return query+"+fastsearch="+(fastSearch?"on":"off");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public SortedSet<Example> getExamples(String query)
 	{
@@ -384,7 +385,7 @@ public class AutoSPARQLSession
 	}
 
 	public Map<String, String> getProperties(String query) throws AutoSPARQLException
-			{
+	{
 		property2LabelMap = new TreeMap<String, String>();
 
 		String queryTriples = query.substring(18, query.length() - 1);
@@ -417,8 +418,8 @@ public class AutoSPARQLSession
 
 		return property2LabelMap;
 	}
-	
-	public List<String> getSameAsLinks(String resourceURI) {
+
+	public static List<String> getSameAsLinks(String resourceURI) {
 		List<String> sameAsLinks = new ArrayList<String>();
 		try {
 			String requestURI = sameAsURI + URLEncoder.encode(resourceURI, "UTF-8");

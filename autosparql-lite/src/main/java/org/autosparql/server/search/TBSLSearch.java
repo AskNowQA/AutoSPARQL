@@ -35,15 +35,18 @@ public class TBSLSearch implements Search
 		SOLR_DBPEDIA_RESOURCES = options.get("solr.resources.url");
 		SOLR_DBPEDIA_CLASSES = options.get("solr.classes.url");			
 	}
-	//private final URL wordnet = getClass().getClassLoader().getResource("tbsl/wordnet_properties.xml").;	
+	//protected final URL wordnet = getClass().getClassLoader().getResource("tbsl/wordnet_properties.xml").;	
 
-	private static final int LIMIT = 10;
-	private static final int OFFSET = 0;
+	protected static final int LIMIT = 10;
+	protected static final int OFFSET = 0;
 
-	private final String QUERY_PREFIX = "";//"Give me all ";
+	protected final String QUERY_PREFIX = "";//"Give me all ";
 
-	private SPARQLTemplateBasedLearner tbsl;
-	private SparqlEndpoint endpoint;
+	protected SPARQLTemplateBasedLearner tbsl;
+	protected SparqlEndpoint endpoint;
+	protected String learnedQuery = null;
+	
+	public String learnedQuery() {return learnedQuery;}
 	
 	static class POSTaggerHolder
 	{
@@ -53,7 +56,7 @@ public class TBSLSearch implements Search
 	
 	static class WordNetHolder
 	{
-		private static final String wordNetFilename = "tbsl/wordnet_properties.xml";
+		protected static final String wordNetFilename = "tbsl/wordnet_properties.xml";
 		static {logger.debug("initializing WordNet...");}
 		public static final WordNet wordNet = new WordNet(wordNetFilename);
 	}
@@ -129,7 +132,7 @@ public TBSLSearch(SparqlEndpoint endpoint, String cacheDir)
 			e.printStackTrace();
 		}
 		//get SPARQL query which returned result, if exists
-		String learnedQuery = tbsl.getBestSPARQLQuery();
+		learnedQuery  = tbsl.getBestSPARQLQuery();
 		if(learnedQuery==null)
 		{
 			logger.info("...unsuccessfully");
@@ -198,7 +201,7 @@ public TBSLSearch(SparqlEndpoint endpoint, String cacheDir)
 		return null;
 	}
 
-	private ResultSet executeQuery(String query)
+	protected ResultSet executeQuery(String query)
 	{
 
 		QueryEngineHTTP queryExecution = new QueryEngineHTTP(endpoint.getURL().toString(), query);
