@@ -57,9 +57,9 @@ public class AutoSPARQLSessionTest
 		assertTrue("Example "+example+" missing in results. Found values: "+'\n'+
 				Example.getURIs(examples).toString().replace(',', '\n'),examples.contains(example));				
 
-		positives = new String[] {"http://dbpedia.org/resource/Angels_&_Demons"};
-		negatives = new String[] {"http://dbpedia.org/resource/Arthur%27s_Teacher_Trouble"};
-		examples = new HashSet<Example>(session.getExamplesByQTL(Arrays.asList(positives), Arrays.asList(negatives),new HashSet<String>(Arrays.asList(new String[] {"film","starring","Brad Pitt"}))));
+//		positives = new String[] {"http://dbpedia.org/resource/Angels_&_Demons"};
+//		negatives = new String[] {"http://dbpedia.org/resource/Arthur%27s_Teacher_Trouble"};
+//		examples = new HashSet<Example>(session.getExamplesByQTL(Arrays.asList(positives), Arrays.asList(negatives),new HashSet<String>(Arrays.asList(new String[] {"film","starring","Brad Pitt"}))));
 
 	}
 }
