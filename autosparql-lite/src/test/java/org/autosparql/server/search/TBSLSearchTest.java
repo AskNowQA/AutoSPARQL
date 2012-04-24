@@ -20,7 +20,7 @@ public class TBSLSearchTest
 		System.out.println("Creating TBSLSearch instance");
 		TBSLSearch search = new TBSLSearch(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),"cache");
 		System.out.println("Creating AutoSPARQLSession instance");
-		//AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),	TBSLSearch.SOLR_DBPEDIA_RESOURCES, "cache");
+		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),	TBSLSearch.SOLR_DBPEDIA_RESOURCES, "cache");
 
 		//List<Example> examples = search.getExamples("soccer clubs in Premier League");
 		
@@ -31,6 +31,8 @@ public class TBSLSearchTest
 		// Example.equals() only uses the examples uri's
 		System.out.println(examples);
 		assertTrue(examples.contains(new Example("http://dbpedia.org/resource/The_Da_Vinci_Code",null,null,null)));
+		System.out.println(search.learnedQuery());
+		
 
 //		session.fillExamples(examples);
 //		for(Example example : examples){

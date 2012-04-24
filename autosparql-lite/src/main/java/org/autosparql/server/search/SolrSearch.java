@@ -20,14 +20,14 @@ import org.autosparql.shared.Example;
 
 public class SolrSearch implements Search
 {
-	private static Logger logger = Logger.getLogger(SolrSearch.class);
+	protected static Logger logger = Logger.getLogger(SolrSearch.class);
+		
+	protected static final int LIMIT = 10;
+	protected static final int OFFSET = 0;
 
-	private static final int LIMIT = 10;
-	private static final int OFFSET = 0;
+	protected static final String SOLR_DBPEDIA_CLASSES = "http://dbpedia.aksw.org:8080/solr/dbpedia_classes";
 
-	private static final String SOLR_DBPEDIA_CLASSES = "http://dbpedia.aksw.org:8080/solr/dbpedia_classes";
-
-	private CommonsHttpSolrServer server;
+	protected CommonsHttpSolrServer server;
 
 	public SolrSearch(String serverURL){
 		try {
@@ -179,12 +179,11 @@ public class SolrSearch implements Search
 		return types;
 	}
 
-	private String buildQueryString(String query){
+	protected String buildQueryString(String query){
 		return "comment:(" + query + ") AND NOT label:(" + query + ")";
 	}
 
-	private String buildQueryString(String query, String type){
+	protected String buildQueryString(String query, String type){
 		return "comment:(" + query + ") AND NOT label:(" + query + ") AND types:\"" + type + "\"";
 	}
-
 }
