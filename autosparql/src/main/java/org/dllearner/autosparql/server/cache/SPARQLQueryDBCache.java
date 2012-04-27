@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.aksw.commons.jena.ExtendedQueryEngineHTTP;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 
@@ -21,6 +20,7 @@ import com.hp.hpl.jena.query.ResultSetFactory;
 import com.hp.hpl.jena.query.ResultSetRewindable;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
@@ -122,9 +122,9 @@ public class SPARQLQueryDBCache implements SPARQLQueryCache{
 			// System.out.println("Posing new query");
 
 			// String endpoint = "http://139.18.2.37:8890/sparql";
-			ExtendedQueryEngineHTTP queryExecution = new ExtendedQueryEngineHTTP(
+			QueryEngineHTTP queryExecution = new QueryEngineHTTP(
 					endpoint.getURL().toString(), query);
-			queryExecution.setTimeOut(maxExecutionTimeInSeconds * 1000);
+			queryExecution.setTimeout(maxExecutionTimeInSeconds * 1000);
 			for (String dgu : endpoint.getDefaultGraphURIs()) {
 				queryExecution.addDefaultGraph(dgu);
 			}
@@ -191,9 +191,9 @@ public class SPARQLQueryDBCache implements SPARQLQueryCache{
 			} else {
 				mon.start();
 				// System.out.println("no-cache");
-				ExtendedQueryEngineHTTP queryExecution = new ExtendedQueryEngineHTTP(
+				QueryEngineHTTP queryExecution = new QueryEngineHTTP(
 						endpoint.getURL().toString(), query);
-				queryExecution.setTimeOut(maxExecutionTimeInSeconds * 1000);
+				queryExecution.setTimeout(maxExecutionTimeInSeconds * 1000);
 				for (String dgu : endpoint.getDefaultGraphURIs()) {
 					queryExecution.addDefaultGraph(dgu);
 				}

@@ -152,6 +152,14 @@
 					<groupId>org.apache.lucene</groupId>
 					<artifactId>lucene-core</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>sparql</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -243,11 +251,19 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>collections</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena-core</artifactId>
+					<groupId>org.apache.jena</groupId>
+				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.aksw.commons</groupId>
-			<artifactId>sparql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.aksw.commons</groupId>
@@ -260,6 +276,14 @@
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>collections</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena-core</artifactId>
+					<groupId>org.apache.jena</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -287,6 +311,34 @@
 					<artifactId>slf4j-log4j12</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>nif</artifactId>
+					<groupId>org.nlp2rdf</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena</artifactId>
+					<groupId>com.hp.hpl.jena</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>any23-core</artifactId>
+					<groupId>org.deri.any23</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>sparql</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>collections</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena-core</artifactId>
+					<groupId>org.apache.jena</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -300,6 +352,16 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-arq</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>jena-core</artifactId>
+					<groupId>org.apache.jena</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 

@@ -152,9 +152,8 @@ public class SolrSearch implements Search
 				return new TreeSet<Example>();
 			}
 		} catch (SolrServerException e) {
-			logger.error("SolrSearch.getExamples() with query "+query+"yielded the following exception:");
-			logger.error(e);
-			logger.error(Arrays.toString(e.getStackTrace()));
+			logger.error("SolrSearch.getExamples() with query "+query+" yielded the following exception:");
+			logger.error("ERROR in SOLRSearch", e);
 			return new TreeSet<Example>();
 		}
 		return examples;

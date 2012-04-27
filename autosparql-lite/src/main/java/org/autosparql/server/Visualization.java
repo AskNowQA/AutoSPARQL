@@ -20,7 +20,7 @@ public class Visualization
 		if(examples.isEmpty()) {return "";}
 		Example example = examples.iterator().next(); // TODO: maybe don't use only the first example?
 		Map<String,Object> properties = example.getProperties();
-		Set<String> numberProperties = new HashSet<>();
+		Set<String> numberProperties = new HashSet<String>();
 		for(String property : properties.keySet())
 		{
 			String object = properties.get(property).toString(); 
