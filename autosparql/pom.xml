@@ -152,6 +152,10 @@
 					<groupId>org.apache.lucene</groupId>
 					<artifactId>lucene-core</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -243,6 +247,10 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -287,15 +295,19 @@
 					<artifactId>slf4j-log4j12</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>nif</artifactId>
+					<groupId>org.nlp2rdf</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena</artifactId>
+					<groupId>com.hp.hpl.jena</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-solrj</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
