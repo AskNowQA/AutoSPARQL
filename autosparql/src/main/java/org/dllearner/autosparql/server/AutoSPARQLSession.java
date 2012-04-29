@@ -41,6 +41,7 @@ public class AutoSPARQLSession {
 	
 	private static final Logger logger = Logger.getLogger(AutoSPARQLSession.class);
 	
+	private Dataset dataset;
 	private SPARQLEndpointEx endpoint;
 	
 	private ExtractionDBCache constructCache;
@@ -70,14 +71,17 @@ public class AutoSPARQLSession {
 	public AutoSPARQLSession(){
 	}
 	
-	public AutoSPARQLSession(SPARQLEndpointEx endpoint, String cacheDir, String servletContextPath, String solrURL, QuestionProcessor questionPreprocessor){
-		this.endpoint = endpoint;
+	public AutoSPARQLSession(Dataset dataset, String cacheDir, String servletContextPath, String solrURL, QuestionProcessor questionPreprocessor){
+		this.dataset = dataset;
 		this.servletContextPath = servletContextPath;
 		this.questionPreprocessor = questionPreprocessor;
 		
+		endpoint = dataset.getEndpoint();
+		search = new SolrSearch(solrURL, questionPreprocessor);
+		
 		constructCache = new ExtractionDBCache(cacheDir + "/" + endpoint.getPrefix() + "/construct-cache");
 		selectCache = new ExtractionDBCache(cacheDir + "/" + endpoint.getPrefix() + "/select-cache");
-		search = new SolrSearch(solrURL, questionPreprocessor);
+	
 		exampleFinder = new ExampleFinder(endpoint, selectCache, constructCache, search, questionPreprocessor);
 		
 		property2LabelMap = new TreeMap<String, String>();

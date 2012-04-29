@@ -49,7 +49,7 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 	
 	private List<StoredSPARQLQuery> storedSPARQLQueries;
 	
-	private Map<Endpoint, SPARQLEndpointEx> endpointsMap;
+	private Map<Endpoint, Dataset> endpoint2DatasetMap;
 	
 	private Store store;
 	
@@ -79,7 +79,7 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 		
 		String configPath = config.getInitParameter("configPath");
 		loadConfig(configPath);
-		loadEndpoints();
+		loadDatasets();
 		loadSPARQLQueriesFromFile();
 		
 	}
@@ -103,23 +103,23 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 		}
 	}
 	
-	private void loadEndpoints(){
-		logger.debug("Loading endpoints from file: " + getServletContext().getRealPath("app/endpoints.xml"));
+	private void loadDatasets(){
+		logger.debug("Loading datasets from file: " + getServletContext().getRealPath("app/datasets.xml"));
 		try {
-			List<SPARQLEndpointEx> endpoints = new Endpoints(getServletContext().getRealPath("app/endpoints.xml")).getEndpoints();
+			List<Dataset> datasets = DatasetLoader.loadDatasets(getServletContext().getRealPath("app/endpoints.xml"));
 			
-			endpointsMap = new HashMap<Endpoint, SPARQLEndpointEx>();
+			endpoint2DatasetMap = new HashMap<Endpoint, Dataset>();
 			
-			for(SPARQLEndpointEx endpoint : endpoints){
-				logger.debug("Loaded endpoint: " + endpoint);
-				endpointsMap.put(new Endpoint(endpoint.getLabel()), endpoint);
+			for(Dataset dataset : datasets){
+				logger.debug("Loaded dataset: " + dataset);
+				endpoint2DatasetMap.put(new Endpoint(dataset.getEndpoint().getLabel()), dataset);
 			}
 		}catch (Exception e) {
 				e.printStackTrace();
 				logger.error(e);
 		}
-			
 	}
+	
 	
 	private String getRootPath(){
 		String path = System.getProperty("catalina.home");
@@ -180,7 +180,7 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 	@Override
 	public void setEndpoint(Endpoint endpoint) throws AutoSPARQLException{
 		try {
-			createNewAutoSPARQLSession(endpointsMap.get(endpoint));
+			createNewAutoSPARQLSession(endpoint2DatasetMap.get(endpoint));
 			logger.info(getUserString() + ":Set endpoint " + endpoint.getLabel());
 		} catch (Exception e) {
 			logger.error(e);
@@ -198,7 +198,7 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 	@Override
 	public List<Endpoint> getEndpoints() throws AutoSPARQLException{
 		try {
-			return new ArrayList<Endpoint>(endpointsMap.keySet());
+			return new ArrayList<Endpoint>(endpoint2DatasetMap.keySet());
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e);
@@ -211,9 +211,9 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 		return getAutoSPARQLSession().getCurrentQuery();
 	}
 	
-	private void createNewAutoSPARQLSession(SPARQLEndpointEx endpoint){
+	private void createNewAutoSPARQLSession(Dataset dataset){
 		logger.info(getUserString() + ": Start new AutoSPARQL session");
-		AutoSPARQLSession session = new AutoSPARQLSession(endpoint, cacheDir,
+		AutoSPARQLSession session = new AutoSPARQLSession(dataset, cacheDir,
 				getServletContext().getRealPath(""), solrURL, questionProcessor);
 		getSession().setAttribute(AUTOSPARQL_SESSION, session);
 	}
@@ -250,7 +250,7 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 
 	@Override
 	public void loadSPARQLQuery(StoredSPARQLQuery storedQuery) {
-		createNewAutoSPARQLSession(endpointsMap.get(new Endpoint(storedQuery.getEndpoint())));
+		createNewAutoSPARQLSession(endpoint2DatasetMap.get(new Endpoint(storedQuery.getEndpoint())));
 		logger.info(getUserString() + ":Loading stored query \"" + storedQuery.getQuestion() + "\"");
 		store.incrementHitCount(storedQuery);
 		

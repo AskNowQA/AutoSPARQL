@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasets>
+	<dataset>
+		<endpoint>
+			<url>http://live.dbpedia.org/sparql/</url>
+			<label>DBpedia Live@AKSW</label>
+			<defaultGraphURI>http://dbpedia.org</defaultGraphURI>
+			<predicateFilters>
+				<predicate>http://dbpedia.org/ontology/wikiPageWikiLink</predicate>
+				<predicate>http://dbpedia.org/ontology/wikiPageExternalLink
+				</predicate>
+				<predicate>http://dbpedia.org/property/wikiPageUsesTemplate
+				</predicate>
+			</predicateFilters>
+		</endpoint>
+		<index>
+			<solr>
+				<url>http://dbpedia.aksw.org:8080/solr</url>
+				<searchField></searchField>
+			</solr>
+		</index>
+
+	</dataset>
+	<dataset>
+		<endpoint>
+			<url>http://dbpedia.org/sparql/</url>
+			<label>DBpedia</label>
+			<defaultGraphURI>http://dbpedia.org</defaultGraphURI>
+			<predicateFilters>
+				<predicate>http://dbpedia.org/property/wikilink</predicate>
+				<predicate>http://dbpedia.org/ontology/wikiPageExternalLink
+				</predicate>
+				<predicate>http://dbpedia.org/property/wikiPageUsesTemplate
+				</predicate>
+			</predicateFilters>
+		</endpoint>
+		<index>
+			<solr>
+				<url>http://dbpedia.aksw.org:8080/solr</url>
+				<searchField></searchField>
+			</solr>
+		</index>
+	</dataset>
+	<dataset>
+		<endpoint>
+			<label>MusicBrainz</label>
+			<url>http://greententacle.techfak.uni-bielefeld.de:5171/sparql</url>
+		</endpoint>
+		<index>
+			<sparql virtuoso="true">
+				<url>http://dbpedia.org/sparql/</url>
+				<defaultGraphURI>http://dbpedia.org</defaultGraphURI>
+				<namedGraphURIs>
+					<namedGraphURI>http://musicbrainz.org/artists</namedGraphURI>
+				</namedGraphURIs>
+			</sparql>
+		</index>
+	</dataset>
+
+
+
+
+</datasets>
