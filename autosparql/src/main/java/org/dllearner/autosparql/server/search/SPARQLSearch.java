@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dllearner.autosparql.client.model.Example;
-import org.dllearner.autosparql.server.util.KeywordExtractor;
-import org.dllearner.autosparql.server.util.SimpleKeywordExtractor;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
@@ -18,7 +16,8 @@ public class SPARQLSearch implements Search{
 	
 	private SparqlEndpoint endpoint;
 	private ExtractionDBCache cache;
-	private KeywordExtractor keywordExtractor;
+//	private KeywordExtractor keywordExtractor;
+	private QuestionProcessor preprocessor;
 	
 	protected int limit = 10;
 	
@@ -48,13 +47,20 @@ public class SPARQLSearch implements Search{
 	}
 	
 	public SPARQLSearch(SparqlEndpoint endpoint, ExtractionDBCache cache) {
-		this(endpoint, cache, new SimpleKeywordExtractor(""));
-	}
-	
-	public SPARQLSearch(SparqlEndpoint endpoint, ExtractionDBCache cache, KeywordExtractor keywordExtractor) {
 		this.endpoint = endpoint;
 		this.cache = cache;
-		this.keywordExtractor = keywordExtractor;
+	}
+	
+//	public SPARQLSearch(SparqlEndpoint endpoint, ExtractionDBCache cache, KeywordExtractor keywordExtractor) {
+//		this.endpoint = endpoint;
+//		this.cache = cache;
+//		this.keywordExtractor = keywordExtractor;
+//	}
+	
+	public SPARQLSearch(SparqlEndpoint endpoint, ExtractionDBCache cache, QuestionProcessor preprocessor) {
+		this.endpoint = endpoint;
+		this.cache = cache;
+		this.preprocessor = preprocessor;
 	}
 
 	@Override
@@ -66,7 +72,7 @@ public class SPARQLSearch implements Search{
 	public List<String> getResources(String searchTerm, int offset) {
 		List<String> resources = new ArrayList<String>();
 		
-		String query = buildResourcesQuery(searchTerm);System.out.println(query);
+		String query = buildResourcesQuery(searchTerm, offset);
 		ResultSet rs = SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(endpoint, query));
 		QuerySolution qs;
 		while(rs.hasNext()){
@@ -88,7 +94,7 @@ public class SPARQLSearch implements Search{
 	public List<Example> getExamples(String searchTerm, int offset) {
 		List<Example> examples = new ArrayList<Example>();
 		
-		String query = buildExamplesQuery(searchTerm);
+		String query = buildExamplesQuery(searchTerm, offset);
 		ResultSet rs = SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(endpoint, query));
 		String uri;
 		String label;
@@ -134,12 +140,17 @@ public class SPARQLSearch implements Search{
 		limit = hitsPerPage;
 	}
 	
-	protected String buildExamplesQuery(String searchTerm){
-		return String.format(exampleQueryTemplate, searchTerm, limit, 0);
+	@Override
+	public void setQuestionPreprocessor(QuestionProcessor preprocessor) {
+		this.preprocessor = preprocessor;
 	}
 	
-	protected String buildResourcesQuery(String searchTerm){
-		return String.format(queryTemplate, searchTerm, limit, 0);
+	protected String buildExamplesQuery(String searchTerm, int offset){
+		return String.format(exampleQueryTemplate, searchTerm, limit, offset);
+	}
+	
+	protected String buildResourcesQuery(String searchTerm, int offset){
+		return String.format(queryTemplate, searchTerm, limit, offset);
 	}
 	
 	protected String buildCountQuery(String searchTerm){

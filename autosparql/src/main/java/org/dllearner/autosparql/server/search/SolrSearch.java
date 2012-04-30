@@ -160,5 +160,10 @@ public class SolrSearch implements Search{
 	public void setHitsPerPage(int hitsPerPage) {
 		this.hitsPerPage = hitsPerPage;
 	}
+	
+	@Override
+	public void setQuestionPreprocessor(QuestionProcessor preprocessor) {
+		this.preprocessor = preprocessor;
+	}
 
 }

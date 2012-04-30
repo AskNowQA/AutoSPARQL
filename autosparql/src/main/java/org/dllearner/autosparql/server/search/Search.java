@@ -14,5 +14,7 @@ public interface Search {
 	int getTotalHits(String queryString);
 	void setHitsPerPage(int hitsPerPage);
 	
+	void setQuestionPreprocessor(QuestionProcessor preprocessor);
+	
 	
 }

@@ -1,7 +1,6 @@
 package org.dllearner.autosparql.server.search;
 
 import org.apache.log4j.Logger;
-import org.dllearner.autosparql.server.util.KeywordExtractor;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 
@@ -39,16 +38,16 @@ public class VirtuosoSearch extends SPARQLSearch{
 		super(endpoint, cache);
 	}
 	
-	public VirtuosoSearch(SparqlEndpoint endpoint, ExtractionDBCache cache, KeywordExtractor keywordExtractor) {
+	public VirtuosoSearch(SparqlEndpoint endpoint, ExtractionDBCache cache, QuestionProcessor keywordExtractor) {
 		super(endpoint, cache, keywordExtractor);
 	}
 	
-	protected String buildExamplesQuery(String searchTerm){
-		return String.format(exampleQueryTemplate, searchTerm, limit, 0);
+	protected String buildExamplesQuery(String searchTerm, int offset){
+		return String.format(exampleQueryTemplate, searchTerm, limit, offset);
 	}
 	
-	protected String buildResourcesQuery(String searchTerm){
-		return String.format(queryTemplate, searchTerm, limit, 0);
+	protected String buildResourcesQuery(String searchTerm, int offset){
+		return String.format(queryTemplate, searchTerm, limit, offset);
 	}
 	
 	protected String buildCountQuery(String searchTerm){

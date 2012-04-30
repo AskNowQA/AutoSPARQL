@@ -1,23 +1,16 @@
 package org.dllearner.autosparql.server;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-import javax.servlet.http.HttpSessionContext;
 
 import org.apache.log4j.Logger;
-import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.autosparql.client.SPARQLService;
 import org.dllearner.autosparql.client.exception.AutoSPARQLException;
 import org.dllearner.autosparql.client.exception.SPARQLQueryException;
@@ -27,7 +20,6 @@ import org.dllearner.autosparql.client.model.StoredSPARQLQuery;
 import org.dllearner.autosparql.server.search.QuestionProcessor;
 import org.dllearner.autosparql.server.store.SimpleFileStore;
 import org.dllearner.autosparql.server.store.Store;
-import org.dllearner.autosparql.server.util.Endpoints;
 import org.ini4j.Ini;
 
 import com.extjs.gxt.ui.client.data.PagingLoadConfig;
@@ -57,7 +49,6 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 	
 	private String storeDir;
 	private String cacheDir;
-	private String solrURL;
 	
 	private String question;
 	
@@ -91,7 +82,6 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 			Ini ini = new Ini(is);
 			storeDir = ini.get("storeDir").get("path");
 			cacheDir = ini.get("cacheDir").get("path");
-			solrURL = ini.get("solrURL").get("url");
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -106,7 +96,7 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 	private void loadDatasets(){
 		logger.debug("Loading datasets from file: " + getServletContext().getRealPath("app/datasets.xml"));
 		try {
-			List<Dataset> datasets = DatasetLoader.loadDatasets(getServletContext().getRealPath("app/endpoints.xml"));
+			List<Dataset> datasets = DatasetLoader.loadDatasets(getServletContext().getRealPath("app/datasets.xml"));
 			
 			endpoint2DatasetMap = new HashMap<Endpoint, Dataset>();
 			
@@ -214,7 +204,7 @@ public class SPARQLServiceImpl extends RemoteServiceServlet implements SPARQLSer
 	private void createNewAutoSPARQLSession(Dataset dataset){
 		logger.info(getUserString() + ": Start new AutoSPARQL session");
 		AutoSPARQLSession session = new AutoSPARQLSession(dataset, cacheDir,
-				getServletContext().getRealPath(""), solrURL, questionProcessor);
+				getServletContext().getRealPath(""), questionProcessor);
 		getSession().setAttribute(AUTOSPARQL_SESSION, session);
 	}
 	

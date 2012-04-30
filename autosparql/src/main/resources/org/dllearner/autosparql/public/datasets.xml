@@ -52,6 +52,8 @@
 				<defaultGraphURI>http://dbpedia.org</defaultGraphURI>
 				<namedGraphURIs>
 					<namedGraphURI>http://musicbrainz.org/artists</namedGraphURI>
+					<namedGraphURI>http://musicbrainz.org/tracks</namedGraphURI>
+					<namedGraphURI>http://musicbrainz.org/albums</namedGraphURI>
 				</namedGraphURIs>
 			</sparql>
 		</index>
