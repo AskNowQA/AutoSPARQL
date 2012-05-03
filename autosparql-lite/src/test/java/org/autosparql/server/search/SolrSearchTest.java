@@ -3,7 +3,6 @@ package org.autosparql.server.search;
 import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
-import java.util.List;
 import java.util.SortedSet;
 
 import org.autosparql.shared.Example;

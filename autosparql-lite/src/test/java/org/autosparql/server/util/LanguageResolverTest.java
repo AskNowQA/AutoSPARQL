@@ -2,19 +2,7 @@ package org.autosparql.server.util;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.autosparql.server.AutoSPARQLServiceImpl;
-import org.autosparql.server.AutoSPARQLSession;
-import org.autosparql.shared.Example;
-import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.junit.Test;
-
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class LanguageResolverTest
 {

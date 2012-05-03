@@ -6,8 +6,6 @@ import java.util.Set;
 
 import org.autosparql.shared.Example;
 
-import com.hp.hpl.jena.vocabulary.XSD;
-
 public class Visualization
 {
 	public static String visualize(Set<Example> examples, String sparqlQuery, String endpoint)

@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.hp.hpl.jena.vocabulary.RDF;
-
 public class BlackList
 {
 	public static final Set<String> dbpedia=new HashSet<String>(Arrays.asList(new String[]{

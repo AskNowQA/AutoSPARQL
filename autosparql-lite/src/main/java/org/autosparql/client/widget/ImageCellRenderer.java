@@ -1,6 +1,5 @@
 package org.autosparql.client.widget;
 
-import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -26,7 +25,7 @@ public class ImageCellRenderer implements GridCellRenderer<Example>{
 
 	protected final Set<String> imageProperties;
 	
-	private boolean paint = true;
+//	private boolean paint = true;
 
 	public ImageCellRenderer(Set<String> imageProperties, Integer maxWidth, Integer maxHeight)
 	{
@@ -59,7 +58,7 @@ public class ImageCellRenderer implements GridCellRenderer<Example>{
 
 					@Override
 					public void onError(ErrorEvent event) {
-						paint = false;
+						//paint = false;
 						log.info("Couldn't load image " + imageURL);
 					}
 				});

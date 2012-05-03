@@ -13,7 +13,6 @@ import java.util.SortedSet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
 
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
@@ -94,9 +93,9 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		//	return null;
 	}
 
-	private HttpSession getHttpSession(){
-		return getThreadLocalRequest().getSession();
-	}
+//	private HttpSession getHttpSession(){
+//		return getThreadLocalRequest().getSession();
+//	}
 
 	private AutoSPARQLSession createAutoSPARQLSession(/*SPARQLEndpointEx endpoint*/)
 	{
@@ -147,7 +146,8 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	}
 
 	@Override
-	public List<String> getSameAsLinks(String resourceURI) {
-		return getAutoSPARQLSession().getSameAsLinks(resourceURI);
+	public List<String> getSameAsLinks(String resourceURI)
+	{
+		return AutoSPARQLSession.getSameAsLinks(resourceURI);
 	}
 }

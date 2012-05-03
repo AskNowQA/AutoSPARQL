@@ -16,8 +16,6 @@ import org.dllearner.algorithm.tbsl.nlp.WordNet;
 import org.dllearner.algorithm.tbsl.sparql.Template;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.Options;
-import org.openjena.atlas.logging.Log;
-
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
@@ -97,7 +95,7 @@ public TBSLSearch(SparqlEndpoint endpoint, String cacheDir)
 			e.printStackTrace();
 		}
 		//get SPARQL query which returned result, if exists
-		String learnedQuery = tbsl.getBestSPARQLQuery();
+		learnedQuery = tbsl.getBestSPARQLQuery();
 
 
 		return resources;

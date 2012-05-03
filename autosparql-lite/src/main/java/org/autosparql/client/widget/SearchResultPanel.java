@@ -32,7 +32,6 @@ import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.Label;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.grid.BufferView;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
@@ -41,8 +40,6 @@ import com.extjs.gxt.ui.client.widget.grid.Grid;
 import com.extjs.gxt.ui.client.widget.grid.GridViewConfig;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SearchResultPanel extends ContentPanel
@@ -82,19 +79,19 @@ public class SearchResultPanel extends ContentPanel
 	//private Button relearnButton = new Button("relearn");
 	//private int newPositives = 0;
 
-	private SearchResultPanelSelectionListener listener = new SearchResultPanelSelectionListener();
-
-	class SearchResultPanelSelectionListener extends SelectionListener<ButtonEvent>
-	{
-		@Override
-		public void componentSelected(ButtonEvent ce)
-		{
-			//			if(ce.getSource()==relearnButton)
-			//			{
-			//				relearn();
-			//			}
-		}		
-	}
+//	private SearchResultPanelSelectionListener listener = new SearchResultPanelSelectionListener();
+//
+//	class SearchResultPanelSelectionListener extends SelectionListener<ButtonEvent>
+//	{
+//		@Override
+//		public void componentSelected(ButtonEvent ce)
+//		{
+//			//			if(ce.getSource()==relearnButton)
+//			//			{
+//			//				relearn();
+//			//			}
+//		}		
+//	}
 
 
 	public SearchResultPanel()

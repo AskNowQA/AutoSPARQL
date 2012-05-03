@@ -78,14 +78,15 @@ public class SimpleHTMLLayout extends HTMLLayout {
 		    String[] s = event.getThrowableStrRep();
 		    if(s != null) {
 		      sbuf.append("<tr><td bgcolor=\"#993300\" style=\"color:White; font-size : xx-small;\" colspan=\"6\">");
-		      appendThrowableAsHTML(s, sbuf);
+		      appendThrowableAsHTML2(s, sbuf);
 		      sbuf.append("</td></tr>" + Layout.LINE_SEP);
 		    }
 
 		    return sbuf.toString();
 	}
 	
-	void appendThrowableAsHTML(String[] s, StringBuffer sbuf) {
+	public void appendThrowableAsHTML2(String[] s, StringBuffer sbuf) // cannot override package private methods in a different package
+	{
 	    if(s != null) {
 	      int len = s.length;
 	      if(len == 0)

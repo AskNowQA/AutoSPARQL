@@ -4,12 +4,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.autosparql.shared.Example;
-import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.junit.Test;
 
 public class VisualizationTest
 {
-
 	@Test
 	public void testVisualize()
 	{

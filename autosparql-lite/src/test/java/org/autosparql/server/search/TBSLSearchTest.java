@@ -5,12 +5,9 @@ import static org.junit.Assert.assertTrue;
 import java.net.MalformedURLException;
 import java.util.SortedSet;
 
-import org.autosparql.server.AutoSPARQLSession;
 import org.autosparql.shared.Example;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.junit.Test;
-
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TBSLSearchTest
 {
@@ -20,7 +17,7 @@ public class TBSLSearchTest
 		System.out.println("Creating TBSLSearch instance");
 		TBSLSearch search = new TBSLSearch(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),"cache");
 		System.out.println("Creating AutoSPARQLSession instance");
-		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),	TBSLSearch.SOLR_DBPEDIA_RESOURCES, "cache");
+//		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),	TBSLSearch.SOLR_DBPEDIA_RESOURCES, "cache");
 
 		//List<Example> examples = search.getExamples("soccer clubs in Premier League");
 		

@@ -21,12 +21,9 @@ package org.autosparql.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 
 /** @author Konrad Höffner */
-@SuppressWarnings("deprecation")
 public interface ImageBundle extends ClientBundle//com.google.gwt.user.client.ui.ImageBundle
 {
 	public static final ImageBundle INSTANCE = GWT.create(ImageBundle.class);

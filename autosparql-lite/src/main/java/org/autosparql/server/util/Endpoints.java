@@ -13,20 +13,19 @@ import java.util.logging.Logger;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
-
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 
 public class Endpoints
 {
 	static private Logger log = Logger.getLogger(Endpoints.class.toString());
-	
+
 	public static List<SPARQLEndpointEx> loadEndpoints(String configPath){
 		List<SPARQLEndpointEx> endpoints = new ArrayList<SPARQLEndpointEx>();
 		try {
 			XMLConfiguration config = new XMLConfiguration(new File(configPath));
-			
-			List endpointConfigurations = config.configurationsAt("endpoint");
-			for(Iterator iter = endpointConfigurations.iterator();iter.hasNext();){
+
+			List<String> endpointConfigurations = CollectionUtils.toString(config.configurationsAt("endpoint"));
+			for(Iterator<?> iter = endpointConfigurations.iterator();iter.hasNext();){
 				HierarchicalConfiguration endpointConf = (HierarchicalConfiguration) iter.next();
 				endpoints.add(createEndpoint(endpointConf));
 			}
@@ -36,7 +35,7 @@ public class Endpoints
 		}
 		return endpoints;
 	}
-	
+
 	private static SPARQLEndpointEx createEndpoint(HierarchicalConfiguration endpointConf){
 		try {
 			URL url = new URL(endpointConf.getString("url"));
@@ -46,9 +45,9 @@ public class Endpoints
 				prefix = label.replaceAll("@", "").replaceAll(" ", "");
 			}
 			String defaultGraphURI = endpointConf.getString("defaultGraphURI");
-			List<String> namedGraphURIs = endpointConf.getList("namedGraphURI");
-			List<String> predicateFilters = endpointConf.getList("predicateFilters.predicate");
-			
+			List<String> namedGraphURIs = CollectionUtils.toString(endpointConf.getList("namedGraphURI"));
+			List<String> predicateFilters = CollectionUtils.toString(endpointConf.getList("predicateFilters.predicate"));
+
 			return new SPARQLEndpointEx(url, Collections.singletonList(defaultGraphURI), namedGraphURIs, label, prefix, new HashSet<String>(predicateFilters));
 		} catch (MalformedURLException e)
 		{
@@ -57,5 +56,5 @@ public class Endpoints
 		}
 		return null;	
 	}
-	
+
 }
