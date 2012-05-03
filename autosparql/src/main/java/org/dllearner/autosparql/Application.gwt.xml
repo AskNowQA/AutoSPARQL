@@ -12,7 +12,7 @@
 
 	<inherits name='com.extjs.gxt.ui.GXT' />
 	
-	<set-property name="user.agent" value="gecko1_8" />
+	<set-property name="user.agent" value="safari" />
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='org.dllearner.autosparql.client.Application' />

@@ -152,6 +152,14 @@
 					<groupId>org.apache.lucene</groupId>
 					<artifactId>lucene-core</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>sparql</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -174,6 +182,16 @@
 			<groupId>org.ini4j</groupId>
 			<artifactId>ini4j</artifactId>
 		</dependency>
+		
+		<dependency>
+				<groupId>org.apache.solr</groupId>
+				<artifactId>solr-solrj</artifactId>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.solr</groupId>
+				<artifactId>solr-core</artifactId>
+			</dependency>
 
 
 		<!-- Jars for SIMBA stuff from Axel -->
@@ -243,11 +261,19 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>collections</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena-core</artifactId>
+					<groupId>org.apache.jena</groupId>
+				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.aksw.commons</groupId>
-			<artifactId>sparql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.aksw.commons</groupId>
@@ -260,6 +286,14 @@
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>collections</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena-core</artifactId>
+					<groupId>org.apache.jena</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -287,19 +321,49 @@
 					<artifactId>slf4j-log4j12</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>nif</artifactId>
+					<groupId>org.nlp2rdf</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena</artifactId>
+					<groupId>com.hp.hpl.jena</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>any23-core</artifactId>
+					<groupId>org.deri.any23</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>sparql</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>collections</artifactId>
+					<groupId>org.aksw.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena-core</artifactId>
+					<groupId>org.apache.jena</groupId>
+				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-solrj</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-arq</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>jena-core</artifactId>
+					<groupId>org.apache.jena</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
@@ -380,6 +444,36 @@
 					</arguments>
 				</configuration>
 			</plugin>-->
+			<!-- A simple Jetty test server at http://localhost:8080/evaluationapp 
+				can be launched with the Maven goal jetty:run and stopped with jetty:stop -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.24</version>
+				<configuration>
+					<stopPort>9966</stopPort>
+					<stopKey>evaluationapp</stopKey>
+					<!-- Redeploy every x seconds if changes are detected, 0 for no automatic 
+						redeployment -->
+					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<connectors>
+						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+							<port>9090</port>
+							<maxIdleTime>60000</maxIdleTime>
+						</connector>
+					</connectors>
+					<!-- make sure Jetty also finds the widgetset -->
+					<webAppConfig>
+						<!--contextPath>/evaluationapp</contextPath -->
+						<contextPath>/${project.build.finalName}</contextPath>
+						<baseResource implementation="org.mortbay.resource.ResourceCollection">
+							<!-- Workaround for Maven/Jetty issue http://jira.codehaus.org/browse/JETTY-680 -->
+							<!-- <resources>src/main/webapp,${project.build.directory}/${project.build.finalName}</resources> -->
+							<resourcesAsCSV>src/main/webapp,${project.build.directory}/${project.build.finalName}</resourcesAsCSV>
+						</baseResource>
+					</webAppConfig>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

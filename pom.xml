@@ -22,7 +22,7 @@
 		<!--Define the AKSW dependency version -->
 		<aksw.version>0.2-SNAPSHOT</aksw.version>
 	</properties>
-	
+
 	<build>
 		<!-- - Plugin Management defines the plugins that the child components 
 			can use - It's good practice to do this as we can ensure all children use 
@@ -86,11 +86,17 @@
 				<artifactId>gxt</artifactId>
 				<version>${gxt.version}</version>
 			</dependency>
-<dependency>
-  <groupId>org.apache.jena</groupId>
-  <artifactId>jena-arq</artifactId>
-  <version>2.9.1-incubating-SNAPSHOT</version>
-</dependency>
+
+			<dependency>
+				<groupId>org.apache.jena</groupId>
+				<artifactId>jena-arq</artifactId>
+				<version>2.9.1-incubating-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+    <groupId>org.apache.jena</groupId>
+    <artifactId>jena-core</artifactId>
+    <version>2.7.1-incubating-SNAPSHOT</version>
+  </dependency>
 
 			<!--SwingX is in central -->
 
@@ -137,12 +143,6 @@
 			</dependency>
 
 
-			<!--JENA ARQ is in central - we use the latest -->
-			<dependency>
-				<groupId>com.hp.hpl.jena</groupId>
-				<artifactId>arq</artifactId>
-				<version>2.8.8</version>
-			</dependency>
 
 			<!--Junits -->
 			<dependency>
@@ -273,147 +273,146 @@
 				<version>1.0.3</version>
 				<scope>provided</scope>
 			</dependency>
-			
+
 			<dependency>
-			<groupId>info.bliki.wiki</groupId>
-			<artifactId>bliki-core</artifactId>
-			<version>3.0.16</version>
-		</dependency>
-		<dependency>
-			<groupId>opennlp</groupId>
-			<artifactId>tools</artifactId>
-			<version>1.5.0</version>
-		</dependency>
+				<groupId>info.bliki.wiki</groupId>
+				<artifactId>bliki-core</artifactId>
+				<version>3.0.16</version>
+			</dependency>
+			<dependency>
+				<groupId>opennlp</groupId>
+				<artifactId>tools</artifactId>
+				<version>1.5.0</version>
+			</dependency>
 
 
-		<!-- Jars for SIMBA stuff from Axel -->
+			<!-- Jars for SIMBA stuff from Axel -->
 
-		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax-api</artifactId>
-			<version>1.0.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>woodstox</groupId>
-			<artifactId>wstx-api</artifactId>
-			<version>3.2.0</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>edu.stanford</groupId>
-			<artifactId>postagger</artifactId>
-			<version>3.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>lbj</groupId>
-			<artifactId>library</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>lbj</groupId>
-			<artifactId>core</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>lbj</groupId>
-			<artifactId>ner</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>jaws</groupId>
-			<artifactId>core</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-rio-api</artifactId>
-			<version>2.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-rio-ntriples</artifactId>
-			<version>2.3.2</version>
-		</dependency>
+			<dependency>
+				<groupId>stax</groupId>
+				<artifactId>stax-api</artifactId>
+				<version>1.0.1</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>woodstox</groupId>
+				<artifactId>wstx-api</artifactId>
+				<version>3.2.0</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>edu.stanford</groupId>
+				<artifactId>postagger</artifactId>
+				<version>3.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>lbj</groupId>
+				<artifactId>library</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>lbj</groupId>
+				<artifactId>core</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>lbj</groupId>
+				<artifactId>ner</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>jaws</groupId>
+				<artifactId>core</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-rio-api</artifactId>
+				<version>2.3.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-rio-ntriples</artifactId>
+				<version>2.3.2</version>
+			</dependency>
 
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.4</version>
-		</dependency>
-
-
-
-		<dependency>
-			<groupId>org.openrdf</groupId>
-			<artifactId>sesame</artifactId>
-			<version>1.2.7</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
+			<dependency>
+				<groupId>commons-dbcp</groupId>
+				<artifactId>commons-dbcp</artifactId>
+				<version>1.4</version>
+			</dependency>
 
 
 
-		
-		
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>3.0.5.RELEASE</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>3.0.5.RELEASE</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>3.0.5.RELEASE</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-solrj</artifactId>
-			<version>3.3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-core</artifactId>
-			<version>3.3.0</version>
-		</dependency>
-	<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
-		</dependency>
+			<dependency>
+				<groupId>org.openrdf</groupId>
+				<artifactId>sesame</artifactId>
+				<version>1.2.7</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+
+
+
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>3.0.5.RELEASE</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>3.0.5.RELEASE</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>3.0.5.RELEASE</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.solr</groupId>
+				<artifactId>solr-solrj</artifactId>
+				<version>3.5.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.solr</groupId>
+				<artifactId>solr-core</artifactId>
+				<version>3.5.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.6.1</version>
+			</dependency>
 
 		</dependencies>
 
 	</dependencyManagement>
 
 	<repositories>
-<repository>
-  <id>apache-repo-releases</id>
-  <url>https://repository.apache.org/content/repositories/releases/</url>
-  <releases>
-   <enabled>true</enabled>
-  </releases>
-</repository>
-<repository>
-  <id>apache-repo-snapshots</id>
-  <url>https://repository.apache.org/content/repositories/snapshots/</url>
-  <snapshots>
-   <enabled>true</enabled>
-  </snapshots>
-</repository>
+		<repository>
+			<id>apache-repo-releases</id>
+			<url>https://repository.apache.org/content/repositories/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>apache-repo-snapshots</id>
+			<url>https://repository.apache.org/content/repositories/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
@@ -434,29 +433,10 @@
 			<url>http://maven.aksw.org:8081/archiva/repository/snapshots</url>
 		</repository>
 
-<!-- 
-		<repository>
-			<id>maven.aksw.internal</id>
-			<name>University Leipzig, AKSW Maven2 Repository</name>
-			<url>http://prod1.aksw.org:8081/archiva/repository/internal</url>
-		</repository>
-
-		<repository>
-			<id>maven.aksw.snapshots</id>
-			<name>University Leipzig, AKSW Maven2 Repository</name>
-			<url>http://prod1.aksw.org:8081/archiva/repository/snapshots</url>
-		</repository>
- -->
 		<!-- This repository contains the pellet jars -->
 		<repository>
 			<id>pellet_etc</id>
 			<url>http://on.cs.unibas.ch/maven/repository/</url>
-		</repository>
-
-		<!-- This repository contains the jars for the project lombok jars -->
-		<repository>
-			<id>projectlombok.org</id>
-			<url>http://projectlombok.org/mavenrepo</url>
 		</repository>
 
 		<repository>
@@ -481,38 +461,39 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-		<!-- This repository contains the jars for pdb2rdf -->
 	</repositories>
-<dependencies>
-<dependency>
-    <groupId>org.apache.jena</groupId>
-    <artifactId>jena-core</artifactId>
-    <version>2.7.1-incubating-SNAPSHOT</version>
-  </dependency>
-<dependency>
- <groupId>org.apache.jena</groupId>
- <artifactId>jena-iri</artifactId>
- <version>0.9.1-incubating-SNAPSHOT</version>
- <scope>compile</scope>
-</dependency>
-<!--<dependency>
-    <groupId>xerces</groupId>
-    <artifactId>xercesImpl</artifactId>
-    <version>2.6.0</version>
-</dependency>-->
-	<dependency>
-		<groupId>org.dllearner</groupId>
-		<artifactId>components-ext</artifactId>
-		<exclusions>
-			<exclusion>
-				<artifactId>slf4j-log4j12</artifactId>
-				<groupId>org.slf4j</groupId>
-			</exclusion>
-			<exclusion>
-				<artifactId>jena</artifactId>
-				<groupId>com.hp.hpl.jena</groupId>
-			</exclusion>
-		</exclusions>
-	</dependency>
-</dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-arq</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-core</artifactId>
+		</dependency>
+		<!--<dependency> <groupId>xerces</groupId> <artifactId>xercesImpl</artifactId> 
+			<version>2.6.0</version> </dependency> -->
+		<dependency>
+			<groupId>org.dllearner</groupId>
+			<artifactId>components-ext</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena</artifactId>
+					<groupId>com.hp.hpl.jena</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>any23-core</artifactId>
+					<groupId>org.deri.any23</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>nif</artifactId>
+					<groupId>org.nlp2rdf</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
 </project>

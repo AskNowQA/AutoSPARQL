@@ -81,5 +81,11 @@ public class WikipediaSearch implements Search{
 		this.hitsPerPage = hitsPerPage;
 		
 	}
+	
+	@Override
+	public void setQuestionPreprocessor(QuestionProcessor preprocessor) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

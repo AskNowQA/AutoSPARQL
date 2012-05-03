@@ -23,7 +23,6 @@ import org.dllearner.autosparql.server.search.QuestionProcessor;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 
-import com.clarkparsia.owlapiv3.XSD;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
@@ -106,7 +105,7 @@ public class QueryTreeFilterEvaluation {
 		
 		Model model = modelGen.createModel(uri, Strategy.CHUNKS, 2);
 		model.createResource("http://dbpedia.org/resource/46_Long").
-		addProperty(model.createProperty("http://dbpedia.org/ontology/seasonNumber"), "1", XSD.INT.toStringID());
+		addProperty(model.createProperty("http://dbpedia.org/ontology/seasonNumber"), "1", com.hp.hpl.jena.vocabulary.XSD.integer.getURI());
 		
 		
 		mon.start();

@@ -11,13 +11,12 @@ import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.autosparql.server.search.QuestionProcessor;
 import org.dllearner.autosparql.server.search.Search;
 import org.dllearner.autosparql.server.search.SolrSearch;
-import org.dllearner.autosparql.server.util.Endpoints;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.junit.Test;
 
 public class ExampleFinderTest {
 	
-	private static final SPARQLEndpointEx endpoint = Endpoints.getDBPediaAKSWEndpoint();
+	private static final SPARQLEndpointEx endpoint = null;
 	private static final String SOLR_SERVER_URL = "http://139.18.2.173:8080/apache-solr-3.1.0/";
 	
 	@Test

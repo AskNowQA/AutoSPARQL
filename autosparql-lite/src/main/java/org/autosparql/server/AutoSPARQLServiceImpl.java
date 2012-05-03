@@ -14,6 +14,7 @@ import java.util.SortedSet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
+import org.apache.log4j.Logger;
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.TBSLSearch;
@@ -23,12 +24,15 @@ import org.autosparql.shared.Example;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
+import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.InvalidFileFormatException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService {
+	
+	private static final Logger logger = Logger.getLogger(AutoSPARQLServiceImpl.class);
 
 	/** */
 	private static final long serialVersionUID = 1;
@@ -46,6 +50,20 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		loadEndpoints();
+		
+		//Test
+		logger.info("Start testing...");
+		String cacheDir = null;
+		try{cacheDir=getServletContext().getRealPath("cache");}
+		catch(Throwable t) {cacheDir="cache";}
+		logger.info("CacheDir: " + cacheDir);
+		try {
+			new ExtractionDBCache(cacheDir).executeSelectQuery(SparqlEndpoint.getEndpointDBpediaAKSW(), "SELECT * WHERE {?s ?p ?o.} LIMIT 1");
+		} catch (Exception e) {
+			logger.error(e);
+		}
+		logger.info("Finished testing...");
+		
 	}
 
 

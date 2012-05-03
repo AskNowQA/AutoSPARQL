@@ -135,6 +135,12 @@ public class AutoSPARQLSession
 			e.printStackTrace();
 		}
 		selectCache = new ExtractionDBCache(dir);
+		try {
+			selectCache.executeSelectQuery(endpoint, "SELECT * WHERE {?s a ?type} LIMIT 1");
+		} catch (Exception e) {
+			logger.error("ERROR", e);
+			e.printStackTrace();
+		}
 
 		primarySearch = new TBSLSearch(endpoint, cacheDir);
 		secondarySearch = new SolrSearch(solrServerURL);

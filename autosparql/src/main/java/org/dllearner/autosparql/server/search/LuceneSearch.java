@@ -134,4 +134,9 @@ public class LuceneSearch implements Search{
 	public int getIndexSize(){
 		return searcher.maxDoc();
 	}
+	
+	@Override
+	public void setQuestionPreprocessor(QuestionProcessor preprocessor) {
+		// TODO Auto-generated method stub
+	}
 }

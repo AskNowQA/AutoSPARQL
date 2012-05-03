@@ -4,11 +4,20 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.autosparql.shared.Example;
+<<<<<<< HEAD
 import org.junit.Test;
 
 public class VisualizationTest
 {
 	@Test
+=======
+//import org.junit.Test;
+
+public class VisualizationTest
+{
+
+//	@Test
+>>>>>>> c4c1e10464628c778f4ef38aecf4c5179cd04a04
 	public void testVisualize()
 	{
 		String[] exampleURIs =
@@ -20,7 +29,7 @@ public class VisualizationTest
 				"http://dbpedia.org/resource/The_Lost_Symbol"
 			};
 		final AutoSPARQLSession session = new AutoSPARQLServiceImpl().getAutoSPARQLSession();
-		SortedSet<Example> examples = new TreeSet<>();
+		SortedSet<Example> examples = new TreeSet<Example>();
 		for(String uri:exampleURIs)
 		{
 			examples.add(new Example(uri));
