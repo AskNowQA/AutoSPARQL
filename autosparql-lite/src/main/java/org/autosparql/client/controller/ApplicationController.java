@@ -6,15 +6,14 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-
 import org.autosparql.client.AppEvents;
+import org.autosparql.client.Application;
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.AutoSPARQLServiceAsync;
 import org.autosparql.client.view.ApplicationView;
 import org.autosparql.client.widget.ErrorDialog;
 import org.autosparql.client.widget.WaitDialog;
 import org.autosparql.shared.Example;
-
 import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
@@ -22,54 +21,46 @@ import com.google.gwt.logging.client.HtmlLogFormatter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 
-
 public class ApplicationController extends Controller
-{
-	private static final boolean USE_DBPEDIA_LIVE_DEFAULT = true;
+{	
+	private static final boolean useDBpediaLiveDefault = true;//new Boolean(Application.properties.getProperty("useDBpediaLiveDefault"));
 	private ApplicationView appView;
 	private Logger log = Logger.getLogger(ApplicationController.class.toString());
 
-	
 	public ApplicationController()
 	{
 		// configure logging
 		final HTML html = new HTML();
 		Logger.getLogger("").addHandler(new Handler() {
-			  {
-			    // set the formatter, in this case HtmlLogFormatter
-			    setFormatter(new HtmlLogFormatter(true));
-			    setLevel(Level.ALL);
-			  }
-
-			  @Override
-			  public void publish(LogRecord record) {
-			    if (!isLoggable(record)) {
-			      Formatter formatter = getFormatter();
-			      String msg = formatter.format(record);
-
-			      html.setHTML(msg);
-			    }
-			  }
+			{
+				// set the formatter, in this case HtmlLogFormatter
+				setFormatter(new HtmlLogFormatter(true));
+				setLevel(Level.ALL);
+			}
+			@Override
+			public void publish(LogRecord record) {
+				if (!isLoggable(record)) {
+					Formatter formatter = getFormatter();
+					String msg = formatter.format(record);
+					html.setHTML(msg);
+				}
+			}
 
 			@Override
 			public void flush()
 			{
-				
-				
+
+
 			}
 
 			@Override
 			public void close() 
 			{
-				// 
-			
-			}});
-		
-		 registerEventTypes(AppEvents.Init);
-		
-		registerEventTypes(AppEvents.Error);
-			
 			}
+		});
+		registerEventTypes(AppEvents.Init);
+		registerEventTypes(AppEvents.Error);	
+	}
 
 	public void handleEvent(AppEvent event)
 	{
@@ -80,66 +71,67 @@ public class ApplicationController extends Controller
 			onError((Throwable)event.getData());
 		}
 	}
-	
-//	public void learn()
-//	{
-//		
-//	}
-	
+
+	//	public void learn()
+	//	{
+	//		
+	//	}
+
 	public void initialize()
 	{
 		String query = com.google.gwt.user.client.Window.Location.getParameter("query");
 		String useDBpediaLiveParameter = com.google.gwt.user.client.Window.Location.getParameter("dbpedialive");
-		boolean useDBpediaLive = useDBpediaLiveParameter==null?USE_DBPEDIA_LIVE_DEFAULT:"on".equals(useDBpediaLiveParameter);
+		boolean useDBpediaLive = useDBpediaLiveParameter==null?useDBpediaLiveDefault:"on".equals(useDBpediaLiveParameter);
 		boolean fastSearch = "on".equals(com.google.gwt.user.client.Window.Location.getParameter("fastsearch"));
 		log.info("dbpedia live: "+useDBpediaLive);
 		log.info("fastsearch: "+fastSearch);
 		final AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
-		
+
 		AsyncCallback<Void> callback = new AsyncCallback<Void>()
-			{@Override	public void onSuccess(Void result)	{}@Override	public void onFailure(Throwable caught){}}; 
-		service.setFastSearch(fastSearch, callback);
-		service.setUseDBpediaLive(useDBpediaLive, callback);
-		
-			//useDBpediaLive,useFastSearch
-		
-		if(query==null||query.isEmpty())
-		{
-			
-		}
-		else
-		{
-			//appView.display(Collections.<Example>emptyList());
-			final WaitDialog wait = new WaitDialog("Creating table");
-			wait.show();
-			log.info("Getting initial examples...");
-			service.getExamples(query, new AsyncCallback<SortedSet<Example>>() {				
-				@Override
-				public void onSuccess(SortedSet<Example> examples)
+				{@Override	public void onSuccess(Void result)	{}@Override	public void onFailure(Throwable caught){}}; 
+				service.setFastSearch(fastSearch, callback);
+				service.setUseDBpediaLive(useDBpediaLive, callback);
+
+				//useDBpediaLive,useFastSearch
+
+				if(query==null||query.isEmpty())
 				{
-					//new Example("testuri", "testlabel", "testimageurl", "testcomment");
-					wait.hide();
-					log.info("successfully gotten "+examples.size()+" initial examples, displaying them now.");
-					appView.display(examples);
-					log.info("successfully displayed the initial examples");
+
 				}
-			
-				@Override
-				public void onFailure(Throwable arg0)
+				else
 				{
-					log.severe(arg0.getCause().getMessage());
-					//log.severe(arg0.getCause().toString());
-					wait.hide();
-					com.google.gwt.user.client.Window.alert(arg0.getMessage());
-					
-					//appView.showError("could not get examples");
-					// TODO Auto-generated method stub
-					
+					//appView.display(Collections.<Example>emptyList());
+					final WaitDialog wait = new WaitDialog("Creating table");
+					wait.show();
+					log.info("Client: Getting initial examples with query \""+query+"\"...");
+					service.getExamples(query, new AsyncCallback<SortedSet<Example>>() {				
+						@Override
+						public void onSuccess(SortedSet<Example> examples)
+						{
+							//new Example("testuri", "testlabel", "testimageurl", "testcomment");
+							wait.hide();
+							log.info("successfully gotten "+examples.size()+" initial examples, displaying them now.");
+							appView.display(examples);
+							log.info("successfully displayed the initial examples");
+						}
+
+						@Override
+						public void onFailure(Throwable arg0)
+						{
+							if(1==1) throw new RuntimeException(arg0);
+							log.severe(arg0.getCause().getMessage());
+							//log.severe(arg0.getCause().toString());
+							wait.hide();
+							com.google.gwt.user.client.Window.alert(arg0.getMessage());
+
+							//appView.showError("could not get examples");
+							// TODO Auto-generated method stub
+
+						}
+					});
+
 				}
-			});
-			        	
-		}
-		appView = new ApplicationView(this);
+				appView = new ApplicationView(this);
 	}
 
 	protected void onError(Throwable throwable) {

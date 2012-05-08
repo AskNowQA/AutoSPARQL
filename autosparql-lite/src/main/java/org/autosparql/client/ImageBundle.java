@@ -24,13 +24,13 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /** @author Konrad Höffner */
-public interface ImageBundle extends ClientBundle//com.google.gwt.user.client.ui.ImageBundle
+public interface ImageBundle extends ClientBundle
 {
 	public static final ImageBundle INSTANCE = GWT.create(ImageBundle.class);
 
 	@Source("images/yes_crystal_clear_32.png")
 	public ImageResource yes();	
-//
+	
 	@Source("images/no_crystal_clear_32.png")
 	public ImageResource no();	
 

@@ -33,8 +33,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService {
 	
 	private static final Logger logger = Logger.getLogger(AutoSPARQLServiceImpl.class);
-
-	/** */
 	private static final long serialVersionUID = 1;
 
 	enum SessionAttributes{AUTOSPARQL_SESSION}
@@ -49,8 +47,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		loadEndpoints();
-		
+	//	loadEndpoints();
 		//Test
 		logger.info("Start testing...");
 		String cacheDir = null;
@@ -62,10 +59,8 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		} catch (Exception e) {
 			logger.error(e);
 		}
-		logger.info("Finished testing...");
-		
+		logger.info("Finished testing...");	
 	}
-
 
 	private void loadEndpoints() {
 		try {
@@ -91,18 +86,16 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	@Override
 	public SortedSet<Example> getExamples(String query)
 	{
-
 		String[] tokens = query.split("\\s");
 		questionWords.clear();
 		for(String token: tokens) {questionWords.add(token);}
-
 		//try {
 		SortedSet<Example> examples = null;
 		try {
 			AutoSPARQLSession session = getAutoSPARQLSession();
+			logger.info("Server: AutoSPARQLServiceImpl: Getting examples from AutoSPARQLSession...");
 			examples = session.getExamples(query);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {			
 			e.printStackTrace();
 		}
 		return examples;
@@ -155,7 +148,6 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	{
 		getAutoSPARQLSession().setFastSearch(fastSearch);	
 	}
-
 
 	@Override
 	public void setUseDBpediaLive(Boolean useDBpediaLive)
