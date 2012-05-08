@@ -2,22 +2,12 @@ package org.autosparql.server;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import org.autosparql.shared.Example;
-<<<<<<< HEAD
 import org.junit.Test;
 
 public class VisualizationTest
 {
 	@Test
-=======
-//import org.junit.Test;
-
-public class VisualizationTest
-{
-
-//	@Test
->>>>>>> c4c1e10464628c778f4ef38aecf4c5179cd04a04
 	public void testVisualize()
 	{
 		String[] exampleURIs =
@@ -39,5 +29,4 @@ public class VisualizationTest
 		String sparqlEndpoint = "http://live.dbpedia.org/sparql";
 		Visualization.visualize(examples, sparqlQuery, sparqlEndpoint);
 	}
-
 }
