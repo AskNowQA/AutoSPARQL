@@ -33,9 +33,12 @@ public class Visualization
 				numberProperties.add(property);
 			} catch(NumberFormatException e)
 			{
+				//int startOfNumber = object.lastIndexOf('^')+1;
 				if(object.contains("^^"))
 				{
-					Double.parseDouble(object.substring(object.lastIndexOf('^'+1)));
+					String value = object.substring(0,object.indexOf('^'));
+					System.out.println(value);
+					Double.parseDouble(value);
 					numberProperties.add(property);
 				}
 			} 
