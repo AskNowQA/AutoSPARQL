@@ -10,14 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-
 import org.apache.log4j.Logger;
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
-import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.Endpoints;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
@@ -30,11 +27,12 @@ import org.ini4j.InvalidFileFormatException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService {
-	
+public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService
+{
 	private static final Logger logger = Logger.getLogger(AutoSPARQLServiceImpl.class);
 	private static final long serialVersionUID = 1;
-
+	static int runningClients=0;
+	
 	enum SessionAttributes{AUTOSPARQL_SESSION}
 
 	private Map<Endpoint, SPARQLEndpointEx> endpointsMap;
@@ -49,7 +47,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		super.init(config);
 	//	loadEndpoints();
 		//Test
-		logger.info("Start testing...");
+		logger.info("Start testing AutoSPARQLServiceImpl...");
 		String cacheDir = null;
 		try{cacheDir=getServletContext().getRealPath("cache");}
 		catch(Throwable t) {cacheDir="cache";}
@@ -59,7 +57,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		} catch (Exception e) {
 			logger.error(e);
 		}
-		logger.info("Finished testing...");	
+		logger.info("... finished testing AutoSPARQLServiceImpl.");	
 	}
 
 	private void loadEndpoints() {
@@ -111,15 +109,13 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	private AutoSPARQLSession createAutoSPARQLSession(/*SPARQLEndpointEx endpoint*/)
 	{
 		String cacheDir = null;
-		try{cacheDir=getServletContext().getRealPath("cache");}
-		catch(Throwable t) {cacheDir="cache";}
-		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES, cacheDir);
+		AutoSPARQLSession session = AutoSPARQLSession.INSTANCE; 
 		//getHttpSession().setAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString(), session);
 		return session;
 	}
 	
 	public AutoSPARQLSession getAutoSPARQLSession()
-	{
+	{		
 			//AutoSPARQLSession session = (AutoSPARQLSession) getHttpSession().getAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString());
 			return session;	
 	}
@@ -160,4 +156,6 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	{
 		return AutoSPARQLSession.getSameAsLinks(resourceURI);
 	}
+	
+	@Override public Integer runningClients() {return ++runningClients;}
 }

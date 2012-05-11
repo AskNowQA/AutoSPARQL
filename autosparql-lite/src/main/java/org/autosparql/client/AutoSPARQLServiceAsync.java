@@ -20,4 +20,5 @@ public interface AutoSPARQLServiceAsync
 	void setUseDBpediaLive(Boolean useDBpediaLive, AsyncCallback<Void> callback);
 	
 	void getSameAsLinks(String resourceURI, AsyncCallback<List<String>> callback);
+	void runningClients(AsyncCallback<Integer> callback);
 }

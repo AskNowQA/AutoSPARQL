@@ -1,11 +1,10 @@
 package org.autosparql.server.search;
 
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import org.apache.log4j.Logger;
 import org.autosparql.shared.Example;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
@@ -22,36 +21,36 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 public class TBSLSearch implements Search
 {
-	private static Logger logger = Logger.getLogger(TBSLSearch.class);	
-	protected static final URL optionURL = TBSLSearch.class.getClassLoader().getResource("tbsl/tbsl.properties");
-	protected static Options options; 
+	private static Logger logger = Logger.getLogger(TBSLSearch.class);		
+	private final static Options options; 
 	public final static String SOLR_DBPEDIA_RESOURCES;
 	public final static String SOLR_DBPEDIA_CLASSES;
 	static
 	{
-		try{options = new Options(optionURL);} catch (Exception e) {throw new RuntimeException("Property resource "+optionURL+" not found. Could not initialize TBSLSearch.",e);};				
+		InputStream optionStream = TBSLSearch.class.getResourceAsStream("tbsl.properties");
+		try{options = new Options(optionStream);} catch (Exception e) {throw new RuntimeException("Problem loading properties from resource "+optionStream.toString()+". Could not initialize TBSLSearch.",e);};				
 		SOLR_DBPEDIA_RESOURCES = options.get("solr.resources.url");
 		SOLR_DBPEDIA_CLASSES = options.get("solr.classes.url");			
 	}
-	//protected final URL wordnet = getClass().getClassLoader().getResource("tbsl/wordnet_properties.xml").;	
+	//private final final URL wordnet = getClass().getClassLoader().getResource("tbsl/wordnet_properties.xml").;	
 
-	protected static final int LIMIT = 10;
-	protected static final int OFFSET = 0;
+	private static final int LIMIT = 10;
+	private static final int OFFSET = 0;
 
-	protected final String QUERY_PREFIX = "";//"Give me all ";
+	private final String QUERY_PREFIX = "";//"Give me all ";
 
-	protected SPARQLTemplateBasedLearner tbsl;
-	protected SparqlEndpoint endpoint;
-	protected String learnedQuery = null;
-	
+	private final SPARQLTemplateBasedLearner tbsl;
+	private final SparqlEndpoint endpoint;
+	private String learnedQuery = null;
+
 	public String learnedQuery() {return learnedQuery;}
-	
+
 	static class POSTaggerHolder
 	{
 		static {logger.debug("initializing POS tagger...");}
 		public static final PartOfSpeechTagger pos = new ApachePartOfSpeechTagger();
 	}
-	
+
 	static class WordNetHolder
 	{
 		protected static final String wordNetFilename = "tbsl/wordnet_properties.xml";
@@ -59,11 +58,13 @@ public class TBSLSearch implements Search
 		public static final WordNet wordNet = new WordNet(wordNetFilename);
 	}
 
-public TBSLSearch(SparqlEndpoint endpoint, String cacheDir)
-{
+	public TBSLSearch(final SparqlEndpoint endpoint,final String cacheDir)
+	{
 		this.endpoint = endpoint;
 		try
 		{
+			// TODO: how can it work everywhere?
+			//cacheDir="/tmp/autosparql-cache-tbsl";
 			tbsl = new SPARQLTemplateBasedLearner(options,POSTaggerHolder.pos,WordNetHolder.wordNet, cacheDir);
 		} catch (Exception e)
 		{

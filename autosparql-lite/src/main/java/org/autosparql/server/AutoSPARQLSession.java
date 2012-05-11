@@ -1,5 +1,6 @@
 package org.autosparql.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -21,11 +22,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
 import org.apache.log4j.Logger;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
@@ -42,6 +41,7 @@ import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
+
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -55,22 +55,20 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 /** @author Konrad Höffner */
 public class AutoSPARQLSession
-{
-	private static Logger logger = Logger.getLogger(AutoSPARQLSession.class);
+{	
+	private static final Logger logger = Logger.getLogger(AutoSPARQLSession.class);
+	public static final AutoSPARQLSession INSTANCE = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES);
 	protected Map<String, String> property2LabelMap;
 	protected TBSLSearch primarySearch;
 	protected SolrSearch secondarySearch;
-
 	protected final String cacheDir = "cache";
 	protected SPARQLEndpointEx endpoint;
 	protected final ExtractionDBCache selectCache;
-
 	public static final List<String> languages = Arrays.asList(new String[] {"de","en"});
 	protected static final int MAX_NUMBER_OF_EXAMPLES = 20;
-	String lastQuery = null;
+	//private String lastQuery = null;
 	PrefixMapping x = new PrefixMappingImpl();
 	protected boolean fastSearch = false;
-
 	protected static final String sameAsURI = "http://sameas.org/rdf?uri=";
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
@@ -82,7 +80,7 @@ public class AutoSPARQLSession
 		if(cm==null) {cm=CacheManager.create();}
 		return cm;
 	}
-	
+
 	// public AutoSPARQLSession(SPARQLEndpointEx endpoint, String cacheDir,
 	// String servletContextPath, String solrURL, QuestionProcessor
 	// questionPreprocessor){
@@ -125,24 +123,37 @@ public class AutoSPARQLSession
 		logger.info("setting fast search to "+fastSearch);
 	}
 
-	public AutoSPARQLSession(SparqlEndpoint endpoint, String solrServerURL, String cacheDir)
-	{
-		this.endpoint= new SPARQLEndpointEx(endpoint,endpoint.toString(),null,Collections.<String>emptySet());
-		String dir = cacheDir;
-		try {
-			dir = cacheDir + "/" + URLEncoder.encode(this.endpoint.getURL().toString(), "UTF-8")+ "/select-cache";
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		selectCache = new ExtractionDBCache(dir);
-		try {
-			selectCache.executeSelectQuery(endpoint, "SELECT * WHERE {?s a ?type} LIMIT 1");
-		} catch (Exception e) {
-			logger.error("ERROR", e);
-			e.printStackTrace();
-		}
 
-		primarySearch = new TBSLSearch(endpoint, cacheDir);
+	private AutoSPARQLSession(SparqlEndpoint endpointURL, String solrServerURL)
+	{		
+//		String cacheDir;
+//			try{cacheDir=getServletContext().getRealPath("cache");}
+//			catch(Throwable t) {cacheDir="cache";}		
+
+		logger.info("Creating AutoSPARQL Session...");
+		if(endpointURL==null||endpointURL.getURL()==null) throw new NullPointerException("endpoint is null");		
+		this.endpoint= new SPARQLEndpointEx(endpointURL,endpointURL.toString(),null,Collections.<String>emptySet());
+		String dir = cacheDir;
+//		try {
+//			dir = cacheDir + "/" + URLEncoder.encode(this.endpoint.getURL().toString(), "UTF-8")+ "/select-cache";
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+		// TODO: how can it work everywhere?
+		dir="/tmp/autosparqlsession-extractiondbcache";
+		new File(dir).mkdir();
+		//dir="/var/lib/tomcat7/webapps/autosparql-lite/cache";
+		selectCache = new ExtractionDBCache(dir);
+		//		try {
+		String query = "SELECT * WHERE {?s a ?type} LIMIT 1";
+		logger.info("Testing extraction DB cache with cache dir "+dir+" and endpoint "+endpointURL.getURL()+" and query "+query);
+		selectCache.executeSelectQuery(endpointURL, query);
+		//		} catch (Exception e) {
+		//			logger.error("ERROR", e);
+		//			e.printStackTrace();
+		//		}
+
+		primarySearch = new TBSLSearch(endpointURL, cacheDir);
 		secondarySearch = new SolrSearch(solrServerURL);
 	}
 
@@ -365,7 +376,7 @@ public class AutoSPARQLSession
 			//					if(answerType==null)
 			//					{
 			examples = secondarySearch.getExamples(query);
-			lastQuery=query;
+			//lastQuery=query;
 		}
 		//			else
 		//			{
