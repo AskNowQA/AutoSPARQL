@@ -2,9 +2,14 @@ package org.autosparql.server.search;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import org.apache.log4j.Logger;
 import org.autosparql.shared.Example;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
@@ -15,6 +20,7 @@ import org.dllearner.algorithm.tbsl.nlp.WordNet;
 import org.dllearner.algorithm.tbsl.sparql.Template;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.Options;
+
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
@@ -31,8 +37,7 @@ public class TBSLSearch implements Search
 		try{options = new Options(optionStream);} catch (Exception e) {throw new RuntimeException("Problem loading properties from resource "+optionStream.toString()+". Could not initialize TBSLSearch.",e);};				
 		SOLR_DBPEDIA_RESOURCES = options.get("solr.resources.url");
 		SOLR_DBPEDIA_CLASSES = options.get("solr.classes.url");			
-	}
-	//private final final URL wordnet = getClass().getClassLoader().getResource("tbsl/wordnet_properties.xml").;	
+	}	
 
 	private static final int LIMIT = 10;
 	private static final int OFFSET = 0;
@@ -58,6 +63,17 @@ public class TBSLSearch implements Search
 		public static final WordNet wordNet = new WordNet(wordNetFilename);
 	}
 
+	static Map<List<String>,TBSLSearch> instances = new HashMap<List<String>,TBSLSearch>();
+	
+	public synchronized TBSLSearch getInstance(final SparqlEndpoint endpoint,final String cacheDir)
+	{
+		TBSLSearch search;
+		List<String> key = Arrays.asList(endpoint.getURL().toString(),endpoint.getDefaultGraphURIs().toString());
+		if((search=instances.get(key))!=null) {return search;}
+		instances.put(key,new TBSLSearch(endpoint,cacheDir));
+		return null;
+	}
+	
 	public TBSLSearch(final SparqlEndpoint endpoint,final String cacheDir)
 	{
 		this.endpoint = endpoint;

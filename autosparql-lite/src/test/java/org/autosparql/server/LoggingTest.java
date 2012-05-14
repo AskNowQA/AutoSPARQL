@@ -14,8 +14,6 @@ public class LoggingTest
 		logger.warn("logging test - warn");
 		logger.info("logging test - info");
 		logger.debug("logging test - debug");
-		logger.trace("logging test - trace");
-		
-		AutoSPARQLSession.INSTANCE.equals(null);
+		logger.trace("logging test - trace");		
 	}
 }

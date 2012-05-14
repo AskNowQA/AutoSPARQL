@@ -41,6 +41,7 @@ import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
+import org.openjena.atlas.logging.Log;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -57,11 +58,11 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class AutoSPARQLSession
 {	
 	private static final Logger logger = Logger.getLogger(AutoSPARQLSession.class);
-	public static final AutoSPARQLSession INSTANCE = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES);
+	//public static final AutoSPARQLSession INSTANCE = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES);
 	protected Map<String, String> property2LabelMap;
 	protected TBSLSearch primarySearch;
 	protected SolrSearch secondarySearch;
-	protected final String cacheDir = "cache";
+	protected final String cacheDir;
 	protected SPARQLEndpointEx endpoint;
 	protected final ExtractionDBCache selectCache;
 	public static final List<String> languages = Arrays.asList(new String[] {"de","en"});
@@ -123,38 +124,42 @@ public class AutoSPARQLSession
 		logger.info("setting fast search to "+fastSearch);
 	}
 
-
-	private AutoSPARQLSession(SparqlEndpoint endpointURL, String solrServerURL)
-	{		
+//SparqlEndpoint endpointURL, String solrServerURL,
+	public AutoSPARQLSession(String cacheDir)
+	{	
+		logger.debug("Creating AutoSPARQLSession with cache dir \""+cacheDir+"\".");
+		this.cacheDir=cacheDir;
 //		String cacheDir;
 //			try{cacheDir=getServletContext().getRealPath("cache");}
 //			catch(Throwable t) {cacheDir="cache";}		
 
-		logger.info("Creating AutoSPARQL Session...");
-		if(endpointURL==null||endpointURL.getURL()==null) throw new NullPointerException("endpoint is null");		
-		this.endpoint= new SPARQLEndpointEx(endpointURL,endpointURL.toString(),null,Collections.<String>emptySet());
-		String dir = cacheDir;
+		SparqlEndpoint endpoint = null;
+		try{endpoint = new SparqlEndpoint(new URL(Defaults.endpointURL()),Collections.singletonList(Defaults.graphURL()),Collections.<String>emptyList());}
+		catch (MalformedURLException e)
+		{logger.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}		
+		//if(endpointURL==null||endpointURL.getURL()==null) throw new NullPointerException("endpoint is null");		
+		this.endpoint= new SPARQLEndpointEx(endpoint,endpoint.toString(),null,Collections.<String>emptySet());
 //		try {
 //			dir = cacheDir + "/" + URLEncoder.encode(this.endpoint.getURL().toString(), "UTF-8")+ "/select-cache";
 //		} catch (UnsupportedEncodingException e) {
 //			e.printStackTrace();
 //		}
 		// TODO: how can it work everywhere?
-		dir="/tmp/autosparqlsession-extractiondbcache";
-		new File(dir).mkdir();
+		//dir="/tmp/autosparqlsession-extractiondbcache";
+		new File(cacheDir).mkdir();
 		//dir="/var/lib/tomcat7/webapps/autosparql-lite/cache";
-		selectCache = new ExtractionDBCache(dir);
+		selectCache = new ExtractionDBCache(cacheDir);
 		//		try {
 		String query = "SELECT * WHERE {?s a ?type} LIMIT 1";
-		logger.info("Testing extraction DB cache with cache dir "+dir+" and endpoint "+endpointURL.getURL()+" and query "+query);
-		selectCache.executeSelectQuery(endpointURL, query);
+		logger.info("Testing extraction DB cache with cache dir "+cacheDir+" and endpoint "+endpoint.getURL()+" and query "+query);
+		selectCache.executeSelectQuery(endpoint, query);
 		//		} catch (Exception e) {
 		//			logger.error("ERROR", e);
 		//			e.printStackTrace();
 		//		}
 
-		primarySearch = new TBSLSearch(endpointURL, cacheDir);
-		secondarySearch = new SolrSearch(solrServerURL);
+		primarySearch = new TBSLSearch(endpoint, cacheDir);
+		secondarySearch = new SolrSearch();
 	}
 
 	/** learns new examples and processes them by removing blacklisted properties and choosing the ideal language in case there are multiple candidates 

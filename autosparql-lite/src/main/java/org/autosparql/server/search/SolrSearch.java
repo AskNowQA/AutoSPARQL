@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -14,20 +13,22 @@ import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.autosparql.server.Defaults;
 import org.autosparql.shared.Example;
 
 public class SolrSearch implements Search
 {
-	protected static Logger logger = Logger.getLogger(SolrSearch.class);
-		
+	private static Logger logger = Logger.getLogger(SolrSearch.class);
+
 	protected static final int LIMIT = 10;
 	protected static final int OFFSET = 0;
 
-	protected static final String SOLR_DBPEDIA_CLASSES = "http://dbpedia.aksw.org:8080/solr/dbpedia_classes";
+	//protected static final String SOLR_DBPEDIA_CLASSES = "http://dbpedia.aksw.org:8080/solr/dbpedia_classes";
 
 	protected CommonsHttpSolrServer server;
 
-	public SolrSearch(String serverURL){
+	private SolrSearch(String serverURL) // change to public if the need for custom sol server url arises
+	{
 		try {
 			server = new CommonsHttpSolrServer(serverURL);
 			server.setRequestWriter(new BinaryRequestWriter());
@@ -36,15 +37,11 @@ public class SolrSearch implements Search
 		}
 	}
 
-	@Override
-	public List<String> getResources(String query) {
-		return getResources(query, LIMIT);
-	}
+	public SolrSearch() {this(Defaults.solrServerURL());}
 
-	@Override
-	public List<String> getResources(String query, int limit) {
-		return getResources(query, limit, OFFSET);
-	}
+	@Override public List<String> getResources(String query) {return getResources(query, LIMIT);	}
+
+	@Override public List<String> getResources(String query, int limit) {return getResources(query, limit, OFFSET);}
 
 	@Override
 	public List<String> getResources(String query, int limit, int offset) {
@@ -65,14 +62,9 @@ public class SolrSearch implements Search
 		return resources;
 	}
 
-	public List<String> getResources(String query, String type) {
-		return getResources(query, type, LIMIT, OFFSET);
-	}
-
-	public List<String> getResources(String query, String type, int limit) {
-		return getResources(query, type, limit, OFFSET);
-	}
-
+	public List<String> getResources(String query, String type) {return getResources(query, type, LIMIT, OFFSET);}
+	public List<String> getResources(String query, String type, int limit) {return getResources(query, type, limit, OFFSET);}
+	
 	public List<String> getResources(String query, String type, int limit, int offset) {
 		List<String> resources = new ArrayList<String>();
 
@@ -91,29 +83,12 @@ public class SolrSearch implements Search
 		return resources;
 	}
 
-	@Override
-	public SortedSet<Example> getExamples(String query) {
-		return getExamples(query, LIMIT, OFFSET);
-	}
+	@Override public SortedSet<Example> getExamples(String query) {return getExamples(query, LIMIT, OFFSET);	}
+	@Override public SortedSet<Example> getExamples(String query, int limit) {return getExamples(query, limit, OFFSET);}
+	@Override public SortedSet<Example> getExamples(String query, int limit, int offset) {	return getExamples(query,null,limit,offset);}
 
-	@Override
-	public SortedSet<Example> getExamples(String query, int limit) {
-		return getExamples(query, limit, OFFSET);
-	}
-
-	@Override
-	public SortedSet<Example> getExamples(String query, int limit, int offset)
-	{
-		return getExamples(query,null,limit,offset);
-	}
-
-	public SortedSet<Example> getExamples(String query, String type) {
-		return getExamples(query, type, LIMIT, OFFSET);
-	}
-
-	public SortedSet<Example> getExamples(String query, String type, int limit) {
-		return getExamples(query, type, limit, OFFSET);
-	}
+	public SortedSet<Example> getExamples(String query, String type) {return getExamples(query, type, LIMIT, OFFSET);}
+	public SortedSet<Example> getExamples(String query, String type, int limit) {return getExamples(query, type, limit, OFFSET);}
 
 	public SortedSet<Example> getExamples(String query, String type, int limit, int offset)
 	{
@@ -138,10 +113,10 @@ public class SolrSearch implements Search
 				Example example = new Example(uri, label, imageURL, comment);
 				//example.set("origin","SolrSearch");
 				logger.trace("SolrSearch Field Value Map:"+d.getFieldValueMap());
-//				for(String property: d.getFieldNames())
-//				{
-//					example.set(property, d.getFieldValue(property));
-//				}
+				//				for(String property: d.getFieldNames())
+				//				{
+				//					example.set(property, d.getFieldValue(property));
+				//				}
 				examples.add(example);
 			}
 			if(examples.isEmpty())
@@ -160,7 +135,7 @@ public class SolrSearch implements Search
 	public List<String> getTypes(String term){
 		List<String> types = new ArrayList<String>();
 		try {
-			CommonsHttpSolrServer server = new CommonsHttpSolrServer(SOLR_DBPEDIA_CLASSES);
+			CommonsHttpSolrServer server = new CommonsHttpSolrServer(TBSLSearch.SOLR_DBPEDIA_CLASSES);
 			server.setRequestWriter(new BinaryRequestWriter());
 			SolrQuery q = new SolrQuery("label:" + term);
 			QueryResponse response = server.query(q);
@@ -176,11 +151,6 @@ public class SolrSearch implements Search
 		return types;
 	}
 
-	protected String buildQueryString(String query){
-		return "comment:(" + query + ") AND NOT label:(" + query + ")";
-	}
-
-	protected String buildQueryString(String query, String type){
-		return "comment:(" + query + ") AND NOT label:(" + query + ") AND types:\"" + type + "\"";
-	}
+	protected String buildQueryString(String query) {return "comment:(" + query + ") AND NOT label:(" + query + ")";}
+	protected String buildQueryString(String query, String type){return "comment:(" + query + ") AND NOT label:(" + query + ") AND types:\"" + type + "\"";}
 }

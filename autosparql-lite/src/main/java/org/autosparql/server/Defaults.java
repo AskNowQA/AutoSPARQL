@@ -18,6 +18,7 @@ public final class Defaults
 	}
 
 //	static boolean useDBpediaLive() {return Boolean.valueOf(properties.getProperty("useDBpediaLive"));}
-	static String endpointURL() {return properties.getProperty("endpointURL");}
-	static String solrServerURL() {return properties.getProperty("solrServerURL");}
+	public static String endpointURL() {return properties.getProperty("endpointURL");}
+	public static String graphURL() {return properties.getProperty("graphURL");}
+	public static String solrServerURL() {return properties.getProperty("solrServerURL");}
 }

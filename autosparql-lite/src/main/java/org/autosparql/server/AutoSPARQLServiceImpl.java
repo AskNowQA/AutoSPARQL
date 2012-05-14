@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import org.apache.log4j.Logger;
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
+import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.Endpoints;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
@@ -24,6 +25,7 @@ import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Options;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -32,7 +34,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	private static final Logger logger = Logger.getLogger(AutoSPARQLServiceImpl.class);
 	private static final long serialVersionUID = 1;
 	static int runningClients=0;
-	
+
 	enum SessionAttributes{AUTOSPARQL_SESSION}
 
 	private Map<Endpoint, SPARQLEndpointEx> endpointsMap;
@@ -40,12 +42,12 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	public AutoSPARQLServiceImpl() {}
 	private Set<String> questionWords = new HashSet<String>();
 
-	final AutoSPARQLSession session = createAutoSPARQLSession();
+	AutoSPARQLSession session;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-	//	loadEndpoints();
+		//	loadEndpoints();
 		//Test
 		logger.info("Start testing AutoSPARQLServiceImpl...");
 		String cacheDir = null;
@@ -53,11 +55,12 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		catch(Throwable t) {cacheDir="cache";}
 		logger.info("CacheDir: " + cacheDir);
 		try {
-			new ExtractionDBCache(cacheDir).executeSelectQuery(SparqlEndpoint.getEndpointDBpediaAKSW(), "SELECT * WHERE {?s ?p ?o.} LIMIT 1");
+			new ExtractionDBCache(cacheDir).executeSelectQuery(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "SELECT * WHERE {?s ?p ?o.} LIMIT 1");
 		} catch (Exception e) {
 			logger.error(e);
 		}
-		logger.info("... finished testing AutoSPARQLServiceImpl.");	
+		logger.info("... finished testing AutoSPARQLServiceImpl.");
+		session = createAutoSPARQLSession();
 	}
 
 	private void loadEndpoints() {
@@ -102,22 +105,25 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		//	return null;
 	}
 
-//	private HttpSession getHttpSession(){
-//		return getThreadLocalRequest().getSession();
-//	}
+	//	private HttpSession getHttpSession(){
+	//		return getThreadLocalRequest().getSession();
+	//	}
 
 	private AutoSPARQLSession createAutoSPARQLSession(/*SPARQLEndpointEx endpoint*/)
 	{
 		String cacheDir = null;
-		AutoSPARQLSession session = AutoSPARQLSession.INSTANCE; 
+		try{cacheDir=getServletContext().getRealPath("cache");}
+		catch(Throwable t) {logger.error("Error getting servlet context",t); cacheDir="cache";}
+
+		AutoSPARQLSession session = new AutoSPARQLSession(cacheDir); 
 		//getHttpSession().setAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString(), session);
 		return session;
 	}
-	
+
 	public AutoSPARQLSession getAutoSPARQLSession()
 	{		
-			//AutoSPARQLSession session = (AutoSPARQLSession) getHttpSession().getAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString());
-			return session;	
+		//AutoSPARQLSession session = (AutoSPARQLSession) getHttpSession().getAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString());
+		return session;	
 	}
 
 	@Override
@@ -126,8 +132,9 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		return getAutoSPARQLSession().getExamplesByQTL(positives, negatives,questionWords);
 	}
 
-	public static void main(String[] args) throws InvalidFileFormatException, FileNotFoundException, IOException, NoTemplateFoundException {
-		SPARQLTemplateBasedLearner l = new SPARQLTemplateBasedLearner(AutoSPARQLServiceImpl.class.getClassLoader().getResource("org/autosparql/server/tbsl.properties").getPath());
+	public static void main(String[] args) throws InvalidFileFormatException, FileNotFoundException, IOException, NoTemplateFoundException
+	{
+		SPARQLTemplateBasedLearner l = new SPARQLTemplateBasedLearner(new Options(TBSLSearch.class.getResourceAsStream("tbsl.properties")));
 		l.setQuestion("Give me all books written by Dan Brown");
 		l.learnSPARQLQueries();
 	}
@@ -156,6 +163,6 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	{
 		return AutoSPARQLSession.getSameAsLinks(resourceURI);
 	}
-	
+
 	@Override public Integer runningClients() {return ++runningClients;}
 }
