@@ -23,15 +23,16 @@ public class Application implements EntryPoint
 	{
 		log.info("Starting AutoSPARQL TBSL Client Application");
 		Window.setTitle("AutoSPARQL TBSL");
-		AsyncCallback<Integer> callback = new AsyncCallback<Integer>
+		AsyncCallback<long[]> callback = new AsyncCallback<long[]>
 		() // Eclipse auto intendation needs () there for good intendation...
 		{
-			@Override public void onFailure(Throwable caught) {log.severe("Couldn't get the number of running clients from the server. "
-					+Arrays.toString(caught.getStackTrace()));}
-			@Override public void onSuccess(Integer runningClients) {Window.setTitle("AutoSPARQL TBSL - "+runningClients+" running clients.");}
+			@Override public void onFailure(Throwable caught)
+			{log.severe("Couldn't get the number of running clients from the server. "+Arrays.toString(caught.getStackTrace()));}
+			@Override public void onSuccess(long[] hitsAndRunningClients)
+			{Window.setTitle("AutoSPARQL TBSL - "+hitsAndRunningClients[1]+" running clients, "+hitsAndRunningClients[0]+" hits.");}
 		};
 		AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
-		service.runningClients(callback);
+		service.hitsAndNumberOfRunningClients(callback);
 		//service.getExamplesByQTL(new ArrayList<String>(positives), new ArrayList<String>(negatives), callback);
 		GXT.setDefaultTheme(Theme.BLUE, true);		
 		Dispatcher dispatcher = Dispatcher.get();

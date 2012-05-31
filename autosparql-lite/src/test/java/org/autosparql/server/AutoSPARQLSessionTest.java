@@ -16,7 +16,7 @@ public class AutoSPARQLSessionTest
 	//	final AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),
 	//			"http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_resources",
 	//			"cache");
-	final AutoSPARQLSession session = new AutoSPARQLServiceImpl().getAutoSPARQLSession();
+	final AutoSPARQLSession session = new AutoSPARQLSession("cache");
 
 	//@Test
 	public void testFillExamples()

@@ -1,6 +1,6 @@
 package org.autosparql.server.util;
 
-import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -19,20 +18,17 @@ public class Endpoints
 {
 	static private Logger log = Logger.getLogger(Endpoints.class.toString());
 
-	public static List<SPARQLEndpointEx> loadEndpoints(String configPath){
+	public static List<SPARQLEndpointEx> loadEndpoints(InputStream stream) throws ConfigurationException
+	{
 		List<SPARQLEndpointEx> endpoints = new ArrayList<SPARQLEndpointEx>();
-		try {
-			XMLConfiguration config = new XMLConfiguration(new File(configPath));
 
+			XMLConfiguration config = new XMLConfiguration();
+			config.load(stream);
 			List<String> endpointConfigurations = CollectionUtils.toString(config.configurationsAt("endpoint"));
 			for(Iterator<?> iter = endpointConfigurations.iterator();iter.hasNext();){
 				HierarchicalConfiguration endpointConf = (HierarchicalConfiguration) iter.next();
 				endpoints.add(createEndpoint(endpointConf));
 			}
-		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return endpoints;
 	}
 

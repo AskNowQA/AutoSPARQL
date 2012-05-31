@@ -4,12 +4,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import org.apache.log4j.Logger;
 import org.autosparql.shared.Example;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
@@ -63,18 +61,21 @@ public class TBSLSearch implements Search
 		public static final WordNet wordNet = new WordNet(wordNetFilename);
 	}
 
-	static Map<List<String>,TBSLSearch> instances = new HashMap<List<String>,TBSLSearch>();
-	
-	public synchronized TBSLSearch getInstance(final SparqlEndpoint endpoint,final String cacheDir)
+	private static Map<List<String>,TBSLSearch> instances = new HashMap<List<String>,TBSLSearch>();
+
+	public static TBSLSearch getInstance(final SparqlEndpoint endpoint,final String cacheDir)
 	{
-		TBSLSearch search;
-		List<String> key = Arrays.asList(endpoint.getURL().toString(),endpoint.getDefaultGraphURIs().toString());
-		if((search=instances.get(key))!=null) {return search;}
-		instances.put(key,new TBSLSearch(endpoint,cacheDir));
-		return null;
+		synchronized(instances)
+		{
+			TBSLSearch search;
+			List<String> key = Arrays.asList(endpoint.getURL().toString(),endpoint.getDefaultGraphURIs().toString());
+			if((search=instances.get(key))!=null) {return search;}
+			instances.put(key,search=new TBSLSearch(endpoint,cacheDir));
+			return search;
+		}
 	}
-	
-	public TBSLSearch(final SparqlEndpoint endpoint,final String cacheDir)
+
+	private TBSLSearch(final SparqlEndpoint endpoint,final String cacheDir)
 	{
 		this.endpoint = endpoint;
 		try
@@ -82,10 +83,7 @@ public class TBSLSearch implements Search
 			// TODO: how can it work everywhere?
 			//cacheDir="/tmp/autosparql-cache-tbsl";
 			tbsl = new SPARQLTemplateBasedLearner(options,POSTaggerHolder.pos,WordNetHolder.wordNet, cacheDir);
-		} catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
+		} catch (Exception e) {throw new RuntimeException(e);}
 	}
 
 	@Override
@@ -106,15 +104,10 @@ public class TBSLSearch implements Search
 		tbsl.setEndpoint(endpoint);
 		if(!query.startsWith(QUERY_PREFIX)) {query=QUERY_PREFIX+query;}
 		tbsl.setQuestion(query);
-		try {
-			tbsl.learnSPARQLQueries();
-		} catch (NoTemplateFoundException e) {
-			e.printStackTrace();
-		}
+		try {tbsl.learnSPARQLQueries();}
+		catch (NoTemplateFoundException e) {throw new RuntimeException(e);}
 		//get SPARQL query which returned result, if exists
 		learnedQuery = tbsl.getBestSPARQLQuery();
-
-
 		return resources;
 	}
 
@@ -143,9 +136,8 @@ public class TBSLSearch implements Search
 		tbsl.setQuestion(query);
 		try {
 			tbsl.learnSPARQLQueries();
-		} catch (NoTemplateFoundException e) {
-			e.printStackTrace();
-		}
+		} catch (NoTemplateFoundException e) {throw new RuntimeException(e);}
+
 		//get SPARQL query which returned result, if exists
 		learnedQuery  = tbsl.getBestSPARQLQuery();
 		if(learnedQuery==null)

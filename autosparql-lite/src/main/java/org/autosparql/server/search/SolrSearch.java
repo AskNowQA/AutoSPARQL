@@ -32,9 +32,7 @@ public class SolrSearch implements Search
 		try {
 			server = new CommonsHttpSolrServer(serverURL);
 			server.setRequestWriter(new BinaryRequestWriter());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		} catch (MalformedURLException e) {throw new RuntimeException("Malformed SOLR Server URL \""+serverURL+"\"",e);}
 	}
 
 	public SolrSearch() {this(Defaults.solrServerURL());}
@@ -43,10 +41,9 @@ public class SolrSearch implements Search
 
 	@Override public List<String> getResources(String query, int limit) {return getResources(query, limit, OFFSET);}
 
-	@Override
-	public List<String> getResources(String query, int limit, int offset) {
+	@Override public List<String> getResources(String query, int limit, int offset)
+	{
 		List<String> resources = new ArrayList<String>();
-
 		SolrQuery q = new SolrQuery(buildQueryString(query));
 		q.setRows(limit);
 		q.setStart(offset);
@@ -56,15 +53,13 @@ public class SolrSearch implements Search
 			for(SolrDocument d : docList){
 				resources.add((String) d.get("uri"));
 			}
-		} catch (SolrServerException e) {
-			e.printStackTrace();
-		}
+		} catch (SolrServerException e) {throw new RuntimeException(e);} // cannot throw because of the Search Interface
 		return resources;
 	}
 
 	public List<String> getResources(String query, String type) {return getResources(query, type, LIMIT, OFFSET);}
 	public List<String> getResources(String query, String type, int limit) {return getResources(query, type, limit, OFFSET);}
-	
+
 	public List<String> getResources(String query, String type, int limit, int offset) {
 		List<String> resources = new ArrayList<String>();
 
@@ -77,9 +72,7 @@ public class SolrSearch implements Search
 			for(SolrDocument d : docList){
 				resources.add((String) d.get("uri"));
 			}
-		} catch (SolrServerException e) {
-			e.printStackTrace();
-		}
+		} catch (SolrServerException e) {throw new RuntimeException("SOLR Server Exception for query \""+query+"\" and type \""+type+"\"",e);}
 		return resources;
 	}
 
@@ -124,10 +117,12 @@ public class SolrSearch implements Search
 				logger.warn("No query learned by SolrSearch with original query: "+query);
 				return new TreeSet<Example>();
 			}
-		} catch (SolrServerException e) {
-			logger.error("SolrSearch.getExamples() with query "+query+" yielded the following exception:");
-			logger.error("ERROR in SOLRSearch", e);
-			return new TreeSet<Example>();
+		} catch (SolrServerException e)
+		{
+			throw new RuntimeException("Error getting examples for query \""+query+"\"",e);
+			//			logger.error("SolrSearch.getExamples() with query "+query+" yielded the following exception:");
+			//			logger.error("ERROR in SOLRSearch", e);
+			//			return new TreeSet<Example>();
 		}
 		return examples;
 	}
@@ -143,11 +138,8 @@ public class SolrSearch implements Search
 			for(SolrDocument d : docList){
 				types.add((String) d.get("uri"));
 			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (SolrServerException e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {throw new RuntimeException(e);}
+
 		return types;
 	}
 

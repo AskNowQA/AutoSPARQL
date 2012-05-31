@@ -59,18 +59,17 @@ public class AutoSPARQLSession
 {	
 	private static final Logger logger = Logger.getLogger(AutoSPARQLSession.class);
 	//public static final AutoSPARQLSession INSTANCE = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES);
-	protected Map<String, String> property2LabelMap;
-	protected TBSLSearch primarySearch;
-	protected SolrSearch secondarySearch;
-	protected final String cacheDir;
-	protected SPARQLEndpointEx endpoint;
-	protected final ExtractionDBCache selectCache;
+	private Map<String, String> property2LabelMap;
+	private TBSLSearch primarySearch;
+	private SolrSearch secondarySearch;
+	//private final String cacheDir;
+	private SPARQLEndpointEx endpoint;
+	private final ExtractionDBCache selectCache;
 	public static final List<String> languages = Arrays.asList(new String[] {"de","en"});
-	protected static final int MAX_NUMBER_OF_EXAMPLES = 20;
+	private static final int MAX_NUMBER_OF_EXAMPLES = 20;
 	//private String lastQuery = null;
-	PrefixMapping x = new PrefixMappingImpl();
-	protected boolean fastSearch = false;
-	protected static final String sameAsURI = "http://sameas.org/rdf?uri=";
+	private boolean fastSearch = false;
+	private static final String sameAsURI = "http://sameas.org/rdf?uri=";
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
 	 * after each method dealing with the cache,
@@ -102,21 +101,22 @@ public class AutoSPARQLSession
 	// examplesCache = new HashMap<String, Example>();
 	// }
 
-	public void setUseDBpediaLive(boolean useDBpediaLive)
-	{
-		try
-		{
-			if(useDBpediaLive)
-			{
-				logger.info("setting endpoint to DBpedia live");
-				this.endpoint = new SPARQLEndpointEx(new SparqlEndpoint(new URL("http://live.dbpedia.org/sparql")),"dbpedialive",null,Collections.<String>emptySet());
-			} else
-			{
-				logger.info("setting endpoint to DBpedia");
-				this.endpoint = new SPARQLEndpointEx(new SparqlEndpoint(new URL("http://dbpedia.org/sparql")),"dbpedia",null,Collections.<String>emptySet());
-			}
-		} catch (MalformedURLException e){throw new RuntimeException(e);}
-	}
+// we don't want hardcoded endpoints
+	//	public void setUseDBpediaLive(boolean useDBpediaLive)
+//	{
+//		try
+//		{
+//			if(useDBpediaLive)
+//			{
+//				logger.info("setting endpoint to DBpedia live");
+//				this.endpoint = new SPARQLEndpointEx(new SparqlEndpoint(new URL("http://live.dbpedia.org/sparql")),"dbpedialive",null,Collections.<String>emptySet());
+//			} else
+//			{
+//				logger.info("setting endpoint to DBpedia");
+//				this.endpoint = new SPARQLEndpointEx(new SparqlEndpoint(new URL("http://dbpedia.org/sparql")),"dbpedia",null,Collections.<String>emptySet());
+//			}
+//		} catch (MalformedURLException e){throw new RuntimeException(e);}
+//	}
 
 	public void setFastSearch(boolean fastSearch)
 	{
@@ -124,14 +124,15 @@ public class AutoSPARQLSession
 		logger.info("setting fast search to "+fastSearch);
 	}
 
-//SparqlEndpoint endpointURL, String solrServerURL,
+	//SparqlEndpoint endpointURL, String solrServerURL,
 	public AutoSPARQLSession(String cacheDir)
 	{	
+		if(cacheDir==null||cacheDir.isEmpty()) {throw new IllegalArgumentException("cacheDir is empty");}
 		logger.debug("Creating AutoSPARQLSession with cache dir \""+cacheDir+"\".");
-		this.cacheDir=cacheDir;
-//		String cacheDir;
-//			try{cacheDir=getServletContext().getRealPath("cache");}
-//			catch(Throwable t) {cacheDir="cache";}		
+		//this.cacheDir=cacheDir;
+		//		String cacheDir;
+		//			try{cacheDir=getServletContext().getRealPath("cache");}
+		//			catch(Throwable t) {cacheDir="cache";}		
 
 		SparqlEndpoint endpoint = null;
 		try{endpoint = new SparqlEndpoint(new URL(Defaults.endpointURL()),Collections.singletonList(Defaults.graphURL()),Collections.<String>emptyList());}
@@ -139,14 +140,16 @@ public class AutoSPARQLSession
 		{logger.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}		
 		//if(endpointURL==null||endpointURL.getURL()==null) throw new NullPointerException("endpoint is null");		
 		this.endpoint= new SPARQLEndpointEx(endpoint,endpoint.toString(),null,Collections.<String>emptySet());
-//		try {
-//			dir = cacheDir + "/" + URLEncoder.encode(this.endpoint.getURL().toString(), "UTF-8")+ "/select-cache";
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
+		//		try {
+		//			dir = cacheDir + "/" + URLEncoder.encode(this.endpoint.getURL().toString(), "UTF-8")+ "/select-cache";
+		//		} catch (UnsupportedEncodingException e) {
+		//			e.printStackTrace();
+		//		}
 		// TODO: how can it work everywhere?
 		//dir="/tmp/autosparqlsession-extractiondbcache";
-		new File(cacheDir).mkdir();
+		File cacheDirFile = new File(cacheDir); 		
+		if(!cacheDirFile.exists()) {cacheDirFile.mkdir();}
+		if(!cacheDirFile.isDirectory()) {throw new RuntimeException("Cache directory path does not denote a directory.");}
 		//dir="/var/lib/tomcat7/webapps/autosparql-lite/cache";
 		selectCache = new ExtractionDBCache(cacheDir);
 		//		try {
@@ -158,7 +161,7 @@ public class AutoSPARQLSession
 		//			e.printStackTrace();
 		//		}
 
-		primarySearch = new TBSLSearch(endpoint, cacheDir);
+		primarySearch = TBSLSearch.getInstance(endpoint, cacheDir);
 		secondarySearch = new SolrSearch();
 	}
 
@@ -360,27 +363,28 @@ public class AutoSPARQLSession
 	public SortedSet<Example> getExamples(String query)
 	{
 		Cache cache = getCacheManager().getCache("examples");
-		{try{
-			Element e=cache.get(cacheKey(query,fastSearch));
-			//System.out.println(e);
-			if(e!=null) {
-				logger.info("cache hit with query \""+query+"\"");
-				getCacheManager().shutdown();
-				return mapsToExamples((List<Map<String,Object>>)e.getValue());}
-			else{logger.info("cache miss with query \""+query+"\"");}
-		}	catch(Exception e) {System.err.println("Error getting cache element.");e.printStackTrace();}
+		Element e=cache.get(cacheKey(query,fastSearch));
+		//System.out.println(e);
+		if(e!=null)
+		{
+			logger.info("cache hit with query \""+query+"\"");			
+			getCacheManager().shutdown(); // shutdown to make sure it gets saved to disk (cache.flush() does not always seem to work) 
+			return mapsToExamples((List<Map<String,Object>>)e.getValue());		
 		}
+
+		logger.info("cache miss with query \""+query+"\"");
 		SortedSet<Example> examples = null;// = new ArrayList<Example>();
 		//		 primary search DBpedia bzw. DBpedia live
 		if(!fastSearch) {examples = primarySearch.getExamples(query);}
 		if(examples==null||examples.isEmpty())
 		{
+			logger.warn("Primary search failed, using secondary search.");
 			//		//			 fallback: string in solr index hauen und zurückgeben was da
 			//		//			 rauskommt
 			//					List<String> answerType = primarySearch.getLexicalAnswerType();
 			//					if(answerType==null)
 			//					{
-			examples = secondarySearch.getExamples(query);
+			examples = secondarySearch.getExamples(query);						 
 			//lastQuery=query;
 		}
 		//			else
@@ -396,11 +400,14 @@ public class AutoSPARQLSession
 		//				}
 		//			}
 		//		}
-		fillExamples(examples);
-		if(examples.isEmpty()) {logger.warn("AutoSPARQLSession found no examples for query \""+query+"\". :-(");}
+		if(examples==null) {logger.warn("Secondary search failed as well. Found no examples for query \""+query+"\". :-(");}
+		else
+		{
+			fillExamples(examples);
+		}		
 		cache.put(new Element(cacheKey(query,fastSearch),examplesToMaps(examples)));
 		cache.flush();
-		getCacheManager().shutdown();
+		getCacheManager().shutdown(); // TODO: is this correct or does it obstruct further cachemanager uses?
 		return examples;
 	}
 
@@ -456,13 +463,7 @@ public class AutoSPARQLSession
 				}
 			}
 			sameAsLinks.add(resourceURI.replace("http://dbpedia.org/resource/", "http://en.wikipedia.org/wiki/"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {throw new RuntimeException("Failed getting sameAs-links for resource URI \""+resourceURI+"\".",e);}
 		return sameAsLinks;
 	}
 }

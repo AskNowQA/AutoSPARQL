@@ -15,7 +15,7 @@ public class TBSLSearchTest
 	public void testGetExamples() throws MalformedURLException
 	{
 		System.out.println("Creating TBSLSearch instance");
-		TBSLSearch search = new TBSLSearch(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),"cache");
+		TBSLSearch search = TBSLSearch.getInstance(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),"cache");
 		System.out.println("Creating AutoSPARQLSession instance");
 //		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),	TBSLSearch.SOLR_DBPEDIA_RESOURCES, "cache");
 

@@ -24,12 +24,13 @@ public interface AutoSPARQLService extends RemoteService
 			return instance;
 		}
 	}	
-	List<Endpoint> getEndpoints();	
-	SortedSet<Example> getExamples(String query);
+	List<Endpoint> getEndpoints() throws Exception;	
+	SortedSet<Example> getExamples(String query) throws Exception;
 	Map<String, String> getProperties(String query) throws AutoSPARQLException;
 	SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives);
 	void setFastSearch(Boolean fastSearch);
-	void setUseDBpediaLive(Boolean useDBpediaLive);
+//	void setUseDBpediaLive(Boolean useDBpediaLive);
 	List<String> getSameAsLinks(String resourceURI);
-	Integer runningClients();
+	//Integer runningClients();
+	long[] hitsAndNumberOfRunningClients();
 }

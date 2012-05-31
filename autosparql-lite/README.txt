@@ -28,3 +28,10 @@ sudo chmod -R a+wr /var/lib/tomcat6/cache
 Alternatively modify your local copy of src/main/resources/tbsl/wordnet_properties.xml
 and change the following to an absolute path containing those files:
 <param name="dictionary_path" value="/opt/wordnet/dict"/> 
+
+For the hosted mode:
+
+1. If you mind the logging exceptions, then do (replace ... by your path to AutoSPARQL)
+"sudo ln -s /.../AutoSPARQL/autosparql-lite /logs"
+The exceptions occur because log4j.properties places the log files under ${catalina.base}
+which is not defined in hosted mode (alternatively you could set this property).

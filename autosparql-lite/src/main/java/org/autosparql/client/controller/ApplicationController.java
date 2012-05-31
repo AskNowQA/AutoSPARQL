@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import org.autosparql.client.AppEvents;
-import org.autosparql.client.Application;
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.AutoSPARQLServiceAsync;
 import org.autosparql.client.view.ApplicationView;
@@ -18,12 +17,13 @@ import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.mvc.AppEvent;
 import com.extjs.gxt.ui.client.mvc.Controller;
 import com.google.gwt.logging.client.HtmlLogFormatter;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 
 public class ApplicationController extends Controller
 {	
-	private static final boolean useDBpediaLiveDefault = true;//new Boolean(Application.properties.getProperty("useDBpediaLiveDefault"));
+//	private static final boolean useFallbackEndpoint = true;//new Boolean(Application.properties.getProperty("useDBpediaLiveDefault"));
 	private ApplicationView appView;
 	private Logger log = Logger.getLogger(ApplicationController.class.toString());
 
@@ -79,18 +79,19 @@ public class ApplicationController extends Controller
 
 	public void initialize()
 	{
-		String query = com.google.gwt.user.client.Window.Location.getParameter("query");
-		String useDBpediaLiveParameter = com.google.gwt.user.client.Window.Location.getParameter("dbpedialive");
-		boolean useDBpediaLive = useDBpediaLiveParameter==null?useDBpediaLiveDefault:"on".equals(useDBpediaLiveParameter);
-		boolean fastSearch = "on".equals(com.google.gwt.user.client.Window.Location.getParameter("fastsearch"));
-		log.info("dbpedia live: "+useDBpediaLive);
+		String query = Window.Location.getParameter("query");
+//		String useDBpediaLiveParameter = Window.Location.getParameter("dbpedialive");
+		String endpointParameter = Window.Location.getParameter("endpoint");		
+//		boolean useDBpediaLive = useDBpediaLiveParameter==null?useFallbackEndpoint:"on".equals(useDBpediaLiveParameter);
+		boolean fastSearch = "on".equals(Window.Location.getParameter("fastsearch"));
+//		log.info("dbpedia live: "+useDBpediaLive);
 		log.info("fastsearch: "+fastSearch);
 		final AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
 
 		AsyncCallback<Void> callback = new AsyncCallback<Void>()
 				{@Override	public void onSuccess(Void result)	{}@Override	public void onFailure(Throwable caught){}}; 
 				service.setFastSearch(fastSearch, callback);
-				service.setUseDBpediaLive(useDBpediaLive, callback);
+//				service.setUseDBpediaLive(useDBpediaLive, callback);
 
 				//useDBpediaLive,useFastSearch
 
@@ -122,7 +123,7 @@ public class ApplicationController extends Controller
 							log.severe(arg0.getCause().getMessage());
 							//log.severe(arg0.getCause().toString());
 							wait.hide();
-							com.google.gwt.user.client.Window.alert(arg0.getMessage());
+							Window.alert(arg0.getMessage());
 
 							//appView.showError("could not get examples");
 							// TODO Auto-generated method stub
@@ -144,4 +145,3 @@ public class ApplicationController extends Controller
 	}
 
 }
-
