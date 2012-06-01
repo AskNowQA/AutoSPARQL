@@ -83,6 +83,7 @@ public class TBSLSearch implements Search
 			// TODO: how can it work everywhere?
 			//cacheDir="/tmp/autosparql-cache-tbsl";
 			tbsl = new SPARQLTemplateBasedLearner(options,POSTaggerHolder.pos,WordNetHolder.wordNet, cacheDir);
+			tbsl.setEndpoint(endpoint);
 		} catch (Exception e) {throw new RuntimeException(e);}
 	}
 

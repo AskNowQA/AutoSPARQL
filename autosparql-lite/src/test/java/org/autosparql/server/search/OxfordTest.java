@@ -1,9 +1,12 @@
 package org.autosparql.server.search;
 
-import static org.junit.Assert.assertTrue;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
 import java.util.SortedSet;
 import org.autosparql.shared.Example;
 import org.dllearner.kb.sparql.SparqlEndpoint;
+import org.junit.Test;
 
 public class OxfordTest
 {
@@ -14,11 +17,14 @@ public class OxfordTest
 			"flats with at least 2 bedrooms and a large kitchen",
 			"Are there flats close to a kindergarten for less than 1000 pounds per month in Oxford?"
 		};
+	String query = "Give me all books written by Dan Brown.";
 	
-	public void testOxford()
+	@Test
+	public void testOxford() throws MalformedURLException
 	{
-		TBSLSearch search = TBSLSearch.getInstance(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),"cache");
-		SortedSet<Example> examples = search.getExamples(queries[0]);
+		TBSLSearch search = TBSLSearch.getInstance(
+				new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.singletonList("http://diadem.cs.ox.ac.uk")),"cache");
+		SortedSet<Example> examples = search.getExamples(query);
 		//System.out.println(examples);
 		for(Example example : examples) System.out.println(example.getURI());
 		//System.out.println(examples.get(0).getURI());
