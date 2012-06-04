@@ -9,6 +9,7 @@ import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -29,6 +30,7 @@ public interface AutoSPARQLService extends RemoteService
 	Map<String, String> getProperties(String query) throws AutoSPARQLException;
 	SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives);
 	void setFastSearch(Boolean fastSearch);
+	void setOxford(boolean oxford);
 //	void setUseDBpediaLive(Boolean useDBpediaLive);
 	List<String> getSameAsLinks(String resourceURI);
 	//Integer runningClients();

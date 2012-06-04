@@ -81,16 +81,20 @@ public class ApplicationController extends Controller
 	{
 		String query = Window.Location.getParameter("query");
 //		String useDBpediaLiveParameter = Window.Location.getParameter("dbpedialive");
-		String endpointParameter = Window.Location.getParameter("endpoint");		
+		//String endpointParameter = Window.Location.getParameter("endpoint");		
 //		boolean useDBpediaLive = useDBpediaLiveParameter==null?useFallbackEndpoint:"on".equals(useDBpediaLiveParameter);
 		boolean fastSearch = "on".equals(Window.Location.getParameter("fastsearch"));
+		boolean oxford = "on".equals(Window.Location.getParameter("oxford"));
+		log.info("oxford: "+oxford);
 //		log.info("dbpedia live: "+useDBpediaLive);
 		log.info("fastsearch: "+fastSearch);
 		final AutoSPARQLServiceAsync service = AutoSPARQLService.Util.getInstance();
 
 		AsyncCallback<Void> callback = new AsyncCallback<Void>()
-				{@Override	public void onSuccess(Void result)	{}@Override	public void onFailure(Throwable caught){}}; 
+				{@Override	public void onSuccess(Void result)	{}@Override	public void onFailure(Throwable caught){throw new RuntimeException(caught);}}; 
 				service.setFastSearch(fastSearch, callback);
+				service.setOxford(oxford, callback);
+				
 //				service.setUseDBpediaLive(useDBpediaLive, callback);
 
 				//useDBpediaLive,useFastSearch

@@ -22,4 +22,5 @@ public interface AutoSPARQLServiceAsync
 	void getSameAsLinks(String resourceURI, AsyncCallback<List<String>> callback);
 	//void runningClients(AsyncCallback<Integer> callback);
 	void hitsAndNumberOfRunningClients(AsyncCallback<long[]> callback);
+	void setOxford(boolean oxford, AsyncCallback<Void> callback);
 }

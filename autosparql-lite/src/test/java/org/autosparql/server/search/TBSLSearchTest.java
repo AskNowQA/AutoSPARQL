@@ -15,7 +15,7 @@ public class TBSLSearchTest
 	public void testGetExamples() throws MalformedURLException
 	{
 		System.out.println("Creating TBSLSearch instance");
-		TBSLSearch search = TBSLSearch.getInstance(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),"cache");
+		TBSLSearch search = TBSLSearch.getDBpediaInstance();
 		System.out.println("Creating AutoSPARQLSession instance");
 //		AutoSPARQLSession session = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(),	TBSLSearch.SOLR_DBPEDIA_RESOURCES, "cache");
 
@@ -26,11 +26,8 @@ public class TBSLSearchTest
 		for(Example example : examples) System.out.println(example.getURI());
 		//System.out.println(examples.get(0).getURI());
 		// Example.equals() only uses the examples uri's
-		System.out.println(examples);
-		assertTrue(examples.contains(new Example("http://dbpedia.org/resource/The_Da_Vinci_Code",null,null,null)));
-		System.out.println(search.learnedQuery());
+		assertTrue(examples.toString()+'\n'+search.learnedQuery(),examples.contains(new Example("http://dbpedia.org/resource/Angels_&_Demons",null,null,null)));
 		
-
 //		session.fillExamples(examples);
 //		for(Example example : examples){
 //			System.out.println(example.get(RDFS.label.getURI()));

@@ -170,5 +170,8 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	/**	hitsAndRunningClients()[0] - hits, [1] - number of running clients */
 	// Java does not have pairs or tuples :-(
 	@Override public long[] hitsAndNumberOfRunningClients()
-	{return new long[] {ActiveClientsListener.hits(),ActiveClientsListener.numberOfConnectedClients()};}	
+	{return new long[] {ActiveClientsListener.hits(),ActiveClientsListener.numberOfConnectedClients()};}
+
+	@Override
+	public void setOxford(boolean oxford) {getAutoSPARQLSession().setOxford(oxford);}
 }

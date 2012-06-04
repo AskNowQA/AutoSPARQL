@@ -1,9 +1,7 @@
 package org.autosparql.server;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -11,7 +9,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,9 +19,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+
 import org.apache.log4j.Logger;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
@@ -37,11 +36,8 @@ import org.autosparql.shared.SPARQLException;
 import org.autosparql.shared.SameAsWhiteList;
 import org.dllearner.algorithm.qtl.QTL;
 import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
-import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.ExtractionDBCache;
-import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
-import org.openjena.atlas.logging.Log;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -49,26 +45,25 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.shared.impl.PrefixMappingImpl;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDFS;
-
+// TODO: synchronized methods for setprimarysearch ?
 /** @author Konrad Höffner */
 public class AutoSPARQLSession
 {	
 	private static final Logger logger = Logger.getLogger(AutoSPARQLSession.class);
-	//public static final AutoSPARQLSession INSTANCE = new AutoSPARQLSession(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES);
+	//public static final AutoSPARQLSession INSTANCE = new AutoSPARQLSession(SparqlprimarySearch().getEndpoint().getprimarySearch().getEndpoint()DBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES);
 	private Map<String, String> property2LabelMap;
-	private TBSLSearch primarySearch;
+//	private TBSLSearch primarySearch;
 	private SolrSearch secondarySearch;
 	//private final String cacheDir;
-	private SPARQLEndpointEx endpoint;
+	//private SPARQLprimarySearch().getEndpoint()Ex primarySearch().getEndpoint();
 	private final ExtractionDBCache selectCache;
 	public static final List<String> languages = Arrays.asList(new String[] {"de","en"});
 	private static final int MAX_NUMBER_OF_EXAMPLES = 20;
 	//private String lastQuery = null;
 	private boolean fastSearch = false;
+	private boolean oxford = false;
 	private static final String sameAsURI = "http://sameas.org/rdf?uri=";
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
@@ -81,18 +76,18 @@ public class AutoSPARQLSession
 		return cm;
 	}
 
-	// public AutoSPARQLSession(SPARQLEndpointEx endpoint, String cacheDir,
+	// public AutoSPARQLSession(SPARQLprimarySearch().getEndpoint()Ex primarySearch().getEndpoint(), String cacheDir,
 	// String servletContextPath, String solrURL, QuestionProcessor
 	// questionPreprocessor){
-	// this.endpoint = endpoint;
+	// this.primarySearch().getEndpoint() = primarySearch().getEndpoint();
 	// this.servletContextPath = servletContextPath;
 	// this.questionPreprocessor = questionPreprocessor;
 	//
 	// constructCache = new ExtractionDBCache(cacheDir + "/" +
-	// endpoint.getPrefix() + "/construct-cache");
+	// primarySearch().getEndpoint().getPrefix() + "/construct-cache");
 
 	// search = new SolrSearch(solrURL, questionPreprocessor);
-	// exampleFinder = new ExampleFinder(endpoint, selectCache, constructCache,
+	// exampleFinder = new ExampleFinder(primarySearch().getEndpoint(), selectCache, constructCache,
 	// search, questionPreprocessor);
 	//
 	// property2LabelMap = new TreeMap<String, String>();
@@ -101,19 +96,19 @@ public class AutoSPARQLSession
 	// examplesCache = new HashMap<String, Example>();
 	// }
 
-// we don't want hardcoded endpoints
+// we don't want hardcoded primarySearch().getEndpoint()s
 	//	public void setUseDBpediaLive(boolean useDBpediaLive)
 //	{
 //		try
 //		{
 //			if(useDBpediaLive)
 //			{
-//				logger.info("setting endpoint to DBpedia live");
-//				this.endpoint = new SPARQLEndpointEx(new SparqlEndpoint(new URL("http://live.dbpedia.org/sparql")),"dbpedialive",null,Collections.<String>emptySet());
+//				logger.info("setting primarySearch().getEndpoint() to DBpedia live");
+//				this.primarySearch().getEndpoint() = new SPARQLprimarySearch().getEndpoint()Ex(new SparqlprimarySearch().getEndpoint()(new URL("http://live.dbpedia.org/sparql")),"dbpedialive",null,Collections.<String>emptySet());
 //			} else
 //			{
-//				logger.info("setting endpoint to DBpedia");
-//				this.endpoint = new SPARQLEndpointEx(new SparqlEndpoint(new URL("http://dbpedia.org/sparql")),"dbpedia",null,Collections.<String>emptySet());
+//				logger.info("setting primarySearch().getEndpoint() to DBpedia");
+//				this.primarySearch().getEndpoint() = new SPARQLprimarySearch().getEndpoint()Ex(new SparqlprimarySearch().getEndpoint()(new URL("http://dbpedia.org/sparql")),"dbpedia",null,Collections.<String>emptySet());
 //			}
 //		} catch (MalformedURLException e){throw new RuntimeException(e);}
 //	}
@@ -123,8 +118,14 @@ public class AutoSPARQLSession
 		this.fastSearch = fastSearch;
 		logger.info("setting fast search to "+fastSearch);
 	}
+	
+	public void setOxford(boolean oxford)
+	{
+		this.oxford = oxford;
+		logger.info("setting oxford to "+oxford);
+	}
 
-	//SparqlEndpoint endpointURL, String solrServerURL,
+	//SparqlprimarySearch().getEndpoint() primarySearch().getEndpoint()URL, String solrServerURL,
 	public AutoSPARQLSession(String cacheDir)
 	{	
 		if(cacheDir==null||cacheDir.isEmpty()) {throw new IllegalArgumentException("cacheDir is empty");}
@@ -134,14 +135,11 @@ public class AutoSPARQLSession
 		//			try{cacheDir=getServletContext().getRealPath("cache");}
 		//			catch(Throwable t) {cacheDir="cache";}		
 
-		SparqlEndpoint endpoint = null;
-		try{endpoint = new SparqlEndpoint(new URL(Defaults.endpointURL()),Collections.singletonList(Defaults.graphURL()),Collections.<String>emptyList());}
-		catch (MalformedURLException e)
-		{logger.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}		
-		//if(endpointURL==null||endpointURL.getURL()==null) throw new NullPointerException("endpoint is null");		
-		this.endpoint= new SPARQLEndpointEx(endpoint,endpoint.toString(),null,Collections.<String>emptySet());
+			
+		//if(primarySearch().getEndpoint()URL==null||primarySearch().getEndpoint()URL.getURL()==null) throw new NullPointerException("primarySearch().getEndpoint() is null");		
+		//this.primarySearch().getEndpoint()= new SPARQLprimarySearch().getEndpoint()Ex(primarySearch().getEndpoint(),primarySearch().getEndpoint().toString(),null,Collections.<String>emptySet());
 		//		try {
-		//			dir = cacheDir + "/" + URLEncoder.encode(this.endpoint.getURL().toString(), "UTF-8")+ "/select-cache";
+		//			dir = cacheDir + "/" + URLEncoder.encode(this.primarySearch().getEndpoint().getURL().toString(), "UTF-8")+ "/select-cache";
 		//		} catch (UnsupportedEncodingException e) {
 		//			e.printStackTrace();
 		//		}
@@ -154,14 +152,14 @@ public class AutoSPARQLSession
 		selectCache = new ExtractionDBCache(cacheDir);
 		//		try {
 		String query = "SELECT * WHERE {?s a ?type} LIMIT 1";
-		logger.info("Testing extraction DB cache with cache dir "+cacheDir+" and endpoint "+endpoint.getURL()+" and query "+query);
-		selectCache.executeSelectQuery(endpoint, query);
+		logger.info("Testing extraction DB cache with cache dir "+cacheDir+" and primarySearch().getEndpoint() "+primarySearch().getEndpoint().getURL()+" and query "+query);
+		selectCache.executeSelectQuery(primarySearch().getEndpoint(), query);
 		//		} catch (Exception e) {
 		//			logger.error("ERROR", e);
 		//			e.printStackTrace();
 		//		}
 
-		primarySearch = TBSLSearch.getInstance(endpoint, cacheDir);
+		//primarySearch = TBSLSearch.getDBpediaInstance();
 		secondarySearch = new SolrSearch();
 	}
 
@@ -176,7 +174,7 @@ public class AutoSPARQLSession
 		//			Element e;
 		//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
 		//		}
-		QTL qtl = new QTL(endpoint, selectCache);
+		QTL qtl = new QTL(primarySearch().getEndpoint(), selectCache);
 		qtl.setExamples(positives, negatives);
 		if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
 		qtl.start();
@@ -184,12 +182,12 @@ public class AutoSPARQLSession
 		// behält nur die kanten wo die property mit einem wort oder das objekt ähnlichkeit hat		
 		String query = qtl.getBestSPARQLQuery();
 		// get all triples belonging to the subjects
-		query = query.replace("SELECT ?x0 WHERE {", "SELECT ?x0 ?p ?o WHERE {?x0 ?p ?o. ");
+		query = query.replace(" ?x0 WHERE {", " ?x0 ?p ?o WHERE {?x0 ?p ?o. ");
 		query = query.replace("?x0", "?s");
 
 		try
 		{
-			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));
+			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(primarySearch().getEndpoint(), query));
 			SortedSet<Example> examples = fillExamples(null, rs);
 			//			cache.put(new Element(parameters,examples));
 			//			cache.flush();
@@ -222,20 +220,26 @@ public class AutoSPARQLSession
 		}
 		catch(Exception e)
 		{
-			throw new SPARQLException(e,query,endpoint.toString());
+			e.printStackTrace();
+			throw new SPARQLException(e,query,primarySearch().getEndpoint().toString());
 		}
 	}
 
+	private TBSLSearch primarySearch()
+	{
+		return oxford?TBSLSearch.getOxfordInstance():TBSLSearch.getDBpediaInstance();
+	}
+	
 	public List<String> getResources(String query)
 	{
 		List<String> resources = new ArrayList<String>();
 		// primary search DBpedia bzw. DBpedia live
-		resources = primarySearch.getResources(query);
+		resources = primarySearch().getResources(query);
 		if (resources.isEmpty())
 		{
 			// fallback: string in solr index hauen und zurückgeben was da
 			// rauskommt
-			List<String> answerType = primarySearch.getLexicalAnswerType();
+			List<String> answerType = primarySearch().getLexicalAnswerType();
 			List<String> types = secondarySearch.getTypes(answerType.get(0));
 
 			for (String type : types)
@@ -255,7 +259,7 @@ public class AutoSPARQLSession
 	/** @param examples the list of existing examples. if null a new one will be created. examples not contained will be created.
 	/** @param rs a resultset whose variables have to be "s", "p" and "o"
 	/** @return the original list if non-null (else a new one) filled with the properties and one object per property from the resultset.*/
-	public static SortedSet<Example> fillExamples(SortedSet<Example> examples, ResultSet rs)
+	private static SortedSet<Example> fillExamples(SortedSet<Example> examples, ResultSet rs)
 	{
 		if(examples==null) {examples = new TreeSet<Example>();}
 		if(!rs.hasNext()) {return new TreeSet<Example>(examples);}
@@ -315,7 +319,7 @@ public class AutoSPARQLSession
 		for(String uri:uris) {sb.append("?s = <"+DefaultPrefixMapping.INSTANCE.expandPrefix(uri)+">||");}
 		// remove last "||"-substring
 		String query = sb.substring(0,sb.length()-2)+")}";
-		ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));
+		ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(primarySearch().getEndpoint(), query));
 		fillExamples(examples,rs);
 	}
 
@@ -375,7 +379,7 @@ public class AutoSPARQLSession
 		logger.info("cache miss with query \""+query+"\"");
 		SortedSet<Example> examples = null;// = new ArrayList<Example>();
 		//		 primary search DBpedia bzw. DBpedia live
-		if(!fastSearch) {examples = primarySearch.getExamples(query);}
+		if(!fastSearch) {examples = primarySearch().getExamples(query);}
 		if(examples==null||examples.isEmpty())
 		{
 			logger.warn("Primary search failed, using secondary search.");
@@ -423,7 +427,7 @@ public class AutoSPARQLSession
 				+ "LIMIT 1000";
 
 		ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache
-				.executeSelectQuery(endpoint, newQuery));
+				.executeSelectQuery(primarySearch().getEndpoint(), newQuery));
 		QuerySolution qs;
 		while (rs.hasNext())
 		{
@@ -466,4 +470,6 @@ public class AutoSPARQLSession
 		} catch (Exception e) {throw new RuntimeException("Failed getting sameAs-links for resource URI \""+resourceURI+"\".",e);}
 		return sameAsLinks;
 	}
+
+	
 }
