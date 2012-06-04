@@ -309,7 +309,6 @@ public class AutoSPARQLSession
 		List<String> uris = new LinkedList<String>();
 		for(Example example: examples)
 		{
-			//	System.out.println("TEST: " + example);
 			uris.add(example.getURI());
 			example.setSameAsLinks(getSameAsLinks(example.getURI()));
 		}
@@ -368,7 +367,6 @@ public class AutoSPARQLSession
 	{
 		Cache cache = getCacheManager().getCache("examples");
 		Element e=cache.get(cacheKey(query,fastSearch));
-		//System.out.println(e);
 		if(e!=null)
 		{
 			logger.info("cache hit with query \""+query+"\"");			

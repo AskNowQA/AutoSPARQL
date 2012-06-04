@@ -21,7 +21,7 @@ public class OxfordTest
 	
 	@Test
 	public void testOxford() throws MalformedURLException
-	{
+	{		
 		TBSLSearch search = TBSLSearch.getOxfordInstance();
 		SortedSet<Example> examples = search.getExamples(query);
 		//System.out.println(examples);

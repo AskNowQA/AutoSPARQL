@@ -1,19 +1,18 @@
 package org.autosparql.server.search;
 
 import static org.junit.Assert.assertTrue;
-
 import java.net.MalformedURLException;
 import java.util.SortedSet;
-
 import org.autosparql.shared.Example;
-import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.junit.Test;
+import com.hp.hpl.jena.query.ARQ; 
 
 public class TBSLSearchTest
 {
 	@Test
 	public void testGetExamples() throws MalformedURLException
 	{
+		
 		System.out.println("Creating TBSLSearch instance");
 		TBSLSearch search = TBSLSearch.getDBpediaInstance();
 		System.out.println("Creating AutoSPARQLSession instance");

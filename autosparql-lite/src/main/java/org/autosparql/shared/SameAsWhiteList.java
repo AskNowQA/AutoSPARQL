@@ -3,7 +3,6 @@ package org.autosparql.shared;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class SameAsWhiteList {
 	
 	public static final String[][] allowedPrefixToImageArray = new String[][]{

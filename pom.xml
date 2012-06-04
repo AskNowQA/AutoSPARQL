@@ -91,16 +91,21 @@
 				<version>${gxt.version}</version>
 			</dependency>
 
-			<dependency>
+  			<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
-			<version>2.9.1-incubating-SNAPSHOT</version>
+			<version>2.9.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-core</artifactId>
-			<version>2.7.1-incubating-SNAPSHOT</version>
+			<version>2.7.1-SNAPSHOT</version>
 			</dependency>
+			 <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-iri</artifactId>
+      <version>0.9.1-incubating-20120305.120450-12</version>
+    </dependency>
 
 			<!--SwingX is in central -->
 
@@ -283,11 +288,11 @@
 				<artifactId>bliki-core</artifactId>
 				<version>3.0.16</version>
 			</dependency>
-			<dependency>
+			<!-- <dependency>
 				<groupId>opennlp</groupId>
 				<artifactId>tools</artifactId>
 				<version>1.5.0</version>
-			</dependency>
+			</dependency> -->
 
 
 			<!-- Jars for SIMBA stuff from Axel -->
@@ -349,7 +354,6 @@
 			</dependency>
 
 
-
 			<dependency>
 				<groupId>org.openrdf</groupId>
 				<artifactId>sesame</artifactId>
@@ -357,9 +361,6 @@
 				<type>jar</type>
 				<scope>compile</scope>
 			</dependency>
-
-
-
 
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -466,7 +467,14 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	<dependencies>
+  	<dependencies>
+  	
+  				<dependency>
+				<groupId>org.apache.solr</groupId>
+				<artifactId>solr-solrj</artifactId>				
+			</dependency>
+  	
+  	
 		<dependency>
 		<groupId>org.apache.jena</groupId>
 		<artifactId>jena-arq</artifactId>
@@ -479,7 +487,31 @@
 <groupId>xerces</groupId>
 <artifactId>xercesImpl</artifactId> 
 <!-- 			<version>2.6.0</version>-->
+
 </dependency>
+		<dependency>
+			<groupId>org.dllearner</groupId>
+			<artifactId>components-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena</artifactId>
+					<groupId>com.hp.hpl.jena</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>any23-core</artifactId>
+					<groupId>org.deri.any23</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>nif</artifactId>
+					<groupId>org.nlp2rdf</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<dependency>
 			<groupId>org.dllearner</groupId>
 			<artifactId>components-ext</artifactId>

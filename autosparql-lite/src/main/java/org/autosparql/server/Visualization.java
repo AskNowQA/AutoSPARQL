@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.shared.Example;
 
 public class Visualization
 {
+	private static Logger log = Logger.getLogger(Visualization.class);
 	// in dbpedia, there are 52587 instances of type rdf:Property, 868 of them instances of DatatypeProperty, 858 of them with rdfs:range	
 
 	// dbo:Temperature removed because there were very little properties // if it's kelvin we know the unit but what if not?
@@ -68,10 +71,6 @@ public class Visualization
 		for(String property : properties.keySet())
 		{
 			String object = properties.get(property).toString(); 
-			//System.out.println(object);
-			//System.out.println(XSD.INTEGER.toStringID());
-			//			System.out.println(XSD.integer.getURI());
-			//			System.out.println(XSD.xint.getURI());
 			//			if(object.contains(XSD.integer.getURI())||object.contains(XSD.xint.getURI()))
 			try
 			{
@@ -83,7 +82,7 @@ public class Visualization
 				if(object.contains("^^"))
 				{
 					String value = object.substring(0,object.indexOf('^'));
-					System.out.println(value);
+					log.trace(object+" is a data type property with value "+value);
 					Double.parseDouble(value);
 					numberProperties.add(property);
 				}
@@ -96,46 +95,8 @@ public class Visualization
 				"data-sgvizler-query=\"\n"+newQuery+'"'+
 				"data-sgvizler-chart=\"gPieChart\"\n"+
 				"style=\"width:800px; height:400px;\"></div>";
-		System.out.println(html);
+		log.debug("Visualization generated div tag: "+html);
 		return html;
 	}
 
-//	public static String visualize(String sparqlQuery, String endpoint, String graph, List<String> properties)
-//	{
-//
-//		Set<String> numberProperties = new HashSet<String>();
-//		for(String property : properties.keySet())
-//		{
-//			String object = properties.get(property).toString(); 
-//			//System.out.println(object);
-//			//System.out.println(XSD.INTEGER.toStringID());
-//			//			System.out.println(XSD.integer.getURI());
-//			//			System.out.println(XSD.xint.getURI());
-//			//			if(object.contains(XSD.integer.getURI())||object.contains(XSD.xint.getURI()))
-//			try
-//			{
-//				Double.parseDouble(object);
-//				numberProperties.add(property);
-//			} catch(NumberFormatException e)
-//			{
-//				//int startOfNumber = object.lastIndexOf('^')+1;
-//				if(object.contains("^^"))
-//				{
-//					String value = object.substring(0,object.indexOf('^'));
-//					System.out.println(value);
-//					Double.parseDouble(value);
-//					numberProperties.add(property);
-//				}
-//			} 
-//		}
-//		String newQuery = sparqlQuery;
-//
-//		String html = "<div id=\"sgvzl_example1\"\n"+
-//				"data-sgvizler-endpoint=\"\n"+endpoint+'"'+
-//				"data-sgvizler-query=\"\n"+newQuery+'"'+
-//				"data-sgvizler-chart=\"gPieChart\"\n"+
-//				"style=\"width:800px; height:400px;\"></div>";
-//		System.out.println(html);
-//		return html;
-//	}
 }

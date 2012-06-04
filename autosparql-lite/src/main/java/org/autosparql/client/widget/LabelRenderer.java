@@ -41,7 +41,7 @@ public class LabelRenderer implements GridCellRenderer<Example>
 //			public void onSuccess(List<String> result) {
 //				for(String sameAsLink : result){
 //					html.append("<br/><a target=\"_blank\" href=\""+sameAsLink+"\">"+sameAsLink+"</a>");
-//					System.out.println(sameAsLink);
+//					
 //				}
 //				
 //			}

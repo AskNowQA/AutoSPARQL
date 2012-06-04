@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import org.apache.log4j.Logger;
 import org.autosparql.server.Defaults;
 import org.autosparql.shared.Example;
@@ -36,7 +35,7 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 public class TBSLSearch implements Search
 {
-	private static Logger logger = Logger.getLogger(TBSLSearch.class);		
+	private static Logger log = Logger.getLogger(TBSLSearch.class);		
 	private final static Options options; 
 	public final static String SOLR_DBPEDIA_RESOURCES;
 	public final static String SOLR_DBPEDIA_CLASSES;
@@ -52,7 +51,7 @@ public class TBSLSearch implements Search
 
 	private static final int LIMIT = 10;
 	private static final int OFFSET = 0;
-
+ 
 	private final String QUERY_PREFIX = "";//"Give me all ";
 
 	private final SPARQLTemplateBasedLearner2 tbsl;
@@ -63,14 +62,14 @@ public class TBSLSearch implements Search
 
 	static class POSTaggerHolder
 	{
-		static {logger.debug("initializing POS tagger...");}
+		static {log.debug("initializing POS tagger...");}
 		public static final PartOfSpeechTagger pos = new ApachePartOfSpeechTagger();
 	}
 
 	static class WordNetHolder
 	{
 		protected static final String wordNetFilename = "tbsl/wordnet_properties.xml";
-		static {logger.debug("initializing WordNet...");}
+		static {log.debug("initializing WordNet...");}
 		public static final WordNet wordNet = new WordNet(wordNetFilename);
 	}
 
@@ -98,7 +97,7 @@ public class TBSLSearch implements Search
 					Collections.singletonList(Defaults.graphURL()),Collections.<String>emptyList(),"","",Collections.<String>emptySet());
 		}
 		catch (MalformedURLException e)
-		{logger.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}	
+		{log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}	
 		return getInstance(endpoint,new SOLRIndex(SOLR_DBPEDIA_RESOURCES),new SOLRIndex(SOLR_DBPEDIA_CLASSES),new SOLRIndex(SOLR_DBPEDIA_PROPERTIES));
 	}
 
@@ -117,7 +116,7 @@ public class TBSLSearch implements Search
 		}
 		catch (MalformedURLException e)
 		{
-			logger.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);
+			log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);
 			throw new RuntimeException(e);
 		}			
 	}
@@ -174,7 +173,7 @@ public class TBSLSearch implements Search
 	@Override
 	public SortedSet<Example> getExamples(String query, int limit, int offset) {
 		SortedSet<Example> examples = new TreeSet<Example>();
-		logger.info("Using TBSLSearch.getExamples() with query \""+query+"\", endpoint \""+endpoint+"\" ...");		
+		log.info("Using TBSLSearch.getExamples() with query \""+query+"\", endpoint \""+endpoint+"\" ...");		
 		tbsl.setEndpoint(endpoint);
 		//		try {
 		//			tbsl.setEndpoint(new SparqlEndpoint(new URL("http://dbpedia.org/sparql")));
@@ -192,18 +191,17 @@ public class TBSLSearch implements Search
 		learnedQuery  = tbsl.getBestSPARQLQuery();
 		if(learnedQuery==null)
 		{
-			logger.info("...unsuccessfully");
-			logger.warn("No query learned by TBSLSearch with original query: \""+query+"\" at endpoint "+endpoint+". Thus, no examples could be found.");
+			log.info("...unsuccessfully");
+			log.warn("No query learned by TBSLSearch with original query: \""+query+"\" at endpoint "+endpoint+". Thus, no examples could be found.");
 			return new TreeSet<Example>();
 		}
 		try
 		{
-			logger.info("Learned Query by TBSL: "+learnedQuery);
+			log.info("Learned Query by TBSL: "+learnedQuery);
 
 			//			learnedQuery = learnedQuery.replace("WHERE {","WHERE {?y ?p1 ?y0. ");
 			//			learnedQuery = learnedQuery.replace("SELECT ?y","SELECT distinct *");
 			//learnedQuery =  learnedQuery.replace("SELECT ?y","SELECT *");
-			System.out.println(learnedQuery);
 			ResultSet rs = executeQuery(learnedQuery);
 			String uri;
 			String lastURI = null;
@@ -241,9 +239,9 @@ public class TBSLSearch implements Search
 		}
 		catch(Exception e)
 		{
-			logger.info("...unsuccessfully");
+			log.info("...unsuccessfully");
 			e.printStackTrace();
-			logger.warn("TBSLSearch: Error was thrown by query: "+learnedQuery);
+			log.warn("TBSLSearch: Error was thrown by query: "+learnedQuery);
 			return new TreeSet<Example>();
 		}
 		return examples;

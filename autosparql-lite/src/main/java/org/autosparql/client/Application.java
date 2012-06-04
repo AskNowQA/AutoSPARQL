@@ -13,10 +13,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 /** Entry point.*/
 public class Application implements EntryPoint
 {
-	private static final Logger log = Logger.getLogger(Application.class.toString());
-	{
-		log.info("client logger works");
-	}
+	private static final Logger log = Logger.getLogger(Application.class.toString()); {log.fine("client logger works");}
 
 	/** This is the entry point method. */
 	public void onModuleLoad()
