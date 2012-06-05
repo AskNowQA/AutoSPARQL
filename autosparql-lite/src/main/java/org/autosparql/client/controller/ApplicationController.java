@@ -123,15 +123,14 @@ public class ApplicationController extends Controller
 						@Override
 						public void onFailure(Throwable arg0)
 						{
-							if(1==1) throw new RuntimeException(arg0);
-							log.severe(arg0.getCause().getMessage());
-							//log.severe(arg0.getCause().toString());
 							wait.hide();
 							Window.alert(arg0.getMessage());
-
+							log.severe(arg0.getCause().getMessage());
+							throw new RuntimeException(arg0);							
+							//log.severe(arg0.getCause().toString());
+							
 							//appView.showError("could not get examples");
 							// TODO Auto-generated method stub
-
 						}
 					});
 
@@ -139,12 +138,14 @@ public class ApplicationController extends Controller
 				appView = new ApplicationView(this);
 	}
 
-	protected void onError(Throwable throwable) {
+	protected void onError(Throwable throwable)
+	{
 		ErrorDialog dialog = new ErrorDialog(throwable);
 		dialog.showDialog();
 	}
 
-	private void onInit(AppEvent event) {
+	private void onInit(AppEvent event)
+	{
 		forwardToView(appView, event);
 	}
 

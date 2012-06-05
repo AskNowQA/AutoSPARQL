@@ -1,7 +1,7 @@
 package org.autosparql.client.widget;
 
 import org.autosparql.shared.Example;
-import org.autosparql.shared.SameAsWhiteList;
+import org.autosparql.shared.ResourceImageLinks;
 
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.grid.ColumnData;
@@ -32,7 +32,7 @@ public class LabelRenderer implements GridCellRenderer<Example>
 		html.append(dbpediaLink + "<br/>");
 		
 		for(String sameAsLink : model.getSameAsLinks()){
-			html.append("<a style='padding-top=5px' target=\"_blank\" href=\""+sameAsLink+"\">"+SameAsWhiteList.getImageLink(sameAsLink)+"</a> &nbsp;");
+			html.append("<a style='padding-top=5px' target=\"_blank\" href=\""+sameAsLink+"\">"+ResourceImageLinks.getImage(sameAsLink)+"</a> &nbsp;");
 		}
 		
 //		AutoSPARQLService.Util.getInstance().getSameAsLinks(model.getURI(), new AsyncCallback<List<String>>() {

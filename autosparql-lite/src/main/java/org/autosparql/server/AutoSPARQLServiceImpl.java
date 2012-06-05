@@ -19,6 +19,7 @@ import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.Endpoints;
+import org.autosparql.server.util.SameAsLinks;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
@@ -162,7 +163,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	@Override
 	public List<String> getSameAsLinks(String resourceURI)
 	{
-		return AutoSPARQLSession.getSameAsLinks(resourceURI);
+		return SameAsLinks.getSameAsLinksForShowing(resourceURI);
 	}
 
 	//@Override public Integer runningClients() {return ++runningClients;}

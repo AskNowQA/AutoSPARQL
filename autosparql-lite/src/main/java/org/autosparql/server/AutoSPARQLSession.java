@@ -2,15 +2,11 @@ package org.autosparql.server;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,32 +15,26 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
 import org.apache.log4j.Logger;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
 import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.DefaultPrefixMapping;
 import org.autosparql.server.util.LanguageResolver;
+import org.autosparql.server.util.SameAsLinks;
 import org.autosparql.shared.BlackList;
 import org.autosparql.shared.Example;
 import org.autosparql.shared.SPARQLException;
-import org.autosparql.shared.SameAsWhiteList;
 import org.dllearner.algorithm.qtl.QTL;
 import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlQuery;
-
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDFS;
 // TODO: synchronized methods for setprimarysearch ?
@@ -54,7 +44,7 @@ public class AutoSPARQLSession
 	private static final Logger logger = Logger.getLogger(AutoSPARQLSession.class);
 	//public static final AutoSPARQLSession INSTANCE = new AutoSPARQLSession(SparqlprimarySearch().getEndpoint().getprimarySearch().getEndpoint()DBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES);
 	private Map<String, String> property2LabelMap;
-//	private TBSLSearch primarySearch;
+	//	private TBSLSearch primarySearch;
 	private SolrSearch secondarySearch;
 	//private final String cacheDir;
 	//private SPARQLprimarySearch().getEndpoint()Ex primarySearch().getEndpoint();
@@ -64,16 +54,18 @@ public class AutoSPARQLSession
 	//private String lastQuery = null;
 	private boolean fastSearch = false;
 	private boolean oxford = false;
-	private static final String sameAsURI = "http://sameas.org/rdf?uri=";
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
 	 * after each method dealing with the cache,
 	 * thus preventing corruptions of the cache (which Ehcache is *really* susceptible to, even if no write or even read is written)*/
 	public static CacheManager getCacheManager()
 	{
+		synchronized(CacheManager.class)
+		{
 		CacheManager cm = CacheManager.getInstance();
 		if(cm==null) {cm=CacheManager.create();}
 		return cm;
+		}
 	}
 
 	// public AutoSPARQLSession(SPARQLprimarySearch().getEndpoint()Ex primarySearch().getEndpoint(), String cacheDir,
@@ -96,29 +88,29 @@ public class AutoSPARQLSession
 	// examplesCache = new HashMap<String, Example>();
 	// }
 
-// we don't want hardcoded primarySearch().getEndpoint()s
+	// we don't want hardcoded primarySearch().getEndpoint()s
 	//	public void setUseDBpediaLive(boolean useDBpediaLive)
-//	{
-//		try
-//		{
-//			if(useDBpediaLive)
-//			{
-//				logger.info("setting primarySearch().getEndpoint() to DBpedia live");
-//				this.primarySearch().getEndpoint() = new SPARQLprimarySearch().getEndpoint()Ex(new SparqlprimarySearch().getEndpoint()(new URL("http://live.dbpedia.org/sparql")),"dbpedialive",null,Collections.<String>emptySet());
-//			} else
-//			{
-//				logger.info("setting primarySearch().getEndpoint() to DBpedia");
-//				this.primarySearch().getEndpoint() = new SPARQLprimarySearch().getEndpoint()Ex(new SparqlprimarySearch().getEndpoint()(new URL("http://dbpedia.org/sparql")),"dbpedia",null,Collections.<String>emptySet());
-//			}
-//		} catch (MalformedURLException e){throw new RuntimeException(e);}
-//	}
+	//	{
+	//		try
+	//		{
+	//			if(useDBpediaLive)
+	//			{
+	//				logger.info("setting primarySearch().getEndpoint() to DBpedia live");
+	//				this.primarySearch().getEndpoint() = new SPARQLprimarySearch().getEndpoint()Ex(new SparqlprimarySearch().getEndpoint()(new URL("http://live.dbpedia.org/sparql")),"dbpedialive",null,Collections.<String>emptySet());
+	//			} else
+	//			{
+	//				logger.info("setting primarySearch().getEndpoint() to DBpedia");
+	//				this.primarySearch().getEndpoint() = new SPARQLprimarySearch().getEndpoint()Ex(new SparqlprimarySearch().getEndpoint()(new URL("http://dbpedia.org/sparql")),"dbpedia",null,Collections.<String>emptySet());
+	//			}
+	//		} catch (MalformedURLException e){throw new RuntimeException(e);}
+	//	}
 
 	public void setFastSearch(boolean fastSearch)
 	{
 		this.fastSearch = fastSearch;
 		logger.info("setting fast search to "+fastSearch);
 	}
-	
+
 	public void setOxford(boolean oxford)
 	{
 		this.oxford = oxford;
@@ -135,7 +127,7 @@ public class AutoSPARQLSession
 		//			try{cacheDir=getServletContext().getRealPath("cache");}
 		//			catch(Throwable t) {cacheDir="cache";}		
 
-			
+
 		//if(primarySearch().getEndpoint()URL==null||primarySearch().getEndpoint()URL.getURL()==null) throw new NullPointerException("primarySearch().getEndpoint() is null");		
 		//this.primarySearch().getEndpoint()= new SPARQLprimarySearch().getEndpoint()Ex(primarySearch().getEndpoint(),primarySearch().getEndpoint().toString(),null,Collections.<String>emptySet());
 		//		try {
@@ -167,6 +159,8 @@ public class AutoSPARQLSession
 	 * with different language tags for the same URI and property*/
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
+		synchronized(selectCache) // necessary?
+		{
 		logger.info("getExamplesByQTL("+positives+","+negatives+","+questionWords+")");
 		//		Cache cache = getCacheManager().getCache("qtl");
 		//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
@@ -223,13 +217,14 @@ public class AutoSPARQLSession
 			e.printStackTrace();
 			throw new SPARQLException(e,query,primarySearch().getEndpoint().toString());
 		}
+		}
 	}
 
 	private TBSLSearch primarySearch()
 	{
 		return oxford?TBSLSearch.getOxfordInstance():TBSLSearch.getDBpediaInstance();
 	}
-	
+
 	public List<String> getResources(String query)
 	{
 		List<String> resources = new ArrayList<String>();
@@ -303,23 +298,26 @@ public class AutoSPARQLSession
 	/** Adds all existing properties for the uris in the examples and one object for each one (depending on the languages)
 	 * @param examples */
 	public void fillExamples(SortedSet<Example> examples)
-	{		
-		if(examples==null) {examples= new TreeSet<Example>();}
-		if(examples.isEmpty()) {System.err.println("Examples are empty.");return;}
-		List<String> uris = new LinkedList<String>();
-		for(Example example: examples)
+	{
+		synchronized(selectCache) // necessary?
 		{
-			uris.add(example.getURI());
-			example.setSameAsLinks(getSameAsLinks(example.getURI()));
-		}
-		StringBuilder sb = new StringBuilder();
+			if(examples==null) {examples= new TreeSet<Example>();}
+			if(examples.isEmpty()) {System.err.println("Examples are empty.");return;}
+			List<String> uris = new LinkedList<String>();
+			for(Example example: examples)
+			{
+				uris.add(example.getURI());
+				example.setSameAsLinks(SameAsLinks.getSameAsLinksForShowing(example.getURI()));
+			}
+			StringBuilder sb = new StringBuilder();
 
-		sb.append("SELECT * from <http://dbpedia.org> { ?s ?p ?o. FILTER(");
-		for(String uri:uris) {sb.append("?s = <"+DefaultPrefixMapping.INSTANCE.expandPrefix(uri)+">||");}
-		// remove last "||"-substring
-		String query = sb.substring(0,sb.length()-2)+")}";
-		ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(primarySearch().getEndpoint(), query));
-		fillExamples(examples,rs);
+			sb.append("SELECT * from <http://dbpedia.org> { ?s ?p ?o. FILTER(");
+			for(String uri:uris) {sb.append("?s = <"+DefaultPrefixMapping.INSTANCE.expandPrefix(uri)+">||");}
+			// remove last "||"-substring
+			String query = sb.substring(0,sb.length()-2)+")}";
+			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(primarySearch().getEndpoint(), query));
+			fillExamples(examples,rs);
+		}
 	}
 
 	public static SortedSet<Example> mapsToExamples(List<Map<String,Object>> maps)
@@ -415,6 +413,8 @@ public class AutoSPARQLSession
 
 	public Map<String, String> getProperties(String query) throws AutoSPARQLException
 	{
+		synchronized(selectCache) // necessary?
+		{
 		property2LabelMap = new TreeMap<String, String>();
 
 		String queryTriples = query.substring(18, query.length() - 1);
@@ -446,28 +446,7 @@ public class AutoSPARQLSession
 		property2LabelMap.put(RDFS.label.getURI(), "label");
 
 		return property2LabelMap;
-	}
+		}
+	}	
 
-	public static List<String> getSameAsLinks(String resourceURI) {
-		List<String> sameAsLinks = new ArrayList<String>();
-		try {
-			String requestURI = sameAsURI + URLEncoder.encode(resourceURI, "UTF-8");
-			URLConnection conn = new URL(requestURI).openConnection();
-			Model model = ModelFactory.createDefaultModel();
-			model.read(conn.getInputStream(), null);
-			String url;
-			Set<String> used = new HashSet<String>();
-			for(Statement st : model.listStatements(null, OWL.sameAs, (RDFNode)null).toList()){
-				url = st.getObject().asResource().getURI();
-				String prefix;
-				if((prefix = SameAsWhiteList.isAllowed(url)) != null && used.add(prefix)){
-					sameAsLinks.add(url);
-				}
-			}
-			sameAsLinks.add(resourceURI.replace("http://dbpedia.org/resource/", "http://en.wikipedia.org/wiki/"));
-		} catch (Exception e) {throw new RuntimeException("Failed getting sameAs-links for resource URI \""+resourceURI+"\".",e);}
-		return sameAsLinks;
-	}
-
-	
 }
