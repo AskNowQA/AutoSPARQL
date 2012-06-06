@@ -24,6 +24,7 @@ import org.autosparql.server.search.SolrSearch;
 import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.DefaultPrefixMapping;
 import org.autosparql.server.util.LanguageResolver;
+import org.autosparql.server.util.NoCache;
 import org.autosparql.server.util.SameAsLinks;
 import org.autosparql.shared.BlackList;
 import org.autosparql.shared.Example;
@@ -48,12 +49,24 @@ public class AutoSPARQLSession
 	private SolrSearch secondarySearch;
 	//private final String cacheDir;
 	//private SPARQLprimarySearch().getEndpoint()Ex primarySearch().getEndpoint();
-	private final ExtractionDBCache selectCache;
+	//private final NoCache selectCache;
 	public static final List<String> languages = Arrays.asList(new String[] {"de","en"});
 	private static final int MAX_NUMBER_OF_EXAMPLES = 20;
 	//private String lastQuery = null;
 	private boolean fastSearch = false;
 	private boolean oxford = false;
+	private boolean useEHCache = false; 
+
+	// TODO: as soon as there are more than two endpoints, do this dynamically with a hashmap and all that, but for now we don't need it
+	private static final ExtractionDBCache dbpediaCache = new ExtractionDBCache("mem:dbpedia");
+	private static final ExtractionDBCache oxfordCache = new ExtractionDBCache("mem:oxford");
+
+	// TODO: any multithreading issues?
+	/** returns the right cache for the active endpoint */
+	private ExtractionDBCache getCache()
+	{
+		return oxford?oxfordCache:dbpediaCache;
+	}
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
 	 * after each method dealing with the cache,
@@ -62,9 +75,9 @@ public class AutoSPARQLSession
 	{
 		synchronized(CacheManager.class)
 		{
-		CacheManager cm = CacheManager.getInstance();
-		if(cm==null) {cm=CacheManager.create();}
-		return cm;
+			CacheManager cm = CacheManager.getInstance();
+			if(cm==null) {cm=CacheManager.create();}
+			return cm;
 		}
 	}
 
@@ -140,12 +153,11 @@ public class AutoSPARQLSession
 		File cacheDirFile = new File(cacheDir); 		
 		if(!cacheDirFile.exists()) {cacheDirFile.mkdir();}
 		if(!cacheDirFile.isDirectory()) {throw new RuntimeException("Cache directory path does not denote a directory.");}
-		//dir="/var/lib/tomcat7/webapps/autosparql-lite/cache";
-		selectCache = new ExtractionDBCache(cacheDir);
+		//dir="/var/lib/tomcat7/webapps/autosparql-lite/cache";		
 		//		try {
 		String query = "SELECT * WHERE {?s a ?type} LIMIT 1";
 		logger.info("Testing extraction DB cache with cache dir "+cacheDir+" and primarySearch().getEndpoint() "+primarySearch().getEndpoint().getURL()+" and query "+query);
-		selectCache.executeSelectQuery(primarySearch().getEndpoint(), query);
+		getCache().executeSelectQuery(primarySearch().getEndpoint(), query);
 		//		} catch (Exception e) {
 		//			logger.error("ERROR", e);
 		//			e.printStackTrace();
@@ -159,66 +171,66 @@ public class AutoSPARQLSession
 	 * with different language tags for the same URI and property*/
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
-		synchronized(selectCache) // necessary?
-		{
-		logger.info("getExamplesByQTL("+positives+","+negatives+","+questionWords+")");
-		//		Cache cache = getCacheManager().getCache("qtl");
-		//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
-		//		{
-		//			Element e;
-		//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
-		//		}
-		QTL qtl = new QTL(primarySearch().getEndpoint(), selectCache);
-		qtl.setExamples(positives, negatives);
-		if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
-		qtl.start();
-		// TODO extract relevant words
-		// behält nur die kanten wo die property mit einem wort oder das objekt ähnlichkeit hat		
-		String query = qtl.getBestSPARQLQuery();
-		// get all triples belonging to the subjects
-		query = query.replace(" ?x0 WHERE {", " ?x0 ?p ?o WHERE {?x0 ?p ?o. ");
-		query = query.replace("?x0", "?s");
+//		synchronized(selectCache) // necessary?
+//		{
+			logger.info("getExamplesByQTL("+positives+","+negatives+","+questionWords+")");
+			//		Cache cache = getCacheManager().getCache("qtl");
+			//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
+			//		{
+			//			Element e;
+			//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
+			//		}
+			QTL qtl = new QTL(primarySearch().getEndpoint(), getCache());
+			qtl.setExamples(positives, negatives);
+			if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
+			qtl.start();
+			// TODO extract relevant words
+			// behält nur die kanten wo die property mit einem wort oder das objekt ähnlichkeit hat		
+			String query = qtl.getBestSPARQLQuery();
+			// get all triples belonging to the subjects
+			query = query.replace(" ?x0 WHERE {", " ?x0 ?p ?o WHERE {?x0 ?p ?o. ");
+			query = query.replace("?x0", "?s");
 
-		try
-		{
-			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(primarySearch().getEndpoint(), query));
-			SortedSet<Example> examples = fillExamples(null, rs);
-			//			cache.put(new Element(parameters,examples));
-			//			cache.flush();
-			if(examples.size()>MAX_NUMBER_OF_EXAMPLES) {return new TreeSet<Example>(new LinkedList<Example>(examples).subList(0, MAX_NUMBER_OF_EXAMPLES-1));}
-			return examples;
+			try
+			{
+				ResultSet rs = SparqlQuery.convertJSONtoResultSet(getCache().executeSelectQuery(primarySearch().getEndpoint(), query));
+				SortedSet<Example> examples = fillExamples(null, rs);
+				//			cache.put(new Element(parameters,examples));
+				//			cache.flush();
+				if(examples.size()>MAX_NUMBER_OF_EXAMPLES) {return new TreeSet<Example>(new LinkedList<Example>(examples).subList(0, MAX_NUMBER_OF_EXAMPLES-1));}
+				return examples;
 
 
-			//			Map<String,Example> examples = new HashMap<String,Example>();
-			//			LanguageResolver resolver = new LanguageResolver();
-			//			for(QuerySolution qs=rs.next(); rs.hasNext();qs=rs.next())
-			//			{
-			//				String property = qs.getResource("p").getURI();
-			//				if(BlackList.dbpedia.contains(property)) {continue;}
-			//				String uri = qs.getResource("x0").getURI();
-			//
-			//				Example e=examples.containsKey(uri)?examples.get(uri):new Example(uri);
-			//				examples.put(uri,e);
-			//
-			//				String object = qs.get("o").toString();
-			//
-			//				String oldObject=e.get(property);
-			//				if(oldObject!=null)
-			//				{
-			//					e.set(property, resolver.resolve(oldObject, object));
-			//				}
-			//
-			//				e.set(property,object.toString());
-			//			}
-			//			return new ArrayList<Example>(examples.values());
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			throw new SPARQLException(e,query,primarySearch().getEndpoint().toString());
-		}
-		}
-	}
+				//			Map<String,Example> examples = new HashMap<String,Example>();
+				//			LanguageResolver resolver = new LanguageResolver();
+				//			for(QuerySolution qs=rs.next(); rs.hasNext();qs=rs.next())
+				//			{
+				//				String property = qs.getResource("p").getURI();
+				//				if(BlackList.dbpedia.contains(property)) {continue;}
+				//				String uri = qs.getResource("x0").getURI();
+				//
+				//				Example e=examples.containsKey(uri)?examples.get(uri):new Example(uri);
+				//				examples.put(uri,e);
+				//
+				//				String object = qs.get("o").toString();
+				//
+				//				String oldObject=e.get(property);
+				//				if(oldObject!=null)
+				//				{
+				//					e.set(property, resolver.resolve(oldObject, object));
+				//				}
+				//
+				//				e.set(property,object.toString());
+				//			}
+				//			return new ArrayList<Example>(examples.values());
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				throw new SPARQLException(e,query,primarySearch().getEndpoint().toString());
+			}
+//		}
+}
 
 	private TBSLSearch primarySearch()
 	{
@@ -299,25 +311,25 @@ public class AutoSPARQLSession
 	 * @param examples */
 	public void fillExamples(SortedSet<Example> examples)
 	{
-		synchronized(selectCache) // necessary?
+		//		synchronized(selectCache) // necessary?
+		//		{
+		if(examples==null) {examples= new TreeSet<Example>();}
+		if(examples.isEmpty()) {System.err.println("Examples are empty.");return;}
+		List<String> uris = new LinkedList<String>();
+		for(Example example: examples)
 		{
-			if(examples==null) {examples= new TreeSet<Example>();}
-			if(examples.isEmpty()) {System.err.println("Examples are empty.");return;}
-			List<String> uris = new LinkedList<String>();
-			for(Example example: examples)
-			{
-				uris.add(example.getURI());
-				example.setSameAsLinks(SameAsLinks.getSameAsLinksForShowing(example.getURI()));
-			}
-			StringBuilder sb = new StringBuilder();
-
-			sb.append("SELECT * from <http://dbpedia.org> { ?s ?p ?o. FILTER(");
-			for(String uri:uris) {sb.append("?s = <"+DefaultPrefixMapping.INSTANCE.expandPrefix(uri)+">||");}
-			// remove last "||"-substring
-			String query = sb.substring(0,sb.length()-2)+")}";
-			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(primarySearch().getEndpoint(), query));
-			fillExamples(examples,rs);
+			uris.add(example.getURI());
+			example.setSameAsLinks(SameAsLinks.getSameAsLinksForShowing(example.getURI()));
 		}
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("SELECT * from <http://dbpedia.org> { ?s ?p ?o. FILTER(");
+		for(String uri:uris) {sb.append("?s = <"+DefaultPrefixMapping.INSTANCE.expandPrefix(uri)+">||");}
+		// remove last "||"-substring
+		String query = sb.substring(0,sb.length()-2)+")}";
+		ResultSet rs = SparqlQuery.convertJSONtoResultSet(getCache().executeSelectQuery(primarySearch().getEndpoint(), query));
+		fillExamples(examples,rs);
+		//		}
 	}
 
 	public static SortedSet<Example> mapsToExamples(List<Map<String,Object>> maps)
@@ -363,16 +375,19 @@ public class AutoSPARQLSession
 	@SuppressWarnings("unchecked")
 	public SortedSet<Example> getExamples(String query)
 	{
-		Cache cache = getCacheManager().getCache("examples");
-		Element e=cache.get(cacheKey(query,fastSearch));
-		if(e!=null)
+		Cache cache = null;
+		if(useEHCache)
 		{
-			logger.info("cache hit with query \""+query+"\"");			
-			getCacheManager().shutdown(); // shutdown to make sure it gets saved to disk (cache.flush() does not always seem to work) 
-			return mapsToExamples((List<Map<String,Object>>)e.getValue());		
-		}
-
-		logger.info("cache miss with query \""+query+"\"");
+			cache = getCacheManager().getCache("examples");
+			Element e=cache.get(cacheKey(query,fastSearch));
+			if(e!=null)
+			{
+				logger.info("cache hit with query \""+query+"\"");			
+				getCacheManager().shutdown(); // shutdown to make sure it gets saved to disk (cache.flush() does not always seem to work) 
+				return mapsToExamples((List<Map<String,Object>>)e.getValue());		
+			}
+		}		
+		logger.info(useEHCache?"cache miss with query \""+query+"\"":"EHCache deactivated");
 		SortedSet<Example> examples = null;// = new ArrayList<Example>();
 		//		 primary search DBpedia bzw. DBpedia live
 		if(!fastSearch) {examples = primarySearch().getExamples(query);}
@@ -405,16 +420,19 @@ public class AutoSPARQLSession
 		{
 			fillExamples(examples);
 		}		
-		cache.put(new Element(cacheKey(query,fastSearch),examplesToMaps(examples)));
-		cache.flush();
-		getCacheManager().shutdown(); // TODO: is this correct or does it obstruct further cachemanager uses?
+		if(useEHCache)
+		{
+			cache.put(new Element(cacheKey(query,fastSearch),examplesToMaps(examples)));
+			cache.flush();
+			getCacheManager().shutdown(); // TODO: is this correct or does it obstruct further cachemanager uses?
+		}
 		return examples;
 	}
 
 	public Map<String, String> getProperties(String query) throws AutoSPARQLException
 	{
-		synchronized(selectCache) // necessary?
-		{
+		//		synchronized(selectCache) // necessary?
+		//		{
 		property2LabelMap = new TreeMap<String, String>();
 
 		String queryTriples = query.substring(18, query.length() - 1);
@@ -424,7 +442,7 @@ public class AutoSPARQLSession
 				+ "> ?label. FILTER(LANGMATCHES(LANG(?label), 'en'))} "
 				+ "LIMIT 1000";
 
-		ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache
+		ResultSet rs = SparqlQuery.convertJSONtoResultSet(getCache()
 				.executeSelectQuery(primarySearch().getEndpoint(), newQuery));
 		QuerySolution qs;
 		while (rs.hasNext())
@@ -446,7 +464,7 @@ public class AutoSPARQLSession
 		property2LabelMap.put(RDFS.label.getURI(), "label");
 
 		return property2LabelMap;
-		}
+		//		}
 	}	
 
 }

@@ -54,14 +54,15 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 
 		//	loadEndpoints();
 		//Test
-		logger.info("Start testing AutoSPARQLServiceImpl...");
-		String cacheDir=getServletContext().getRealPath("cache");
-
-		logger.info("CacheDir: " + cacheDir);
-
-		new ExtractionDBCache(cacheDir).executeSelectQuery(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "SELECT * WHERE {?s ?p ?o.} LIMIT 1");
-
-		logger.info("... finished testing AutoSPARQLServiceImpl.");
+//		logger.info("Start testing AutoSPARQLServiceImpl...");
+//		String cacheDir=getServletContext().getRealPath("cache");
+//
+//		logger.info("CacheDir: " + cacheDir);
+//
+//		new ExtractionDBCache(cacheDir).executeSelectQuery(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "SELECT * WHERE {?s ?p ?o.} LIMIT 1");
+//
+//		
+//		logger.info("... finished testing AutoSPARQLServiceImpl.");
 		session = createAutoSPARQLSession();
 	}
 

@@ -41,6 +41,7 @@ import com.extjs.gxt.ui.client.widget.grid.GridViewConfig;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class SearchResultPanel extends ContentPanel
 {
@@ -79,19 +80,19 @@ public class SearchResultPanel extends ContentPanel
 	//private Button relearnButton = new Button("relearn");
 	//private int newPositives = 0;
 
-//	private SearchResultPanelSelectionListener listener = new SearchResultPanelSelectionListener();
-//
-//	class SearchResultPanelSelectionListener extends SelectionListener<ButtonEvent>
-//	{
-//		@Override
-//		public void componentSelected(ButtonEvent ce)
-//		{
-//			//			if(ce.getSource()==relearnButton)
-//			//			{
-//			//				relearn();
-//			//			}
-//		}		
-//	}
+	//	private SearchResultPanelSelectionListener listener = new SearchResultPanelSelectionListener();
+	//
+	//	class SearchResultPanelSelectionListener extends SelectionListener<ButtonEvent>
+	//	{
+	//		@Override
+	//		public void componentSelected(ButtonEvent ce)
+	//		{
+	//			//			if(ce.getSource()==relearnButton)
+	//			//			{
+	//			//				relearn();
+	//			//			}
+	//		}		
+	//	}
 
 
 	public SearchResultPanel()
@@ -111,7 +112,7 @@ public class SearchResultPanel extends ContentPanel
 		Button relearnButton = new Button("Relearn");
 		toolbar.add(relearnButton);
 		relearnButton.addSelectionListener(new SelectionListener<ButtonEvent>()
-		{ @Override public void componentSelected(ButtonEvent ce) {learn();}});
+				{ @Override public void componentSelected(ButtonEvent ce) {learn();}});
 
 		setBottomComponent(toolbar);
 
@@ -158,28 +159,8 @@ public class SearchResultPanel extends ContentPanel
 	}
 
 	private List<ColumnConfig> columnConfigs(List<Example> examples)
-	{
+	{		
 		log.info("Creating column configs");
-		List<ColumnConfig> columnConfigs = new LinkedList<ColumnConfig>();
-
-		ColumnConfig buttonConfig = new ColumnConfig("button", "", 55);
-		buttonConfig.setAlignment(HorizontalAlignment.LEFT);
-		buttonConfig.setRenderer(new PlusMinusButtonCellRender(this));
-		columnConfigs.add(buttonConfig);
-
-		//configs.add(new ColumnConfig("uri", "url", 200));
-		ColumnConfig labelConfig = new ColumnConfig("http://www.w3.org/2000/01/rdf-schema#label", "label", 200);
-		labelConfig.setRenderer(new LabelRenderer());
-		//labelConfig.setResizable(true);
-		columnConfigs.add(labelConfig);
-
-		ColumnConfig imageConfig = new ColumnConfig("http://xmlns.com/foaf/0.1/depiction", "image", 100);
-		imageConfig.setRenderer(new ImageCellRenderer(imageProperties,100,100));
-		columnConfigs.add(imageConfig);
-
-		ColumnConfig commentConfig = new ColumnConfig("http://www.w3.org/2000/01/rdf-schema#comment", "comment", 300);
-		commentConfig.setRenderer(new CommentRenderer());
-		columnConfigs.add(commentConfig);
 
 		SortedSet<String> properties = new TreeSet<String>();
 		for(Example example: examples)
@@ -209,19 +190,57 @@ public class SearchResultPanel extends ContentPanel
 			if(propertyCounts.get(property)>=examples.size()*MIN_OCCURRENCE) {initialProperties.add(property);}
 		}
 		// End Remove rare properties ******************************************
+
+		List<ColumnConfig> columnConfigs = new LinkedList<ColumnConfig>();
+
+		ColumnConfig buttonConfig = new ColumnConfig("button", "", 55);
+		buttonConfig.setAlignment(HorizontalAlignment.LEFT);
+		buttonConfig.setRenderer(new PlusMinusButtonCellRender(this));
+		columnConfigs.add(buttonConfig);
+
+		//configs.add(new ColumnConfig("uri", "url", 200));
+		if(initialProperties.contains("http://www.w3.org/2000/01/rdf-schema#label"))
+		{
+			ColumnConfig labelConfig = new ColumnConfig("http://www.w3.org/2000/01/rdf-schema#label", "label", 200);
+			labelConfig.setRenderer(new LabelRenderer());
+			//labelConfig.setResizable(true);
+			columnConfigs.add(labelConfig);
+		}
+
+	// images can have other properties too - so always display this, the render checks multiple properties
+			ColumnConfig imageConfig = new ColumnConfig("http://xmlns.com/foaf/0.1/depiction", "image", 100);
+			imageConfig.setRenderer(new ImageCellRenderer(imageProperties,100,100));
+			columnConfigs.add(imageConfig);
+
+
+		if(initialProperties.contains("http://www.w3.org/2000/01/rdf-schema#comment"))
+		{
+			ColumnConfig commentConfig = new ColumnConfig("http://www.w3.org/2000/01/rdf-schema#comment", "comment", 300);
+			commentConfig.setRenderer(new CommentRenderer());
+			columnConfigs.add(commentConfig);
+		}		
+
+
 		log.info("Shrinked initial properties from "+properties.size()+" to "+initialProperties.size()+".");
 		// Sort properties by their alphabetically ascending by their displayed form
 		Map<String,String> transformedToOriginalProperty = new HashMap<String,String>();
 		for(String property: properties) {transformedToOriginalProperty.put(Transformer.displayProperty(property),property);}
 		List<String> transformedProperties = new ArrayList<String>(transformedToOriginalProperty.keySet());
 		Collections.sort(transformedProperties);
+		// TODO: tidy up the description part a bit, make sure it gets called, make it more general?,
+		// maybe set width according to content of first element or average, remove data types in the renderers 
+		// if still shown directly or in the popup 
+		
 		for(String transformedProperty: transformedProperties)
 		{
 			String property = transformedToOriginalProperty.get(transformedProperty);
 			if(defaultProperties.contains(property)) {continue;}
 			if(imageProperties.contains(property)) {continue;}
-			ColumnConfig config = new ColumnConfig(property,Transformer.displayProperty(property),150);
-			config.setRenderer(new LiteralRenderer());
+			ColumnConfig config = new ColumnConfig(property,Transformer.displayProperty(property),
+					transformedProperty.contains("description")?300:150);
+			config.setRenderer(transformedProperty.contains("description")?
+					new CommentRenderer():new LiteralRenderer());
+			
 			config.setHidden(!initialProperties.contains(property));
 			//if(property.contains("image")) {config.setRenderer(new ImageCellRenderer(100,100));}
 

@@ -24,7 +24,7 @@ public class LabelRenderer implements GridCellRenderer<Example>
 	{	
 		//String imageURL = model.getImageURL();
 		String literal = model.get(property);
-		
+		if(literal==null||literal.isEmpty()) return new HTML();
 		// Remove language tag
 		if(!SHOW_LANGUAGE_TAG&&literal.contains("@")) {literal = literal.substring(0,literal.lastIndexOf('@'));}
 		String dbpediaLink  = "<a target=\"_blank\" href=\""+model.getURI()+"\">"+literal+"</a>";

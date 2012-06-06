@@ -1,6 +1,7 @@
 package org.autosparql.shared;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -24,7 +25,7 @@ public class Example extends BaseModel implements Comparable<Example>, com.googl
 	// else there are problems with dots in the names
 	protected boolean allowNestedValues = false;
 	
-	private List<String> sameAsLinks;
+	private List<String> sameAsLinks = Collections.<String>emptyList();
 
 	/** sorl is used as a fallback if the normal endpoint does not work */
 	public boolean containsSolrData = false;

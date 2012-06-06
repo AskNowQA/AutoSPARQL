@@ -26,6 +26,7 @@ import org.dllearner.common.index.SOLRIndex;
 import org.dllearner.common.index.SPARQLClassesIndex;
 import org.dllearner.common.index.SPARQLIndex;
 import org.dllearner.common.index.SPARQLPropertiesIndex;
+import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.Options;
 
@@ -128,7 +129,8 @@ public class TBSLSearch implements Search
 		{
 			// TODO: how can it work everywhere?
 			//cacheDir="/tmp/autosparql-cache-tbsl";
-			tbsl = new SPARQLTemplateBasedLearner2(endpoint,resourcesIndex,classesIndex,propertiesIndex,POSTaggerHolder.pos,WordNetHolder.wordNet, options);
+			ExtractionDBCache cache = new ExtractionDBCache("mem:"+endpoint.getBaseURI());
+			tbsl = new SPARQLTemplateBasedLearner2(endpoint,resourcesIndex,classesIndex,propertiesIndex,POSTaggerHolder.pos,WordNetHolder.wordNet, options,cache);
 			tbsl.init();
 		} catch (Exception e) {throw new RuntimeException(e);}
 	}
@@ -150,7 +152,7 @@ public class TBSLSearch implements Search
 	{
 		List<String> resources = new ArrayList<String>();
 
-		tbsl.setEndpoint(endpoint);
+		//tbsl.setEndpoint(endpoint);
 		if(!query.startsWith(QUERY_PREFIX)) {query=QUERY_PREFIX+query;}
 		tbsl.setQuestion(query);
 		try {tbsl.learnSPARQLQueries();}
@@ -174,9 +176,10 @@ public class TBSLSearch implements Search
 	public SortedSet<Example> getExamples(String query, int limit, int offset) {
 		SortedSet<Example> examples = new TreeSet<Example>();
 		log.info("Using TBSLSearch.getExamples() with query \""+query+"\", endpoint \""+endpoint+"\" ...");		
-		tbsl.setEndpoint(endpoint);
+		
+
 		//		try {
-		//			tbsl.setEndpoint(new SparqlEndpoint(new URL("http://dbpedia.org/sparql")));
+
 		//		} catch (MalformedURLException e1) {
 		//			// TODO Auto-generated catch block
 		//			e1.printStackTrace();

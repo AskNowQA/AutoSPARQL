@@ -54,7 +54,7 @@ public final class SameAsLinks
 				if((prefix = ResourceImageLinks.prefix(url)) != null && used.add(prefix)) {sameAsLinks.add(url);}
 			}
 			// add a link from DBpedia-Wikipedia
-			sameAsLinks.add(resourceURI.replace("http://dbpedia.org/resource/", "http://en.wikipedia.org/wiki/"));
+			if(resourceURI.startsWith("http://dbpedia.org/resource/")) sameAsLinks.add(resourceURI.replace("http://dbpedia.org/resource/", "http://en.wikipedia.org/wiki/"));
 		} catch (UnsupportedEncodingException e) {throw new RuntimeException("UTF-8");}
 		catch (Exception e) {throw new RuntimeException("Failed getting sameAs-links for resource URI \""+resourceURI+"\".",e);}
 		return sameAsLinks;

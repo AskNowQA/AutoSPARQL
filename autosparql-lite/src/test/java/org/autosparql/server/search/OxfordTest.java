@@ -1,5 +1,7 @@
 package org.autosparql.server.search;
 
+import static org.junit.Assert.*;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -23,12 +25,14 @@ public class OxfordTest
 	public void testOxford() throws MalformedURLException
 	{		
 		TBSLSearch search = TBSLSearch.getOxfordInstance();
+		
 		SortedSet<Example> examples = search.getExamples(query);
-		//System.out.println(examples);
-		for(Example example : examples) System.out.println(example.getURI());
-		//System.out.println(examples.get(0).getURI());
-		// Example.equals() only uses the examples uri's
-		System.out.println(examples);
-		System.out.println(search.learnedQuery());
+		assertTrue(examples.iterator().next().get("uri").toString()
+				.startsWith("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
+		
+//		for(Example example : examples) System.out.println(example.getURI());
+//
+//		System.out.println(examples);
+		//System.out.println(search.learnedQuery());
 	}
 }
