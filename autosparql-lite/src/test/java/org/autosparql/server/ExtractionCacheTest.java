@@ -18,6 +18,9 @@ public class ExtractionCacheTest
 	@Test public void testJDBCMemory() throws SQLException {testJDBC("jdbc:h2:mem:");}		
 	@Test public void testJDBCDiskRelative() throws SQLException {testJDBC("jdbc:h2:test");}
 	@Test public void testJDBCDiskLinuxTempDir() throws SQLException {testJDBC("jdbc:h2:/tmp/test");}
+	@Test public void testTomcatWebappAutosparqlDirWithCacheSize100MB() throws SQLException {testJDBC("jdbc:h2:/usr/share/tomcat7/webapps/autosparql-lite/cache/httplivedbpediaorgsparql_httpdbpediaorg;CACHE_SIZE=100000");}
+	 
+
 	
 	public void testJDBC(String url) throws SQLException
 	{

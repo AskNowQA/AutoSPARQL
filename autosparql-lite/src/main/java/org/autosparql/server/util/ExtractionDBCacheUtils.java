@@ -2,14 +2,16 @@ package org.autosparql.server.util;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.apache.log4j.Logger;
 import org.autosparql.server.Defaults;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 
 public final class ExtractionDBCacheUtils
 {
+	private static final Logger log = Logger.getLogger(ExtractionDBCacheUtils.class);
 	static String cacheDir = "defaultcache";
 	static private final String param = ";CACHE_SIZE=100000"; 
-	public static void setCacheDir(String cacheDir) {ExtractionDBCacheUtils.cacheDir=cacheDir;}
+	public static void setCacheDir(String cacheDir) {ExtractionDBCacheUtils.cacheDir=cacheDir;log.info("ExtractionDBCacheUtils cacheDirectory set to "+cacheDir);}
 	
 	private ExtractionDBCacheUtils() {throw new AssertionError();}
 	

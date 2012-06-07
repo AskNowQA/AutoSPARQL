@@ -103,7 +103,7 @@ public class TBSLSearch implements Search
 		}
 		catch (MalformedURLException e)
 		{log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}
-		catch (SQLException e) {throw new RuntimeException("Could not get extraction cache.");}	
+		catch (SQLException e) {throw new RuntimeException("Could not get extraction cache.",e);}	
 	}
 
 	public static TBSLSearch getOxfordInstance()
@@ -121,7 +121,7 @@ public class TBSLSearch implements Search
 		}
 		catch (MalformedURLException e)
 		{log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}
-		catch (SQLException e) {throw new RuntimeException("Could not get extraction cache.");}	
+		catch (SQLException e) {throw new RuntimeException("Could not get extraction cache.",e);}	
 	}
 
 	private TBSLSearch(final SPARQLEndpointEx endpoint,Index resourcesIndex, Index classesIndex, Index propertiesIndex,ExtractionDBCache cache)

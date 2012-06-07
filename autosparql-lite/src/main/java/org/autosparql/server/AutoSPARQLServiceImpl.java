@@ -52,7 +52,7 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 		//		{		
 		cacheDir=getServletContext().getRealPath("cache");
 		ExtractionDBCacheUtils.setCacheDir(cacheDir);
-		logger.info("cacheDir for extractiondbcache: "+cacheDir);
+//		logger.info("cacheDir for extractiondbcache: "+cacheDir);
 
 		//	loadEndpoints();
 		//Test
