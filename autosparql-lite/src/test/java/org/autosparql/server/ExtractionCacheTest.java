@@ -1,19 +1,16 @@
 package org.autosparql.server;
 
 import static org.junit.Assert.assertTrue;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import org.aksw.commons.sparql.SPARQLEndpoints;
+import org.autosparql.server.util.ExtractionDBCacheUtils;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.junit.Test;
-
 import com.hp.hpl.jena.query.ResultSetRewindable;
 
 public class ExtractionCacheTest
@@ -42,7 +39,8 @@ public class ExtractionCacheTest
 	{		
 		// "hack" get a memory connection. we shouldn't be able to write to etc so this would throw an error if it tries on-disk cache
 		// TODO: if feature request gets implemented, use ExtractionDBCache(Connection)
-		ExtractionDBCache cache = new ExtractionDBCache("mem:http://dbpedia.org/sparql");
+		ExtractionDBCacheUtils.setCacheDir("cache");
+		ExtractionDBCache cache = ExtractionDBCacheUtils.getCache(SparqlEndpoint.getEndpointDBpedia().getURL().toString(),SparqlEndpoint.getEndpointDBpedia().getDefaultGraphURIs().get(0));
 		String json = cache.executeSelectQuery(SparqlEndpoint.getEndpointDBpedia(),
 				"select ?l {<http://dbpedia.org/resource/Leipzig> rdfs:label ?l. FILTER langmatches(lang(?l),'de').}");
 		ResultSetRewindable rs = SparqlQuery.convertJSONtoResultSet(json);		

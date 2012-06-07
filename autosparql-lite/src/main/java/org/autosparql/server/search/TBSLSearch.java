@@ -3,6 +3,7 @@ package org.autosparql.server.search;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +14,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.autosparql.server.Defaults;
+import org.autosparql.server.util.ExtractionDBCacheUtils;
 import org.autosparql.shared.Example;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
@@ -76,14 +78,14 @@ public class TBSLSearch implements Search
 
 	private static Map<List<String>,TBSLSearch> instances = new HashMap<List<String>,TBSLSearch>();
 
-	private static TBSLSearch getInstance(final SPARQLEndpointEx endpoint,Index resourcesIndex, Index classesIndex, Index propertiesIndex)
+	private static TBSLSearch getInstance(final SPARQLEndpointEx endpoint,Index resourcesIndex, Index classesIndex, Index propertiesIndex,ExtractionDBCache cache)
 	{
 		synchronized(instances)
 		{
 			TBSLSearch search;
 			List<String> key = Arrays.asList(endpoint.getURL().toString(),endpoint.getDefaultGraphURIs().toString());
 			if((search=instances.get(key))!=null) {return search;}
-			instances.put(key,search=new TBSLSearch(endpoint,resourcesIndex,classesIndex,propertiesIndex));
+			instances.put(key,search=new TBSLSearch(endpoint,resourcesIndex,classesIndex,propertiesIndex,cache));
 			return search;
 		}
 	}
@@ -96,10 +98,12 @@ public class TBSLSearch implements Search
 			endpoint = new SPARQLEndpointEx(
 					new URL(Defaults.endpointURL()),
 					Collections.singletonList(Defaults.graphURL()),Collections.<String>emptyList(),"","",Collections.<String>emptySet());
+			return getInstance(endpoint,new SOLRIndex(SOLR_DBPEDIA_RESOURCES),new SOLRIndex(SOLR_DBPEDIA_CLASSES),new SOLRIndex(SOLR_DBPEDIA_PROPERTIES)
+			,ExtractionDBCacheUtils.getDBpediaCache());
 		}
 		catch (MalformedURLException e)
-		{log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}	
-		return getInstance(endpoint,new SOLRIndex(SOLR_DBPEDIA_RESOURCES),new SOLRIndex(SOLR_DBPEDIA_CLASSES),new SOLRIndex(SOLR_DBPEDIA_PROPERTIES));
+		{log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}
+		catch (SQLException e) {throw new RuntimeException("Could not get extraction cache.");}	
 	}
 
 	public static TBSLSearch getOxfordInstance()
@@ -107,30 +111,29 @@ public class TBSLSearch implements Search
 		SPARQLEndpointEx endpoint;
 		try
 		{
-			endpoint = new SPARQLEndpointEx(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList(),"","",Collections.<String>emptySet());
+			endpoint = new SPARQLEndpointEx(new URL(Defaults.oxfordEndpointURL()), Collections.singletonList(Defaults.oxfordGraphURL()), Collections.<String>emptyList(),"","",Collections.<String>emptySet());
 
 			SPARQLIndex resourceIndex = new SPARQLIndex(endpoint);
 			SPARQLClassesIndex classIndex = new SPARQLClassesIndex(endpoint);
 			SPARQLPropertiesIndex propertyIndex = new SPARQLPropertiesIndex(endpoint);
 
-			return getInstance(endpoint,resourceIndex,classIndex,propertyIndex);
+			return getInstance(endpoint,resourceIndex,classIndex,propertyIndex,ExtractionDBCacheUtils.getOxfordCache());
 		}
 		catch (MalformedURLException e)
-		{
-			log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);
-			throw new RuntimeException(e);
-		}			
+		{log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}
+		catch (SQLException e) {throw new RuntimeException("Could not get extraction cache.");}	
 	}
 
-	private TBSLSearch(final SPARQLEndpointEx endpoint,Index resourcesIndex, Index classesIndex, Index propertiesIndex)
+	private TBSLSearch(final SPARQLEndpointEx endpoint,Index resourcesIndex, Index classesIndex, Index propertiesIndex,ExtractionDBCache cache)
 	{
 		this.endpoint = endpoint;
 		try
 		{
 			// TODO: how can it work everywhere?
 			//cacheDir="/tmp/autosparql-cache-tbsl";
-			ExtractionDBCache cache = new ExtractionDBCache("mem:"+endpoint.getBaseURI());
-			tbsl = new SPARQLTemplateBasedLearner2(endpoint,resourcesIndex,classesIndex,propertiesIndex,POSTaggerHolder.pos,WordNetHolder.wordNet, options,cache);
+
+			tbsl = new SPARQLTemplateBasedLearner2(endpoint,resourcesIndex,classesIndex,propertiesIndex,POSTaggerHolder.pos,WordNetHolder.wordNet, options,
+					cache);
 			tbsl.init();
 		} catch (Exception e) {throw new RuntimeException(e);}
 	}

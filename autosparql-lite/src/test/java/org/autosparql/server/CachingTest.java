@@ -23,7 +23,6 @@ public class CachingTest
 	Example e2 = new Example("http://dbpedia.org/resource/Leipzig");
 	SortedSet<Example> examples;
 	
-
 	@Before
 	public void before()
 	{

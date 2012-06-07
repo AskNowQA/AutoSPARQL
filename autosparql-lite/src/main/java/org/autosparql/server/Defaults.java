@@ -22,4 +22,6 @@ public final class Defaults
 	public static String graphURL() {return properties.getProperty("graphURL");}
 	public static String solrServerURL() {return properties.getProperty("solrServerURL");}
 	public static String sameAsServiceURL() {return properties.getProperty("sameAsServiceURL");}
+	public static String oxfordEndpointURL() {return properties.getProperty("oxfordEndpointURL");}
+	public static String oxfordGraphURL() {return properties.getProperty("oxfordGraphURL");}
 }

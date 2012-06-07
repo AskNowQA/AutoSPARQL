@@ -18,7 +18,7 @@ public class VisualizationTest
 				"http://dbpedia.org/resource/The_Da_Vinci_Code",
 				"http://dbpedia.org/resource/The_Lost_Symbol"
 			};
-		final AutoSPARQLSession session = new AutoSPARQLSession("cache");
+		final AutoSPARQLSession session = new AutoSPARQLSession();
 		SortedSet<Example> examples = new TreeSet<Example>();
 		for(String uri:exampleURIs)
 		{

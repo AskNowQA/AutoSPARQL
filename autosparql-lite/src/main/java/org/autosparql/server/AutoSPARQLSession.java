@@ -3,6 +3,7 @@ package org.autosparql.server;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,16 +16,18 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+
 import org.apache.log4j.Logger;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
 import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.DefaultPrefixMapping;
+import org.autosparql.server.util.ExtractionDBCacheUtils;
 import org.autosparql.server.util.LanguageResolver;
-import org.autosparql.server.util.NoCache;
 import org.autosparql.server.util.SameAsLinks;
 import org.autosparql.shared.BlackList;
 import org.autosparql.shared.Example;
@@ -33,6 +36,7 @@ import org.dllearner.algorithm.qtl.QTL;
 import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlQuery;
+
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -58,14 +62,14 @@ public class AutoSPARQLSession
 	private boolean useEHCache = false; 
 
 	// TODO: as soon as there are more than two endpoints, do this dynamically with a hashmap and all that, but for now we don't need it
-	private static final ExtractionDBCache dbpediaCache = new ExtractionDBCache("mem:dbpedia");
-	private static final ExtractionDBCache oxfordCache = new ExtractionDBCache("mem:oxford");
+	
 
 	// TODO: any multithreading issues?
 	/** returns the right cache for the active endpoint */
 	private ExtractionDBCache getCache()
 	{
-		return oxford?oxfordCache:dbpediaCache;
+		try	{return oxford?ExtractionDBCacheUtils.getOxfordCache():ExtractionDBCacheUtils.getDBpediaCache();}
+		catch (SQLException e) {throw new RuntimeException("Can not get extraction cache.");}
 	}
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
@@ -131,10 +135,10 @@ public class AutoSPARQLSession
 	}
 
 	//SparqlprimarySearch().getEndpoint() primarySearch().getEndpoint()URL, String solrServerURL,
-	public AutoSPARQLSession(String cacheDir)
+	public AutoSPARQLSession()
 	{	
-		if(cacheDir==null||cacheDir.isEmpty()) {throw new IllegalArgumentException("cacheDir is empty");}
-		logger.debug("Creating AutoSPARQLSession with cache dir \""+cacheDir+"\".");
+//		if(cacheDir==null||cacheDir.isEmpty()) {throw new IllegalArgumentException("cacheDir is empty");}
+//		logger.debug("Creating AutoSPARQLSession with cache dir \""+cacheDir+"\".");
 		//this.cacheDir=cacheDir;
 		//		String cacheDir;
 		//			try{cacheDir=getServletContext().getRealPath("cache");}
@@ -150,14 +154,14 @@ public class AutoSPARQLSession
 		//		}
 		// TODO: how can it work everywhere?
 		//dir="/tmp/autosparqlsession-extractiondbcache";
-		File cacheDirFile = new File(cacheDir); 		
-		if(!cacheDirFile.exists()) {cacheDirFile.mkdir();}
-		if(!cacheDirFile.isDirectory()) {throw new RuntimeException("Cache directory path does not denote a directory.");}
+//		File cacheDirFile = new File(cacheDir); 		
+//		if(!cacheDirFile.exists()) {cacheDirFile.mkdir();}
+//		if(!cacheDirFile.isDirectory()) {throw new RuntimeException("Cache directory path does not denote a directory.");}
 		//dir="/var/lib/tomcat7/webapps/autosparql-lite/cache";		
 		//		try {
-		String query = "SELECT * WHERE {?s a ?type} LIMIT 1";
-		logger.info("Testing extraction DB cache with cache dir "+cacheDir+" and primarySearch().getEndpoint() "+primarySearch().getEndpoint().getURL()+" and query "+query);
-		getCache().executeSelectQuery(primarySearch().getEndpoint(), query);
+//		String query = "SELECT * WHERE {?s a ?type} LIMIT 1";
+//		logger.info("Testing extraction DB cache with cache dir "+cacheDir+" and primarySearch().getEndpoint() "+primarySearch().getEndpoint().getURL()+" and query "+query);
+//		getCache().executeSelectQuery(primarySearch().getEndpoint(), query);
 		//		} catch (Exception e) {
 		//			logger.error("ERROR", e);
 		//			e.printStackTrace();

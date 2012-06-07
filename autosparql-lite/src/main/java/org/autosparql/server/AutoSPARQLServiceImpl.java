@@ -9,27 +9,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.Endpoints;
+import org.autosparql.server.util.ExtractionDBCacheUtils;
 import org.autosparql.server.util.SameAsLinks;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
-import org.dllearner.kb.sparql.ExtractionDBCache;
-import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Options;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService
@@ -51,6 +47,12 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	public void init(ServletConfig config) throws ServletException
 	{
 		super.init(config);
+		String cacheDir = null;
+		//		try
+		//		{		
+		cacheDir=getServletContext().getRealPath("cache");
+		ExtractionDBCacheUtils.setCacheDir(cacheDir);
+		logger.info("cacheDir for extractiondbcache: "+cacheDir);
 
 		//	loadEndpoints();
 		//Test
@@ -111,14 +113,11 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 
 	private AutoSPARQLSession createAutoSPARQLSession(/*SPARQLEndpointEx endpoint*/)
 	{	
-		String cacheDir = null;
-		//		try
-		//		{
-		cacheDir=getServletContext().getRealPath("cache");
+
 		//		}
 		//		catch(Throwable t) {logger.error("Error getting servlet context",t); cacheDir="cache";}
 
-		AutoSPARQLSession session = new AutoSPARQLSession(cacheDir); 
+		AutoSPARQLSession session = new AutoSPARQLSession(); 
 		//getHttpSession().setAttribute(SessionAttributes.AUTOSPARQL_SESSION.toString(), session);
 		return session;
 	}
