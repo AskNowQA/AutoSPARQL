@@ -8,7 +8,14 @@ import org.dllearner.kb.sparql.ExtractionDBCache;
 
 public final class ExtractionDBCacheUtils
 {
-	private static final Logger log = Logger.getLogger(ExtractionDBCacheUtils.class);
+	private static final Logger log = Logger.getLogger(ExtractionDBCacheUtils.class);	
+	static
+	{
+		log.info("registering org.h2.Driver");
+		try{Class.forName("org.h2.Driver");}
+		catch (ClassNotFoundException e){throw new RuntimeException("Couldn't initialize org.h2.Driver classs.",e);}	
+	}
+	
 	static String cacheDir = "defaultcache";
 	static private final String param = ";CACHE_SIZE=100000"; 
 	public static void setCacheDir(String cacheDir) {ExtractionDBCacheUtils.cacheDir=cacheDir;log.info("ExtractionDBCacheUtils cacheDirectory set to "+cacheDir);}
@@ -27,7 +34,9 @@ public final class ExtractionDBCacheUtils
 		
 	@SuppressWarnings("unused")
 	private static ExtractionDBCache getMemCache(String endpoint, String graph) throws SQLException
-	{return new ExtractionDBCache(DriverManager.getConnection("jdbc:h2:mem"+key(endpoint,graph)+param, "", ""));}
+	{
+		return new ExtractionDBCache(DriverManager.getConnection("jdbc:h2:mem"+key(endpoint,graph)+param, "", ""));
+		}
 	
 	private static ExtractionDBCache getDiskCache(String endpoint, String graph) throws SQLException
 	{
