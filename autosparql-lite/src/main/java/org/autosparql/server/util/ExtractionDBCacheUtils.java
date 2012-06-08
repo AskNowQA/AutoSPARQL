@@ -16,9 +16,10 @@ public final class ExtractionDBCacheUtils
 		catch (ClassNotFoundException e){throw new RuntimeException("Couldn't initialize org.h2.Driver classs.",e);}	
 	}
 	
-	static String cacheDir = "defaultcache";
-	static private final String param = ";CACHE_SIZE=100000"; 
-	public static void setCacheDir(String cacheDir) {ExtractionDBCacheUtils.cacheDir=cacheDir;log.info("ExtractionDBCacheUtils cacheDirectory set to "+cacheDir);}
+	static String cacheDir = System.getProperty("java.io.tmpdir");
+	static {log.info("ExtractionDBCache will use cacheDir \""+System.getProperty("java.io.tmpdir")+"\"");}
+	static private final String param = ";CACHE_SIZE=100000;AUTO_SERVER=TRUE"; 
+	//public static void setCacheDir(String cacheDir) {ExtractionDBCacheUtils.cacheDir=cacheDir;log.info("ExtractionDBCacheUtils cacheDirectory set to "+cacheDir);}
 	
 	private ExtractionDBCacheUtils() {throw new AssertionError();}
 	
@@ -41,6 +42,7 @@ public final class ExtractionDBCacheUtils
 	private static ExtractionDBCache getDiskCache(String endpoint, String graph) throws SQLException
 	{
 		if(cacheDir==null) {throw new RuntimeException("cache dir not set");}
+		log.debug("getting disk cache residing in cacheDir \""+cacheDir+'"');
 		return new ExtractionDBCache(DriverManager.getConnection("jdbc:h2:"+cacheDir+'/'+key(endpoint,graph)+param, "", ""));
 		} 
 }

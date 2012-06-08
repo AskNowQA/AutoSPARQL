@@ -17,10 +17,8 @@ public class ExtractionCacheTest
 {
 	@Test public void testJDBCMemory() throws SQLException {testJDBC("jdbc:h2:mem:");}		
 	@Test public void testJDBCDiskRelative() throws SQLException {testJDBC("jdbc:h2:test");}
-	@Test public void testJDBCDiskLinuxTempDir() throws SQLException {testJDBC("jdbc:h2:/tmp/test");}
-	@Test public void testTomcatWebappAutosparqlDirWithCacheSize100MB() throws SQLException {testJDBC("jdbc:h2:/usr/share/tomcat7/webapps/autosparql-lite/cache/httplivedbpediaorgsparql_httpdbpediaorg;CACHE_SIZE=100000");}
-	 
-
+	@Test public void testJDBCDiskTempDir() throws SQLException {testJDBC("jdbc:h2:"+System.getProperty("java.io.tempdir"));}
+	//@Test public void testTomcatWebappAutosparqlDirWithCacheSize100MB() throws SQLException {testJDBC("jdbc:h2:/usr/share/tomcat7/webapps/autosparql-lite/testcache/httplivedbpediaorgsparql_httpdbpediaorg;CACHE_SIZE=100000");}	 
 	
 	public void testJDBC(String url) throws SQLException
 	{
@@ -42,7 +40,7 @@ public class ExtractionCacheTest
 	{		
 		// "hack" get a memory connection. we shouldn't be able to write to etc so this would throw an error if it tries on-disk cache
 		// TODO: if feature request gets implemented, use ExtractionDBCache(Connection)
-		ExtractionDBCacheUtils.setCacheDir("cache");
+		//ExtractionDBCacheUtils.setCacheDir("cache");
 		ExtractionDBCache cache = ExtractionDBCacheUtils.getCache(SparqlEndpoint.getEndpointDBpedia().getURL().toString(),SparqlEndpoint.getEndpointDBpedia().getDefaultGraphURIs().get(0));
 		String json = cache.executeSelectQuery(SparqlEndpoint.getEndpointDBpedia(),
 				"select ?l {<http://dbpedia.org/resource/Leipzig> rdfs:label ?l. FILTER langmatches(lang(?l),'de').}");

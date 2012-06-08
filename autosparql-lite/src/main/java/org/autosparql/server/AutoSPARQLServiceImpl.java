@@ -17,7 +17,6 @@ import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.Endpoints;
-import org.autosparql.server.util.ExtractionDBCacheUtils;
 import org.autosparql.server.util.SameAsLinks;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
@@ -47,11 +46,11 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	public void init(ServletConfig config) throws ServletException
 	{
 		super.init(config);
-		String cacheDir = null;
-		//		try
-		//		{		
-		cacheDir=getServletContext().getRealPath("cache");
-		ExtractionDBCacheUtils.setCacheDir(cacheDir);
+//		String cacheDir = null;
+//		//		try
+//		//		{		
+//		cacheDir=getServletContext().getRealPath("cache");
+//		ExtractionDBCacheUtils.setCacheDir(cacheDir);
 //		logger.info("cacheDir for extractiondbcache: "+cacheDir);
 
 		//	loadEndpoints();

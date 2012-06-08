@@ -1,6 +1,6 @@
 package org.autosparql.server;
 
-import java.io.File;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
@@ -16,11 +16,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
 import org.apache.log4j.Logger;
 import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
@@ -36,7 +34,6 @@ import org.dllearner.algorithm.qtl.QTL;
 import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlQuery;
-
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -59,7 +56,7 @@ public class AutoSPARQLSession
 	//private String lastQuery = null;
 	private boolean fastSearch = false;
 	private boolean oxford = false;
-	private boolean useEHCache = false; 
+	private static final boolean USE_EH_CACHE = true; 
 
 	// TODO: as soon as there are more than two endpoints, do this dynamically with a hashmap and all that, but for now we don't need it
 	
@@ -172,18 +169,24 @@ public class AutoSPARQLSession
 	}
 
 	/** learns new examples and processes them by removing blacklisted properties and choosing the ideal language in case there are multiple candidates 
-	 * with different language tags for the same URI and property*/
-	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
+	 * with different language tags for the same URI and property
+	 * uses an ehcache for the examples and a selectcache for the sparql queries.*/
+	@SuppressWarnings("unchecked") public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
 //		synchronized(selectCache) // necessary?
 //		{
 			logger.info("getExamplesByQTL("+positives+","+negatives+","+questionWords+")");
-			//		Cache cache = getCacheManager().getCache("qtl");
-			//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
-			//		{
-			//			Element e;
-			//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
-			//		}
+			
+			Cache cache = null; 
+			Serializable cacheKey = null;
+			if(USE_EH_CACHE)
+			{
+				cache = getCacheManager().getCache("qtl");
+				cacheKey = new Object[] {positives,negatives,questionWords,oxford};
+				Element e;
+				if((e=cache.get(cacheKey))!=null) {return (SortedSet<Example>)e.getValue();}
+			}
+			
 			QTL qtl = new QTL(primarySearch().getEndpoint(), getCache());
 			qtl.setExamples(positives, negatives);
 			if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
@@ -199,8 +202,12 @@ public class AutoSPARQLSession
 			{
 				ResultSet rs = SparqlQuery.convertJSONtoResultSet(getCache().executeSelectQuery(primarySearch().getEndpoint(), query));
 				SortedSet<Example> examples = fillExamples(null, rs);
-				//			cache.put(new Element(parameters,examples));
-				//			cache.flush();
+				if(USE_EH_CACHE)
+				{
+							cache.put(new Element(cacheKey,examples));
+							cache.flush();
+							getCacheManager().shutdown(); // TODO: is this correct or does it obstruct further cachemanager uses?
+				}
 				if(examples.size()>MAX_NUMBER_OF_EXAMPLES) {return new TreeSet<Example>(new LinkedList<Example>(examples).subList(0, MAX_NUMBER_OF_EXAMPLES-1));}
 				return examples;
 
@@ -211,7 +218,7 @@ public class AutoSPARQLSession
 				//			{
 				//				String property = qs.getResource("p").getURI();
 				//				if(BlackList.dbpedia.contains(property)) {continue;}
-				//				String uri = qs.getResource("x0").getURI();
+				//				String ean uri = qs.getResource("x0").getURI();
 				//
 				//				Example e=examples.containsKey(uri)?examples.get(uri):new Example(uri);
 				//				examples.put(uri,e);
@@ -371,19 +378,16 @@ public class AutoSPARQLSession
 		return maps;
 	}
 
-	public static String cacheKey(String query, boolean fastSearch)
-	{
-		return query+"+fastsearch="+(fastSearch?"on":"off");
-	}
-
 	@SuppressWarnings("unchecked")
 	public SortedSet<Example> getExamples(String query)
 	{
 		Cache cache = null;
-		if(useEHCache)
+		Serializable cacheKey = new Object[]{query,fastSearch,oxford};
+		if(USE_EH_CACHE)
 		{
 			cache = getCacheManager().getCache("examples");
-			Element e=cache.get(cacheKey(query,fastSearch));
+			
+			Element e=cache.get(cacheKey);
 			if(e!=null)
 			{
 				logger.info("cache hit with query \""+query+"\"");			
@@ -391,7 +395,7 @@ public class AutoSPARQLSession
 				return mapsToExamples((List<Map<String,Object>>)e.getValue());		
 			}
 		}		
-		logger.info(useEHCache?"cache miss with query \""+query+"\"":"EHCache deactivated");
+		logger.info(USE_EH_CACHE?"cache miss with query \""+query+"\"":"EHCache deactivated");
 		SortedSet<Example> examples = null;// = new ArrayList<Example>();
 		//		 primary search DBpedia bzw. DBpedia live
 		if(!fastSearch) {examples = primarySearch().getExamples(query);}
@@ -424,9 +428,9 @@ public class AutoSPARQLSession
 		{
 			fillExamples(examples);
 		}		
-		if(useEHCache)
+		if(USE_EH_CACHE)
 		{
-			cache.put(new Element(cacheKey(query,fastSearch),examplesToMaps(examples)));
+			cache.put(new Element(cacheKey,examplesToMaps(examples)));
 			cache.flush();
 			getCacheManager().shutdown(); // TODO: is this correct or does it obstruct further cachemanager uses?
 		}

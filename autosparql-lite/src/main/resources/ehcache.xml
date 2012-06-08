@@ -1,18 +1,22 @@
-<ehcache maxBytesLocalOnHeap="200m" maxBytesLocalDisk="1g" >
-<diskStore path="cache"/>
+<ehcache maxBytesLocalOnHeap="100m" maxBytesLocalDisk="1g" >
+<diskStore path="java.io.tmpdir"/>
 <cache name="examples"
  diskPersistent="true"
 		eternal="true"
-        maxElementsInMemory="100000">
+        maxElementsInMemory="10000"
+        memoryStoreEvictionPolicy="LRU">
+        
 </cache>
 <cache name="qtl"
  diskPersistent="true"
 		eternal="true"
-        maxElementsInMemory="100000">
+        maxElementsInMemory="10000"
+        memoryStoreEvictionPolicy="LRU">
 </cache>
 <cache name="test"
  diskPersistent="true"
 		eternal="true"
-        maxElementsInMemory="10">
+        maxElementsInMemory="10"
+        memoryStoreEvictionPolicy="LRU">
 </cache>
 </ehcache>
