@@ -212,13 +212,13 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		mainPanel.addComponent(inputFormHolder);
 		mainPanel.setComponentAlignment(inputFormHolder, Alignment.MIDDLE_CENTER);
 		
-		feedbackLabel = new Label();
-		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
-		feedbackLabel.addStyleName("status-label");
-		feedbackLabel.setWidth("60%");
-		feedbackLabel.setVisible(false);
-		mainPanel.addComponent(feedbackLabel);
-		mainPanel.setComponentAlignment(feedbackLabel, Alignment.MIDDLE_CENTER);
+//		feedbackLabel = new Label();
+//		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
+//		feedbackLabel.addStyleName("status-label");
+//		feedbackLabel.setWidth("60%");
+//		feedbackLabel.setVisible(false);
+//		mainPanel.addComponent(feedbackLabel);
+//		mainPanel.setComponentAlignment(feedbackLabel, Alignment.MIDDLE_CENTER);
 		
 		resultHolderPanel = new VerticalLayout();
 		resultHolderPanel.setWidth("80%");
@@ -244,6 +244,58 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		
 	}
 	
+//	private Component createInputForm(){
+//		HorizontalLayout l = new HorizontalLayout();
+//		l.setSpacing(true);
+//		
+//		Component kbSelector = createKnowledgeBaseSelector();
+//		kbSelector.setWidth("150px");
+//		kbSelector.setHeight("100px");
+//		l.addComponent(kbSelector);
+//		
+////		questionField = new TextField();
+////		questionField.setWidth("100%");
+////		questionField.setValue("houses in Oxfordshire");
+////		questionField.addShortcutListener(new ShortcutListener("run", ShortcutAction.KeyCode.ENTER, null) {
+////		    @Override
+////		    public void handleAction(Object sender, Object target) {
+////		       onExecuteQuery();
+////		    }
+////		});
+////		l.addComponent(questionField);
+//		
+//		questionBox = new ComboBox();
+//		questionBox.setWidth("100%");
+//		questionBox.setImmediate(true);
+//		questionBox.setNewItemsAllowed(true);
+//		questionBox.setInputPrompt("Enter your question.");
+//		questionBox.addShortcutListener(new ShortcutListener("run", ShortcutAction.KeyCode.ENTER, null) {
+//		    @Override
+//		    public void handleAction(Object sender, Object target) {
+//		       onExecuteQuery();
+//		    }
+//		});
+//		l.addComponent(questionBox);
+//		l.setComponentAlignment(questionBox, Alignment.MIDDLE_CENTER);
+//		
+//		addExampleQuestions();
+//		
+//		executeButton = new NativeButton("Run");
+//		executeButton.addListener(new Button.ClickListener() {
+//			
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				onExecuteQuery();
+//			}
+//		});
+//		l.addComponent(executeButton);
+//		l.setComponentAlignment(executeButton, Alignment.MIDDLE_CENTER);
+//		
+//		l.setExpandRatio(questionBox, 1f);
+//		
+//		return l;
+//	}
+	
 	private Component createInputForm(){
 		HorizontalLayout l = new HorizontalLayout();
 		l.setSpacing(true);
@@ -253,19 +305,19 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		kbSelector.setHeight("100px");
 		l.addComponent(kbSelector);
 		
-//		questionField = new TextField();
-//		questionField.setWidth("100%");
-//		questionField.setValue("houses in Oxfordshire");
-//		questionField.addShortcutListener(new ShortcutListener("run", ShortcutAction.KeyCode.ENTER, null) {
-//		    @Override
-//		    public void handleAction(Object sender, Object target) {
-//		       onExecuteQuery();
-//		    }
-//		});
-//		l.addComponent(questionField);
-		
+		VerticalLayout right = new VerticalLayout();
+		right.setSizeFull();
+		right.setSpacing(true);
+		l.addComponent(right);
+		l.setExpandRatio(right, 1f);
+		HorizontalLayout rightTop = new HorizontalLayout();
+		rightTop.setSpacing(true);
+		rightTop.setHeight(null);
+		rightTop.setWidth("100%");
+		right.addComponent(rightTop);
 		questionBox = new ComboBox();
 		questionBox.setWidth("100%");
+		questionBox.setHeight(null);
 		questionBox.setImmediate(true);
 		questionBox.setNewItemsAllowed(true);
 		questionBox.setInputPrompt("Enter your question.");
@@ -275,8 +327,8 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		       onExecuteQuery();
 		    }
 		});
-		l.addComponent(questionBox);
-		l.setComponentAlignment(questionBox, Alignment.MIDDLE_CENTER);
+		rightTop.addComponent(questionBox);
+		rightTop.setExpandRatio(questionBox, 1f);
 		
 		addExampleQuestions();
 		
@@ -288,10 +340,22 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 				onExecuteQuery();
 			}
 		});
-		l.addComponent(executeButton);
-		l.setComponentAlignment(executeButton, Alignment.MIDDLE_CENTER);
+		rightTop.addComponent(executeButton);
 		
-		l.setExpandRatio(questionBox, 1f);
+		feedbackLabel = new Label();
+		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
+		feedbackLabel.addStyleName("status-label");
+		feedbackLabel.setWidth("90%");
+		feedbackLabel.setVisible(false);
+		
+		HorizontalLayout feedbackWrapper = new HorizontalLayout();
+		feedbackWrapper.setSizeFull();
+		feedbackWrapper.addComponent(feedbackLabel);
+		feedbackWrapper.setComponentAlignment(feedbackLabel, Alignment.MIDDLE_CENTER);
+		
+		right.addComponent(feedbackWrapper);
+		right.setExpandRatio(feedbackWrapper, 1f);
+		
 		
 		return l;
 	}
@@ -425,7 +489,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 			resultTable.setColumnWidth(propertyURI, -1);
 //		}
 		
-		resultTable.setColumnHeader(propertyURI, Labels.getLabel(propertyURI));
+		resultTable.setColumnHeader(propertyURI, Labels.getLabel(propertyURI) + "\u1F4CA");
 		visibleColumns.add(propertyURI);
 		
 		resultTable.setVisibleColumns(visibleColumns.toArray());

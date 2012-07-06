@@ -85,22 +85,22 @@ public class OxfordInfoLabel extends HorizontalLayout implements InfoLabel{
 		if(street != null){
 			try {
 				String googleMaps = "https://maps.google.com?q=" + URLEncoder.encode(street, "UTF-8");
-				s2 += "<div><b>Street:</b><a href=\"" + googleMaps + "\">"  + street + "</a></div>";
+				s2 += "<div><b>Street: </b><a href=\"" + googleMaps + "\">"  + street + "</a></div>";
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 		}
 		Integer nrOfBedrooms = (Integer) item.getData().get("bedrooms");
 		if(nrOfBedrooms != null){
-			s2 += "<div><b>#bedrooms:</b>"  + nrOfBedrooms + "</div>";
+			s2 += "<div><b>#bedrooms: </b>"  + nrOfBedrooms + "</div>";
 		}
 		Integer nrOfBathrooms = (Integer) item.getData().get("bathrooms");
 		if(nrOfBathrooms != null){
-			s2 += "<div><b>#bathrooms:</b>"  + nrOfBathrooms + "</div>";
+			s2 += "<div><b>#bathrooms: </b>"  + nrOfBathrooms + "</div>";
 		}
 		Integer nrOfReceptions = (Integer) item.getData().get("receptions");
 		if(nrOfReceptions != null){
-			s2 += "<div><b>#receptions:</b>"  + nrOfReceptions + "</div>";
+			s2 += "<div><b>#receptions: </b>"  + nrOfReceptions + "</div>";
 		}
 		s2 += "</div>";
 		if(!s2.isEmpty()){

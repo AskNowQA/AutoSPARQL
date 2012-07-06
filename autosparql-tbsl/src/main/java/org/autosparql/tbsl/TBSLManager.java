@@ -471,7 +471,7 @@ public class TBSLManager {
 			
 			if(learnedSPARQLQuery != null){
 				String translatedQuery = getNLRepresentation(learnedSPARQLQuery);
-				translatedQuery = translatedQuery.replace("This query retrieves", "").replace("distinct", "");
+				translatedQuery = translatedQuery.replace("This query retrieves", "").replace("distinct", "").replace(".", "").trim();
 				message("Found answer for \"" + translatedQuery + "\"");
 				Query q = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
 				if(!q.hasGroupBy()){
@@ -518,17 +518,19 @@ public class TBSLManager {
 	}
 	
 	private List<BasicResultItem> fetchResult(String query){
-		String extendedSPARQLQuery = extendSPARQLQuery(learnedSPARQLQuery);
+		Query extendedSPARQLQuery = extendSPARQLQuery(learnedSPARQLQuery);
 		System.out.println("Loading result...");
 //		message("Loading result");
 		List<BasicResultItem> result = new ArrayList<BasicResultItem>();
-		ResultSet rs = executeSelect(extendedSPARQLQuery);
+		ResultSet rs = executeSelect(extendedSPARQLQuery.toString());
 		QuerySolution qs;
+		String targetVar = currentExtendedKnowledgebase.getTargetVar();
+		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 		while(rs.hasNext()){
 			qs = rs.next();
 			
 			String uri = null;
-			RDFNode targetNode = qs.get(currentExtendedKnowledgebase.getTargetVar());
+			RDFNode targetNode = qs.get(targetVar);
 			if(targetNode.isURIResource()){
 				uri = targetNode.asResource().getURI();
 			} else if(targetNode.isLiteral()){
@@ -654,18 +656,22 @@ public class TBSLManager {
 					break;
 				}
 			}
+			
+			String targetVar = currentExtendedKnowledgebase.getTargetVar();
+			targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
+			
 			Query newQuery = QueryFactory.create();
 			newQuery.setSyntax(Syntax.syntaxARQ);
 			newQuery.setDistinct(true);
 			newQuery.setQuerySelectType();
-			pb.addTriple(new Triple(Node.createVariable(currentExtendedKnowledgebase.getTargetVar()), Node.createVariable("prop"), Node.createVariable("value")));
+			pb.addTriple(new Triple(Node.createVariable(targetVar), Node.createVariable("prop"), Node.createVariable("value")));
 			newQuery.setQueryPattern(wherePart);
 			wherePart.addElementFilter(new ElementFilter(new E_Regex(new E_Str(new ExprVar("prop")), "http://dbpedia.org/ontology/", "")));
 			List<String> vars = new ArrayList<String>();
 			vars.add("prop");
 			newQuery.addProjectVars(vars);
 			//add COUNT ?x0 and GROUP BY ?prop
-			Expr count = newQuery.allocAggregate(new AggCountVarDistinct(new ExprVar(Node.createVariable(currentExtendedKnowledgebase.getTargetVar()))));
+			Expr count = newQuery.allocAggregate(new AggCountVarDistinct(new ExprVar(Node.createVariable(targetVar))));
 			newQuery.addResultVar("cnt", count);
 			newQuery.addGroupBy(new ExprVar("prop"));
 			
@@ -694,7 +700,10 @@ public class TBSLManager {
 				break;
 			}
 		}
-		pb.addTriple(new Triple(Node.createVariable(currentExtendedKnowledgebase.getTargetVar()), Node.createURI(propertyURI), Node.createVariable("value")));
+		String targetVar = currentExtendedKnowledgebase.getTargetVar();
+		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
+		
+		pb.addTriple(new Triple(Node.createVariable(targetVar), Node.createURI(propertyURI), Node.createVariable("value")));
 		List<String> vars = new ArrayList<String>();
 		vars.add("value");
 		extendedSPARQLQuery.addProjectVars(vars);
@@ -705,7 +714,7 @@ public class TBSLManager {
 		Map<String, Set<Object>> uri2Values = new HashMap<String, Set<Object>>();
 		while(rs.hasNext()){
 			qs = rs.next();
-			String uri = qs.getResource(currentExtendedKnowledgebase.getTargetVar()).getURI();
+			String uri = qs.getResource(targetVar).getURI();
 			Set<Object> values = uri2Values.get(uri);
 			if(values == null){
 				values = new HashSet<Object>();
@@ -754,11 +763,13 @@ public class TBSLManager {
 				break;
 			}
 		}
+		String targetVar = currentExtendedKnowledgebase.getTargetVar();
+		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 		List<String> vars = new ArrayList<String>();
 		int i = 0;
 		boolean useOptional = true;//we have to put each triple into an OPTIONAL construct, because otherwise only information for resources having all properties will be returned
 		for(String uri : propertyURIs){
-			Triple t = new Triple(Node.createVariable(currentExtendedKnowledgebase.getTargetVar()), Node.createURI(uri), Node.createVariable("value" + i));
+			Triple t = new Triple(Node.createVariable(targetVar), Node.createURI(uri), Node.createVariable("value" + i));
 			if(useOptional){
 				ElementGroup eg = new ElementGroup();
 				eg.addTriplePattern(t);
@@ -778,7 +789,7 @@ public class TBSLManager {
 		while(rs.hasNext()){
 			qs = rs.next();
 			
-			String uri = qs.getResource(currentExtendedKnowledgebase.getTargetVar()).getURI();
+			String uri = qs.getResource(targetVar).getURI();
 			for(i = 0; i < propertyURIs.size(); i++){
 				Object value = null;
 				RDFNode node = qs.get("value" + i);
@@ -894,7 +905,7 @@ public class TBSLManager {
 		return null;
 	}
 	
-	private String extendSPARQLQuery(String sparqlQuery){
+	private Query extendSPARQLQuery(String sparqlQuery){
 		Query extendedSPARQLQuery = QueryFactory.create(sparqlQuery, Syntax.syntaxARQ);
 		ElementGroup wherePart = (ElementGroup)extendedSPARQLQuery.getQueryPattern();
 		ElementPathBlock pb = null;
@@ -906,6 +917,7 @@ public class TBSLManager {
 		}
 		
 		String targetVar = currentExtendedKnowledgebase.getTargetVar();
+		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 		List<String> vars = new ArrayList<String>();
 		
 		
@@ -997,7 +1009,7 @@ public class TBSLManager {
 			}
 		}
 		extendedSPARQLQuery.addProjectVars(vars);
-		return extendedSPARQLQuery.toString();
+		return extendedSPARQLQuery;
 	}
 	
 	private ResultSet executeSelect(String sparqlQuery){
@@ -1036,6 +1048,8 @@ public class TBSLManager {
 	}
 	
 	public static void main(String[] args) {
+		char ch = '\uD83D\uDCCA';
+		System.out.println(ch);
 		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
 		TBSLManager man = new TBSLManager();
 		man.init();
