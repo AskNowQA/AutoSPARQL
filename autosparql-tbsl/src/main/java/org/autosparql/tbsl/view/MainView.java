@@ -458,6 +458,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		for(Object itemId : resultTable.getItemIds()){
 			resultTable.getItem(itemId).getItemProperty(propertyURI).setValue(((BasicResultItem)itemId).getValue(propertyURI));
 		}
+		final boolean isDataProperty = UserSession.getManager().isDataProperty(propertyURI);
 //		if(!UserSession.getManager().isDataProperty(propertyURI)){
 			resultTable.addGeneratedColumn(propertyURI, new Table.ColumnGenerator() {
 	            public Component generateCell(Table source, Object itemId,
@@ -465,10 +466,10 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	            	String html = "";
 	                BasicResultItem item = (BasicResultItem)itemId;
 	                Set<Object> dataValues = (Set<Object>) item.getData().get(propertyURI);
-	                boolean dataProperty = UserSession.getManager().isDataProperty(propertyURI);
+	                
 	                if(dataValues != null){
 	                	for(Object value : dataValues){
-	                		if(dataProperty){
+	                		if(isDataProperty){
 	                			html += value.toString();
 	                		} else {
 	                			String uri = (String) value;
@@ -489,7 +490,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 			resultTable.setColumnWidth(propertyURI, -1);
 //		}
 		
-		resultTable.setColumnHeader(propertyURI, Labels.getLabel(propertyURI) + "\u1F4CA");
+		resultTable.setColumnHeader(propertyURI, Labels.getLabel(propertyURI) + (isDataProperty  ? " \u2599" : ""));
 		visibleColumns.add(propertyURI);
 		
 		resultTable.setVisibleColumns(visibleColumns.toArray());
@@ -691,7 +692,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	        header.setSpacing(true);
 	        header.setComponentAlignment(propertySelector, Alignment.MIDDLE_LEFT);
 	        pl.setHeaderComponent(resultTable, header);
-		} else {
+		} else if(UserSession.getManager().getKnowledgebases().indexOf(UserSession.getManager().getCurrentExtendedKnowledgebase()) == 0){
 			Label l = new Label("Sort by ");
 			l.setHeight("100%");
 			l.addStyleName("white-font");

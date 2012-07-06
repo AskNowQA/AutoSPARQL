@@ -472,7 +472,7 @@ public class TBSLManager {
 			if(learnedSPARQLQuery != null){
 				String translatedQuery = getNLRepresentation(learnedSPARQLQuery);
 				translatedQuery = translatedQuery.replace("This query retrieves", "").replace("distinct", "").replace(".", "").trim();
-				message("Found answer for \"" + translatedQuery + "\"");
+				message("Found answer for \"" + translatedQuery + "\". Loading result...");
 				Query q = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
 				if(!q.hasGroupBy()){
 					q.setDistinct(true);
@@ -494,6 +494,7 @@ public class TBSLManager {
 					}
 					fillItems(mostProminentProperties);
 					answer = new SelectAnswer(result, mostProminentProperties, additionalProperties);
+					message("Found answer for \"" + translatedQuery + "\".");
 				} else if(q.isAskType()){
 					
 				}
@@ -507,6 +508,7 @@ public class TBSLManager {
 			
 		} catch (NoTemplateFoundException e) {
 			e.printStackTrace();
+			message("Could not find an answer. Using fallback by searching in descriptions of the entities.");
 			answer = answerQuestionFallback(question);
 		}
 //		message("Finished.");
@@ -1048,13 +1050,11 @@ public class TBSLManager {
 	}
 	
 	public static void main(String[] args) {
-		char ch = '\uD83D\uDCCA';
-		System.out.println(ch);
 		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
 		TBSLManager man = new TBSLManager();
 		man.init();
-		man.setKnowledgebase(man.getKnowledgebases().get(0));
-		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses with double garage");
+		man.setKnowledgebase(man.getKnowledgebases().get(1));
+		SelectAnswer a = (SelectAnswer) man.answerQuestion("Give me all films starring Brad Pitt or starring Julia Roberts");
 		List<String> p = new ArrayList<String>();
 		p.add(a.getItems().get(1).getUri());
 		p.add(a.getItems().get(2).getUri());
