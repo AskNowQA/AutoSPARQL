@@ -15,6 +15,9 @@
  */
 package org.autosparql.tbsl;
 
+import java.util.Map;
+
+import org.autosparql.tbsl.util.URLParameters;
 import org.autosparql.tbsl.view.MainView;
 import org.autosparql.tbsl.widget.TimeChartWindow;
 import org.vaadin.appfoundation.authentication.SessionHandler;
@@ -25,6 +28,7 @@ import org.vaadin.appfoundation.view.ViewHandler;
 import com.vaadin.Application;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -35,8 +39,7 @@ import com.vaadin.ui.Window.CloseEvent;
  * The Application's "main" class
  */
 @SuppressWarnings("serial")
-public class TBSLApplication extends Application
-{
+public class TBSLApplication extends Application implements ParameterHandler{
     private MainView mainView;
     
     Action action_query = new ShortcutAction("Ctrl+Q",
@@ -46,6 +49,9 @@ public class TBSLApplication extends Application
     Action action_chart = new ShortcutAction("Ctrl+M",
             ShortcutAction.KeyCode.M,
             new int[] { ShortcutAction.ModifierKey.CTRL });
+    
+    private String endpoint;
+    private String question;
 
     @Override
     public void init()
@@ -62,6 +68,7 @@ public class TBSLApplication extends Application
 		Permissions.initialize(this, new JPAPermissionManager());
 		
 		Window mainWindow = new Window("AutoSPARQL TBSL"); 
+		mainWindow.addParameterHandler(this);
 		setMainWindow(mainWindow);
 		
 		mainView = new MainView();
@@ -98,6 +105,7 @@ public class TBSLApplication extends Application
 				return new Action[] { action_query, action_chart };
 			}
 		});
+        
     }
     
     private void onShowLearnedQuery(){
@@ -138,5 +146,23 @@ public class TBSLApplication extends Application
 //                    Notification.TYPE_ERROR_MESSAGE);
 //        }
     }
+
+	@Override
+	public void handleParameters(Map<String, String[]> parameters) {
+		String[] endpointArray = parameters.get(URLParameters.ENDPOINT);
+		if(endpointArray != null && endpointArray.length == 1){
+			endpoint = endpointArray[0];
+			System.out.println("URL param: " + endpoint);
+		}
+		String[] questionArray = parameters.get(URLParameters.QUESTION);
+		if(questionArray != null && endpointArray.length == 1){
+			question = questionArray[0];
+			System.out.println("URL param: " + question);
+		}
+		if(endpoint != null && question != null){
+        	mainView.initWithParams(endpoint, question);
+        }
+		
+	}
     
 }

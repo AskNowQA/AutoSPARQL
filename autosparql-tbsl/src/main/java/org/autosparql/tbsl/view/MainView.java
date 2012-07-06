@@ -140,6 +140,19 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 //		header.setExpandRatio(pad, 1f);
 	}
 	
+	public void initWithParams(String endpoint, String question){
+		System.out.println("init with params");
+		if(endpoint.equals("dbpedia")){
+			knowledgebaseSelector.select(UserSession.getManager().getKnowledgebases().get(1));
+		} else if(endpoint.equals("oxford")){
+			knowledgebaseSelector.select(UserSession.getManager().getKnowledgebases().get(0));
+		}
+		questionBox.addItem(question);
+		questionBox.setValue(question);
+		onExecuteQuery();
+		
+	}
+	
 	private void createFooter(){
 //		HorizontalLayout footer = new HorizontalLayout();
 //		footer.setWidth("100%");
