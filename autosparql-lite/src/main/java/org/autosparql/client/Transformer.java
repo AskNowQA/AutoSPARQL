@@ -7,7 +7,6 @@ public class Transformer
 	{
 		String[] tokens=url.split("[:/#]");
 		return tokens[tokens.length-1];
-		
 	}
 	
 	public static String displayProperty(String property)

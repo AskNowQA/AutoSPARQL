@@ -1,22 +1,36 @@
 package org.autosparql.server.search;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import org.apache.log4j.Logger;
+import org.autosparql.server.Defaults;
+import org.autosparql.server.util.ExtractionDBCacheUtils;
 import org.autosparql.shared.Example;
+import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
-import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
+import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
 import org.dllearner.algorithm.tbsl.nlp.ApachePartOfSpeechTagger;
 import org.dllearner.algorithm.tbsl.nlp.PartOfSpeechTagger;
 import org.dllearner.algorithm.tbsl.nlp.WordNet;
 import org.dllearner.algorithm.tbsl.sparql.Template;
+import org.dllearner.common.index.Index;
+import org.dllearner.common.index.SOLRIndex;
+import org.dllearner.common.index.SPARQLClassesIndex;
+import org.dllearner.common.index.SPARQLIndex;
+import org.dllearner.common.index.SPARQLPropertiesIndex;
+import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.Options;
-import org.openjena.atlas.logging.Log;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -24,54 +38,107 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 public class TBSLSearch implements Search
 {
-	private static Logger logger = Logger.getLogger(TBSLSearch.class);	
-	protected static final URL optionURL = TBSLSearch.class.getClassLoader().getResource("tbsl/tbsl.properties");
-	protected static Options options; 
+	private static Logger log = Logger.getLogger(TBSLSearch.class);		
+	private final static Options options; 
 	public final static String SOLR_DBPEDIA_RESOURCES;
 	public final static String SOLR_DBPEDIA_CLASSES;
+	public final static String SOLR_DBPEDIA_PROPERTIES;
 	static
 	{
-		try{options = new Options(optionURL);} catch (Exception e) {throw new RuntimeException("Property resource "+optionURL+" not found. Could not initialize TBSLSearch.",e);};				
+		InputStream optionStream = TBSLSearch.class.getResourceAsStream("tbsl.properties");
+		try{options = new Options(optionStream);} catch (Exception e) {throw new RuntimeException("Problem loading properties from resource "+optionStream.toString()+". Could not initialize TBSLSearch.",e);};				
 		SOLR_DBPEDIA_RESOURCES = options.get("solr.resources.url");
 		SOLR_DBPEDIA_CLASSES = options.get("solr.classes.url");			
-	}
-	//protected final URL wordnet = getClass().getClassLoader().getResource("tbsl/wordnet_properties.xml").;	
+		SOLR_DBPEDIA_PROPERTIES = options.get("solr.properties.url");
+	}	
 
-	protected static final int LIMIT = 10;
-	protected static final int OFFSET = 0;
+	private static final int LIMIT = 10;
+	private static final int OFFSET = 0;
+ 
+	private final String QUERY_PREFIX = "";//"Give me all ";
 
-	protected final String QUERY_PREFIX = "";//"Give me all ";
+	private final SPARQLTemplateBasedLearner2 tbsl;
+	private final SPARQLEndpointEx endpoint;
+	private String learnedQuery = null;
 
-	protected SPARQLTemplateBasedLearner tbsl;
-	protected SparqlEndpoint endpoint;
-	protected String learnedQuery = null;
-	
 	public String learnedQuery() {return learnedQuery;}
-	
+
 	static class POSTaggerHolder
 	{
-		static {logger.debug("initializing POS tagger...");}
+		static {log.debug("initializing POS tagger...");}
 		public static final PartOfSpeechTagger pos = new ApachePartOfSpeechTagger();
 	}
-	
+
 	static class WordNetHolder
 	{
 		protected static final String wordNetFilename = "tbsl/wordnet_properties.xml";
-		static {logger.debug("initializing WordNet...");}
+		static {log.debug("initializing WordNet...");}
 		public static final WordNet wordNet = new WordNet(wordNetFilename);
 	}
 
-public TBSLSearch(SparqlEndpoint endpoint, String cacheDir)
-{
+	private static Map<List<String>,TBSLSearch> instances = new HashMap<List<String>,TBSLSearch>();
+
+	private static TBSLSearch getInstance(final SPARQLEndpointEx endpoint,Index resourcesIndex, Index classesIndex, Index propertiesIndex,ExtractionDBCache cache)
+	{
+		synchronized(instances)
+		{
+			TBSLSearch search;
+			List<String> key = Arrays.asList(endpoint.getURL().toString(),endpoint.getDefaultGraphURIs().toString());
+			if((search=instances.get(key))!=null) {return search;}
+			instances.put(key,search=new TBSLSearch(endpoint,resourcesIndex,classesIndex,propertiesIndex,cache));
+			return search;
+		}
+	}
+
+	public static TBSLSearch getDBpediaInstance()
+	{
+		SPARQLEndpointEx endpoint = null;
+		try
+		{
+			endpoint = new SPARQLEndpointEx(
+					new URL(Defaults.endpointURL()),
+					Collections.singletonList(Defaults.graphURL()),Collections.<String>emptyList(),"","",Collections.<String>emptySet());
+			return getInstance(endpoint,new SOLRIndex(SOLR_DBPEDIA_RESOURCES),new SOLRIndex(SOLR_DBPEDIA_CLASSES),new SOLRIndex(SOLR_DBPEDIA_PROPERTIES)
+			,ExtractionDBCacheUtils.getDBpediaCache());
+		}
+		catch (MalformedURLException e)
+		{log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}
+		catch (SQLException e) {throw new RuntimeException("Could not get extraction cache.",e);}	
+	}
+
+	public static TBSLSearch getOxfordInstance()
+	{
+		SPARQLEndpointEx endpoint;
+		try
+		{
+			endpoint = new SPARQLEndpointEx(new URL(Defaults.oxfordEndpointURL()), Collections.singletonList(Defaults.oxfordGraphURL()), Collections.<String>emptyList(),"","",Collections.<String>emptySet());
+
+			SPARQLIndex resourceIndex = new SPARQLIndex(endpoint);
+			SPARQLClassesIndex classIndex = new SPARQLClassesIndex(endpoint);
+			SPARQLPropertiesIndex propertyIndex = new SPARQLPropertiesIndex(endpoint);
+
+			return getInstance(endpoint,resourceIndex,classIndex,propertyIndex,ExtractionDBCacheUtils.getOxfordCache());
+		}
+		catch (MalformedURLException e)
+		{log.fatal("Couldn't initialize SPARQL endpoint \""+Defaults.endpointURL()+"\"", e);throw new RuntimeException(e);}
+		catch (SQLException e) {throw new RuntimeException("Could not get extraction cache.",e);}	
+	}
+
+	private TBSLSearch(final SPARQLEndpointEx endpoint,Index resourcesIndex, Index classesIndex, Index propertiesIndex,ExtractionDBCache cache)
+	{
 		this.endpoint = endpoint;
 		try
 		{
-			tbsl = new SPARQLTemplateBasedLearner(options,POSTaggerHolder.pos,WordNetHolder.wordNet, cacheDir);
-		} catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
+			// TODO: how can it work everywhere?
+			//cacheDir="/tmp/autosparql-cache-tbsl";
+
+			tbsl = new SPARQLTemplateBasedLearner2(endpoint,resourcesIndex,classesIndex,propertiesIndex,POSTaggerHolder.pos,WordNetHolder.wordNet, options,
+					cache);
+			tbsl.init();
+		} catch (Exception e) {throw new RuntimeException(e);}
 	}
+
+	public SPARQLEndpointEx getEndpoint() {return endpoint;}
 
 	@Override
 	public List<String> getResources(String query) {
@@ -88,18 +155,13 @@ public TBSLSearch(SparqlEndpoint endpoint, String cacheDir)
 	{
 		List<String> resources = new ArrayList<String>();
 
-		tbsl.setEndpoint(endpoint);
+		//tbsl.setEndpoint(endpoint);
 		if(!query.startsWith(QUERY_PREFIX)) {query=QUERY_PREFIX+query;}
 		tbsl.setQuestion(query);
-		try {
-			tbsl.learnSPARQLQueries();
-		} catch (NoTemplateFoundException e) {
-			e.printStackTrace();
-		}
+		try {tbsl.learnSPARQLQueries();}
+		catch (NoTemplateFoundException e) {throw new RuntimeException(e);}
 		//get SPARQL query which returned result, if exists
-		String learnedQuery = tbsl.getBestSPARQLQuery();
-
-
+		learnedQuery = tbsl.getBestSPARQLQuery();
 		return resources;
 	}
 
@@ -116,10 +178,11 @@ public TBSLSearch(SparqlEndpoint endpoint, String cacheDir)
 	@Override
 	public SortedSet<Example> getExamples(String query, int limit, int offset) {
 		SortedSet<Example> examples = new TreeSet<Example>();
-		logger.info("Using TBSLSearch.getExamples() with query \""+query+"\", endpoint \""+endpoint+"\" ...");		
-		tbsl.setEndpoint(endpoint);
+		log.info("Using TBSLSearch.getExamples() with query \""+query+"\", endpoint \""+endpoint+"\" ...");		
+		
+
 		//		try {
-		//			tbsl.setEndpoint(new SparqlEndpoint(new URL("http://dbpedia.org/sparql")));
+
 		//		} catch (MalformedURLException e1) {
 		//			// TODO Auto-generated catch block
 		//			e1.printStackTrace();
@@ -128,25 +191,23 @@ public TBSLSearch(SparqlEndpoint endpoint, String cacheDir)
 		tbsl.setQuestion(query);
 		try {
 			tbsl.learnSPARQLQueries();
-		} catch (NoTemplateFoundException e) {
-			e.printStackTrace();
-		}
+		} catch (NoTemplateFoundException e) {throw new RuntimeException(e);}
+
 		//get SPARQL query which returned result, if exists
 		learnedQuery  = tbsl.getBestSPARQLQuery();
 		if(learnedQuery==null)
 		{
-			logger.info("...unsuccessfully");
-			logger.warn("No query learned by TBSLSearch with original query: \""+query+"\" at endpoint "+endpoint+". Thus, no examples could be found.");
+			log.info("...unsuccessfully");
+			log.warn("No query learned by TBSLSearch with original query: \""+query+"\" at endpoint "+endpoint+". Thus, no examples could be found.");
 			return new TreeSet<Example>();
 		}
 		try
 		{
-			logger.info("Learned Query by TBSL: "+learnedQuery);
+			log.info("Learned Query by TBSL: "+learnedQuery);
 
 			//			learnedQuery = learnedQuery.replace("WHERE {","WHERE {?y ?p1 ?y0. ");
 			//			learnedQuery = learnedQuery.replace("SELECT ?y","SELECT distinct *");
 			//learnedQuery =  learnedQuery.replace("SELECT ?y","SELECT *");
-			System.out.println(learnedQuery);
 			ResultSet rs = executeQuery(learnedQuery);
 			String uri;
 			String lastURI = null;
@@ -184,9 +245,9 @@ public TBSLSearch(SparqlEndpoint endpoint, String cacheDir)
 		}
 		catch(Exception e)
 		{
-			logger.info("...unsuccessfully");
+			log.info("...unsuccessfully");
 			e.printStackTrace();
-			logger.warn("TBSLSearch: Error was thrown by query: "+learnedQuery);
+			log.warn("TBSLSearch: Error was thrown by query: "+learnedQuery);
 			return new TreeSet<Example>();
 		}
 		return examples;

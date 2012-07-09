@@ -8,7 +8,7 @@ import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 
 public class ErrorDialog extends Dialog{
 
-	private Dialog dialog;
+//	private Dialog dialog;
 	
 	private ContentPanel errorPanel;
 	private Text errorMessage;

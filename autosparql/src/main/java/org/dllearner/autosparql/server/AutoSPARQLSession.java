@@ -71,13 +71,15 @@ public class AutoSPARQLSession {
 	public AutoSPARQLSession(){
 	}
 	
-	public AutoSPARQLSession(Dataset dataset, String cacheDir, String servletContextPath, String solrURL, QuestionProcessor questionPreprocessor){
+	public AutoSPARQLSession(Dataset dataset, String cacheDir, String servletContextPath, QuestionProcessor questionPreprocessor){
 		this.dataset = dataset;
 		this.servletContextPath = servletContextPath;
 		this.questionPreprocessor = questionPreprocessor;
 		
 		endpoint = dataset.getEndpoint();
-		search = new SolrSearch(solrURL, questionPreprocessor);
+		
+		search = dataset.getSearchIndex();
+		search.setQuestionPreprocessor(questionPreprocessor);
 		
 		constructCache = new ExtractionDBCache(cacheDir + "/" + endpoint.getPrefix() + "/construct-cache");
 		selectCache = new ExtractionDBCache(cacheDir + "/" + endpoint.getPrefix() + "/select-cache");

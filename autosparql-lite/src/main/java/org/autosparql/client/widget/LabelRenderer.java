@@ -1,14 +1,13 @@
 package org.autosparql.client.widget;
 
 import org.autosparql.shared.Example;
-import org.autosparql.shared.SameAsWhiteList;
+import org.autosparql.shared.ResourceImageLinks;
 
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.grid.ColumnData;
 import com.extjs.gxt.ui.client.widget.grid.Grid;
 import com.extjs.gxt.ui.client.widget.grid.GridCellRenderer;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 
 public class LabelRenderer implements GridCellRenderer<Example>
 {
@@ -25,7 +24,7 @@ public class LabelRenderer implements GridCellRenderer<Example>
 	{	
 		//String imageURL = model.getImageURL();
 		String literal = model.get(property);
-		
+		if(literal==null||literal.isEmpty()) return new HTML();
 		// Remove language tag
 		if(!SHOW_LANGUAGE_TAG&&literal.contains("@")) {literal = literal.substring(0,literal.lastIndexOf('@'));}
 		String dbpediaLink  = "<a target=\"_blank\" href=\""+model.getURI()+"\">"+literal+"</a>";
@@ -33,7 +32,7 @@ public class LabelRenderer implements GridCellRenderer<Example>
 		html.append(dbpediaLink + "<br/>");
 		
 		for(String sameAsLink : model.getSameAsLinks()){
-			html.append("<a style='padding-top=5px' target=\"_blank\" href=\""+sameAsLink+"\">"+SameAsWhiteList.getImageLink(sameAsLink)+"</a> &nbsp;");
+			html.append("<a style='padding-top=5px' target=\"_blank\" href=\""+sameAsLink+"\">"+ResourceImageLinks.getImage(sameAsLink)+"</a> &nbsp;");
 		}
 		
 //		AutoSPARQLService.Util.getInstance().getSameAsLinks(model.getURI(), new AsyncCallback<List<String>>() {
@@ -42,7 +41,7 @@ public class LabelRenderer implements GridCellRenderer<Example>
 //			public void onSuccess(List<String> result) {
 //				for(String sameAsLink : result){
 //					html.append("<br/><a target=\"_blank\" href=\""+sameAsLink+"\">"+sameAsLink+"</a>");
-//					System.out.println(sameAsLink);
+//					
 //				}
 //				
 //			}

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
-import static org.autosparql.shared.StringUtils.*;
 import static org.autosparql.server.util.TieBreaker.TIEBREAKER;
 
 /** Resolves conflicts (chooses one) between objects of different language tags. Also implements the comparator interface (rating the chosen one smaller).

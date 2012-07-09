@@ -1,6 +1,5 @@
 package org.autosparql.client.widget;
 
-import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -26,7 +25,7 @@ public class ImageCellRenderer implements GridCellRenderer<Example>{
 
 	protected final Set<String> imageProperties;
 	
-	private boolean paint = true;
+//	private boolean paint = true;
 
 	public ImageCellRenderer(Set<String> imageProperties, Integer maxWidth, Integer maxHeight)
 	{
@@ -59,8 +58,8 @@ public class ImageCellRenderer implements GridCellRenderer<Example>{
 
 					@Override
 					public void onError(ErrorEvent event) {
-						paint = false;
-						log.info("Couldn't load image " + imageURL);
+						//paint = false;
+						log.warning("Couldn't load image " + imageURL);
 					}
 				});
 				image.setUrl(imageURL);
@@ -88,11 +87,10 @@ public class ImageCellRenderer implements GridCellRenderer<Example>{
 //				continue;
 //			}
 		}*/
-		if(!containsImage){System.out.println("NOT");return new HTML("");}//{return new HTML("No image");}
+		if(!containsImage){log.fine(model.getURI()+" does not contain an image.");return new HTML("");}//{return new HTML("No image");}
 //		if(image==null){return new HTML("Error rendering URL <br/>\""+imageURL+"\"");}
 
-		log.info("rendering "+imageURL2);
-		System.out.println(image);
+		log.finer("rendering "+imageURL2);
 		// not loaded yet, cannot retrieve width
 		if(image.getWidth()==0){return "<img src=\"" + imageURL2 + "\" id=\"image"+(++imageNr)+"\" onload=\"resizeToMax(this.id)\"/>";}
 		if(shrinkImage&&image != null&&(image.getWidth()>maxWidth||image.getHeight()>maxHeight))
@@ -100,7 +98,7 @@ public class ImageCellRenderer implements GridCellRenderer<Example>{
 			//double aspectRatio = image.getWidth() / image.getHeight();
 			double shrinkFactor = Math.min((double)maxWidth/image.getWidth(),(double)maxHeight/image.getHeight());
 			image.setPixelSize((int)((double)image.getWidth()*shrinkFactor),(int)((double)image.getHeight()*shrinkFactor));
-			log.info("Shrinking image " + imageURL2 + "| Factor: " + shrinkFactor);
+			log.finer("Shrinking image " + imageURL2 + "| Factor: " + shrinkFactor);
 		}
 //		String imageURL2 = "http://images2.wikia.nocookie.net/__cb20100923201744/uncyclopedia/images/thumb/6/63/Wikipedia-logo.png/98px-Wikipedia-logo.png";
 //		return "<img src=\"" + imageURL + "\" alt=\"no image\"/>";

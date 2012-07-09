@@ -19,4 +19,8 @@
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
 
+<listener>
+ <listener-class>org.autosparql.server.ActiveClientsListener</listener-class>
+</listener>
+    
 </web-app>

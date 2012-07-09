@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.autosparql.shared.Example;
 
-public class TestData {
-	
+public class TestData
+{
 	private static int SIZE = 20;
 	
 	public static List<Example> getDummyExamples(){

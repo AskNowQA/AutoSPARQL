@@ -23,7 +23,6 @@ public class CachingTest
 	Example e2 = new Example("http://dbpedia.org/resource/Leipzig");
 	SortedSet<Example> examples;
 	
-
 	@Before
 	public void before()
 	{
@@ -52,6 +51,7 @@ public class CachingTest
 		Cache cache = getCacheManager().getCache("test");
 		cache.put(new Element("array",array));
 		cache.flush();
+		getCacheManager().shutdown();
 		}
 		Cache cache2 = getCacheManager().getCache("test");
 		assertTrue(Arrays.equals((String[])cache2.get("array").getValue(),array));
@@ -62,8 +62,10 @@ public class CachingTest
 	{
 		{
 		Cache cache = CacheManager.getInstance().getCache("test");
+	
 		List<Map<String,Object>> list = AutoSPARQLSession.examplesToMaps(examples);
 		cache.put(new Element("testquery",list));
+		getCacheManager().shutdown();
 		}
 		Cache cache2 = getCacheManager().getCache("test");
 		SortedSet<Example> retrieved = AutoSPARQLSession.mapsToExamples((List<Map<String,Object>>)cache2.get("testquery").getValue());

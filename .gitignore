@@ -2,5 +2,13 @@
 .project
 .settings
 target
+war
 war/WEB-INF/classes/**/*
 war/WEB-INF/lib
+nohup.out
+user_sessions*
+autosparql/cache2
+autosparql/select-cache
+autosparql/construct-cache
+autosparql/log
+autosparql/logs

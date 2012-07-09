@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.log4j.Logger;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.autosparql.server.search.Search;
 import org.dllearner.autosparql.server.search.SolrSearch;
@@ -19,6 +20,8 @@ import org.dllearner.autosparql.server.search.VirtuosoSearch;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 
 public class DatasetLoader {
+	
+	private static final Logger logger = Logger.getLogger(DatasetLoader.class);
 	
 	public static List<Dataset> loadDatasets(String path){
 		List<Dataset> datasets = new ArrayList<Dataset>();
@@ -84,7 +87,7 @@ public class DatasetLoader {
 				for(Object o : namedGraphsConf.getList("namedGraphURI")){
 					namedGraphURIs.add(o.toString());
 				}
-				Boolean isVirtuoso = (Boolean) sparqlConf.getProperty("virtuoso");
+				Boolean isVirtuoso = Boolean.valueOf(indexConf.getProperty("sparql[@virtuoso]").toString());
 				if(isVirtuoso == null || !isVirtuoso){
 					searchIndex = new org.dllearner.autosparql.server.search.SPARQLSearch(new SparqlEndpoint(url, Collections.<String>singletonList(defaultGraphURI), namedGraphURIs));
 				} else {

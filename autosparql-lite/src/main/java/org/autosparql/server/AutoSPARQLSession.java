@@ -1,18 +1,13 @@
 package org.autosparql.server;
 
-import java.io.IOException;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,72 +26,77 @@ import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.server.search.SolrSearch;
 import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.DefaultPrefixMapping;
+import org.autosparql.server.util.ExtractionDBCacheUtils;
 import org.autosparql.server.util.LanguageResolver;
+import org.autosparql.server.util.SameAsLinks;
 import org.autosparql.shared.BlackList;
 import org.autosparql.shared.Example;
 import org.autosparql.shared.SPARQLException;
-import org.autosparql.shared.SameAsWhiteList;
 import org.dllearner.algorithm.qtl.QTL;
 import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
-import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.ExtractionDBCache;
-import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
-import org.openjena.atlas.logging.Log;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.shared.impl.PrefixMappingImpl;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDFS;
-
+// TODO: synchronized methods for setprimarysearch ?
 /** @author Konrad Höffner */
 public class AutoSPARQLSession
-{
-	private static Logger logger = Logger.getLogger(AutoSPARQLSession.class);
-	protected Map<String, String> property2LabelMap;
-	protected TBSLSearch primarySearch;
-	protected SolrSearch secondarySearch;
-
-	protected final String cacheDir = "cache";
-	protected SPARQLEndpointEx endpoint;
-	protected final ExtractionDBCache selectCache;
-
+{	
+	private static final Logger logger = Logger.getLogger(AutoSPARQLSession.class);
+	//public static final AutoSPARQLSession INSTANCE = new AutoSPARQLSession(SparqlprimarySearch().getEndpoint().getprimarySearch().getEndpoint()DBpediaLiveAKSW(), TBSLSearch.SOLR_DBPEDIA_RESOURCES);
+	private Map<String, String> property2LabelMap;
+	//	private TBSLSearch primarySearch;
+	private SolrSearch secondarySearch;
+	//private final String cacheDir;
+	//private SPARQLprimarySearch().getEndpoint()Ex primarySearch().getEndpoint();
+	//private final NoCache selectCache;
 	public static final List<String> languages = Arrays.asList(new String[] {"de","en"});
-	protected static final int MAX_NUMBER_OF_EXAMPLES = 20;
-	String lastQuery = null;
-	PrefixMapping x = new PrefixMappingImpl();
-	protected boolean fastSearch = false;
+	private static final int MAX_NUMBER_OF_EXAMPLES = 20;
+	//private String lastQuery = null;
+	private boolean fastSearch = false;
+	private boolean oxford = false;
+	private boolean useEHCache = false; 
 
-	protected static final String sameAsURI = "http://sameas.org/rdf?uri=";
+	// TODO: as soon as there are more than two endpoints, do this dynamically with a hashmap and all that, but for now we don't need it
+	
+
+	// TODO: any multithreading issues?
+	/** returns the right cache for the active endpoint */
+	private ExtractionDBCache getCache()
+	{
+		try	{return oxford?ExtractionDBCacheUtils.getOxfordCache():ExtractionDBCacheUtils.getDBpediaCache();}
+		catch (SQLException e) {throw new RuntimeException("Can not get extraction cache.");}
+	}
 
 	/** Using this instead of getCacheManager() allows us to safely use CacheManager.shutdown()
 	 * after each method dealing with the cache,
 	 * thus preventing corruptions of the cache (which Ehcache is *really* susceptible to, even if no write or even read is written)*/
 	public static CacheManager getCacheManager()
 	{
-		CacheManager cm = CacheManager.getInstance();
-		if(cm==null) {cm=CacheManager.create();}
-		return cm;
+		synchronized(CacheManager.class)
+		{
+			CacheManager cm = CacheManager.getInstance();
+			if(cm==null) {cm=CacheManager.create();}
+			return cm;
+		}
 	}
-	
-	// public AutoSPARQLSession(SPARQLEndpointEx endpoint, String cacheDir,
+
+	// public AutoSPARQLSession(SPARQLprimarySearch().getEndpoint()Ex primarySearch().getEndpoint(), String cacheDir,
 	// String servletContextPath, String solrURL, QuestionProcessor
 	// questionPreprocessor){
-	// this.endpoint = endpoint;
+	// this.primarySearch().getEndpoint() = primarySearch().getEndpoint();
 	// this.servletContextPath = servletContextPath;
 	// this.questionPreprocessor = questionPreprocessor;
 	//
 	// constructCache = new ExtractionDBCache(cacheDir + "/" +
-	// endpoint.getPrefix() + "/construct-cache");
+	// primarySearch().getEndpoint().getPrefix() + "/construct-cache");
 
 	// search = new SolrSearch(solrURL, questionPreprocessor);
-	// exampleFinder = new ExampleFinder(endpoint, selectCache, constructCache,
+	// exampleFinder = new ExampleFinder(primarySearch().getEndpoint(), selectCache, constructCache,
 	// search, questionPreprocessor);
 	//
 	// property2LabelMap = new TreeMap<String, String>();
@@ -105,21 +105,22 @@ public class AutoSPARQLSession
 	// examplesCache = new HashMap<String, Example>();
 	// }
 
-	public void setUseDBpediaLive(boolean useDBpediaLive)
-	{
-		try
-		{
-			if(useDBpediaLive)
-			{
-				logger.info("setting endpoint to DBpedia live");
-				this.endpoint = new SPARQLEndpointEx(new SparqlEndpoint(new URL("http://live.dbpedia.org/sparql")),"dbpedialive",null,Collections.<String>emptySet());
-			} else
-			{
-				logger.info("setting endpoint to DBpedia");
-				this.endpoint = new SPARQLEndpointEx(new SparqlEndpoint(new URL("http://dbpedia.org/sparql")),"dbpedia",null,Collections.<String>emptySet());
-			}
-		} catch (MalformedURLException e){throw new RuntimeException(e);}
-	}
+	// we don't want hardcoded primarySearch().getEndpoint()s
+	//	public void setUseDBpediaLive(boolean useDBpediaLive)
+	//	{
+	//		try
+	//		{
+	//			if(useDBpediaLive)
+	//			{
+	//				logger.info("setting primarySearch().getEndpoint() to DBpedia live");
+	//				this.primarySearch().getEndpoint() = new SPARQLprimarySearch().getEndpoint()Ex(new SparqlprimarySearch().getEndpoint()(new URL("http://live.dbpedia.org/sparql")),"dbpedialive",null,Collections.<String>emptySet());
+	//			} else
+	//			{
+	//				logger.info("setting primarySearch().getEndpoint() to DBpedia");
+	//				this.primarySearch().getEndpoint() = new SPARQLprimarySearch().getEndpoint()Ex(new SparqlprimarySearch().getEndpoint()(new URL("http://dbpedia.org/sparql")),"dbpedia",null,Collections.<String>emptySet());
+	//			}
+	//		} catch (MalformedURLException e){throw new RuntimeException(e);}
+	//	}
 
 	public void setFastSearch(boolean fastSearch)
 	{
@@ -127,98 +128,129 @@ public class AutoSPARQLSession
 		logger.info("setting fast search to "+fastSearch);
 	}
 
-	public AutoSPARQLSession(SparqlEndpoint endpoint, String solrServerURL, String cacheDir)
+	public void setOxford(boolean oxford)
 	{
-		this.endpoint= new SPARQLEndpointEx(endpoint,endpoint.toString(),null,Collections.<String>emptySet());
-		String dir = cacheDir;
-		try {
-			dir = cacheDir + "/" + URLEncoder.encode(this.endpoint.getURL().toString(), "UTF-8")+ "/select-cache";
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		selectCache = new ExtractionDBCache(dir);
-		try {
-			selectCache.executeSelectQuery(endpoint, "SELECT * WHERE {?s a ?type} LIMIT 1");
-		} catch (Exception e) {
-			logger.error("ERROR", e);
-			e.printStackTrace();
-		}
+		this.oxford = oxford;
+		logger.info("setting oxford to "+oxford);
+	}
 
-		primarySearch = new TBSLSearch(endpoint, cacheDir);
-		secondarySearch = new SolrSearch(solrServerURL);
+	//SparqlprimarySearch().getEndpoint() primarySearch().getEndpoint()URL, String solrServerURL,
+	public AutoSPARQLSession()
+	{	
+//		if(cacheDir==null||cacheDir.isEmpty()) {throw new IllegalArgumentException("cacheDir is empty");}
+//		logger.debug("Creating AutoSPARQLSession with cache dir \""+cacheDir+"\".");
+		//this.cacheDir=cacheDir;
+		//		String cacheDir;
+		//			try{cacheDir=getServletContext().getRealPath("cache");}
+		//			catch(Throwable t) {cacheDir="cache";}		
+
+
+		//if(primarySearch().getEndpoint()URL==null||primarySearch().getEndpoint()URL.getURL()==null) throw new NullPointerException("primarySearch().getEndpoint() is null");		
+		//this.primarySearch().getEndpoint()= new SPARQLprimarySearch().getEndpoint()Ex(primarySearch().getEndpoint(),primarySearch().getEndpoint().toString(),null,Collections.<String>emptySet());
+		//		try {
+		//			dir = cacheDir + "/" + URLEncoder.encode(this.primarySearch().getEndpoint().getURL().toString(), "UTF-8")+ "/select-cache";
+		//		} catch (UnsupportedEncodingException e) {
+		//			e.printStackTrace();
+		//		}
+		// TODO: how can it work everywhere?
+		//dir="/tmp/autosparqlsession-extractiondbcache";
+//		File cacheDirFile = new File(cacheDir); 		
+//		if(!cacheDirFile.exists()) {cacheDirFile.mkdir();}
+//		if(!cacheDirFile.isDirectory()) {throw new RuntimeException("Cache directory path does not denote a directory.");}
+		//dir="/var/lib/tomcat7/webapps/autosparql-lite/cache";		
+		//		try {
+//		String query = "SELECT * WHERE {?s a ?type} LIMIT 1";
+//		logger.info("Testing extraction DB cache with cache dir "+cacheDir+" and primarySearch().getEndpoint() "+primarySearch().getEndpoint().getURL()+" and query "+query);
+//		getCache().executeSelectQuery(primarySearch().getEndpoint(), query);
+		//		} catch (Exception e) {
+		//			logger.error("ERROR", e);
+		//			e.printStackTrace();
+		//		}
+
+		//primarySearch = TBSLSearch.getDBpediaInstance();
+		secondarySearch = new SolrSearch();
 	}
 
 	/** learns new examples and processes them by removing blacklisted properties and choosing the ideal language in case there are multiple candidates 
 	 * with different language tags for the same URI and property*/
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives,Set<String> questionWords)
 	{
-		logger.info("getExamplesByQTL("+positives+","+negatives+","+questionWords+")");
-		//		Cache cache = getCacheManager().getCache("qtl");
-		//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
-		//		{
-		//			Element e;
-		//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
-		//		}
-		QTL qtl = new QTL(endpoint, selectCache);
-		qtl.setExamples(positives, negatives);
-		if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
-		qtl.start();
-		// TODO extract relevant words
-		// behält nur die kanten wo die property mit einem wort oder das objekt ähnlichkeit hat		
-		String query = qtl.getBestSPARQLQuery();
-		// get all triples belonging to the subjects
-		query = query.replace("SELECT ?x0 WHERE {", "SELECT ?x0 ?p ?o WHERE {?x0 ?p ?o. ");
-		query = query.replace("?x0", "?s");
+//		synchronized(selectCache) // necessary?
+//		{
+			logger.info("getExamplesByQTL("+positives+","+negatives+","+questionWords+")");
+			//		Cache cache = getCacheManager().getCache("qtl");
+			//		List<Collection> parameters  = new LinkedList<Collection>(Arrays.asList(new Collection[]{positives,negatives,questionWords}));
+			//		{
+			//			Element e;
+			//			if((e=cache.get(parameters))!=null) {return (SortedSet<Example>)e.getValue();}
+			//		}
+			QTL qtl = new QTL(primarySearch().getEndpoint(), getCache());
+			qtl.setExamples(positives, negatives);
+			if(questionWords!=null) {qtl.addStatementFilter(new QuestionBasedStatementFilter(questionWords));}
+			qtl.start();
+			// TODO extract relevant words
+			// behält nur die kanten wo die property mit einem wort oder das objekt ähnlichkeit hat		
+			String query = qtl.getBestSPARQLQuery();
+			// get all triples belonging to the subjects
+			query = query.replace(" ?x0 WHERE {", " ?x0 ?p ?o WHERE {?x0 ?p ?o. ");
+			query = query.replace("?x0", "?s");
 
-		try
-		{
-			ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));
-			SortedSet<Example> examples = fillExamples(null, rs);
-			//			cache.put(new Element(parameters,examples));
-			//			cache.flush();
-			if(examples.size()>MAX_NUMBER_OF_EXAMPLES) {return new TreeSet<Example>(new LinkedList<Example>(examples).subList(0, MAX_NUMBER_OF_EXAMPLES-1));}
-			return examples;
+			try
+			{
+				ResultSet rs = SparqlQuery.convertJSONtoResultSet(getCache().executeSelectQuery(primarySearch().getEndpoint(), query));
+				SortedSet<Example> examples = fillExamples(null, rs);
+				//			cache.put(new Element(parameters,examples));
+				//			cache.flush();
+				if(examples.size()>MAX_NUMBER_OF_EXAMPLES) {return new TreeSet<Example>(new LinkedList<Example>(examples).subList(0, MAX_NUMBER_OF_EXAMPLES-1));}
+				return examples;
 
 
-			//			Map<String,Example> examples = new HashMap<String,Example>();
-			//			LanguageResolver resolver = new LanguageResolver();
-			//			for(QuerySolution qs=rs.next(); rs.hasNext();qs=rs.next())
-			//			{
-			//				String property = qs.getResource("p").getURI();
-			//				if(BlackList.dbpedia.contains(property)) {continue;}
-			//				String uri = qs.getResource("x0").getURI();
-			//
-			//				Example e=examples.containsKey(uri)?examples.get(uri):new Example(uri);
-			//				examples.put(uri,e);
-			//
-			//				String object = qs.get("o").toString();
-			//
-			//				String oldObject=e.get(property);
-			//				if(oldObject!=null)
-			//				{
-			//					e.set(property, resolver.resolve(oldObject, object));
-			//				}
-			//
-			//				e.set(property,object.toString());
-			//			}
-			//			return new ArrayList<Example>(examples.values());
-		}
-		catch(Exception e)
-		{
-			throw new SPARQLException(e,query,endpoint.toString());
-		}
+				//			Map<String,Example> examples = new HashMap<String,Example>();
+				//			LanguageResolver resolver = new LanguageResolver();
+				//			for(QuerySolution qs=rs.next(); rs.hasNext();qs=rs.next())
+				//			{
+				//				String property = qs.getResource("p").getURI();
+				//				if(BlackList.dbpedia.contains(property)) {continue;}
+				//				String uri = qs.getResource("x0").getURI();
+				//
+				//				Example e=examples.containsKey(uri)?examples.get(uri):new Example(uri);
+				//				examples.put(uri,e);
+				//
+				//				String object = qs.get("o").toString();
+				//
+				//				String oldObject=e.get(property);
+				//				if(oldObject!=null)
+				//				{
+				//					e.set(property, resolver.resolve(oldObject, object));
+				//				}
+				//
+				//				e.set(property,object.toString());
+				//			}
+				//			return new ArrayList<Example>(examples.values());
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				throw new SPARQLException(e,query,primarySearch().getEndpoint().toString());
+			}
+//		}
+}
+
+	private TBSLSearch primarySearch()
+	{
+		return oxford?TBSLSearch.getOxfordInstance():TBSLSearch.getDBpediaInstance();
 	}
 
 	public List<String> getResources(String query)
 	{
 		List<String> resources = new ArrayList<String>();
 		// primary search DBpedia bzw. DBpedia live
-		resources = primarySearch.getResources(query);
+		resources = primarySearch().getResources(query);
 		if (resources.isEmpty())
 		{
 			// fallback: string in solr index hauen und zurückgeben was da
 			// rauskommt
-			List<String> answerType = primarySearch.getLexicalAnswerType();
+			List<String> answerType = primarySearch().getLexicalAnswerType();
 			List<String> types = secondarySearch.getTypes(answerType.get(0));
 
 			for (String type : types)
@@ -238,7 +270,7 @@ public class AutoSPARQLSession
 	/** @param examples the list of existing examples. if null a new one will be created. examples not contained will be created.
 	/** @param rs a resultset whose variables have to be "s", "p" and "o"
 	/** @return the original list if non-null (else a new one) filled with the properties and one object per property from the resultset.*/
-	public static SortedSet<Example> fillExamples(SortedSet<Example> examples, ResultSet rs)
+	private static SortedSet<Example> fillExamples(SortedSet<Example> examples, ResultSet rs)
 	{
 		if(examples==null) {examples = new TreeSet<Example>();}
 		if(!rs.hasNext()) {return new TreeSet<Example>(examples);}
@@ -282,15 +314,16 @@ public class AutoSPARQLSession
 	/** Adds all existing properties for the uris in the examples and one object for each one (depending on the languages)
 	 * @param examples */
 	public void fillExamples(SortedSet<Example> examples)
-	{		
+	{
+		//		synchronized(selectCache) // necessary?
+		//		{
 		if(examples==null) {examples= new TreeSet<Example>();}
 		if(examples.isEmpty()) {System.err.println("Examples are empty.");return;}
 		List<String> uris = new LinkedList<String>();
 		for(Example example: examples)
 		{
-			//	System.out.println("TEST: " + example);
 			uris.add(example.getURI());
-			example.setSameAsLinks(getSameAsLinks(example.getURI()));
+			example.setSameAsLinks(SameAsLinks.getSameAsLinksForShowing(example.getURI()));
 		}
 		StringBuilder sb = new StringBuilder();
 
@@ -298,8 +331,9 @@ public class AutoSPARQLSession
 		for(String uri:uris) {sb.append("?s = <"+DefaultPrefixMapping.INSTANCE.expandPrefix(uri)+">||");}
 		// remove last "||"-substring
 		String query = sb.substring(0,sb.length()-2)+")}";
-		ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache.executeSelectQuery(endpoint, query));
+		ResultSet rs = SparqlQuery.convertJSONtoResultSet(getCache().executeSelectQuery(primarySearch().getEndpoint(), query));
 		fillExamples(examples,rs);
+		//		}
 	}
 
 	public static SortedSet<Example> mapsToExamples(List<Map<String,Object>> maps)
@@ -345,29 +379,32 @@ public class AutoSPARQLSession
 	@SuppressWarnings("unchecked")
 	public SortedSet<Example> getExamples(String query)
 	{
-		Cache cache = getCacheManager().getCache("examples");
-		{try{
+		Cache cache = null;
+		if(useEHCache)
+		{
+			cache = getCacheManager().getCache("examples");
 			Element e=cache.get(cacheKey(query,fastSearch));
-			//System.out.println(e);
-			if(e!=null) {
-				logger.info("cache hit with query \""+query+"\"");
-				getCacheManager().shutdown();
-				return mapsToExamples((List<Map<String,Object>>)e.getValue());}
-			else{logger.info("cache miss with query \""+query+"\"");}
-		}	catch(Exception e) {System.err.println("Error getting cache element.");e.printStackTrace();}
-		}
+			if(e!=null)
+			{
+				logger.info("cache hit with query \""+query+"\"");			
+				getCacheManager().shutdown(); // shutdown to make sure it gets saved to disk (cache.flush() does not always seem to work) 
+				return mapsToExamples((List<Map<String,Object>>)e.getValue());		
+			}
+		}		
+		logger.info(useEHCache?"cache miss with query \""+query+"\"":"EHCache deactivated");
 		SortedSet<Example> examples = null;// = new ArrayList<Example>();
 		//		 primary search DBpedia bzw. DBpedia live
-		if(!fastSearch) {examples = primarySearch.getExamples(query);}
+		if(!fastSearch) {examples = primarySearch().getExamples(query);}
 		if(examples==null||examples.isEmpty())
 		{
+			logger.warn("Primary search failed, using secondary search.");
 			//		//			 fallback: string in solr index hauen und zurückgeben was da
 			//		//			 rauskommt
 			//					List<String> answerType = primarySearch.getLexicalAnswerType();
 			//					if(answerType==null)
 			//					{
-			examples = secondarySearch.getExamples(query);
-			lastQuery=query;
+			examples = secondarySearch.getExamples(query);						 
+			//lastQuery=query;
 		}
 		//			else
 		//			{
@@ -382,16 +419,24 @@ public class AutoSPARQLSession
 		//				}
 		//			}
 		//		}
-		fillExamples(examples);
-		if(examples.isEmpty()) {logger.warn("AutoSPARQLSession found no examples for query \""+query+"\". :-(");}
-		cache.put(new Element(cacheKey(query,fastSearch),examplesToMaps(examples)));
-		cache.flush();
-		getCacheManager().shutdown();
+		if(examples==null) {logger.warn("Secondary search failed as well. Found no examples for query \""+query+"\". :-(");}
+		else
+		{
+			fillExamples(examples);
+		}		
+		if(useEHCache)
+		{
+			cache.put(new Element(cacheKey(query,fastSearch),examplesToMaps(examples)));
+			cache.flush();
+			getCacheManager().shutdown(); // TODO: is this correct or does it obstruct further cachemanager uses?
+		}
 		return examples;
 	}
 
 	public Map<String, String> getProperties(String query) throws AutoSPARQLException
 	{
+		//		synchronized(selectCache) // necessary?
+		//		{
 		property2LabelMap = new TreeMap<String, String>();
 
 		String queryTriples = query.substring(18, query.length() - 1);
@@ -401,8 +446,8 @@ public class AutoSPARQLSession
 				+ "> ?label. FILTER(LANGMATCHES(LANG(?label), 'en'))} "
 				+ "LIMIT 1000";
 
-		ResultSet rs = SparqlQuery.convertJSONtoResultSet(selectCache
-				.executeSelectQuery(endpoint, newQuery));
+		ResultSet rs = SparqlQuery.convertJSONtoResultSet(getCache()
+				.executeSelectQuery(primarySearch().getEndpoint(), newQuery));
 		QuerySolution qs;
 		while (rs.hasNext())
 		{
@@ -423,32 +468,7 @@ public class AutoSPARQLSession
 		property2LabelMap.put(RDFS.label.getURI(), "label");
 
 		return property2LabelMap;
-	}
+		//		}
+	}	
 
-	public static List<String> getSameAsLinks(String resourceURI) {
-		List<String> sameAsLinks = new ArrayList<String>();
-		try {
-			String requestURI = sameAsURI + URLEncoder.encode(resourceURI, "UTF-8");
-			URLConnection conn = new URL(requestURI).openConnection();
-			Model model = ModelFactory.createDefaultModel();
-			model.read(conn.getInputStream(), null);
-			String url;
-			Set<String> used = new HashSet<String>();
-			for(Statement st : model.listStatements(null, OWL.sameAs, (RDFNode)null).toList()){
-				url = st.getObject().asResource().getURI();
-				String prefix;
-				if((prefix = SameAsWhiteList.isAllowed(url)) != null && used.add(prefix)){
-					sameAsLinks.add(url);
-				}
-			}
-			sameAsLinks.add(resourceURI.replace("http://dbpedia.org/resource/", "http://en.wikipedia.org/wiki/"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return sameAsLinks;
-	}
 }

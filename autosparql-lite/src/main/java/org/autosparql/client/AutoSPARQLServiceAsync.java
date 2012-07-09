@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
-import org.autosparql.client.exception.AutoSPARQLException;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
 
@@ -18,7 +17,10 @@ public interface AutoSPARQLServiceAsync
 
 	void getExamplesByQTL(List<String> positives, List<String> negatives,AsyncCallback<SortedSet<Example>> callback);
 	void setFastSearch(Boolean fastSearch, AsyncCallback<Void> callback);
-	void setUseDBpediaLive(Boolean useDBpediaLive, AsyncCallback<Void> callback);
+//	void setUseDBpediaLive(Boolean useDBpediaLive, AsyncCallback<Void> callback);
 	
 	void getSameAsLinks(String resourceURI, AsyncCallback<List<String>> callback);
+	//void runningClients(AsyncCallback<Integer> callback);
+	void hitsAndNumberOfRunningClients(AsyncCallback<long[]> callback);
+	void setOxford(boolean oxford, AsyncCallback<Void> callback);
 }

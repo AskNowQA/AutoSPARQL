@@ -506,8 +506,7 @@ public class DefaultPrefixMapping extends PrefixMappingImpl
 
 	DefaultPrefixMapping()
 	{
-		super();
-		System.out.println(PREFIX_ARRAY);
+		super();		
 		for(int i=0;i<PREFIX_ARRAY.length;i++)
 		{
 			set(PREFIX_ARRAY[i][0], PREFIX_ARRAY[i][1]);
