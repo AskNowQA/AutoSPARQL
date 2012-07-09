@@ -15,7 +15,7 @@
 		</endpoint>
 		<index>
 			<solr>
-				<url>http://dbpedia.aksw.org:8080/solr</url>
+				<url>http://dbpedia.aksw.org:8080/solr/dbpedia_resources</url>
 				<searchField></searchField>
 			</solr>
 		</index>
@@ -36,7 +36,7 @@
 		</endpoint>
 		<index>
 			<solr>
-				<url>http://dbpedia.aksw.org:8080/solr</url>
+				<url>http://dbpedia.aksw.org:8080/solr/dbpedia_resources</url>
 				<searchField></searchField>
 			</solr>
 		</index>
