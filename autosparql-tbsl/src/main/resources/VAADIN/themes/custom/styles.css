@@ -91,3 +91,16 @@ a.green.button {
 .footer{
 	
 }
+
+.v-nativebutton-borderless {
+    border: none;
+    background: transparent;
+}
+
+.v-nativebutton-borderless:active {
+    border: none;
+}
+
+.v-nativebutton-borderless:hover {
+     border: none;
+}

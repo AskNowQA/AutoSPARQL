@@ -2,6 +2,7 @@ package org.autosparql.tbsl.widget;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -32,6 +33,7 @@ import com.invient.vaadin.charts.InvientChartsConfig.AxisBase.AxisTitle;
 import com.invient.vaadin.charts.InvientChartsConfig.AxisBase.AxisTitleAlign;
 import com.invient.vaadin.charts.InvientChartsConfig.BarConfig;
 import com.invient.vaadin.charts.InvientChartsConfig.CategoryAxis;
+import com.invient.vaadin.charts.InvientChartsConfig.ColumnConfig;
 import com.invient.vaadin.charts.InvientChartsConfig.DataLabel;
 import com.invient.vaadin.charts.InvientChartsConfig.DateTimeAxis;
 import com.invient.vaadin.charts.InvientChartsConfig.GeneralChartConfig.Spacing;
@@ -46,7 +48,9 @@ import com.invient.vaadin.charts.InvientChartsConfig.SeriesState;
 import com.invient.vaadin.charts.InvientChartsConfig.SymbolMarker;
 import com.invient.vaadin.charts.InvientChartsConfig.VertAlign;
 import com.invient.vaadin.charts.InvientChartsConfig.XAxis;
+import com.invient.vaadin.charts.InvientChartsConfig.XAxisDataLabel;
 import com.invient.vaadin.charts.InvientChartsConfig.YAxis;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -54,38 +58,73 @@ public class Charts {
 	
 	private static SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
 	
-	public static Window getChart(String question, String propertyURI, XSDDatatype datatype, Map<String, Set<Object>> data){
+	private static List<String> barChartProperties = Arrays.asList(new String[]{});
+	private static List<String> columnChartProperties = Arrays.asList(new String[]{"http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice"});
+	private static List<String> timeSeriesChartProperties = Arrays.asList(new String[]{});
+	
+	public static Window getChart(String question, String propertyURI, XSDDatatype datatype, Map<String, String> uri2Label, Map<String, Set<Object>> data){
 		Window wnd = new Window();
 		wnd.setWidth("800px");
 		wnd.setHeight("800px");
 		
 		VerticalLayout mainLayout = new VerticalLayout();
-		mainLayout.setSizeFull();
-		wnd.setContent(mainLayout);
+		mainLayout.setSizeUndefined();
+//		wnd.setContent(mainLayout);
+		
+		Panel p = new Panel();
+		p.setSizeFull();
+		p.setContent(mainLayout);
+		wnd.setContent(p);
 		
 		InvientChartsConfig chartConfig = new InvientChartsConfig();
 		String propertyLabel = Labels.getLabel(propertyURI);
 		String title = propertyLabel + " for " + "\"" + question + "\"";
 		chartConfig.getTitle().setText(title);
 		
-		InvientCharts chart = createChart(chartConfig, propertyLabel, datatype, data);
-		chart.setSizeFull();
-		mainLayout.addComponent(chart);
-		
-		return wnd;
-	}
-	
-	private static InvientCharts createChart(InvientChartsConfig chartConfig, String property, XSDDatatype datatype, Map<String, Set<Object>> data){
-		if(datatype == XSDDatatype.XSDdouble || datatype == XSDDatatype.XSDint 
-				|| datatype == XSDDatatype.XSDinteger || datatype == XSDDatatype.XSDpositiveInteger ){
-			return createBarChart(chartConfig, property, data);
-		} else if(datatype == XSDDatatype.XSDdate || datatype == XSDDatatype.XSDdateTime){
-			return createTimeChart(chartConfig, property, data);
+		InvientCharts chart = createChart(chartConfig, propertyURI, propertyLabel, datatype, uri2Label, data);
+		if(chart != null){
+//			chart.setSizeFull();
+			chart.setWidth("2000px");
+			mainLayout.addComponent(chart);
+			return wnd;
 		}
-		throw new RuntimeException("Datatype " + datatype + " currently not supported.");
+		return null;
 	}
 	
-	private static InvientCharts createTimeChart(InvientChartsConfig chartConfig, String property, Map<String, Set<Object>> data){
+	private static InvientCharts createChart(InvientChartsConfig chartConfig, String propertyURI, String propertyLabel, XSDDatatype datatype, Map<String, String> uri2Label, Map<String, Set<Object>> data){
+		InvientCharts chart = getChartByPropertyURI(chartConfig, propertyURI, propertyLabel, datatype, uri2Label, data);
+		if(chart == null){
+			chart = getChartByDatatype(chartConfig, propertyURI, propertyLabel, datatype, uri2Label, data);
+		}
+		return chart;
+	}
+	
+	private static InvientCharts getChartByPropertyURI(InvientChartsConfig chartConfig, String propertyURI, String propertyLabel, XSDDatatype datatype, Map<String, String> uri2Label, Map<String, Set<Object>> data){
+		if(barChartProperties.contains(propertyURI)){
+			return createBarChart(chartConfig, propertyLabel, uri2Label, data);
+		} else if(columnChartProperties.contains(propertyURI)){
+			return showColumnWithRotatedLabels(chartConfig, propertyLabel, uri2Label, data);
+		} else if(timeSeriesChartProperties.contains(propertyURI)){
+			return createTimeChart(chartConfig, propertyLabel, uri2Label, data);
+		}
+		return null;
+	}
+	
+	private static InvientCharts getChartByDatatype(InvientChartsConfig chartConfig, String propertyURI, String propertyLabel, XSDDatatype datatype, Map<String, String> uri2Label, Map<String, Set<Object>> data){
+		if(datatype != null){
+			if(datatype == XSDDatatype.XSDdouble || datatype == XSDDatatype.XSDint 
+					|| datatype == XSDDatatype.XSDinteger || datatype == XSDDatatype.XSDpositiveInteger ){
+				return createBarChart(chartConfig, propertyLabel, uri2Label, data);
+			} else if(datatype == XSDDatatype.XSDdate || datatype == XSDDatatype.XSDdateTime){
+				return createTimeChart(chartConfig, propertyLabel, uri2Label, data);
+			}
+			throw new RuntimeException("Datatype " + datatype + " currently not supported.");
+		}
+		return null;
+	}
+		
+	
+	private static InvientCharts createTimeChart(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
         chartConfig.getGeneralChartConfig().setZoomType(ZoomType.X);
         chartConfig.getGeneralChartConfig().setSpacing(new Spacing());
         chartConfig.getGeneralChartConfig().getSpacing().setRight(20);
@@ -150,29 +189,85 @@ public class Charts {
         return chart;
 	}
 	
-	private static LinkedHashSet<DateTimePoint> getTimePoints(Series series, Map<String, Set<Object>> data){
-		LinkedHashSet<DateTimePoint> points = new LinkedHashSet<DateTimePoint>();
-		for(Entry<String, Set<Object>> entry : data.entrySet()){
-			String value = (String) entry.getValue().iterator().next();
-			try {
-				Date date = df.parse(value);
-				DateTimePoint p = new DateTimePoint(series, date, 1.0);
-				p.setName(entry.getKey());
-				points.add(p);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-		return points;
+	private static InvientCharts createColumnChart(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
+		chartConfig.getGeneralChartConfig().setType(SeriesType.COLUMN);
+
+        SortedMap<String, Set<Object>> sortedData = new TreeMap<String, Set<Object>>(data);
+        List<String> categories = new ArrayList<String>();
+        String label;
+        for(String uri : sortedData.keySet()){
+        	label = uri2Label.get(uri);
+        	if(label == null){
+        		label = Labels.getLabelForResource(uri);
+        	}
+        	categories.add(label);
+        }
+        
+        CategoryAxis xAxisMain = new CategoryAxis();
+        xAxisMain.setCategories(categories);
+        xAxisMain.setLabel(new XAxisDataLabel());
+        xAxisMain.getLabel().setRotation(-90);
+        LinkedHashSet<XAxis> xAxesSet = new LinkedHashSet<InvientChartsConfig.XAxis>();
+        xAxesSet.add(xAxisMain);
+        chartConfig.setXAxes(xAxesSet);
+
+        NumberYAxis yAxis = new NumberYAxis();
+        yAxis.setMin(0.0);
+        yAxis.setTitle(new AxisTitle(property));
+        yAxis.getTitle().setAlign(AxisTitleAlign.HIGH);
+        LinkedHashSet<YAxis> yAxesSet = new LinkedHashSet<InvientChartsConfig.YAxis>();
+        yAxesSet.add(yAxis);
+        chartConfig.setYAxes(yAxesSet);
+
+//        chartConfig
+//                .getTooltip()
+//                .setFormatterJsFunc(
+//                        "function() {"
+//                                + " return '' + this.series.name +': '+ this.y +' millions';"
+//                                + "}");
+
+        BarConfig barCfg = new BarConfig();
+        barCfg.setDataLabel(new DataLabel());
+        chartConfig.addSeriesConfig(barCfg);
+
+        Legend legend = new Legend();
+        legend.setLayout(Layout.VERTICAL);
+        legend.setPosition(new Position());
+        legend.getPosition().setAlign(HorzAlign.RIGHT);
+        legend.getPosition().setVertAlign(VertAlign.TOP);
+        legend.getPosition().setX(-100);
+        legend.getPosition().setY(100);
+        legend.setFloating(true);
+        legend.setBorderWidth(1);
+        legend.setBackgroundColor(new RGB(255, 255, 255));
+        legend.setShadow(true);
+//        chartConfig.setLegend(legend);
+
+        chartConfig.getCredit().setEnabled(false);
+
+        InvientCharts chart = new InvientCharts(chartConfig);
+
+        XYSeries seriesData = new XYSeries(property);
+        seriesData.setSeriesPoints(getPoints(seriesData, sortedData));
+        chart.addSeries(seriesData);
+
+        
+        return chart;
 	}
 	
-	private static InvientCharts createBarChart(InvientChartsConfig chartConfig, String property, Map<String, Set<Object>> data){
+	
+	private static InvientCharts createBarChart(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
         chartConfig.getGeneralChartConfig().setType(SeriesType.BAR);
 
         SortedMap<String, Set<Object>> sortedData = new TreeMap<String, Set<Object>>(data);
         List<String> categories = new ArrayList<String>();
+        String label;
         for(String uri : sortedData.keySet()){
-        	categories.add(Labels.getLabelForResource(uri));
+        	label = uri2Label.get(uri);
+        	if(label == null){
+        		label = Labels.getLabelForResource(uri);
+        	}
+        	categories.add(label);
         }
         
         CategoryAxis xAxisMain = new CategoryAxis();
@@ -225,9 +320,70 @@ public class Charts {
         return chart;
 	}
 	
-//	private static InvientCharts createPieChart(Map<String, List<Object>> data){
-//		
-//	}
+	private static InvientCharts showColumnWithRotatedLabels(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
+       
+        chartConfig.getGeneralChartConfig().setType(SeriesType.COLUMN);
+
+        chartConfig.getTitle().setText("World\'s largest cities per 2008");
+    
+        SortedMap<String, Set<Object>> sortedData = new TreeMap<String, Set<Object>>(data);
+        List<String> categories = new ArrayList<String>();
+        String label;
+        for(String uri : sortedData.keySet()){
+        	label = uri2Label.get(uri);
+        	if(label == null){
+        		label = Labels.getLabelForResource(uri);
+        	}
+        	categories.add(label);
+        }
+        
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setCategories(categories);
+        xAxis.setLabel(new XAxisDataLabel());
+        xAxis.getLabel().setRotation(-45);
+        xAxis.getLabel().setAlign(HorzAlign.RIGHT);
+        xAxis.getLabel()
+                .setStyle("{ font: 'normal 13px Verdana, sans-serif' }");
+        LinkedHashSet<XAxis> xAxesSet = new LinkedHashSet<InvientChartsConfig.XAxis>();
+        xAxesSet.add(xAxis);
+        chartConfig.setXAxes(xAxesSet);
+
+        NumberYAxis yAxis = new NumberYAxis();
+        yAxis.setMin(0.0);
+        yAxis.setTitle(new AxisTitle("Population (millions)"));
+        LinkedHashSet<YAxis> yAxesSet = new LinkedHashSet<InvientChartsConfig.YAxis>();
+        yAxesSet.add(yAxis);
+        chartConfig.setYAxes(yAxesSet);
+
+        chartConfig.setLegend(new Legend(false));
+
+        chartConfig
+                .getTooltip()
+                .setFormatterJsFunc(
+                        "function() {"
+                                + " return '<b>'+ this.x +'</b><br/>'+ 'Population in 2008: '+ $wnd.Highcharts.numberFormat(this.y, 1) + "
+                                + " ' millions' " + "}");
+
+        InvientCharts chart = new InvientCharts(chartConfig);
+
+        ColumnConfig colCfg = new ColumnConfig();
+        colCfg.setDataLabel(new DataLabel());
+        colCfg.getDataLabel().setRotation(-90);
+        colCfg.getDataLabel().setAlign(HorzAlign.RIGHT);
+        colCfg.getDataLabel().setX(-3);
+        colCfg.getDataLabel().setY(10);
+        colCfg.getDataLabel().setColor(new RGB(255, 255, 255));
+        colCfg.getDataLabel().setFormatterJsFunc(
+                "function() {" + " return this.y; " + "}");
+        colCfg.getDataLabel().setStyle(
+                " { font: 'normal 13px Verdana, sans-serif' } ");
+        XYSeries seriesData = new XYSeries("Population", colCfg);
+        seriesData.setSeriesPoints(getPoints(seriesData, data));
+
+        chart.addSeries(seriesData);
+
+       return chart;
+    }
 	
     
     private static LinkedHashSet<DecimalPoint> getPoints(Series series,
@@ -251,8 +407,25 @@ public class Charts {
 				points.add(new DecimalPoint(series, doubleValue));
 			}
 		}
+		System.out.println(points.size());
 		return points;
     }
+    
+    private static LinkedHashSet<DateTimePoint> getTimePoints(Series series, Map<String, Set<Object>> data){
+		LinkedHashSet<DateTimePoint> points = new LinkedHashSet<DateTimePoint>();
+		for(Entry<String, Set<Object>> entry : data.entrySet()){
+			String value = (String) entry.getValue().iterator().next();
+			try {
+				Date date = df.parse(value);
+				DateTimePoint p = new DateTimePoint(series, date, 1.0);
+				p.setName(entry.getKey());
+				points.add(p);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return points;
+	}
 	
 	
 

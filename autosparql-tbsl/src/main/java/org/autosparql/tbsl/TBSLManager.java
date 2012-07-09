@@ -14,11 +14,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
 import org.apache.log4j.Level;
@@ -258,6 +263,10 @@ public class TBSLManager {
 		this.progressListener = progressListener;
 	}
 	
+	public Map<String, BasicResultItem> getUri2Items() {
+		return uri2Item;
+	}
+	
 	public String getNLRepresentation(String sparqlQueryString){
 		return translateSPARQLQuery(sparqlQueryString);
 	}
@@ -472,6 +481,7 @@ public class TBSLManager {
 			if(learnedSPARQLQuery != null){
 				String translatedQuery = getNLRepresentation(learnedSPARQLQuery);
 				translatedQuery = translatedQuery.replace("This query retrieves", "").replace("distinct", "").replace(".", "").trim();
+				translatedQuery = normalizeVarNames(translatedQuery);
 				message("Found answer for \"" + translatedQuery + "\". Loading result...");
 				Query q = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
 				if(!q.hasGroupBy()){
@@ -614,6 +624,17 @@ public class TBSLManager {
 			
 			uri2Item.put(uri, item);
 			
+		}
+		if(currentExtendedKnowledgebase.getInfoBoxClass() == OxfordInfoLabel.class){
+			Map<String, Set<Object>> uri2Values = new HashMap<String, Set<Object>>();
+			for(BasicResultItem item : result){
+				String uri = item.getUri();
+				Double price = (Double) item.getData().get("price");
+				if(price != null){
+					uri2Values.put(uri, Collections.<Object>singleton(price));
+				}
+			}
+			property2URI2Values.put("http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice", uri2Values);
 		}
 		return result;
 	}
@@ -884,23 +905,25 @@ public class TBSLManager {
 			} 
 		} 
 		//infer datatype by sample values
-		Set<Object> values = property2URI2Values.get(propertyURI).entrySet().iterator().next().getValue();
-		Object value = values.iterator().next();
-		if(value instanceof Double){
-			return XSDDatatype.XSDdouble;
-		} else if(value instanceof Integer){
-			return XSDDatatype.XSDinteger;
-		} else if(value instanceof String){
-			try {
-				Double.parseDouble((String) value);
+		if(property2URI2Values.containsKey(propertyURI)){
+			Set<Object> values = property2URI2Values.get(propertyURI).entrySet().iterator().next().getValue();
+			Object value = values.iterator().next();
+			if(value instanceof Double){
 				return XSDDatatype.XSDdouble;
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
+			} else if(value instanceof Integer){
+				return XSDDatatype.XSDinteger;
+			} else if(value instanceof String){
 				try {
-					Integer.parseInt((String) value);
-					return XSDDatatype.XSDinteger;
-				} catch (NumberFormatException e2) {
+					Double.parseDouble((String) value);
+					return XSDDatatype.XSDdouble;
+				} catch (NumberFormatException e) {
 					e.printStackTrace();
+					try {
+						Integer.parseInt((String) value);
+						return XSDDatatype.XSDinteger;
+					} catch (NumberFormatException e2) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -1049,18 +1072,82 @@ public class TBSLManager {
         return entries;
 	}
 	
+	public static Query normalizeVarNames(Query query){
+		Query copy = QueryFactory.create(query);
+		
+		
+		List<String> candidates = new LinkedList<String>(Arrays.asList(new String[]{"x", "y", "z"}));
+		//find all vars of form ?LetterNumber
+		SortedSet<String> vars = new TreeSet<String>();
+		String queryString = query.toString();
+		System.out.println(queryString);
+		String regex = "\\?[A-Za-z][0-9]+\\s";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(queryString);
+		while (matcher.find()) {
+			vars.add(matcher.group().trim());
+		}
+		System.out.println(vars);
+		int cnt = 0;
+		for(String var : vars){
+			String replacement;
+			if(!candidates.isEmpty()){
+				replacement = candidates.remove(0);
+			} else {
+				replacement = "x" + cnt++;
+			}
+			queryString = queryString.replace(var, "?" + replacement);
+		}
+		System.out.println(queryString);
+		
+		
+		return copy;
+	}
+	
+	private String normalizeVarNames(String query){
+		
+		
+		List<String> candidates = new LinkedList<String>(Arrays.asList(new String[]{"x", "y", "z"}));
+		//find all vars of form ?LetterNumber
+		SortedSet<String> vars = new TreeSet<String>();
+		String regex = "\\?[A-Za-z][0-9]+\\s";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(query);
+		while (matcher.find()) {
+			vars.add(matcher.group().trim());
+		}
+		System.out.println(vars);
+		int cnt = 0;
+		for(String var : vars){
+			String replacement;
+			if(!candidates.isEmpty()){
+				replacement = candidates.remove(0);
+			} else {
+				replacement = "x" + cnt++;
+			}
+			query = query.replace(var, "?" + replacement);
+		}
+		System.out.println(query);
+		
+		
+		return query;
+	}
+	
 	public static void main(String[] args) {
-		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
-		TBSLManager man = new TBSLManager();
-		man.init();
-		man.setKnowledgebase(man.getKnowledgebases().get(1));
-		SelectAnswer a = (SelectAnswer) man.answerQuestion("Give me all films starring Brad Pitt or starring Julia Roberts");
-		List<String> p = new ArrayList<String>();
-		p.add(a.getItems().get(1).getUri());
-		p.add(a.getItems().get(2).getUri());
-		p.add(a.getItems().get(0).getUri());
-		List<String> n = new ArrayList<String>();
-		man.refine(p, n);
+		Query q = QueryFactory.create("SELECT ?x0 WHERE {?x0 a ?type. ?type a ?y1. ?x0 <http://test.org/t> ?x1}");
+		normalizeVarNames(q);
+//		
+//		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
+//		TBSLManager man = new TBSLManager();
+//		man.init();
+//		man.setKnowledgebase(man.getKnowledgebases().get(1));
+//		SelectAnswer a = (SelectAnswer) man.answerQuestion("Give me all soccer clubs in Premier League.");
+//		List<String> p = new ArrayList<String>();
+//		p.add(a.getItems().get(1).getUri());
+//		p.add(a.getItems().get(2).getUri());
+//		p.add(a.getItems().get(0).getUri());
+//		List<String> n = new ArrayList<String>();
+//		man.refine(p, n);
 	}
 
 }

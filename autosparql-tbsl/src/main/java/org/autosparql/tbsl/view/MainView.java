@@ -1,12 +1,10 @@
 package org.autosparql.tbsl.view;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,10 +35,9 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractSelect.Filtering;
@@ -59,10 +56,10 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Table.HeaderClickEvent;
-import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.CloseEvent;
 
 public class MainView extends VerticalLayout implements ViewContainer, TBSLProgressListener{
 	
@@ -657,6 +654,31 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		pl.setClosable(resultTable, false);
 		pl.setCollapsible(resultTable, false);
 		pl.setSizeFull();
+		
+		HorizontalLayout header = new HorizontalLayout();
+		header.setSizeUndefined();
+        header.setSpacing(true);
+        pl.setHeaderComponent(resultTable, header);
+		
+        List<String> existingProperties = new ArrayList<String>(prominentProperties);
+        existingProperties.addAll(additionalProperties.keySet());
+        if(canShowMap(existingProperties)){
+        	NativeButton showMapButton = new NativeButton();
+    		showMapButton.addStyleName("borderless");
+    		Resource icon = new ThemeResource("images/map2.png");
+    		showMapButton.setIcon(icon);
+    		showMapButton.setDescription("Show in map.");
+    		showMapButton.setHeight("100%");
+    		showMapButton.addListener(new Button.ClickListener() {
+    			
+    			@Override
+    			public void buttonClick(ClickEvent event) {
+    				onShowMap();
+    			}
+    		});
+    		header.addComponent(showMapButton);
+        }
+		
 		if(!additionalProperties.isEmpty()){
 			Label l = new Label("Show also ");
 			l.setHeight("100%");
@@ -685,13 +707,10 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 				}
 			});
 
-			HorizontalLayout header = new HorizontalLayout();
-			header.setSizeUndefined();
 			header.addComponent(l);
 	        header.addComponent(propertySelector);
 	        header.setSpacing(true);
 	        header.setComponentAlignment(propertySelector, Alignment.MIDDLE_LEFT);
-	        pl.setHeaderComponent(resultTable, header);
 		} else if(UserSession.getManager().getKnowledgebases().indexOf(UserSession.getManager().getCurrentExtendedKnowledgebase()) == 0){
 			Label l = new Label("Sort by ");
 			l.setHeight("100%");
@@ -712,14 +731,24 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 					resultTable.sort(new Object[]{sortProp.getId()}, new boolean[]{sortProp.isAscending()});
 				}
 			});
+			
+			NativeButton showDiagramButton = new NativeButton();
+			showDiagramButton.addStyleName("borderless");
+			showDiagramButton.setIcon(new ThemeResource("images/diagram.png"));
+			showDiagramButton.setDescription("Visualize price.");
+			showDiagramButton.addListener(new Button.ClickListener() {
+				
+				@Override
+				public void buttonClick(ClickEvent event) {
+					onShowChart("http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice");
+				}
+			});
 
-			HorizontalLayout header = new HorizontalLayout();
-			header.setSizeUndefined();
+			header.addComponent(showDiagramButton);
 			header.addComponent(l);
 	        header.addComponent(sortSelector);
 	        header.setSpacing(true);
 	        header.setComponentAlignment(sortSelector, Alignment.MIDDLE_LEFT);
-	        pl.setHeaderComponent(resultTable, header);
 		}
 		
 		resultTable.addListener(new Table.HeaderClickListener() {
@@ -734,14 +763,49 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		resultHolderPanel.addComponent(pl);
 	}
 	
-	private void onShowChart(String propertyURI){
+	private boolean canShowMap(List<String> existingProperties){
+		return 	UserSession.getManager().getKnowledgebases().indexOf(UserSession.getManager().getCurrentExtendedKnowledgebase()) == 0 
+				||
+				(existingProperties.contains("http://www.w3.org/2003/01/geo/wgs84_pos#lat") && existingProperties.contains("http://www.w3.org/2003/01/geo/wgs84_pos#long"));
+	}
+	
+	private void onShowMap(){
+		String url = "http://browser.linkedgeodata.org";
+		Embedded e = new Embedded("Linked Geo Data View", new ExternalResource(url));
+        e.setAlternateText("Linked Geo Data View");
+        e.setType(Embedded.TYPE_BROWSER);
+        e.setSizeFull();
+        
+        final Window w = new Window();
+        VerticalLayout mainLayout = new VerticalLayout();
+        mainLayout.setSizeFull();
+        w.setContent(mainLayout);
+        w.setHeight("800px");
+        w.setWidth("800px");
+        mainLayout.addComponent(e);
+        w.addListener(new Window.CloseListener() {
+
+			@Override
+			public void windowClose(CloseEvent e) {
+				MainView.this.getApplication().getMainWindow().removeWindow(w);
+			}
+		});
+		getApplication().getMainWindow().addWindow(w);
+        
+	}
+	
+	private void onShowChart(String propertyURI) {
 		Map<String, Set<Object>> data = UserSession.getManager().getDataForProperty(propertyURI);
 		XSDDatatype datatype = UserSession.getManager().getDatatype(propertyURI);
-		System.out.println(datatype);
-		if(datatype != null){
-			final Window w = Charts.getChart(UserSession.getManager().getCurrentQuestion(), propertyURI, datatype, data);
+		Map<String, String> uri2Label = new HashMap<String, String>();
+		for(Entry<String, BasicResultItem> entry : UserSession.getManager().getUri2Items().entrySet()){
+			uri2Label.put(entry.getKey(), entry.getValue().getLabel());
+		}
+		final Window w = Charts.getChart(UserSession.getManager().getCurrentQuestion(),
+				propertyURI, datatype, uri2Label, data);
+		if(w != null){
 			w.addListener(new Window.CloseListener() {
-				
+
 				@Override
 				public void windowClose(CloseEvent e) {
 					MainView.this.getApplication().getMainWindow().removeWindow(w);
@@ -749,7 +813,8 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 			});
 			getApplication().getMainWindow().addWindow(w);
 		}
-		
+	
+
 	}
 	
 	private void showAnswer(Answer answer){
