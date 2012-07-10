@@ -48,8 +48,8 @@ public class OxfordPriceChartWindow extends Window{
 	private InvientCharts visibleChart;
 
 	public OxfordPriceChartWindow(String question, String propertyURI, final Map<String, String> uri2Label, final Map<String, Set<Object>> data) {
-		setWidth("800px");
-		setHeight("800px");
+		setWidth("900px");
+		setHeight("900px");
 		
 		final InvientChartsConfig chartConfig = new InvientChartsConfig();
 		final String propertyLabel = Labels.getLabel(propertyURI);

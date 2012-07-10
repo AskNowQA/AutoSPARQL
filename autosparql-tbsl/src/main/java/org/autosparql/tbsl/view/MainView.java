@@ -666,9 +666,9 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
         if(canShowMap(existingProperties)){
         	NativeButton showMapButton = new NativeButton();
     		showMapButton.addStyleName("borderless");
-    		showMapButton.addStyleName("large");
+    		showMapButton.addStyleName("map-button");
     		Resource icon = new ThemeResource("images/map2.png");
-    		showMapButton.setIcon(icon);
+//    		showMapButton.setIcon(icon);
     		showMapButton.setDescription("Show in map.");
     		showMapButton.setHeight("100%");
     		showMapButton.addListener(new Button.ClickListener() {
@@ -736,8 +736,9 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 			
 			NativeButton showDiagramButton = new NativeButton();
 			showDiagramButton.addStyleName("borderless");
-			showDiagramButton.addStyleName("large");
-			showDiagramButton.setIcon(new ThemeResource("images/diagram.png"));
+			showDiagramButton.setHeight("100%");
+			showDiagramButton.addStyleName("diagram-button");
+//			showDiagramButton.setIcon(new ThemeResource("images/diagram.png"));
 			showDiagramButton.setDescription("Visualize price.");
 			showDiagramButton.addListener(new Button.ClickListener() {
 				

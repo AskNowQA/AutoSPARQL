@@ -71,8 +71,8 @@ public class Charts {
 	
 	public static Window getChart(String question, String propertyURI, XSDDatatype datatype, Map<String, String> uri2Label, Map<String, Set<Object>> data){
 		Window wnd = new Window();
-		wnd.setWidth("800px");
-		wnd.setHeight("800px");
+		wnd.setWidth("900px");
+		wnd.setHeight("900px");
 		
 		VerticalLayout mainLayout = new VerticalLayout();
 		mainLayout.setSizeUndefined();

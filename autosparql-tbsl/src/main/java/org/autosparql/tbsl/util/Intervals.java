@@ -28,12 +28,13 @@ public class Intervals {
 			}
 		}		
 		//create intervals
-		double intervalSize = max / nrOfIntervals;System.out.println(intervalSize);
+		double intervalSize = findNiceUpperBound(max) / nrOfIntervals;
 		Interval[] intervals = new Interval[nrOfIntervals];
 		double lowerBoundary = Double.MIN_VALUE;
 		for(int i = 0; i < nrOfIntervals; i++){
-			double upperBoundary = intervalSize * (i+1);System.out.println(lowerBoundary + "-" + upperBoundary);
+			double upperBoundary = intervalSize * (i+1);
 			intervals[i] = new Interval(lowerBoundary, upperBoundary);
+			lowerBoundary = upperBoundary;
 		}
 		//aggregate data by intervals
 		for(Entry<String, Double> entry : data.entrySet()){
@@ -45,7 +46,6 @@ public class Intervals {
 		}
 		return intervals;
 	}
-	
 	
 	public static <T extends Number> Map<String, T> sampleNumbers(Map<String, Set<T>> data){
 		Map<String, T> sample = new HashMap<String, T>();
@@ -61,6 +61,22 @@ public class Intervals {
 			sample.put(entry.getKey(), entry.getValue().iterator().next());
 		}
 		return sample;
+	}
+	
+	private static double findNiceUpperBound(double value){
+		int exponent = 0;
+		double base = 10;
+		while(true){
+			double potenz = Math.pow(base, exponent);
+			if(potenz/value >= 1){
+				return Math.ceil(value / potenz) * potenz;
+			}
+			exponent++;
+		}
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(findNiceUpperBound(880));
 	}
 
 }
