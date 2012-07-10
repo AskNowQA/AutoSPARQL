@@ -1,11 +1,5 @@
 package org.autosparql.tbsl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -26,18 +20,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.autosparql.tbsl.model.Answer;
 import org.autosparql.tbsl.model.BasicResultItem;
 import org.autosparql.tbsl.model.ExtendedKnowledgebase;
-import org.autosparql.tbsl.model.InfoTemplate;
 import org.autosparql.tbsl.model.Refinement;
 import org.autosparql.tbsl.model.SelectAnswer;
 import org.autosparql.tbsl.util.FallbackIndex;
-import org.autosparql.tbsl.util.LuceneIndex;
-import org.autosparql.tbsl.util.SolrIndex;
-import org.autosparql.tbsl.widget.DBpediaInfoLabel;
 import org.autosparql.tbsl.widget.OxfordInfoLabel;
 import org.autosparql.tbsl.widget.TBSLProgressListener;
 import org.dllearner.algorithm.qtl.QTL;
@@ -48,26 +37,11 @@ import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter2;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
-import org.dllearner.algorithm.tbsl.nlp.ApachePartOfSpeechTagger;
-import org.dllearner.algorithm.tbsl.nlp.PartOfSpeechTagger;
-import org.dllearner.algorithm.tbsl.nlp.WordNet;
-import org.dllearner.algorithm.tbsl.util.Knowledgebase;
 import org.dllearner.algorithm.tbsl.util.PopularityMap;
-import org.dllearner.common.index.Index;
-import org.dllearner.common.index.MappingBasedIndex;
-import org.dllearner.common.index.SOLRIndex;
-import org.dllearner.common.index.SPARQLIndex;
-import org.dllearner.common.index.VirtuosoClassesIndex;
-import org.dllearner.common.index.VirtuosoPropertiesIndex;
-import org.dllearner.common.index.VirtuosoResourcesIndex;
 import org.dllearner.core.ComponentInitException;
 import org.dllearner.kb.sparql.ExtractionDBCache;
-import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
-import org.ini4j.Ini;
-import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Options;
-import org.ini4j.Profile.Section;
 
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -94,19 +68,13 @@ import com.hp.hpl.jena.sparql.syntax.ElementFilter;
 import com.hp.hpl.jena.sparql.syntax.ElementGroup;
 import com.hp.hpl.jena.sparql.syntax.ElementOptional;
 import com.hp.hpl.jena.sparql.syntax.ElementPathBlock;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.vaadin.terminal.ThemeResource;
 
 public class TBSLManager {
 	
-	private PartOfSpeechTagger posTagger;
-	private WordNet wordNet;
-	private String wordnetDir;
-	private String cacheDir;
-	private String oxfordFallbackIndexDir;
+	private final Logger logger = Logger.getLogger(TBSLManager.class);
 	
-	private ExtractionDBCache cache = new ExtractionDBCache("cache");
+	
+	private ExtractionDBCache cache;
 	private ExtendedKnowledgebase currentExtendedKnowledgebase;
 	
 	private SPARQLTemplateBasedLearner2 tbsl;
@@ -130,134 +98,29 @@ public class TBSLManager {
 	
 	
 	public TBSLManager() {
-		posTagger = new ApachePartOfSpeechTagger();
-		wordNet = new WordNet(this.getClass().getClassLoader().getResourceAsStream("wordnet_properties.xml"));
-		
-		loadSettings();
 		init();
 	}
 	
 	public void init(){
 		try {
-			cache = new ExtractionDBCache(cacheDir);
+			cache = new ExtractionDBCache(Manager.getInstance().getCacheDir());
 			
-			knowledgebases.add(createOxfordKnowledgebase());
-			knowledgebases.add(createDBpediaKnowledgebase());
-			
+			knowledgebases = Manager.getInstance().getKnowledgebases(cache);
 			currentExtendedKnowledgebase = knowledgebases.get(0);
 			
-			tbsl = new SPARQLTemplateBasedLearner2(currentExtendedKnowledgebase.getKnowledgebase(), posTagger, wordNet, new Options());
+			tbsl = new SPARQLTemplateBasedLearner2(currentExtendedKnowledgebase.getKnowledgebase(), 
+					Manager.getInstance().getPosTagger(), Manager.getInstance().getWordNet(), new Options());
 			tbsl.setMappingIndex(currentExtendedKnowledgebase.getKnowledgebase().getMappingIndex());
 			tbsl.init();
 			
-			nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), wordnetDir);
+			nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), Manager.getInstance().getWordnetDir());
 		}  catch (ComponentInitException e) {
 			e.printStackTrace();
 		} 
 	}
 	
-	private void loadSettings(){
-		InputStream is;
-		try {
-			is = this.getClass().getClassLoader().getResourceAsStream("settings.ini");
-			Ini ini = new Ini(is);
-			//base section
-			Section baseSection = ini.get("base");
-			cacheDir = baseSection.get("cacheDir", String.class);
-			wordnetDir = baseSection.get("wordnetDir", String.class);
-			oxfordFallbackIndexDir = baseSection.get("oxfordFallbackIndexDir", String.class);
-		
-		} catch (InvalidFileFormatException e2) {
-			e2.printStackTrace();
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		
-	}
 	
-	private Set<String> loadBlackList(String filename){
-		Set<String> uris = new HashSet<String>();
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(filename)));
-			String line;
-			while((line = br.readLine()) != null){
-				uris.add(line);
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return uris;
-	}
 	
-	private ExtendedKnowledgebase createDBpediaKnowledgebase(){
-		try {
-			SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://live.dbpedia.org/sparql"), Collections.singletonList("http://dbpedia.org"), Collections.<String>emptyList());
-			
-			SOLRIndex resourcesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_resources");
-			resourcesIndex.setPrimarySearchField("label");
-//			resourcesIndex.setSortField("pagerank");
-			Index classesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_classes");
-			Index propertiesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_properties");
-			
-			MappingBasedIndex mappingIndex= new MappingBasedIndex(
-					this.getClass().getClassLoader().getResource("dbpedia_class_mappings.txt").getPath(), 
-					this.getClass().getClassLoader().getResource("dbpedia_resource_mappings.txt").getPath(),
-					this.getClass().getClassLoader().getResource("dbpedia_dataproperty_mappings.txt").getPath(),
-					this.getClass().getClassLoader().getResource("dbpedia_objectproperty_mappings.txt").getPath()
-					);
-			
-			Knowledgebase kb = new Knowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
-			String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +
-        	 		"<div style='float: right; height: 100px; width: 200px'>" +
-        	 		"<div style='height: 100%;'><img style='height: 100%;' src=\"imageURL\"/></div>" +
-        	 		"</div>" +
-        	 		"<div>description</div>";
-			Map<String, String> propertiesMap = new HashMap<String, String>();
-			propertiesMap.put("label", "http://www.w3.org/2000/01/rdf-schema#label");
-			propertiesMap.put("imageURL", "http://www.w3.org/2000/01/rdf-schema#comment");
-			propertiesMap.put("description", "http://xmlns.com/foaf/0.1/depiction");
-			InfoTemplate infoTemplate = new InfoTemplate(infoTemplateHtml, null);
-			
-			List<String> exampleQuestions = loadQuestions(this.getClass().getClassLoader().getResourceAsStream("dbpedia_example_questions.txt"));
-			
-			ExtendedKnowledgebase ekb = new ExtendedKnowledgebase(
-					kb, 
-					"http://www.w3.org/2000/01/rdf-schema#label", 
-					"http://www.w3.org/2000/01/rdf-schema#comment",
-					"http://xmlns.com/foaf/0.1/depiction", null, null, DBpediaInfoLabel.class, "x0", true, exampleQuestions);
-			ekb.setLabelPropertyLanguage("en");
-			ekb.setPropertyNamespaces(Arrays.asList(new String[]{"http://dbpedia.org/ontology/", RDF.getURI(), RDFS.getURI()}));
-			
-			Set<String> propertyBlackList = loadBlackList("dbpedia_property_blacklist.txt");
-			ekb.setPropertyBlackList(propertyBlackList);
-			
-			FallbackIndex fallback = new SolrIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_resources");
-			ekb.setFallbackIndex(fallback);
-			
-			ekb.setIcon(new ThemeResource("images/dbpedia_live_logo.png"));
-			
-			return ekb;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	private List<String> loadQuestions(InputStream fileInputStream){
-		List<String> questions = new ArrayList<String>();
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream));
-			String question;
-			while((question = br.readLine()) != null){
-				questions.add(question);
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return questions;
-	}
 	
 	public void setProgressListener(TBSLProgressListener progressListener) {
 		this.progressListener = progressListener;
@@ -279,87 +142,45 @@ public class TBSLManager {
 		return nlg.getNLR(sparqlQuery);
 	}
 	
-	private ExtendedKnowledgebase createOxfordKnowledgebase(){
-		try {
-			SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
-			
-			SPARQLIndex resourcesIndex = new VirtuosoResourcesIndex(endpoint, cache);
-			SPARQLIndex classesIndex = new VirtuosoClassesIndex(endpoint, cache);
-			SPARQLIndex propertiesIndex = new VirtuosoPropertiesIndex(endpoint, cache);
-			MappingBasedIndex mappingIndex= new MappingBasedIndex(
-					this.getClass().getClassLoader().getResource("oxford_class_mappings.txt").getPath(), 
-					this.getClass().getClassLoader().getResource("oxford_resource_mappings.txt").getPath(),
-					this.getClass().getClassLoader().getResource("oxford_dataproperty_mappings.txt").getPath(),
-					this.getClass().getClassLoader().getResource("oxford_objectproperty_mappings.txt").getPath()
-					);
-			
-			Knowledgebase kb = new Knowledgebase(endpoint, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
-			
-			String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +
-        	 		"<div style='float: right; height: 100px; width: 200px'>" +
-        	 		"<div style='height: 100%;'><img style='height: 100%;' src=\"imageURL\"/></div>" +
-        	 		"</div>" +
-        	 		"<div>description</div>";
-			Map<String, String> propertiesMap = new HashMap<String, String>();
-			propertiesMap.put("label", "http://purl.org/goodrelations/v1#name");
-			propertiesMap.put("imageURL", "http://xmlns.com/foaf/0.1/depiction");
-			propertiesMap.put("description", "http://purl.org/goodrelations/v1#description");
-			InfoTemplate infoTemplate = new InfoTemplate(infoTemplateHtml, null);
-			
-			Map<String, String> optionalProperties = new HashMap<String, String>();
-			optionalProperties.put("bedrooms", "http://diadem.cs.ox.ac.uk/ontologies/real-estate#bedrooms");
-			optionalProperties.put("bathrooms", "http://diadem.cs.ox.ac.uk/ontologies/real-estate#bathrooms");
-			optionalProperties.put("receptions", "http://diadem.cs.ox.ac.uk/ontologies/real-estate#receptions");
-			optionalProperties.put("street", "http://www.w3.org/2006/vcard/ns#street-address");
-			
-			List<String> exampleQuestions = loadQuestions(this.getClass().getClassLoader().getResourceAsStream("oxford_example_questions.txt"));
-			
-			ExtendedKnowledgebase ekb = new ExtendedKnowledgebase(
-					kb, 
-					"http://purl.org/goodrelations/v1#name", 
-					"http://purl.org/goodrelations/v1#description",
-					"http://xmlns.com/foaf/0.1/depiction", null, optionalProperties, OxfordInfoLabel.class, "x0", false, exampleQuestions);
-			FallbackIndex fallback = new LuceneIndex(oxfordFallbackIndexDir);
-			ekb.setFallbackIndex(fallback);
-			
-			ekb.setIcon(new ThemeResource("images/oxford_logo.gif"));
-			return ekb;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	
 	
 	public Refinement refine(List<String> posExamples, List<String> negExamples){
+		logger.info("Refining answer...");
+		logger.info("Positive examples: " + posExamples);
+		logger.info("Negative examples: " + negExamples);
 		QTL qtl = new QTL(new SPARQLEndpointEx(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), null, null, Collections.<String>emptySet()),
 				cache);
 		qtl.setRestrictToNamespaces(currentExtendedKnowledgebase.getPropertyNamespaces());
 		Set<String> relevantKeywords = tbsl.getRelevantKeywords();
-		System.out.println("Relevant keywords: " + relevantKeywords);
+		logger.info("Relevant filter keywords: " + relevantKeywords);
 		qtl.addStatementFilter(new QuestionBasedStatementFilter2(relevantKeywords));
 		try {
 			String example = qtl.getQuestion(posExamples, negExamples);
 			String refinedSPARQLQuery = qtl.getBestSPARQLQuery();
-			List<BasicResultItem> result = fetchResult(refinedSPARQLQuery);
-			Map<String, Integer> additionalProperties = getAdditionalProperties();
-			
-			List<String> mostProminentProperties = new ArrayList<String>();
-			List<Entry<String, Integer>> sortedByValues = sortByValues(additionalProperties);
-			for(int i = 0; i < Math.min(sortedByValues.size(), 5); i++){
-				String propertyURI = sortedByValues.get(i).getKey();
-				mostProminentProperties.add(propertyURI);
-				additionalProperties.remove(propertyURI);
+			if(refinedSPARQLQuery != null){
+				logger.info("Refinement successful.");
+				logger.info("Refined SPARQL query:\n" + refinedSPARQLQuery);
+				List<BasicResultItem> result = fetchResult(refinedSPARQLQuery);
+				Map<String, Integer> additionalProperties = getAdditionalProperties();
+				
+				List<String> mostProminentProperties = new ArrayList<String>();
+				List<Entry<String, Integer>> sortedByValues = sortByValues(additionalProperties);
+				for(int i = 0; i < Math.min(sortedByValues.size(), 5); i++){
+					String propertyURI = sortedByValues.get(i).getKey();
+					mostProminentProperties.add(propertyURI);
+					additionalProperties.remove(propertyURI);
+				}
+				fillItems(mostProminentProperties);
+				Refinement refinement = new Refinement(posExamples, negExamples, learnedSPARQLQuery, refinedSPARQLQuery, new SelectAnswer(result, mostProminentProperties, additionalProperties), example);
+				return refinement;
 			}
-			fillItems(mostProminentProperties);
-			Refinement refinement = new Refinement(posExamples, negExamples, learnedSPARQLQuery, refinedSPARQLQuery, new SelectAnswer(result, mostProminentProperties, additionalProperties), example);
-			return refinement;
+			
 		} catch (EmptyLGGException e) {
-			e.printStackTrace();
+			logger.error("Empty LGG", e);
 		} catch (NegativeTreeCoverageExecption e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Negative tree covered", e);
 		} catch (TimeOutException e) {
-			e.printStackTrace();
+			logger.error("QTL timeout", e);
 		}
 		return null;
 	}
@@ -380,7 +201,7 @@ public class TBSLManager {
 			map.init();
 			tbsl.setPopularityMap(map);
 		}
-		nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), "/opt/wordnet/dict");
+		nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), Manager.getInstance().getWordnetDir());
 		
 		fallback = ekb.getFallbackIndex();
 	}
@@ -467,6 +288,7 @@ public class TBSLManager {
 	}
 	
 	public Answer answerQuestion(String question){
+		logger.info("Question: " + question);
 		this.currentQuestion = question;
 		Answer answer = null;
 		try {
@@ -479,6 +301,8 @@ public class TBSLManager {
 			learnedSPARQLQuery = tbsl.getBestSPARQLQuery();
 			
 			if(learnedSPARQLQuery != null){
+				logger.info("Found answer.");
+				logger.info("Learned SPARQL Query:\n" + learnedSPARQLQuery);
 				String translatedQuery = getNLRepresentation(learnedSPARQLQuery);
 				translatedQuery = translatedQuery.replace("This query retrieves", "").replace("distinct", "").replace(".", "").trim();
 				translatedQuery = normalizeVarNames(translatedQuery);
@@ -488,7 +312,7 @@ public class TBSLManager {
 					q.setDistinct(true);
 					learnedSPARQLQuery = q.toString();
 				}
-				System.out.println("Learned SPARQL Query:\n" + learnedSPARQLQuery);
+				
 				
 				if(q.isSelectType()){
 					
@@ -509,6 +333,7 @@ public class TBSLManager {
 					
 				}
 			} else {
+				logger.info("Found no answer.");
 				message("Could not find an answer. Using fallback by searching in descriptions of the entities.");
 				answer = answerQuestionFallback(question);
 			}
@@ -517,7 +342,7 @@ public class TBSLManager {
 			
 			
 		} catch (NoTemplateFoundException e) {
-			e.printStackTrace();
+			logger.error("Found no template.");
 			message("Could not find an answer. Using fallback by searching in descriptions of the entities.");
 			answer = answerQuestionFallback(question);
 		}
@@ -531,7 +356,7 @@ public class TBSLManager {
 	
 	private List<BasicResultItem> fetchResult(String query){
 		Query extendedSPARQLQuery = extendSPARQLQuery(learnedSPARQLQuery);
-		System.out.println("Loading result...");
+		logger.info("Loading result...");
 //		message("Loading result");
 		List<BasicResultItem> result = new ArrayList<BasicResultItem>();
 		ResultSet rs = executeSelect(extendedSPARQLQuery.toString());
@@ -636,6 +461,7 @@ public class TBSLManager {
 			}
 			property2URI2Values.put("http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice", uri2Values);
 		}
+		logger.info("...done.");
 		return result;
 	}
 	
@@ -653,7 +479,7 @@ public class TBSLManager {
 	}
 	
 	private Answer answerQuestionFallback(String question){
-		System.out.println("Using fallback.");
+		logger.info("Using fallback.");
 		
 		List<BasicResultItem> result = fallback.getData(question, 100, 0);
 		
@@ -669,7 +495,7 @@ public class TBSLManager {
 	public Map<String, Integer> getAdditionalProperties(){
 		Map<String, Integer> properties = new HashMap<String, Integer>();
 		if(currentExtendedKnowledgebase.isAllowAdditionalProperties() && learnedSPARQLQuery !=null){
-			System.out.println("Loading additional,common properties");
+			logger.info("Loading additional,common properties...");
 			Query extendedSPARQLQuery = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
 			ElementGroup wherePart = (ElementGroup)extendedSPARQLQuery.getQueryPattern();
 			ElementPathBlock pb = null;
@@ -709,11 +535,12 @@ public class TBSLManager {
 				}
 			}
 		}
+		logger.info("...done.");
 		return properties;
 	}
 	
 	public void fillItems(String propertyURI){
-		System.out.println("Filling data with " + propertyURI);
+		logger.info("Filling data with " + propertyURI + "...");
 		Query extendedSPARQLQuery = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
 		ElementGroup wherePart = (ElementGroup)extendedSPARQLQuery.getQueryPattern();
 		ElementPathBlock pb = null;
@@ -772,11 +599,14 @@ public class TBSLManager {
 			uri2Item.get(entry.getKey()).getData().put(propertyURI, entry.getValue());
 		}
 		property2URI2Values.put(propertyURI, uri2Values);
-		
+		logger.info("...done.");
 	}
 	
 	public void fillItems(List<String> propertyURIs){
-		System.out.println("Filling data with " + propertyURIs);
+		if(propertyURIs.isEmpty()){
+			return;
+		}
+		logger.info("Filling data with " + propertyURIs + "...");
 		Query extendedSPARQLQuery = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
 		ElementGroup wherePart = (ElementGroup)extendedSPARQLQuery.getQueryPattern();
 		ElementPathBlock pb = null;
@@ -866,7 +696,7 @@ public class TBSLManager {
 				uri2Values.put(uri, values);
 			}
 		}
-		
+		logger.info("...done.");
 	}
 	
 	public Map<String, Set<Object>> getDataForProperty(String propertyURI){
@@ -1038,16 +868,20 @@ public class TBSLManager {
 	}
 	
 	private ResultSet executeSelect(String sparqlQuery){
-		System.out.println("Sending query\n" + sparqlQuery);
-		ResultSet rs;
-		if (cache == null) {
-			QueryEngineHTTP qe = new QueryEngineHTTP(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint().getURL().toString(), sparqlQuery);
-			qe.setDefaultGraphURIs(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint().getDefaultGraphURIs());
-			rs = qe.execSelect();
-		} else {
-			rs = SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), sparqlQuery));
+		logger.info("Executing SPARQL query\n" + sparqlQuery);
+		ResultSet rs = null;
+		try {
+			if (cache == null) {
+				QueryEngineHTTP qe = new QueryEngineHTTP(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint().getURL().toString(), sparqlQuery);
+				qe.setDefaultGraphURIs(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint().getDefaultGraphURIs());
+				rs = qe.execSelect();
+			} else {
+				rs = SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), sparqlQuery));
+			}
+			logger.info("...done.");
+		} catch (Exception e) {
+			logger.error("Error executing SPARQL query.", e);
 		}
-		
 		return rs;
 	}
 	

@@ -24,7 +24,7 @@ public class TBSLContextListener implements ServletContextListener{
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		
+		Manager.getInstance().init();
 	}
 	
 	private static String getParameter(ServletContext servletContext, String key, String defaultValue) {
