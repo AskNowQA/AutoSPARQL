@@ -22,6 +22,7 @@ import org.autosparql.tbsl.util.Labels;
 import org.autosparql.tbsl.widget.Charts;
 import org.autosparql.tbsl.widget.FeedBackListener;
 import org.autosparql.tbsl.widget.InfoLabel;
+import org.autosparql.tbsl.widget.OxfordPriceChartWindow;
 import org.autosparql.tbsl.widget.TBSLProgressListener;
 import org.vaadin.appfoundation.view.View;
 import org.vaadin.appfoundation.view.ViewContainer;
@@ -665,8 +666,9 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
         if(canShowMap(existingProperties)){
         	NativeButton showMapButton = new NativeButton();
     		showMapButton.addStyleName("borderless");
+    		showMapButton.addStyleName("map-button");
     		Resource icon = new ThemeResource("images/map2.png");
-    		showMapButton.setIcon(icon);
+//    		showMapButton.setIcon(icon);
     		showMapButton.setDescription("Show in map.");
     		showMapButton.setHeight("100%");
     		showMapButton.addListener(new Button.ClickListener() {
@@ -734,7 +736,9 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 			
 			NativeButton showDiagramButton = new NativeButton();
 			showDiagramButton.addStyleName("borderless");
-			showDiagramButton.setIcon(new ThemeResource("images/diagram.png"));
+			showDiagramButton.setHeight("100%");
+			showDiagramButton.addStyleName("diagram-button");
+//			showDiagramButton.setIcon(new ThemeResource("images/diagram.png"));
 			showDiagramButton.setDescription("Visualize price.");
 			showDiagramButton.addListener(new Button.ClickListener() {
 				
@@ -801,8 +805,15 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		for(Entry<String, BasicResultItem> entry : UserSession.getManager().getUri2Items().entrySet()){
 			uri2Label.put(entry.getKey(), entry.getValue().getLabel());
 		}
-		final Window w = Charts.getChart(UserSession.getManager().getCurrentQuestion(),
-				propertyURI, datatype, uri2Label, data);
+		final Window w;
+		if(propertyURI.equals("http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice")){
+			 w = new OxfordPriceChartWindow(UserSession.getManager().getCurrentQuestion(),
+						propertyURI, uri2Label, data);
+		} else {
+			w = Charts.getChart(UserSession.getManager().getCurrentQuestion(),
+					propertyURI, datatype, uri2Label, data);
+		}
+		
 		if(w != null){
 			w.addListener(new Window.CloseListener() {
 

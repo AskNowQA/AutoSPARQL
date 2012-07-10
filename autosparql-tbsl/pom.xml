@@ -97,12 +97,12 @@
         <version>6.1.24</version>
         <configuration>
           <stopPort>9966</stopPort>
-          <stopKey>autosparql-tbsl</stopKey>
+          <stopKey>autosparql-lite</stopKey>
           <!-- Redeploy every x seconds if changes are detected, 0 for no automatic redeployment -->
           <scanIntervalSeconds>0</scanIntervalSeconds>
           <!-- make sure Jetty also finds the widgetset -->
           <webAppConfig>
-            <contextPath>/autosparql-tbsl</contextPath>
+            <contextPath>/autosparql-lite</contextPath>
             <baseResource implementation="org.mortbay.resource.ResourceCollection">
               <!-- Workaround for Maven/Jetty issue http://jira.codehaus.org/browse/JETTY-680 -->
               <!-- <resources>src/main/webapp,${project.build.directory}/${project.build.finalName}</resources> -->

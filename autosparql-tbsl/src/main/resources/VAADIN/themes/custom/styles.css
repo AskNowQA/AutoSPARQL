@@ -104,3 +104,30 @@ a.green.button {
 .v-nativebutton-borderless:hover {
      border: none;
 }
+
+.map-button {
+	width: 24px;
+	height: 24px;
+	padding-top: 3px;
+	background-image: url("/autosparql-lite/VAADIN/themes/custom/images/map2.png");
+	background-size: 28px;
+background-repeat: no-repeat;
+}
+
+.diagram-button {
+	width: 24px;
+	height: 24px;
+	padding-top: 3px;
+	background-image: url("/autosparql-lite/VAADIN/themes/custom/images/diagram.png");
+	background-size: 28px;
+background-repeat: no-repeat;
+}
+
+.aggregate-box{
+	background-color: black;
+	color:white;
+	margin-top :10px;
+	border-radius : 25px;
+	font-size: 1.2em;
+	
+}
