@@ -104,3 +104,18 @@ a.green.button {
 .v-nativebutton-borderless:hover {
      border: none;
 }
+
+.large .v-icon{
+	width: 24px;
+	height: 24px;
+	padding-top: 3px;
+}
+
+.aggregate-box{
+	background-color: black;
+	color:white;
+	margin-top :10px;
+	border-radius : 25px;
+	font-size: 1.2em;
+	
+}
