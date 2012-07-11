@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import org.autosparql.tbsl.model.Interval;
 import org.autosparql.tbsl.util.Intervals;
 import org.autosparql.tbsl.util.Labels;
+import org.dllearner.utilities.MapUtils;
 
 import com.invient.vaadin.charts.InvientCharts;
 import com.invient.vaadin.charts.InvientChartsConfig;
@@ -57,8 +58,12 @@ public class OxfordPriceChartWindow extends Window{
 		chartConfig.getTitle().setText(title);
 		
 		final VerticalLayout mainLayout = new VerticalLayout();
-		mainLayout.setSizeUndefined();
+		mainLayout.setSizeFull();
 		mainLayout.setSpacing(true);
+		setContent(mainLayout);
+		
+		final VerticalLayout diagramHolder = new VerticalLayout();
+		diagramHolder.setWidth(null);
 		
 		CheckBox aggregateCheckBox = new CheckBox("Aggregate");
 		aggregateCheckBox.addStyleName("aggregate-box");
@@ -67,10 +72,10 @@ public class OxfordPriceChartWindow extends Window{
 		aggregateCheckBox.addListener(new Property.ValueChangeListener() {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				mainLayout.removeComponent(visibleChart);
+				diagramHolder.removeComponent(visibleChart);
 				visibleChart = getChart(chartConfig, propertyLabel, uri2Label, data, (Boolean)event.getProperty().getValue());
-				mainLayout.addComponent(visibleChart);
-				mainLayout.setExpandRatio(visibleChart, 1f);
+				diagramHolder.addComponent(visibleChart);
+				diagramHolder.setExpandRatio(visibleChart, 1f);
 			}
 		});
 		mainLayout.addComponent(aggregateCheckBox);
@@ -80,34 +85,43 @@ public class OxfordPriceChartWindow extends Window{
 		
 		Panel p = new Panel();
 		p.setSizeFull();
-		p.setContent(mainLayout);
-		setContent(p);
+		p.setContent(diagramHolder);
+		mainLayout.addComponent(p);
+		mainLayout.setExpandRatio(p, 1f);
 		
 		visibleChart = getChart(chartConfig, propertyLabel, uri2Label, data, false);
-		mainLayout.addComponent(visibleChart);
-		mainLayout.setExpandRatio(visibleChart, 1f);
+		diagramHolder.addComponent(visibleChart);
 	}
 	
 	private InvientCharts getChart(InvientChartsConfig chartConfig, String propertyLabel, Map<String, String> uri2Label, Map<String, Set<Object>> data, boolean aggregated){
+		 Map<String, Object> sample = Intervals.sample(data);
+	        Map<String, Double> castData = new HashMap<String, Double>();
+	        for(Entry<String, Object> entry : sample.entrySet()){
+	        	castData.put(entry.getKey(), (Double) entry.getValue());
+	        }
 		InvientCharts chart;
 		if(aggregated){
-			chart = showAggregatedColumnWithRotatedLabels(chartConfig, propertyLabel, uri2Label, data);
+			chart = showAggregatedColumnWithRotatedLabels(chartConfig, propertyLabel, uri2Label, castData);
+			chart.setWidth("800px");
 		} else {
-			chart =  showColumnWithRotatedLabels(chartConfig, propertyLabel, uri2Label, data);
+			chart =  showColumnWithRotatedLabels(chartConfig, propertyLabel, uri2Label, castData);
+			int width = 30 * castData.size();
+			chart.setWidth(width + "px");
 		}
 		chart.setHeight("800px");
-		chart.setWidth("800px");
+		
 		return chart;
 	}
 	
-	private InvientCharts showColumnWithRotatedLabels(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
+	private InvientCharts showColumnWithRotatedLabels(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Double> data){
 	       
         chartConfig.getGeneralChartConfig().setType(SeriesType.COLUMN);
     
-        SortedMap<String, Set<Object>> sortedData = new TreeMap<String, Set<Object>>(data);
+        List<Entry<String, Double>> sortedData = MapUtils.sortByValues(data);
         List<String> categories = new ArrayList<String>();
         String label;
-        for(String uri : sortedData.keySet()){
+        for(Entry<String, Double> entry : sortedData){
+        	String uri = entry.getKey();
         	label = uri2Label.get(uri);
         	if(label == null){
         		label = Labels.getLabelForResource(uri);
@@ -156,24 +170,20 @@ public class OxfordPriceChartWindow extends Window{
         colCfg.getDataLabel().setStyle(
                 " { font: 'normal 13px Verdana, sans-serif' } ");
         XYSeries seriesData = new XYSeries(property, colCfg);
-        seriesData.setSeriesPoints(getPoints(seriesData, data));
+        seriesData.setSeriesPoints(getPoints(seriesData, sortedData));
 
         chart.addSeries(seriesData);
 
        return chart;
     }
 	
-	private InvientCharts showAggregatedColumnWithRotatedLabels(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
+	private InvientCharts showAggregatedColumnWithRotatedLabels(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Double> data){
 	       
         chartConfig.getGeneralChartConfig().setType(SeriesType.COLUMN);
     
-        Map<String, Object> sample = Intervals.sample(data);
-        Map<String, Double> castData = new HashMap<String, Double>();
-        for(Entry<String, Object> entry : sample.entrySet()){
-        	castData.put(entry.getKey(), (Double) entry.getValue());
-        }
+       
         
-        Interval[] intervals = Intervals.aggregateDoubles(castData, 5);
+        Interval[] intervals = Intervals.aggregateDoubles(data, 5);
         List<String> categories = new ArrayList<String>();
         for(Interval interval : intervals){
         	categories.add("<="  + NumberFormat.getCurrencyInstance(Locale.UK).format(interval.getUpperBoundary()));
@@ -229,25 +239,10 @@ public class OxfordPriceChartWindow extends Window{
 	
     
     private static LinkedHashSet<DecimalPoint> getPoints(Series series,
-    		Map<String, Set<Object>> data) {
+    		Map<String, Double> data) {
     	LinkedHashSet<DecimalPoint> points = new LinkedHashSet<DecimalPoint>();
-		for(Entry<String, Set<Object>> entry : data.entrySet()){
-			Object value = entry.getValue().iterator().next();
-			Double doubleValue = null;
-			if(value instanceof Double){
-				doubleValue = (Double) value;
-			} else if(value instanceof Integer){
-				doubleValue = ((Integer)value).doubleValue();
-			} else if(value instanceof String){
-				try {
-					doubleValue = Double.parseDouble((String) value);
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
-			}
-			if(doubleValue != null){
-				points.add(new DecimalPoint(series, doubleValue));
-			}
+		for(Entry<String, Double> entry : data.entrySet()){
+				points.add(new DecimalPoint(series, entry.getValue()));
 		}
 		return points;
     }
@@ -258,6 +253,15 @@ public class OxfordPriceChartWindow extends Window{
 		for(Interval interval : intervals){
 			points.add(new DecimalPoint(series, interval.getSize()));
 		}
+		return points;
+    }
+    
+    private static LinkedHashSet<DecimalPoint> getPoints(Series series,
+    		List<Entry<String, Double>> data) {
+    	LinkedHashSet<DecimalPoint> points = new LinkedHashSet<DecimalPoint>();
+    	for(Entry<String, Double> entry : data){
+			points.add(new DecimalPoint(series, entry.getValue()));
+	}
 		return points;
     }
 }

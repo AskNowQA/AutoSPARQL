@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.autosparql.tbsl.model.Answer;
 import org.autosparql.tbsl.model.BasicResultItem;
@@ -131,7 +132,10 @@ public class TBSLManager {
 	}
 	
 	public String getNLRepresentation(String sparqlQueryString){
-		return translateSPARQLQuery(sparqlQueryString);
+		String translatedQuery = translateSPARQLQuery(sparqlQueryString);
+		translatedQuery = translatedQuery.replace("This query retrieves", "").replace("distinct", "").replace(".", "").replace("(ignoring case)","").trim();
+		translatedQuery = normalizeVarNames(translatedQuery);
+		return translatedQuery;
 	}
 	
 	private String translateSPARQLQuery(String sparqlQueryString){
@@ -304,8 +308,6 @@ public class TBSLManager {
 				logger.info("Found answer.");
 				logger.info("Learned SPARQL Query:\n" + learnedSPARQLQuery);
 				String translatedQuery = getNLRepresentation(learnedSPARQLQuery);
-				translatedQuery = translatedQuery.replace("This query retrieves", "").replace("distinct", "").replace(".", "").trim();
-				translatedQuery = normalizeVarNames(translatedQuery);
 				message("Found answer for \"" + translatedQuery + "\". Loading result...");
 				Query q = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
 				if(!q.hasGroupBy()){
@@ -968,20 +970,20 @@ public class TBSLManager {
 	}
 	
 	public static void main(String[] args) {
-		Query q = QueryFactory.create("SELECT ?x0 WHERE {?x0 a ?type. ?type a ?y1. ?x0 <http://test.org/t> ?x1}");
-		normalizeVarNames(q);
-//		
-//		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
-//		TBSLManager man = new TBSLManager();
-//		man.init();
-//		man.setKnowledgebase(man.getKnowledgebases().get(1));
-//		SelectAnswer a = (SelectAnswer) man.answerQuestion("Give me all soccer clubs in Premier League.");
-//		List<String> p = new ArrayList<String>();
-//		p.add(a.getItems().get(1).getUri());
-//		p.add(a.getItems().get(2).getUri());
-//		p.add(a.getItems().get(0).getUri());
-//		List<String> n = new ArrayList<String>();
-//		man.refine(p, n);
+//		Query q = QueryFactory.create("SELECT ?x0 WHERE {?x0 a ?type. ?type a ?y1. ?x0 <http://test.org/t> ?x1}");
+//		normalizeVarNames(q);
+		Manager.getInstance().init();
+		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
+		TBSLManager man = new TBSLManager();
+		man.init();
+		man.setKnowledgebase(man.getKnowledgebases().get(0));
+		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses in Headington");
+		List<String> p = new ArrayList<String>();
+		p.add(a.getItems().get(1).getUri());
+		p.add(a.getItems().get(2).getUri());
+		p.add(a.getItems().get(0).getUri());
+		List<String> n = new ArrayList<String>();
+		man.refine(p, n);
 	}
 
 }

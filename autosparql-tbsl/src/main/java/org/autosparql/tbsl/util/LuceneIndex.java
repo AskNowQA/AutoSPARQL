@@ -88,5 +88,9 @@ public class LuceneIndex implements FallbackIndex{
         return items;
 	}
 
+	public static void main(String[] args) {
+		LuceneIndex index = new LuceneIndex("/home/lorenz/arbeit/oxford_index");
+		System.out.println(index.getData("houses in headington", 10, 0));
+	}
 
 }

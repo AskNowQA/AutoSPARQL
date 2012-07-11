@@ -28,7 +28,7 @@ public class Intervals {
 			}
 		}		
 		//create intervals
-		double intervalSize = findNiceUpperBound(max) / nrOfIntervals;
+		double intervalSize = findNiceUpperBound2(max) / nrOfIntervals;
 		Interval[] intervals = new Interval[nrOfIntervals];
 		double lowerBoundary = Double.MIN_VALUE;
 		for(int i = 0; i < nrOfIntervals; i++){
@@ -75,8 +75,22 @@ public class Intervals {
 		}
 	}
 	
+	private static double findNiceUpperBound2(double value){
+		int exponent = 0;
+		double base = 10;
+		while(true){
+			double potenz = Math.pow(base, exponent);
+			if(value/potenz <= 1){
+				potenz = Math.pow(base, exponent-1);
+				return Math.ceil(value / potenz) * potenz;
+			}
+			exponent++;
+		}
+	}
+	
 	public static void main(String[] args) {
-		System.out.println(findNiceUpperBound(880));
+		System.out.println(findNiceUpperBound2(145));
+		System.out.println(Math.ceil(1.2));
 	}
 
 }

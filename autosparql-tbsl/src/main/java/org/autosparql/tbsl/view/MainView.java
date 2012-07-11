@@ -856,9 +856,12 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 			negExamples.add(((BasicResultItem)row).getUri());
 		}
 		Refinement refinement = UserSession.getManager().refine(posExamples, negExamples);
-		System.out.println(refinement.getRefinedSPARQLQuery());
-		resultHolderPanel.removeAllComponents();
-		showAnswer(refinement.getRefinedAnswer());
+		if(refinement != null){
+			resultHolderPanel.removeAllComponents();
+			showAnswer(refinement.getRefinedAnswer());
+		} else {
+			//TODO show message that refinement failed
+		}
 	}
 	
 	
