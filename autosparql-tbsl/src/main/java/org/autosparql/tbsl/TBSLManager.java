@@ -336,7 +336,7 @@ public class TBSLManager {
 				}
 			} else {
 				logger.info("Found no answer.");
-				message("Could not find an answer. Using fallback by searching in descriptions of the entities.");
+				message("Could not find an non-empty answer. Using fallback by searching in descriptions of the entities.");
 				answer = answerQuestionFallback(question);
 			}
 			
@@ -345,7 +345,7 @@ public class TBSLManager {
 			
 		} catch (NoTemplateFoundException e) {
 			logger.error("Found no template.");
-			message("Could not find an answer. Using fallback by searching in descriptions of the entities.");
+			message("Didn't understand the question. Using fallback by searching in descriptions of the entities.");
 			answer = answerQuestionFallback(question);
 		}
 //		message("Finished.");
@@ -484,6 +484,21 @@ public class TBSLManager {
 		logger.info("Using fallback.");
 		
 		List<BasicResultItem> result = fallback.getData(question, 100, 0);
+		//hack if OXford KB we add the price relation, because we need this for the price chart view
+		if(knowledgebases.indexOf(currentExtendedKnowledgebase) == 0){
+			Map<String, Set<Object>> uri2Values = new HashMap<String, Set<Object>>();
+			String uri;
+			Object price;
+			for(BasicResultItem item : result){
+				uri = item.getUri();
+				price = item.getData().get("price");
+				if(uri != null && price != null){
+					uri2Values.put(uri, Collections.singleton(price));
+				}
+			}
+			property2URI2Values.put("http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice", uri2Values);
+		}
+		
 		
 		Map<String, Integer> additionalProperties = getAdditionalProperties();
 		
@@ -977,7 +992,7 @@ public class TBSLManager {
 		TBSLManager man = new TBSLManager();
 		man.init();
 		man.setKnowledgebase(man.getKnowledgebases().get(0));
-		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses in Headington");
+		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses with 3 bedrooms");
 		List<String> p = new ArrayList<String>();
 		p.add(a.getItems().get(1).getUri());
 		p.add(a.getItems().get(2).getUri());

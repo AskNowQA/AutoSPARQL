@@ -53,7 +53,7 @@ public class LuceneIndex implements FallbackIndex{
 			System.out.println("Found " + hits.length + " hits.");
 			for(int i=0;i<hits.length;++i) {
 			    int docId = hits[i].doc;
-			    Document d = searcher.doc(docId);System.out.println(d.getFields());
+			    Document d = searcher.doc(docId);
 			    String uri = d.get("uri");
 			    String label = d.get("label");
 			    String description = d.get("description");
@@ -61,6 +61,9 @@ public class LuceneIndex implements FallbackIndex{
 			    Map<String, Object> data = new HashMap<String, Object>();
 			    if(d.get("address") != null){
 			    	data.put("street", d.get("address"));
+			    }
+			    if(d.get("locality") != null){
+			    	data.put("locality", d.get("locality"));
 			    }
 			    if(d.get("price") != null){
 			    	 data.put("price", Double.valueOf(d.get("price")));

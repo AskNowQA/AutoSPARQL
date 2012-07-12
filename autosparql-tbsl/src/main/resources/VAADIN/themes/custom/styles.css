@@ -46,13 +46,13 @@
 }
 
 .v-table-cell-content-green {
-    background: #2EFE2E;
+    background: #D2FFC4;
     border-bottom: 1px solid black;
     border-top: 1px solid black;
 }
 
 .v-table-cell-content-red {
-    background: red;
+    background: #FF8A8A;
      border-bottom: 1px solid black;
     border-top: 1px solid black;
 }

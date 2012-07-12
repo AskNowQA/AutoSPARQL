@@ -64,6 +64,8 @@ import com.vaadin.ui.Window.CloseEvent;
 
 public class MainView extends VerticalLayout implements ViewContainer, TBSLProgressListener{
 	
+	private static final int REFRESH_INTERVAL = 1000;
+	
 	private VerticalLayout mainPanel = new VerticalLayout();
 	private View currentView;
 	
@@ -101,7 +103,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		UserSession.getManager().setProgressListener(this);
 		
 		refresher = new Refresher();
-		refresher.setRefreshInterval(500);
+		refresher.setRefreshInterval(REFRESH_INTERVAL);
 		refresher.setEnabled(false);
 	    refresher.addListener(new RefreshListener() {
 			@Override
@@ -241,58 +243,6 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		
 		
 	}
-	
-//	private Component createInputForm(){
-//		HorizontalLayout l = new HorizontalLayout();
-//		l.setSpacing(true);
-//		
-//		Component kbSelector = createKnowledgeBaseSelector();
-//		kbSelector.setWidth("150px");
-//		kbSelector.setHeight("100px");
-//		l.addComponent(kbSelector);
-//		
-////		questionField = new TextField();
-////		questionField.setWidth("100%");
-////		questionField.setValue("houses in Oxfordshire");
-////		questionField.addShortcutListener(new ShortcutListener("run", ShortcutAction.KeyCode.ENTER, null) {
-////		    @Override
-////		    public void handleAction(Object sender, Object target) {
-////		       onExecuteQuery();
-////		    }
-////		});
-////		l.addComponent(questionField);
-//		
-//		questionBox = new ComboBox();
-//		questionBox.setWidth("100%");
-//		questionBox.setImmediate(true);
-//		questionBox.setNewItemsAllowed(true);
-//		questionBox.setInputPrompt("Enter your question.");
-//		questionBox.addShortcutListener(new ShortcutListener("run", ShortcutAction.KeyCode.ENTER, null) {
-//		    @Override
-//		    public void handleAction(Object sender, Object target) {
-//		       onExecuteQuery();
-//		    }
-//		});
-//		l.addComponent(questionBox);
-//		l.setComponentAlignment(questionBox, Alignment.MIDDLE_CENTER);
-//		
-//		addExampleQuestions();
-//		
-//		executeButton = new NativeButton("Run");
-//		executeButton.addListener(new Button.ClickListener() {
-//			
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				onExecuteQuery();
-//			}
-//		});
-//		l.addComponent(executeButton);
-//		l.setComponentAlignment(executeButton, Alignment.MIDDLE_CENTER);
-//		
-//		l.setExpandRatio(questionBox, 1f);
-//		
-//		return l;
-//	}
 	
 	private Component createInputForm(){
 		HorizontalLayout l = new HorizontalLayout();

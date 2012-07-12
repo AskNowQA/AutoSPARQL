@@ -224,6 +224,12 @@
    <artifactId>invient-charts</artifactId>
    <version>0.8.6</version>
 </dependency>
+<dependency>
+   <groupId>org.vaadin.addons</groupId>
+   <artifactId>lucenecontainer</artifactId>
+   <version>1.0.2</version>
+</dependency>
+
 
 
 	<dependency>

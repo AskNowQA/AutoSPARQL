@@ -90,6 +90,15 @@ public class OxfordInfoLabel extends HorizontalLayout implements InfoLabel{
 				e.printStackTrace();
 			}
 		}
+		String locality = (String) item.getData().get("locality");
+		if(locality != null){
+			try {
+				String googleMaps = "https://maps.google.com?q=" + URLEncoder.encode(locality, "UTF-8");
+				s2 += "<div><b>Locality: </b><a href=\"" + googleMaps + "\">"  + locality + "</a></div>";
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 		Integer nrOfBedrooms = (Integer) item.getData().get("bedrooms");
 		if(nrOfBedrooms != null){
 			s2 += "<div><b>#bedrooms: </b>"  + nrOfBedrooms + "</div>";

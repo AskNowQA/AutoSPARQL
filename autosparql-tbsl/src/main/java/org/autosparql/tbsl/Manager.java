@@ -176,6 +176,7 @@ public class Manager {
 			optionalProperties.put("bathrooms", "http://diadem.cs.ox.ac.uk/ontologies/real-estate#bathrooms");
 			optionalProperties.put("receptions", "http://diadem.cs.ox.ac.uk/ontologies/real-estate#receptions");
 			optionalProperties.put("street", "http://www.w3.org/2006/vcard/ns#street-address");
+			optionalProperties.put("locality", "http://www.w3.org/2006/vcard/ns#locality");
 			
 			List<String> exampleQuestions = loadQuestions(this.getClass().getClassLoader().getResourceAsStream("oxford_example_questions.txt"));
 			
