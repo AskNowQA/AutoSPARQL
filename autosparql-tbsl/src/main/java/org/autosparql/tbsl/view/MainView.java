@@ -154,11 +154,6 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	}
 	
 	private void createFooter(){
-//		HorizontalLayout footer = new HorizontalLayout();
-//		footer.setWidth("100%");
-//		footer.setHeight(null);
-//		addComponent(footer);
-		
 		try {
 			CustomLayout footer = new CustomLayout(this.getClass().getClassLoader().getResourceAsStream("footer.html"));
 			footer.addStyleName("footer");
@@ -169,27 +164,6 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//		Resource res = new ThemeResource("images/citec_logo.gif");
-//		Link link = new Link("", new ExternalResource("http://www.cit-ec.de/"));
-//	    link.setIcon(res);
-//	    link.addStyleName("image-shift-right");
-//	    link.setWidth("100px");
-//	    link.addStyleName("smalllogo");
-//	    footer.addComponent(link);
-//
-//	    Label pad = new Label();
-//		pad.setWidth("100%");
-//		footer.addComponent(pad);
-//		footer.setExpandRatio(pad, 1f);
-//		
-//		res = new ThemeResource("images/aksw_logo.png");
-//		link = new Link("", new ExternalResource("http://www.aksw.org"));
-//	    link.setIcon(res);
-//	    link.addStyleName("image-shift-left");
-//	    link.setWidth("100px");
-//	    link.addStyleName("smalllogo");
-//	    footer.addComponent(link);
 	}
 	
 	private void createMainPanel(){
@@ -211,23 +185,13 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		inputFormHolder.setComponentAlignment(inputForm, Alignment.MIDDLE_CENTER);
 		mainPanel.addComponent(inputFormHolder);
 		mainPanel.setComponentAlignment(inputFormHolder, Alignment.MIDDLE_CENTER);
-		
-//		feedbackLabel = new Label();
-//		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
-//		feedbackLabel.addStyleName("status-label");
-//		feedbackLabel.setWidth("60%");
-//		feedbackLabel.setVisible(false);
-//		mainPanel.addComponent(feedbackLabel);
-//		mainPanel.setComponentAlignment(feedbackLabel, Alignment.MIDDLE_CENTER);
-		
+
 		resultHolderPanel = new VerticalLayout();
 		resultHolderPanel.setWidth("80%");
 		resultHolderPanel.setHeight("100%");
 		mainPanel.addComponent(resultHolderPanel);
 		mainPanel.setComponentAlignment(resultHolderPanel, Alignment.MIDDLE_CENTER);
 		mainPanel.setExpandRatio(resultHolderPanel, 0.8f);
-		
-		
 		
 		refineButton = new Button("Refine");
 		refineButton.setVisible(false);
