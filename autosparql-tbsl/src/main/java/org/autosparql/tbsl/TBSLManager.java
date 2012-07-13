@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.xerces.impl.xpath.regex.RegularExpression;
 import org.autosparql.tbsl.model.Answer;
 import org.autosparql.tbsl.model.BasicResultItem;
 import org.autosparql.tbsl.model.ExtendedKnowledgebase;
@@ -992,7 +993,7 @@ public class TBSLManager {
 		TBSLManager man = new TBSLManager();
 		man.init();
 		man.setKnowledgebase(man.getKnowledgebases().get(0));
-		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses with 3 bedrooms");
+		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses in Headington");
 		List<String> p = new ArrayList<String>();
 		p.add(a.getItems().get(1).getUri());
 		p.add(a.getItems().get(2).getUri());
