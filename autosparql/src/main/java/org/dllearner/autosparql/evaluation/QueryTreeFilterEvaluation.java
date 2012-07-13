@@ -16,10 +16,10 @@ import org.dllearner.algorithm.qtl.filters.QuestionBasedQueryTreeFilterAggressiv
 import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
 import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementSelector;
 import org.dllearner.algorithm.qtl.impl.QueryTreeFactoryImpl;
-import org.dllearner.algorithm.qtl.util.ModelGenerator;
-import org.dllearner.algorithm.qtl.util.ModelGenerator.Strategy;
 import org.dllearner.algorithm.qtl.util.TreeHelper;
 import org.dllearner.autosparql.server.search.QuestionProcessor;
+import org.dllearner.kb.sparql.ConciseBoundedDescriptionGenerator;
+import org.dllearner.kb.sparql.ConciseBoundedDescriptionGeneratorImpl;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 
@@ -77,9 +77,8 @@ public class QueryTreeFilterEvaluation {
 		List<String> predicateFilters = Arrays.asList("http://dbpedia.org/ontology/wikiPageWikiLink",
 				"http://dbpedia.org/property/wikiPageUsesTemplate", "http://dbpedia.org/ontology/wikiPageExternalLink",
 				"http://dbpedia.org/property/reference");
-		ModelGenerator modelGen = new ModelGenerator(
-				new SparqlEndpoint(new URL(ENDPOINT_URL), Collections.singletonList("http://dbpedia.org"), Collections.<String>emptyList()), 
-				new HashSet<String>(predicateFilters), new ExtractionDBCache("construct-cache2"));
+		ConciseBoundedDescriptionGenerator modelGen = new ConciseBoundedDescriptionGeneratorImpl(
+				new SparqlEndpoint(new URL(ENDPOINT_URL), Collections.singletonList("http://dbpedia.org"), Collections.<String>emptyList()), new ExtractionDBCache("construct-cache2"));
 		
 		List<String> relevantWords = qProcessor.getRelevantWords(question);
 		relevantWords.add("1");
@@ -103,7 +102,7 @@ public class QueryTreeFilterEvaluation {
 		}relevantWords.addAll(synset);
 		System.out.println(synset);
 		
-		Model model = modelGen.createModel(uri, Strategy.CHUNKS, 2);
+		Model model = modelGen.getConciseBoundedDescription(uri, 2);
 		model.createResource("http://dbpedia.org/resource/46_Long").
 		addProperty(model.createProperty("http://dbpedia.org/ontology/seasonNumber"), "1", com.hp.hpl.jena.vocabulary.XSD.integer.getURI());
 		

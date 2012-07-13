@@ -1,14 +1,13 @@
 package org.autosparql.tbsl.widget;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -20,7 +19,6 @@ import org.autosparql.tbsl.util.Intervals;
 import org.autosparql.tbsl.util.Labels;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.ibm.icu.text.SimpleDateFormat;
 import com.invient.vaadin.charts.Color.RGB;
 import com.invient.vaadin.charts.Color.RGBA;
 import com.invient.vaadin.charts.Gradient;

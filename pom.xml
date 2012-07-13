@@ -76,11 +76,6 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>xerces</groupId>
-				<artifactId>xercesImpl</artifactId>
-				<version>2.9.1</version>
-			</dependency>
-			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
 				<version>1.2.16</version>
@@ -95,13 +90,8 @@
   			<dependency>
   <groupId>org.apache.jena</groupId>
   <artifactId>jena-arq</artifactId>
-  <version>2.9.1-incubating-SNAPSHOT</version>
+  <version>2.9.2</version>
 </dependency>
-			 <dependency>
-    <groupId>org.apache.jena</groupId>
-    <artifactId>jena-core</artifactId>
-    <version>2.7.1-incubating-SNAPSHOT</version>
-  </dependency>
 
 			<!--SwingX is in central -->
 
@@ -476,16 +466,6 @@
 		<groupId>org.apache.jena</groupId>
 		<artifactId>jena-arq</artifactId>
 		</dependency>
-		<dependency>
-		<groupId>org.apache.jena</groupId>
-		<artifactId>jena-core</artifactId>
-		</dependency>
-		<dependency>
-<groupId>xerces</groupId>
-<artifactId>xercesImpl</artifactId> 
-<!-- 			<version>2.6.0</version>-->
-
-</dependency>
 		<dependency>
 			<groupId>org.dllearner</groupId>
 			<artifactId>components-core</artifactId>

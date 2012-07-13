@@ -1,7 +1,7 @@
 package org.autosparql.tbsl.widget;
 
-import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,8 +14,6 @@ import java.util.Set;
 
 import org.autosparql.tbsl.UserSession;
 
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.ibm.icu.text.SimpleDateFormat;
 import com.invient.vaadin.charts.Color.RGB;
 import com.invient.vaadin.charts.Color.RGBA;
 import com.invient.vaadin.charts.Gradient;
