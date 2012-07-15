@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.xerces.impl.xpath.regex.RegularExpression;
 import org.autosparql.tbsl.model.Answer;
 import org.autosparql.tbsl.model.BasicResultItem;
 import org.autosparql.tbsl.model.ExtendedKnowledgebase;
@@ -986,14 +985,12 @@ public class TBSLManager {
 	}
 	
 	public static void main(String[] args) {
-//		Query q = QueryFactory.create("SELECT ?x0 WHERE {?x0 a ?type. ?type a ?y1. ?x0 <http://test.org/t> ?x1}");
-//		normalizeVarNames(q);
 		Manager.getInstance().init();
 		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
 		TBSLManager man = new TBSLManager();
 		man.init();
-		man.setKnowledgebase(man.getKnowledgebases().get(0));
-		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses in Headington");
+		man.setKnowledgebase(man.getKnowledgebases().get(1));
+		SelectAnswer a = (SelectAnswer) man.answerQuestion("soccer clubs in Premier League");
 		List<String> p = new ArrayList<String>();
 		p.add(a.getItems().get(1).getUri());
 		p.add(a.getItems().get(2).getUri());

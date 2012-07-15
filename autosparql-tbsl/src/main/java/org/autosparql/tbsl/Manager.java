@@ -58,6 +58,7 @@ public class Manager {
 	private String wordnetDir;
 	private String cacheDir;
 	private String oxfordFallbackIndexDir;
+	private String semMapURL;
 	
 	private Manager() {
 	}
@@ -81,6 +82,7 @@ public class Manager {
 			cacheDir = baseSection.get("cacheDir", String.class);
 			wordnetDir = baseSection.get("wordnetDir", String.class);
 			oxfordFallbackIndexDir = baseSection.get("oxfordFallbackIndexDir", String.class);
+			semMapURL = baseSection.get("SemMapURL", String.class);
 		
 		} catch (InvalidFileFormatException e2) {
 			e2.printStackTrace();
@@ -247,6 +249,10 @@ public class Manager {
 	
 	public String getCacheDir() {
 		return cacheDir;
+	}
+	
+	public String getSemMapURL() {
+		return semMapURL;
 	}
 	
 	public List<ExtendedKnowledgebase> getKnowledgebases(ExtractionDBCache cache) {

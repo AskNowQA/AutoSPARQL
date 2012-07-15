@@ -1,7 +1,12 @@
 package org.autosparql.tbsl.view;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.autosparql.tbsl.Manager;
 import org.autosparql.tbsl.TBSLManager;
 import org.autosparql.tbsl.UserSession;
 import org.autosparql.tbsl.model.Answer;
@@ -18,6 +24,8 @@ import org.autosparql.tbsl.model.ExtendedKnowledgebase;
 import org.autosparql.tbsl.model.Refinement;
 import org.autosparql.tbsl.model.SelectAnswer;
 import org.autosparql.tbsl.model.SortProperty;
+import org.autosparql.tbsl.util.EscapeUtils;
+import org.autosparql.tbsl.util.JENAUtils;
 import org.autosparql.tbsl.util.Labels;
 import org.autosparql.tbsl.widget.Charts;
 import org.autosparql.tbsl.widget.FeedBackListener;
@@ -31,6 +39,9 @@ import org.vaadin.sasha.portallayout.PortalLayout;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.Syntax;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -41,6 +52,7 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractSelect.Filtering;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -92,6 +104,8 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	private List<Object> positiveMarkedRows;
 	private List<Object> negativeMarkedRows;
 	
+	VerticalLayout l;
+	
 	public MainView() {
 		setSizeFull();
 		
@@ -111,6 +125,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 				if (!executing) {
 			        // stop polling
 			        source.setEnabled(false);
+			        executeButton.setEnabled(true);
 			        showAnswer(answer);
 			      }
 				
@@ -122,6 +137,15 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	@Override
 	public void attach() {
 		createFooter();
+		try {
+			String logoHTML = readFileAsString(this.getClass().getClassLoader().getResource("VAADIN/themes/custom/layouts/logo.html").getPath());
+			Label label = new Label(logoHTML.replace("$logo",getApplication().getURL().getPath() + "VAADIN/themes/custom/images/dbpedia_logo.png"), Label.CONTENT_XHTML);
+			label.setHeight("100px");
+			l.addComponent(label);
+			l.setExpandRatio(label, 1f);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void createHeader(){
@@ -233,6 +257,13 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		questionBox.setImmediate(true);
 		questionBox.setNewItemsAllowed(true);
 		questionBox.setInputPrompt("Enter your question.");
+		questionBox.addListener(new Property.ValueChangeListener() {
+			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				onExecuteQuery();
+			}
+		});
 		questionBox.addShortcutListener(new ShortcutListener("run", ShortcutAction.KeyCode.ENTER, null) {
 		    @Override
 		    public void handleAction(Object sender, Object target) {
@@ -280,8 +311,15 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		}
 	}
 	
+	private Component createFeedbackComponent(){
+		HorizontalLayout feedbackPanel = new HorizontalLayout();
+		
+		return feedbackPanel;
+	}
+	
 	private Component createKnowledgeBaseSelector(){
-		VerticalLayout l = new VerticalLayout();
+		l = new VerticalLayout();
+		l.setSpacing(true);
 		l.setSizeFull();
 		
 		IndexedContainer ic = new IndexedContainer();
@@ -309,14 +347,39 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
         
 		knowledgebaseLogo = new Embedded("");
 		knowledgebaseLogo.setHeight("100%");
-		l.addComponent(knowledgebaseLogo);
-		l.setComponentAlignment(knowledgebaseLogo, Alignment.MIDDLE_CENTER);
-		l.setExpandRatio(knowledgebaseLogo, 1f);
+//		l.addComponent(knowledgebaseLogo);
+//		l.setComponentAlignment(knowledgebaseLogo, Alignment.MIDDLE_CENTER);
+//		l.setExpandRatio(knowledgebaseLogo, 1f);
+		
+		CustomLayout cl = new CustomLayout("logo");
+		cl.setSizeFull();
+//		cl.addComponent(knowledgebaseSelector, "test");
+//		return cl;
+//		l.addComponent(cl);
+//		l.setExpandRatio(cl, 1f);
+			
+			try {
+				String logoHTML = readFileAsString(this.getClass().getClassLoader().getResource("VAADIN/themes/custom/layouts/logo.html").getPath());
+				Label label = new Label(logoHTML.replace("$logo",((WebApplicationContext)getApplication().getContext()).getBaseDirectory().getPath() + "VAADIN/themes/custom/images/dbpedia_logo.png" ), Label.CONTENT_XHTML);
+				label.setHeight("100px");
+//				l.addComponent(label);
+//				l.setExpandRatio(label, 1f);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		
         return l;
 	}
 	
 	
+	
+	private static String readFileAsString(String filePath) throws java.io.IOException {
+		byte[] buffer = new byte[(int) new File(filePath).length()];
+		BufferedInputStream f = new BufferedInputStream(new FileInputStream(filePath));
+		f.read(buffer);
+		return new String(buffer);
+	}
 	
 	
 	
@@ -340,6 +403,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		resultHolderPanel.removeAllComponents();
 		final String question = (String) questionBox.getValue();
 		if(question != null){
+			executeButton.setEnabled(false);
 			feedbackLabel.setVisible(true);
 			final TBSLManager man = UserSession.getManager();
 			executing = true;
@@ -688,7 +752,22 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	}
 	
 	private void onShowMap(){
-		String url = "http://browser.linkedgeodata.org";
+		String queryString = UserSession.getManager().getLearnedSPARQLQuery();
+		Query query = QueryFactory.create(queryString, Syntax.syntaxARQ);
+		query = JENAUtils.writeOutPrefixes(query);
+		String targetVar = query.getProjectVars().get(0).getVarName();
+		String serviceURI = UserSession.getManager().getCurrentExtendedKnowledgebase().getKnowledgebase().getEndpoint().getURL().toString();
+		String url = "";
+		try {
+			url = Manager.getInstance().getSemMapURL() 
+					+ "?query=" + URLEncoder.encode(query.toString().replaceAll("[\n\r]", " "), "UTF-8")
+					+ "&var=" + targetVar
+					+ "&service-uri=" + EscapeUtils.encodeURIComponent(serviceURI);
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.out.println(url);
 		Embedded e = new Embedded("Linked Geo Data View", new ExternalResource(url));
         e.setAlternateText("Linked Geo Data View");
         e.setType(Embedded.TYPE_BROWSER);
