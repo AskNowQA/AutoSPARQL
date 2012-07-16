@@ -58,13 +58,29 @@
 }
 
 .status-label {
-	border: 2px solid #a1a1a1;
 	padding: 10px 40px;
 	background: black;
-	text-align: center; border-radius : 25px;
+	text-align: center;
 	color: white;
-	border-radius: 25px;
 	font-size: 1.2em;
+}
+
+.white-round-border{
+	border: 2px solid #a1a1a1;
+	border-top-left-radius: 25px;
+	border-bottom-left-radius: 25px;
+	margin-right: 10px;
+	 -moz-box-shadow:    3px 3px 5px 6px red;
+  -webkit-box-shadow: 3px 3px 5px 6px red;
+  box-shadow:         3px 3px 5px 6px red;
+}
+
+.class_box_shadow{
+ 
+-moz-box-shadow: 10 10 5px #fff;
+-webkit-box-shadow: 10px 10px 5px #fff;
+box-shadow: 0px 0px 5px #fff;
+
 }
 
 @
@@ -130,4 +146,14 @@ background-repeat: no-repeat;
 	border-radius : 25px;
 	font-size: 1.2em;
 	
+}
+
+.did-you-mean-header{
+	font-size: 2em;
+	font-family: fantasy;
+	text-align: center;
+}
+
+.other-solution-label{
+	font-size:1.4em;
 }

@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.autosparql.tbsl.util.URLParameters;
 import org.autosparql.tbsl.view.MainView;
-import org.autosparql.tbsl.widget.TimeChartWindow;
 import org.vaadin.appfoundation.authentication.SessionHandler;
 import org.vaadin.appfoundation.authorization.Permissions;
 import org.vaadin.appfoundation.authorization.jpa.JPAPermissionManager;
@@ -46,9 +45,6 @@ public class TBSLApplication extends Application implements ParameterHandler{
             ShortcutAction.KeyCode.Q,
             new int[] { ShortcutAction.ModifierKey.CTRL });
     
-    Action action_chart = new ShortcutAction("Ctrl+M",
-            ShortcutAction.KeyCode.M,
-            new int[] { ShortcutAction.ModifierKey.CTRL });
     
     private String endpoint;
     private String question;
@@ -85,24 +81,13 @@ public class TBSLApplication extends Application implements ParameterHandler{
 			public void handleAction(Action action, Object sender, Object target) {
 				if(action == action_query){
 					onShowLearnedQuery();
-				} else if(action == action_chart){
-					final Window w = new TimeChartWindow();
-					getMainWindow().addWindow(w);
-			        w.addListener(new Window.CloseListener() {
-						
-						@Override
-						public void windowClose(CloseEvent e) {
-							getMainWindow().removeWindow(w);
-						}
-					});
-					
-				}
+				} 
 				
 			}
 			
 			@Override
 			public Action[] getActions(Object target, Object sender) {
-				return new Action[] { action_query, action_chart };
+				return new Action[] { action_query};
 			}
 		});
         

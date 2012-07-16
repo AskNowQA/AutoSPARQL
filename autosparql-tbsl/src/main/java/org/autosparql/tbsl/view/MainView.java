@@ -73,6 +73,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
+import com.vaadin.ui.themes.BaseTheme;
 
 public class MainView extends VerticalLayout implements ViewContainer, TBSLProgressListener{
 	
@@ -93,6 +94,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	private ComboBox propertySelector;
 	
 	private Label feedbackLabel;
+	private Button wrongSolutionButton;
 	
 	private boolean executing = false;
 	private Answer answer;
@@ -137,15 +139,15 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	@Override
 	public void attach() {
 		createFooter();
-		try {
-			String logoHTML = readFileAsString(this.getClass().getClassLoader().getResource("VAADIN/themes/custom/layouts/logo.html").getPath());
-			Label label = new Label(logoHTML.replace("$logo",getApplication().getURL().getPath() + "VAADIN/themes/custom/images/dbpedia_logo.png"), Label.CONTENT_XHTML);
-			label.setHeight("100px");
-			l.addComponent(label);
-			l.setExpandRatio(label, 1f);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			String logoHTML = readFileAsString(this.getClass().getClassLoader().getResource("VAADIN/themes/custom/layouts/logo.html").getPath());
+//			Label label = new Label(logoHTML.replace("$logo",getApplication().getURL().getPath() + "VAADIN/themes/custom/images/dbpedia_logo.png"), Label.CONTENT_XHTML);
+//			label.setHeight("100px");
+//			l.addComponent(label);
+//			l.setExpandRatio(label, 1f);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	private void createHeader(){
@@ -285,19 +287,21 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		});
 		rightTop.addComponent(executeButton);
 		
-		feedbackLabel = new Label();
-		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
-		feedbackLabel.addStyleName("status-label");
-		feedbackLabel.setWidth("90%");
-		feedbackLabel.setVisible(false);
+//		feedbackLabel = new Label();
+//		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
+//		feedbackLabel.addStyleName("status-label");
+//		feedbackLabel.setWidth("90%");
+//		feedbackLabel.setVisible(false);
+//		
+//		HorizontalLayout feedbackWrapper = new HorizontalLayout();
+//		feedbackWrapper.setSizeFull();
+//		feedbackWrapper.addComponent(feedbackLabel);
+//		feedbackWrapper.setComponentAlignment(feedbackLabel, Alignment.MIDDLE_CENTER);
 		
-		HorizontalLayout feedbackWrapper = new HorizontalLayout();
-		feedbackWrapper.setSizeFull();
-		feedbackWrapper.addComponent(feedbackLabel);
-		feedbackWrapper.setComponentAlignment(feedbackLabel, Alignment.MIDDLE_CENTER);
+		Component feedbackComponent = createFeedbackComponent();
 		
-		right.addComponent(feedbackWrapper);
-		right.setExpandRatio(feedbackWrapper, 1f);
+		right.addComponent(feedbackComponent);
+		right.setExpandRatio(feedbackComponent, 1f);
 		
 		
 		return l;
@@ -313,8 +317,130 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	
 	private Component createFeedbackComponent(){
 		HorizontalLayout feedbackPanel = new HorizontalLayout();
+		feedbackPanel.setSpacing(true);
+		feedbackPanel.addStyleName("white-round-border");
+//		feedbackPanel.addStyleName("class_box_shadow");
+		feedbackPanel.setSizeFull();
+		feedbackPanel.setWidth("99%");
+		
+		feedbackLabel = new Label("&nbsp;", Label.CONTENT_XHTML);
+		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
+		feedbackLabel.addStyleName("status-label");
+		feedbackLabel.setSizeFull();
+		feedbackLabel.setVisible(true);
+		
+		feedbackPanel.addComponent(feedbackLabel);
+		feedbackPanel.setExpandRatio(feedbackLabel, 1f);
+		
+		wrongSolutionButton = new Button("Wrong!");
+		wrongSolutionButton.addListener(new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Window otherSolutionsWindow = createOtherSolutionsWindow();
+				getApplication().getMainWindow().addWindow(otherSolutionsWindow);
+			}
+		});
+		wrongSolutionButton.setVisible(false);
+		feedbackPanel.addComponent(wrongSolutionButton);
 		
 		return feedbackPanel;
+	}
+	
+	private Window createOtherSolutionsWindow(){
+		final Window otherSolutionsWindow = new Window();
+		otherSolutionsWindow.setWidth("600px");
+		otherSolutionsWindow.setHeight("600px");
+		otherSolutionsWindow.addListener(new Window.CloseListener() {
+
+			@Override
+			public void windowClose(CloseEvent e) {
+				MainView.this.getApplication().getMainWindow().removeWindow(otherSolutionsWindow);
+			}
+		});
+		
+		VerticalLayout content = new VerticalLayout();
+		content.setSizeFull();
+		content.setSpacing(true);
+		otherSolutionsWindow.setContent(content);
+
+		Label label = new Label("Did you mean?");
+		label.setHeight(null);
+		label.addStyleName("did-you-mean-header");
+		content.addComponent(label);
+		
+		final List<Entry<String, String>> otherSolutions = UserSession.getManager().getMoreSolutions();
+		final Table table = new Table();
+		table.setSizeFull();
+		table.setImmediate(true);
+		table.addContainerProperty("solution", Label.class, null);
+		table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+		content.addComponent(table);
+		content.setExpandRatio(table, 1f);
+		
+		Item item;
+		for(Entry<String, String> sol : otherSolutions){
+			item = table.addItem(sol);
+			item.getItemProperty("solution").setValue(sol);
+		}
+		table.addGeneratedColumn("solution", new ColumnGenerator() {
+			@Override
+			public Component generateCell(Table source, final Object itemId, Object columnId) {
+				final Entry<String, String> entry = (Entry<String, String>) itemId;
+				
+				HorizontalLayout c = new HorizontalLayout();
+				c.setHeight("30px");
+				c.setWidth(null);
+				c.addStyleName("tweet");
+				
+				VerticalLayout buttons = new VerticalLayout();
+				buttons.setHeight("100%");
+				buttons.addStyleName("buttons");
+				Button posExampleButton = new Button();
+				posExampleButton.setIcon(new ThemeResource("images/thumb_up.png"));
+				posExampleButton.addStyleName(BaseTheme.BUTTON_LINK);
+				posExampleButton.setDescription("Click if this is what you intended.");
+				posExampleButton.addListener(new Button.ClickListener() {
+					
+					@Override
+					public void buttonClick(ClickEvent event) {
+						MainView.this.getApplication().getMainWindow().removeWindow(otherSolutionsWindow);
+						Answer newAnswer = UserSession.getManager().createAnswer(entry.getKey());
+						resultHolderPanel.removeAllComponents();
+						showAnswer(newAnswer);
+					}
+				});
+				buttons.addComponent(posExampleButton);
+				c.addComponent(buttons);
+				Label solutionLabel = new Label(entry.getValue());
+				solutionLabel.addStyleName("other-solution-label");
+				c.addComponent(solutionLabel);
+				return c;
+			}
+		});
+		
+		//more button
+		final Button moreButton = new Button("More");
+		moreButton.setHeight(null);
+		moreButton.addListener(new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				List<Entry<String, String>> moreOtherSolutions = UserSession.getManager().getMoreSolutions(otherSolutions.size()+1);
+				if(moreOtherSolutions.size() < 10){
+					moreButton.setEnabled(false);
+				}
+				Item item;
+				for(Entry<String, String> sol : moreOtherSolutions){
+					item = table.addItem(sol);
+					item.getItemProperty("solution").setValue(sol);
+				}
+				otherSolutions.addAll(moreOtherSolutions);
+			}
+		});
+		content.addComponent(moreButton);
+		content.setComponentAlignment(moreButton, Alignment.MIDDLE_CENTER);
+		return otherSolutionsWindow;
 	}
 	
 	private Component createKnowledgeBaseSelector(){
@@ -347,26 +473,26 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
         
 		knowledgebaseLogo = new Embedded("");
 		knowledgebaseLogo.setHeight("100%");
-//		l.addComponent(knowledgebaseLogo);
-//		l.setComponentAlignment(knowledgebaseLogo, Alignment.MIDDLE_CENTER);
-//		l.setExpandRatio(knowledgebaseLogo, 1f);
+		l.addComponent(knowledgebaseLogo);
+		l.setComponentAlignment(knowledgebaseLogo, Alignment.MIDDLE_CENTER);
+		l.setExpandRatio(knowledgebaseLogo, 1f);
 		
-		CustomLayout cl = new CustomLayout("logo");
-		cl.setSizeFull();
-//		cl.addComponent(knowledgebaseSelector, "test");
-//		return cl;
-//		l.addComponent(cl);
-//		l.setExpandRatio(cl, 1f);
-			
-			try {
-				String logoHTML = readFileAsString(this.getClass().getClassLoader().getResource("VAADIN/themes/custom/layouts/logo.html").getPath());
-				Label label = new Label(logoHTML.replace("$logo",((WebApplicationContext)getApplication().getContext()).getBaseDirectory().getPath() + "VAADIN/themes/custom/images/dbpedia_logo.png" ), Label.CONTENT_XHTML);
-				label.setHeight("100px");
-//				l.addComponent(label);
-//				l.setExpandRatio(label, 1f);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//		CustomLayout cl = new CustomLayout("logo");
+//		cl.setSizeFull();
+////		cl.addComponent(knowledgebaseSelector, "test");
+////		return cl;
+////		l.addComponent(cl);
+////		l.setExpandRatio(cl, 1f);
+//			
+//			try {
+//				String logoHTML = readFileAsString(this.getClass().getClassLoader().getResource("VAADIN/themes/custom/layouts/logo.html").getPath());
+//				Label label = new Label(logoHTML.replace("$logo",((WebApplicationContext)getApplication().getContext()).getBaseDirectory().getPath() + "VAADIN/themes/custom/images/dbpedia_logo.png" ), Label.CONTENT_XHTML);
+//				label.setHeight("100px");
+////				l.addComponent(label);
+////				l.setExpandRatio(label, 1f);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 			
 		
         return l;
@@ -405,6 +531,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		if(question != null){
 			executeButton.setEnabled(false);
 			feedbackLabel.setVisible(true);
+			wrongSolutionButton.setVisible(false);
 			final TBSLManager man = UserSession.getManager();
 			executing = true;
 			refresher.setEnabled(true);
@@ -855,6 +982,14 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		} else {
 			//TODO show message that refinement failed
 		}
+	}
+
+	@Override
+	public void foundAnswer(boolean answerFound) {
+		if(answerFound){
+			wrongSolutionButton.setVisible(true);
+		}
+		
 	}
 	
 	

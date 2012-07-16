@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +39,7 @@ import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter2;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
+import org.dllearner.algorithm.tbsl.sparql.WeightedQuery;
 import org.dllearner.algorithm.tbsl.util.PopularityMap;
 import org.dllearner.core.ComponentInitException;
 import org.dllearner.kb.sparql.ExtractionDBCache;
@@ -198,11 +200,13 @@ public class TBSLManager {
 		tbsl.setKnowledgebase(ekb.getKnowledgebase());
 		if(ekb.getInfoBoxClass() == OxfordInfoLabel.class){
 			tbsl.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
+			tbsl.setUseDomainRangeRestriction(false);
 		} else {
 			tbsl.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex"});
 			PopularityMap map = new PopularityMap(
 					this.getClass().getClassLoader().getResource("dbpedia_popularity.map").getPath(), currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), cache);
 			map.init();
+			tbsl.setUseDomainRangeRestriction(true);
 			tbsl.setPopularityMap(map);
 		}
 		nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), Manager.getInstance().getWordnetDir());
@@ -212,6 +216,27 @@ public class TBSLManager {
 	
 	public ExtendedKnowledgebase getCurrentExtendedKnowledgebase() {
 		return currentExtendedKnowledgebase;
+	}
+	
+	public List<Entry<String, String>> getMoreSolutions(){
+		return getMoreSolutions(1);
+	}
+	
+	public List<Entry<String, String>> getMoreSolutions(int offset){
+		Map<String, String> query2Translation = new LinkedHashMap<String, String>();
+		SortedSet<WeightedQuery> otherCandidates = tbsl.getGeneratedQueries();
+		List<WeightedQuery> subList = new ArrayList<WeightedQuery>(otherCandidates).subList(
+				offset, Math.min(otherCandidates.size(), offset + 10));
+		for(WeightedQuery wQ : subList){
+			String queryString = wQ.getQuery().toString();
+			String translation = getNLRepresentation(queryString);
+			query2Translation.put(queryString, translation);
+		}
+		List<Entry<String, String>> otherSolutions = new ArrayList<Entry<String,String>>();
+		for(Entry<String, String> entry : query2Translation.entrySet()){
+			otherSolutions.add(entry);
+		}
+		return otherSolutions;
 	}
 	
 //	public List<BasicResultItem> answerQuestion(String question){
@@ -307,52 +332,68 @@ public class TBSLManager {
 			if(learnedSPARQLQuery != null){
 				logger.info("Found answer.");
 				logger.info("Learned SPARQL Query:\n" + learnedSPARQLQuery);
-				String translatedQuery = getNLRepresentation(learnedSPARQLQuery);
-				message("Found answer for \"" + translatedQuery + "\". Loading result...");
-				Query q = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
-				if(!q.hasGroupBy()){
-					q.setDistinct(true);
-					learnedSPARQLQuery = q.toString();
-				}
-				
-				
-				if(q.isSelectType()){
-					
-					List<BasicResultItem> result = fetchResult(learnedSPARQLQuery);
-					Map<String, Integer> additionalProperties = getAdditionalProperties();
-					
-					List<String> mostProminentProperties = new ArrayList<String>();
-					List<Entry<String, Integer>> sortedByValues = sortByValues(additionalProperties);
-					for(int i = 0; i < Math.min(sortedByValues.size(), 5); i++){
-						String propertyURI = sortedByValues.get(i).getKey();
-						mostProminentProperties.add(propertyURI);
-						additionalProperties.remove(propertyURI);
-					}
-					fillItems(mostProminentProperties);
-					answer = new SelectAnswer(result, mostProminentProperties, additionalProperties);
-					message("Found answer for \"" + translatedQuery + "\".");
-				} else if(q.isAskType()){
-					
+				answer = createAnswer(learnedSPARQLQuery);
+				if(progressListener != null){
+					progressListener.foundAnswer(true);
 				}
 			} else {
 				logger.info("Found no answer.");
 				message("Could not find an non-empty answer. Using fallback by searching in descriptions of the entities.");
 				answer = answerQuestionFallback(question);
 			}
-			
-			
-			
-			
 		} catch (NoTemplateFoundException e) {
 			logger.error("Found no template.");
 			message("Didn't understand the question. Using fallback by searching in descriptions of the entities.");
 			answer = answerQuestionFallback(question);
+			if(progressListener != null){
+				progressListener.foundAnswer(false);
+			}
 		}
 //		message("Finished.");
 		if(progressListener != null){
 			progressListener.finished(answer);
 		}
 		
+		return answer;
+	}
+	
+	public Answer createAnswer(String sparqlQueryString){
+		learnedSPARQLQuery = sparqlQueryString;
+		Answer answer = null;
+		String translatedQuery = getNLRepresentation(sparqlQueryString);
+		message("Found answer for \"" + translatedQuery + "\". Loading result...");
+		Query q = QueryFactory.create(sparqlQueryString, Syntax.syntaxARQ);
+		if(!q.hasGroupBy()){
+			q.setDistinct(true);
+			learnedSPARQLQuery = q.toString();
+		}
+		
+		
+		if(q.isSelectType()){
+			
+			List<BasicResultItem> result = fetchResult(sparqlQueryString);
+			Map<String, Integer> additionalProperties = getAdditionalProperties();
+			
+			List<String> mostProminentProperties = new ArrayList<String>();
+			if(!result.isEmpty()){
+				List<Entry<String, Integer>> sortedByValues = sortByValues(additionalProperties);
+				for(int i = 0; i < Math.min(sortedByValues.size(), 5); i++){
+					String propertyURI = sortedByValues.get(i).getKey();
+					mostProminentProperties.add(propertyURI);
+					additionalProperties.remove(propertyURI);
+				}
+				fillItems(mostProminentProperties);
+			}
+			
+			answer = new SelectAnswer(result, mostProminentProperties, additionalProperties);
+			if(result.isEmpty()){
+				message("Answer for \"" + translatedQuery + "\" is empty.");
+			} else {
+				message("Found answer for \"" + translatedQuery + "\".");
+			}
+		} else if(q.isAskType()){
+			
+		}
 		return answer;
 	}
 	
@@ -989,8 +1030,8 @@ public class TBSLManager {
 		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
 		TBSLManager man = new TBSLManager();
 		man.init();
-		man.setKnowledgebase(man.getKnowledgebases().get(1));
-		SelectAnswer a = (SelectAnswer) man.answerQuestion("soccer clubs in Premier League");
+		man.setKnowledgebase(man.getKnowledgebases().get(0));
+		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses in Abingdon with more than 2 bedrooms");
 		List<String> p = new ArrayList<String>();
 		p.add(a.getItems().get(1).getUri());
 		p.add(a.getItems().get(2).getUri());
