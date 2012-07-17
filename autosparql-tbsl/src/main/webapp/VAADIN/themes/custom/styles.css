@@ -75,11 +75,15 @@
   box-shadow:         3px 3px 5px 6px red;
 }
 
+.white-border{
+	border: 3px solid white;
+}
+
 .class_box_shadow{
  
 -moz-box-shadow: 10 10 5px #fff;
--webkit-box-shadow: 10px 10px 5px #fff;
-box-shadow: 0px 0px 5px #fff;
+-webkit-box-shadow: 5px 5px 5px 5px #fff;
+box-shadow: 5px 5px 5px 5px #fff;
 
 }
 
@@ -157,3 +161,60 @@ background-repeat: no-repeat;
 .other-solution-label{
 	font-size:1.4em;
 }
+
+
+.box{
+	position:relative;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fefbb0), to(#fff955));
+       -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
+}
+
+.box:after{
+	-webkit-box-shadow: 8px 12px 10px rgba(0, 0, 0, 0.7);
+    position:absolute;
+	content:'';
+	background:transparent;
+	bottom:10px;
+	right:9px;
+	width:70%;
+	height:70%;
+    -webkit-transform: rotate(5deg)
+					   skew(10deg);
+					   z-index:-2;
+					   
+}
+
+.box:before{
+	-webkit-box-shadow: 11px 11px 32px rgba(255, 255, 255, 0.7);
+    position:absolute;
+	content:'';
+	background:transparent;
+	bottom:46px;
+	right:41px;
+	width:50%;
+	height:50%;
+    -webkit-transform: rotate(20deg)
+					   skew(45deg);
+z-index:-1;
+
+}
+
+.shadow-label {
+-moz-box-shadow: 10px 10px 5px #888;
+-webkit-box-shadow: 10px 10px 5px #888;
+box-shadow: 10px 10px 5px #888;
+}
+
+.wrong-button {
+	height: 50px;
+	padding-top: 3px;
+	background-image: url("/autosparql-lite/VAADIN/themes/custom/images/wrong_way.png");
+	background-size: 52px;
+	background-repeat: no-repeat;
+}
+
+.v-embedded[style] img {
+    width: 100% !important;
+    }
+
+

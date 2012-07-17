@@ -79,7 +79,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	
 	private static final int REFRESH_INTERVAL = 1000;
 	
-	private VerticalLayout mainPanel = new VerticalLayout();
+	private VerticalLayout mainPanel;
 	private View currentView;
 	
 	private Embedded knowledgebaseLogo;
@@ -93,8 +93,10 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	private Table resultTable;
 	private ComboBox propertySelector;
 	
+	private HorizontalLayout feedbackPanel;
 	private Label feedbackLabel;
-	private Button wrongSolutionButton;
+	private NativeButton wrongSolutionButton;
+	
 	
 	private boolean executing = false;
 	private Answer answer;
@@ -111,7 +113,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	public MainView() {
 		setSizeFull();
 		
-		createHeader();
+//		createHeader();
 		createMainPanel();
 //		createFooter();
 		
@@ -139,15 +141,19 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	@Override
 	public void attach() {
 		createFooter();
-//		try {
-//			String logoHTML = readFileAsString(this.getClass().getClassLoader().getResource("VAADIN/themes/custom/layouts/logo.html").getPath());
-//			Label label = new Label(logoHTML.replace("$logo",getApplication().getURL().getPath() + "VAADIN/themes/custom/images/dbpedia_logo.png"), Label.CONTENT_XHTML);
-//			label.setHeight("100px");
-//			l.addComponent(label);
-//			l.setExpandRatio(label, 1f);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+	}
+	
+	public void initWithParams(String endpoint, String question){
+		System.out.println("init with params");
+		if(endpoint.equals("dbpedia")){
+			knowledgebaseSelector.select(UserSession.getManager().getKnowledgebases().get(1));
+		} else if(endpoint.equals("oxford")){
+			knowledgebaseSelector.select(UserSession.getManager().getKnowledgebases().get(0));
+		}
+		questionBox.addItem(question);
+		questionBox.setValue(question);
+		onExecuteQuery();
+		
 	}
 	
 	private void createHeader(){
@@ -166,19 +172,6 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 //		header.setExpandRatio(pad, 1f);
 	}
 	
-	public void initWithParams(String endpoint, String question){
-		System.out.println("init with params");
-		if(endpoint.equals("dbpedia")){
-			knowledgebaseSelector.select(UserSession.getManager().getKnowledgebases().get(1));
-		} else if(endpoint.equals("oxford")){
-			knowledgebaseSelector.select(UserSession.getManager().getKnowledgebases().get(0));
-		}
-		questionBox.addItem(question);
-		questionBox.setValue(question);
-		onExecuteQuery();
-		
-	}
-	
 	private void createFooter(){
 		try {
 			CustomLayout footer = new CustomLayout(this.getClass().getClassLoader().getResourceAsStream("footer.html"));
@@ -193,14 +186,14 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	}
 	
 	private void createMainPanel(){
-		VerticalLayout mainPanel = new VerticalLayout();
+		mainPanel = new VerticalLayout();
 		mainPanel.setSpacing(true);
 		mainPanel.setSizeFull();
 		addComponent(mainPanel);
 		setExpandRatio(mainPanel, 1f);
 		
-		
-		Component inputForm = createInputForm();
+		//top part
+		Component inputForm = createInputComponent();
 		inputForm.setWidth("60%");
 		inputForm.setHeight("100%");
 		VerticalLayout inputFormHolder = new VerticalLayout();
@@ -211,7 +204,8 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		inputFormHolder.setComponentAlignment(inputForm, Alignment.MIDDLE_CENTER);
 		mainPanel.addComponent(inputFormHolder);
 		mainPanel.setComponentAlignment(inputFormHolder, Alignment.MIDDLE_CENTER);
-
+		
+		//middle part
 		resultHolderPanel = new VerticalLayout();
 		resultHolderPanel.setWidth("80%");
 		resultHolderPanel.setHeight("100%");
@@ -219,6 +213,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		mainPanel.setComponentAlignment(resultHolderPanel, Alignment.MIDDLE_CENTER);
 		mainPanel.setExpandRatio(resultHolderPanel, 0.8f);
 		
+		//refine button, only visible if constraints running QTL algorithm are satisfied
 		refineButton = new Button("Refine");
 		refineButton.setVisible(false);
 		refineButton.addListener(new Button.ClickListener() {
@@ -234,17 +229,18 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		
 	}
 	
-	private Component createInputForm(){
+	private Component createInputComponent(){
 		HorizontalLayout l = new HorizontalLayout();
 		l.setSpacing(true);
 		
-		Component kbSelector = createKnowledgeBaseSelector();
+		Component kbSelector = createKnowledgebaseComponent();
 		kbSelector.setWidth("150px");
 		kbSelector.setHeight("100px");
 		l.addComponent(kbSelector);
 		
 		VerticalLayout right = new VerticalLayout();
 		right.setSizeFull();
+		right.setHeight("100px");
 		right.setSpacing(true);
 		l.addComponent(right);
 		l.setExpandRatio(right, 1f);
@@ -287,52 +283,35 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		});
 		rightTop.addComponent(executeButton);
 		
-//		feedbackLabel = new Label();
-//		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
-//		feedbackLabel.addStyleName("status-label");
-//		feedbackLabel.setWidth("90%");
-//		feedbackLabel.setVisible(false);
-//		
-//		HorizontalLayout feedbackWrapper = new HorizontalLayout();
-//		feedbackWrapper.setSizeFull();
-//		feedbackWrapper.addComponent(feedbackLabel);
-//		feedbackWrapper.setComponentAlignment(feedbackLabel, Alignment.MIDDLE_CENTER);
-		
 		Component feedbackComponent = createFeedbackComponent();
-		
 		right.addComponent(feedbackComponent);
 		right.setExpandRatio(feedbackComponent, 1f);
+		right.setComponentAlignment(feedbackComponent, Alignment.MIDDLE_CENTER);
 		
 		
 		return l;
 	}
 	
-	private void addExampleQuestions(){
-		questionBox.removeAllItems();
-		List<String> exampleQuestions = UserSession.getManager().getCurrentExtendedKnowledgebase().getExampleQuestions();
-		for(String question : exampleQuestions){
-			questionBox.addItem(question);
-		}
-	}
-	
 	private Component createFeedbackComponent(){
-		HorizontalLayout feedbackPanel = new HorizontalLayout();
+		feedbackPanel = new HorizontalLayout();
 		feedbackPanel.setSpacing(true);
-		feedbackPanel.addStyleName("white-round-border");
-//		feedbackPanel.addStyleName("class_box_shadow");
 		feedbackPanel.setSizeFull();
-		feedbackPanel.setWidth("99%");
+		feedbackPanel.addStyleName("white-border");
+		feedbackPanel.addStyleName("shadow-label");
+		feedbackPanel.setWidth("95%");
+		feedbackPanel.setHeight("80%");
+		feedbackPanel.setVisible(false);
 		
 		feedbackLabel = new Label("&nbsp;", Label.CONTENT_XHTML);
 		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
 		feedbackLabel.addStyleName("status-label");
 		feedbackLabel.setSizeFull();
-		feedbackLabel.setVisible(true);
-		
 		feedbackPanel.addComponent(feedbackLabel);
 		feedbackPanel.setExpandRatio(feedbackLabel, 1f);
+		feedbackPanel.setComponentAlignment(feedbackLabel, Alignment.MIDDLE_CENTER);
 		
-		wrongSolutionButton = new Button("Wrong!");
+		wrongSolutionButton = new NativeButton("Wrong!");
+		wrongSolutionButton.setWidth("60px");
 		wrongSolutionButton.addListener(new Button.ClickListener() {
 			
 			@Override
@@ -341,16 +320,17 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 				getApplication().getMainWindow().addWindow(otherSolutionsWindow);
 			}
 		});
-		wrongSolutionButton.setVisible(false);
-		feedbackPanel.addComponent(wrongSolutionButton);
+//		wrongSolutionButton.setVisible(false);
+//		feedbackPanel.addComponent(wrongSolutionButton);
+//		feedbackPanel.setComponentAlignment(wrongSolutionButton, Alignment.MIDDLE_CENTER);
 		
 		return feedbackPanel;
 	}
 	
 	private Window createOtherSolutionsWindow(){
 		final Window otherSolutionsWindow = new Window();
-		otherSolutionsWindow.setWidth("600px");
-		otherSolutionsWindow.setHeight("600px");
+		otherSolutionsWindow.setWidth("700px");
+		otherSolutionsWindow.setHeight("700px");
 		otherSolutionsWindow.addListener(new Window.CloseListener() {
 
 			@Override
@@ -443,7 +423,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		return otherSolutionsWindow;
 	}
 	
-	private Component createKnowledgeBaseSelector(){
+	private Component createKnowledgebaseComponent(){
 		l = new VerticalLayout();
 		l.setSpacing(true);
 		l.setSizeFull();
@@ -472,42 +452,22 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
         l.addComponent(knowledgebaseSelector);
         
 		knowledgebaseLogo = new Embedded("");
+		knowledgebaseLogo.setType(Embedded.TYPE_IMAGE);
 		knowledgebaseLogo.setHeight("100%");
 		l.addComponent(knowledgebaseLogo);
 		l.setComponentAlignment(knowledgebaseLogo, Alignment.MIDDLE_CENTER);
 		l.setExpandRatio(knowledgebaseLogo, 1f);
 		
-//		CustomLayout cl = new CustomLayout("logo");
-//		cl.setSizeFull();
-////		cl.addComponent(knowledgebaseSelector, "test");
-////		return cl;
-////		l.addComponent(cl);
-////		l.setExpandRatio(cl, 1f);
-//			
-//			try {
-//				String logoHTML = readFileAsString(this.getClass().getClassLoader().getResource("VAADIN/themes/custom/layouts/logo.html").getPath());
-//				Label label = new Label(logoHTML.replace("$logo",((WebApplicationContext)getApplication().getContext()).getBaseDirectory().getPath() + "VAADIN/themes/custom/images/dbpedia_logo.png" ), Label.CONTENT_XHTML);
-//				label.setHeight("100px");
-////				l.addComponent(label);
-////				l.setExpandRatio(label, 1f);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-			
-		
         return l;
 	}
 	
-	
-	
-	private static String readFileAsString(String filePath) throws java.io.IOException {
-		byte[] buffer = new byte[(int) new File(filePath).length()];
-		BufferedInputStream f = new BufferedInputStream(new FileInputStream(filePath));
-		f.read(buffer);
-		return new String(buffer);
+	private void addExampleQuestions(){
+		questionBox.removeAllItems();
+		List<String> exampleQuestions = UserSession.getManager().getCurrentExtendedKnowledgebase().getExampleQuestions();
+		for(String question : exampleQuestions){
+			questionBox.addItem(question);
+		}
 	}
-	
-	
 	
 	public void reset(){
 		knowledgebaseSelector.setValue(UserSession.getManager().getCurrentExtendedKnowledgebase());
@@ -530,8 +490,8 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		final String question = (String) questionBox.getValue();
 		if(question != null){
 			executeButton.setEnabled(false);
-			feedbackLabel.setVisible(true);
-			wrongSolutionButton.setVisible(false);
+			resetFeedback();
+			showFeedback(true);
 			final TBSLManager man = UserSession.getManager();
 			executing = true;
 			refresher.setEnabled(true);
@@ -987,9 +947,20 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	@Override
 	public void foundAnswer(boolean answerFound) {
 		if(answerFound){
-			wrongSolutionButton.setVisible(true);
+//			wrongSolutionButton.setVisible(true);
+			feedbackPanel.addComponent(wrongSolutionButton);
+			feedbackPanel.setComponentAlignment(wrongSolutionButton, Alignment.MIDDLE_CENTER);
 		}
 		
+	}
+	
+	private void showFeedback(boolean show){
+		feedbackPanel.setVisible(show);
+	}
+	
+	private void resetFeedback(){
+		feedbackLabel.setValue("&nbsp;");
+		feedbackPanel.removeComponent(wrongSolutionButton);
 	}
 	
 	
