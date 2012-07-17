@@ -1,0 +1,133 @@
+@import "../reindeer/styles.css";
+
+.wrap{
+	white-space: normal;
+}
+
+.white-font {
+	color: white;
+	font-size: 1.2em;
+	vertical-align: middle;
+}
+
+.v-table .v-selected,.black .v-table .v-selected .green-selection-table {
+	background-color: green;
+	background-image: none;
+	background-repeat: no-repeat;
+}
+
+.smalllogo a img { 
+	width: 100px;
+}
+
+.image-shift-right{
+	margin-left: 10px;
+}
+
+.image-shift-left{
+	margin-right: 10px;
+}
+
+.noline a {
+	color:black;
+}
+.noline a:link {text-decoration: none}
+.noline a:visited {text-decoration: none}
+.noline a:active {text-decoration: none}
+.noline a:hover {text-decoration: underline; color: blue;}
+
+
+.tweet .buttons {
+  visibility: hidden;
+}
+
+.tweet:hover .buttons {
+  visibility: visible;
+}
+
+.v-table-cell-content-green {
+    background: #D2FFC4;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.v-table-cell-content-red {
+    background: #FF8A8A;
+     border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.status-label {
+	border: 2px solid #a1a1a1;
+	padding: 10px 40px;
+	background: black;
+	text-align: center; border-radius : 25px;
+	color: white;
+	border-radius: 25px;
+	font-size: 1.2em;
+}
+
+@
+-webkit-keyframes greenPulse {
+from { background-color: #749a02; -webkit-box-shadow:: 0 0 9px #333; }
+50% { background-color: #91bd09; -webkit-box-shadow:: 0 0 18px #91bd09; }
+to { background-color: #749a02; -webkit-box-shadow:: 0 0 9px #333; }
+}
+
+a.green.button {
+	-webkit-animation-name: greenPulse;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+}
+
+.input-form {
+	background-color: black;
+}
+
+.header {
+	
+}
+
+.footer{
+	
+}
+
+.v-nativebutton-borderless {
+    border: none;
+    background: transparent;
+}
+
+.v-nativebutton-borderless:active {
+    border: none;
+}
+
+.v-nativebutton-borderless:hover {
+     border: none;
+}
+
+.map-button {
+	width: 24px;
+	height: 24px;
+	padding-top: 3px;
+	background-image: url("/autosparql-lite/VAADIN/themes/custom/images/map2.png");
+	background-size: 28px;
+background-repeat: no-repeat;
+}
+
+.diagram-button {
+	width: 24px;
+	height: 24px;
+	padding-top: 3px;
+	background-image: url("/autosparql-lite/VAADIN/themes/custom/images/diagram.png");
+	background-size: 28px;
+background-repeat: no-repeat;
+}
+
+.aggregate-box{
+	background-color: black;
+	color:white;
+	margin-top :10px;
+	border-radius : 25px;
+	font-size: 1.2em;
+	
+}

@@ -21,7 +21,8 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
-import org.dllearner.algorithm.qtl.util.ModelGenerator;
+import org.dllearner.kb.sparql.ConciseBoundedDescriptionGenerator;
+import org.dllearner.kb.sparql.ConciseBoundedDescriptionGeneratorImpl;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 
 import com.google.common.base.Joiner;
@@ -50,7 +51,7 @@ public class DBModelCacheExtended extends DBModelCacheImpl implements DBModelCac
 	
 	private static final int CHUNK_SIZE = 1000;
 	
-	private ModelGenerator modelGen;
+	private ConciseBoundedDescriptionGenerator modelGen;
 	
 	private final Logger logger = Logger.getLogger(DBModelCacheExtended.class);
 	
@@ -73,7 +74,7 @@ public class DBModelCacheExtended extends DBModelCacheImpl implements DBModelCac
 		
 		databaseDirectory = cacheDirectory;
 		
-		modelGen = new ModelGenerator(endpoint);
+		modelGen = new ConciseBoundedDescriptionGeneratorImpl(endpoint);
 		
 		connect2Database();
 	}

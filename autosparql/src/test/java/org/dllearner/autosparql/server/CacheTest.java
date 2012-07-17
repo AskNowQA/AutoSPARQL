@@ -10,9 +10,9 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
-import org.dllearner.algorithm.qtl.util.ModelGenerator;
-import org.dllearner.algorithm.qtl.util.ModelGenerator.Strategy;
 import org.dllearner.autosparql.server.cache.DBModelCacheExtended;
+import org.dllearner.kb.sparql.ConciseBoundedDescriptionGenerator;
+import org.dllearner.kb.sparql.ConciseBoundedDescriptionGeneratorImpl;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.utilities.Files;
@@ -96,8 +96,8 @@ public class CacheTest {
 	@Test
 	public void objectSerializationTest(){
 		try {
-			ModelGenerator modelGen = new ModelGenerator(SparqlEndpoint.getEndpointDBpediaLiveAKSW());
-			Model model = modelGen.createModel("http://dbpedia.org/resource/Berlin", Strategy.CHUNKS, 2);
+			ConciseBoundedDescriptionGenerator modelGen = new ConciseBoundedDescriptionGeneratorImpl(SparqlEndpoint.getEndpointDBpediaLiveAKSW());
+			Model model = modelGen.getConciseBoundedDescription("http://dbpedia.org/resource/Berlin", 2);
 			StringWriter sw = new StringWriter();
 			model.write(sw, "TURTLE");
 			sw.flush();

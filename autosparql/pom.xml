@@ -102,9 +102,10 @@
 			<artifactId>bliki-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>opennlp</groupId>
-			<artifactId>tools</artifactId>
-		</dependency>
+  <groupId>org.apache.opennlp</groupId>
+  <artifactId>opennlp-tools</artifactId>
+  <version>1.5.2-incubating</version>
+</dependency>
 
 		<!-- GWT dependencies (from central repo) -->
 		<dependency>

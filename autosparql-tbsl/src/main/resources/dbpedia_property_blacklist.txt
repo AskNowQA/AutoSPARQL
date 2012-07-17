@@ -1,0 +1,9 @@
+http://dbpedia.org/ontology/abstract
+http://dbpedia.org/ontology/thumbnail
+http://dbpedia.org/ontology/wikiPageDisambiguates
+http://dbpedia.org/ontology/wikiPageExternalLink
+http://dbpedia.org/ontology/wikiPageID
+http://dbpedia.org/ontology/wikiPageRevisionID
+http://dbpedia.org/ontology/wikiPageRedirects
+http://dbpedia.org/ontology/wikiPageWikiLink
+http://dbpedia.org/ontology/wikiPageInterLanguageLink
