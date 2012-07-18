@@ -39,6 +39,7 @@ import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter2;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
+import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner3;
 import org.dllearner.algorithm.tbsl.sparql.WeightedQuery;
 import org.dllearner.algorithm.tbsl.util.PopularityMap;
 import org.dllearner.core.ComponentInitException;
@@ -80,7 +81,7 @@ public class TBSLManager {
 	private ExtractionDBCache cache;
 	private ExtendedKnowledgebase currentExtendedKnowledgebase;
 	
-	private SPARQLTemplateBasedLearner2 tbsl;
+	private SPARQLTemplateBasedLearner3 tbsl;
 	private FallbackIndex fallback;
 	
 	private String learnedSPARQLQuery;
@@ -107,12 +108,13 @@ public class TBSLManager {
 	public void init(){
 		try {
 			cache = new ExtractionDBCache(Manager.getInstance().getCacheDir());
+			cache.setMaxExecutionTimeInSeconds(100);
 			
 			knowledgebases = Manager.getInstance().getKnowledgebases(cache);
 			currentExtendedKnowledgebase = knowledgebases.get(0);
 			
-			tbsl = new SPARQLTemplateBasedLearner2(currentExtendedKnowledgebase.getKnowledgebase(), 
-					Manager.getInstance().getPosTagger(), Manager.getInstance().getWordNet(), new Options());
+			tbsl = new SPARQLTemplateBasedLearner3(currentExtendedKnowledgebase.getKnowledgebase(), 
+					Manager.getInstance().getPosTagger(), Manager.getInstance().getWordNet(), new Options(), cache);
 			tbsl.setMappingIndex(currentExtendedKnowledgebase.getKnowledgebase().getMappingIndex());
 			tbsl.init();
 			
@@ -201,6 +203,7 @@ public class TBSLManager {
 		if(ekb.getInfoBoxClass() == OxfordInfoLabel.class){
 			tbsl.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
 			tbsl.setUseDomainRangeRestriction(false);
+			tbsl.setPopularityMap(null);
 		} else {
 			tbsl.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex"});
 			PopularityMap map = new PopularityMap(
@@ -210,7 +213,7 @@ public class TBSLManager {
 			tbsl.setPopularityMap(map);
 		}
 		nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), Manager.getInstance().getWordnetDir());
-		
+		tbsl.setCache(cache);
 		fallback = ekb.getFallbackIndex();
 	}
 	
@@ -1030,8 +1033,8 @@ public class TBSLManager {
 		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
 		TBSLManager man = new TBSLManager();
 		man.init();
-		man.setKnowledgebase(man.getKnowledgebases().get(0));
-		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses in Abingdon with more than 2 bedrooms");
+		man.setKnowledgebase(man.getKnowledgebases().get(1));
+		SelectAnswer a = (SelectAnswer) man.answerQuestion("books written by Dan Brown");
 		List<String> p = new ArrayList<String>();
 		p.add(a.getItems().get(1).getUri());
 		p.add(a.getItems().get(2).getUri());
