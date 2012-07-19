@@ -39,7 +39,6 @@ import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter2;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
-import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner3;
 import org.dllearner.algorithm.tbsl.sparql.WeightedQuery;
 import org.dllearner.algorithm.tbsl.util.PopularityMap;
 import org.dllearner.core.ComponentInitException;
