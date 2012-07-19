@@ -77,6 +77,7 @@
 
 .white-border{
 	border: 3px solid white;
+	border-radius: 10px;
 }
 
 .class_box_shadow{
@@ -215,6 +216,10 @@ box-shadow: 10px 10px 5px #888;
 
 .v-embedded[style] img {
     width: 100% !important;
+    }
+    
+    .shift-left{
+    	margin-right: 20px;
     }
 
 

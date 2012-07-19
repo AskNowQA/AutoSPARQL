@@ -320,6 +320,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 				getApplication().getMainWindow().addWindow(otherSolutionsWindow);
 			}
 		});
+		wrongSolutionButton.addStyleName("shift-left");
 //		wrongSolutionButton.setVisible(false);
 //		feedbackPanel.addComponent(wrongSolutionButton);
 //		feedbackPanel.setComponentAlignment(wrongSolutionButton, Alignment.MIDDLE_CENTER);
@@ -453,7 +454,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
         
 		knowledgebaseLogo = new Embedded("");
 		knowledgebaseLogo.setType(Embedded.TYPE_IMAGE);
-		knowledgebaseLogo.setHeight("100%");
+		knowledgebaseLogo.setHeight("50px");
 		l.addComponent(knowledgebaseLogo);
 		l.setComponentAlignment(knowledgebaseLogo, Alignment.MIDDLE_CENTER);
 		l.setExpandRatio(knowledgebaseLogo, 1f);

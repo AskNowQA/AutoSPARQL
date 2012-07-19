@@ -81,7 +81,7 @@ public class TBSLManager {
 	private ExtractionDBCache cache;
 	private ExtendedKnowledgebase currentExtendedKnowledgebase;
 	
-	private SPARQLTemplateBasedLearner3 tbsl;
+	private SPARQLTemplateBasedLearner2 tbsl;
 	private FallbackIndex fallback;
 	
 	private String learnedSPARQLQuery;
@@ -113,8 +113,8 @@ public class TBSLManager {
 			knowledgebases = Manager.getInstance().getKnowledgebases(cache);
 			currentExtendedKnowledgebase = knowledgebases.get(0);
 			
-			tbsl = new SPARQLTemplateBasedLearner3(currentExtendedKnowledgebase.getKnowledgebase(), 
-					Manager.getInstance().getPosTagger(), Manager.getInstance().getWordNet(), new Options(), cache);
+			tbsl = new SPARQLTemplateBasedLearner2(currentExtendedKnowledgebase.getKnowledgebase(), 
+					Manager.getInstance().getPosTagger(), Manager.getInstance().getWordNet(), new Options());
 			tbsl.setMappingIndex(currentExtendedKnowledgebase.getKnowledgebase().getMappingIndex());
 			tbsl.init();
 			
@@ -213,7 +213,7 @@ public class TBSLManager {
 			tbsl.setPopularityMap(map);
 		}
 		nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), Manager.getInstance().getWordnetDir());
-		tbsl.setCache(cache);
+//		tbsl.setCache(cache);
 		fallback = ekb.getFallbackIndex();
 	}
 	
@@ -1033,8 +1033,8 @@ public class TBSLManager {
 		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
 		TBSLManager man = new TBSLManager();
 		man.init();
-		man.setKnowledgebase(man.getKnowledgebases().get(1));
-		SelectAnswer a = (SelectAnswer) man.answerQuestion("books written by Dan Brown");
+		man.setKnowledgebase(man.getKnowledgebases().get(0));
+		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses with more than 2 bedrooms");
 		List<String> p = new ArrayList<String>();
 		p.add(a.getItems().get(1).getUri());
 		p.add(a.getItems().get(2).getUri());
