@@ -856,17 +856,18 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 			e1.printStackTrace();
 		}
 		System.out.println(url);
-		Embedded e = new Embedded("Linked Geo Data View", new ExternalResource(url));
+		Embedded e = new Embedded("", new ExternalResource(url));
         e.setAlternateText("Linked Geo Data View");
         e.setType(Embedded.TYPE_BROWSER);
         e.setSizeFull();
         
-        final Window w = new Window();
+        final Window w = new Window("Linked Geo Data View");
         VerticalLayout mainLayout = new VerticalLayout();
         mainLayout.setSizeFull();
         w.setContent(mainLayout);
-        w.setHeight("800px");
-        w.setWidth("800px");
+        w.setHeight("95%");
+        w.setWidth("95%");
+        w.center();
         mainLayout.addComponent(e);
         w.addListener(new Window.CloseListener() {
 
