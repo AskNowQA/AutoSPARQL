@@ -1,7 +1,5 @@
 package org.autosparql.server;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,23 +7,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.autosparql.client.AutoSPARQLService;
 import org.autosparql.client.exception.AutoSPARQLException;
-import org.autosparql.server.search.TBSLSearch;
 import org.autosparql.server.util.Endpoints;
 import org.autosparql.server.util.ExtractionDBCacheUtils;
 import org.autosparql.server.util.SameAsLinks;
 import org.autosparql.shared.Endpoint;
 import org.autosparql.shared.Example;
 import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
-import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
-import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner;
-import org.ini4j.InvalidFileFormatException;
-import org.ini4j.Options;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoSPARQLService
@@ -132,13 +128,6 @@ public class AutoSPARQLServiceImpl extends RemoteServiceServlet implements AutoS
 	public SortedSet<Example> getExamplesByQTL(List<String> positives,List<String> negatives)
 	{
 		return getAutoSPARQLSession().getExamplesByQTL(positives, negatives,questionWords);
-	}
-
-	public static void main(String[] args) throws InvalidFileFormatException, FileNotFoundException, IOException, NoTemplateFoundException
-	{
-		SPARQLTemplateBasedLearner l = new SPARQLTemplateBasedLearner(new Options(TBSLSearch.class.getResourceAsStream("tbsl.properties")));
-		l.setQuestion("Give me all books written by Dan Brown");
-		l.learnSPARQLQueries();
 	}
 
 	@Override
