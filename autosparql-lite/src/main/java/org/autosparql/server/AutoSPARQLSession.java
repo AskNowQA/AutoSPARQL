@@ -338,7 +338,10 @@ public class AutoSPARQLSession
 		for(String uri:uris) {sb.append("?s = <"+DefaultPrefixMapping.INSTANCE.expandPrefix(uri)+">||");}
 		// remove last "||"-substring
 		String query = sb.substring(0,sb.length()-2)+")}";
+		// TODO restrict namespace in query
+		// TODO: is all data fetched or not because of limits of sparql endpoint?
 		ResultSet rs = SparqlQuery.convertJSONtoResultSet(getCache().executeSelectQuery(primarySearch().getEndpoint(), query));
+		
 		fillExamples(examples,rs);
 		//		}
 	}
