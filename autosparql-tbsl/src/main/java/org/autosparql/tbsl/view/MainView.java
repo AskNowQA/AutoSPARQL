@@ -320,6 +320,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 				getApplication().getMainWindow().addWindow(otherSolutionsWindow);
 			}
 		});
+		wrongSolutionButton.addStyleName("shift-left");
 //		wrongSolutionButton.setVisible(false);
 //		feedbackPanel.addComponent(wrongSolutionButton);
 //		feedbackPanel.setComponentAlignment(wrongSolutionButton, Alignment.MIDDLE_CENTER);
@@ -453,7 +454,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
         
 		knowledgebaseLogo = new Embedded("");
 		knowledgebaseLogo.setType(Embedded.TYPE_IMAGE);
-		knowledgebaseLogo.setHeight("100%");
+		knowledgebaseLogo.setHeight("50px");
 		l.addComponent(knowledgebaseLogo);
 		l.setComponentAlignment(knowledgebaseLogo, Alignment.MIDDLE_CENTER);
 		l.setExpandRatio(knowledgebaseLogo, 1f);
@@ -855,17 +856,18 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 			e1.printStackTrace();
 		}
 		System.out.println(url);
-		Embedded e = new Embedded("Linked Geo Data View", new ExternalResource(url));
+		Embedded e = new Embedded("", new ExternalResource(url));
         e.setAlternateText("Linked Geo Data View");
         e.setType(Embedded.TYPE_BROWSER);
         e.setSizeFull();
         
-        final Window w = new Window();
+        final Window w = new Window("Linked Geo Data View");
         VerticalLayout mainLayout = new VerticalLayout();
         mainLayout.setSizeFull();
         w.setContent(mainLayout);
-        w.setHeight("800px");
-        w.setWidth("800px");
+        w.setHeight("95%");
+        w.setWidth("95%");
+        w.center();
         mainLayout.addComponent(e);
         w.addListener(new Window.CloseListener() {
 

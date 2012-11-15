@@ -107,6 +107,7 @@ public class TBSLManager {
 	public void init(){
 		try {
 			cache = new ExtractionDBCache(Manager.getInstance().getCacheDir());
+			cache.setMaxExecutionTimeInSeconds(100);
 			
 			knowledgebases = Manager.getInstance().getKnowledgebases(cache);
 			currentExtendedKnowledgebase = knowledgebases.get(0);
@@ -201,6 +202,7 @@ public class TBSLManager {
 		if(ekb.getInfoBoxClass() == OxfordInfoLabel.class){
 			tbsl.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
 			tbsl.setUseDomainRangeRestriction(false);
+			tbsl.setPopularityMap(null);
 		} else {
 			tbsl.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex"});
 			PopularityMap map = new PopularityMap(
@@ -210,7 +212,7 @@ public class TBSLManager {
 			tbsl.setPopularityMap(map);
 		}
 		nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), Manager.getInstance().getWordnetDir());
-		
+//		tbsl.setCache(cache);
 		fallback = ekb.getFallbackIndex();
 	}
 	
@@ -1031,7 +1033,7 @@ public class TBSLManager {
 		TBSLManager man = new TBSLManager();
 		man.init();
 		man.setKnowledgebase(man.getKnowledgebases().get(0));
-		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses in Abingdon with more than 2 bedrooms");
+		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses with more than 2 bedrooms");
 		List<String> p = new ArrayList<String>();
 		p.add(a.getItems().get(1).getUri());
 		p.add(a.getItems().get(2).getUri());
