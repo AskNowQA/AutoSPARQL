@@ -31,18 +31,22 @@ import org.autosparql.tbsl.model.SelectAnswer;
 import org.autosparql.tbsl.util.FallbackIndex;
 import org.autosparql.tbsl.widget.OxfordInfoLabel;
 import org.autosparql.tbsl.widget.TBSLProgressListener;
-import org.dllearner.algorithm.qtl.QTL;
-import org.dllearner.algorithm.qtl.exception.EmptyLGGException;
-import org.dllearner.algorithm.qtl.exception.NegativeTreeCoverageExecption;
-import org.dllearner.algorithm.qtl.exception.TimeOutException;
-import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter2;
-import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
 import org.dllearner.algorithm.tbsl.learning.NoTemplateFoundException;
 import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
 import org.dllearner.algorithm.tbsl.sparql.WeightedQuery;
+import org.dllearner.algorithm.tbsl.util.Knowledgebase;
+import org.dllearner.algorithm.tbsl.util.LocalKnowledgebase;
 import org.dllearner.algorithm.tbsl.util.PopularityMap;
+import org.dllearner.algorithm.tbsl.util.RemoteKnowledgebase;
+import org.dllearner.algorithms.qtl.QTL;
+import org.dllearner.algorithms.qtl.exception.EmptyLGGException;
+import org.dllearner.algorithms.qtl.exception.NegativeTreeCoverageExecption;
+import org.dllearner.algorithms.qtl.exception.TimeOutException;
+import org.dllearner.algorithms.qtl.filters.QuestionBasedStatementFilter2;
+import org.dllearner.algorithms.qtl.util.SPARQLEndpointEx;
 import org.dllearner.core.ComponentInitException;
 import org.dllearner.kb.sparql.ExtractionDBCache;
+import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.ini4j.Options;
 
@@ -51,6 +55,7 @@ import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -117,8 +122,13 @@ public class TBSLManager {
 			tbsl.setMappingIndex(currentExtendedKnowledgebase.getKnowledgebase().getMappingIndex());
 			tbsl.init();
 			
-			nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), Manager.getInstance().getWordnetDir());
-		}  catch (ComponentInitException e) {
+			Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
+			if(kb instanceof RemoteKnowledgebase){
+				nlg = new SimpleNLGwithPostprocessing(((RemoteKnowledgebase) kb).getEndpoint(), Manager.getInstance().getWordnetDir());
+			} else {
+				nlg = new SimpleNLGwithPostprocessing(((LocalKnowledgebase) kb).getModel(), Manager.getInstance().getWordnetDir());
+			}
+			}  catch (ComponentInitException e) {
 			e.printStackTrace();
 		} 
 	}
@@ -155,8 +165,16 @@ public class TBSLManager {
 		logger.info("Refining answer...");
 		logger.info("Positive examples: " + posExamples);
 		logger.info("Negative examples: " + negExamples);
-		QTL qtl = new QTL(new SPARQLEndpointEx(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), null, null, Collections.<String>emptySet()),
-				cache);
+		QTL qtl;
+		Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
+		if(kb instanceof RemoteKnowledgebase){
+			qtl = new QTL(new SPARQLEndpointEx(((RemoteKnowledgebase) kb).getEndpoint(), null, null, Collections.<String>emptySet()),
+					cache);
+		} else {
+			qtl = new QTL(((LocalKnowledgebase) kb).getModel());
+		}
+		
+		
 		qtl.setRestrictToNamespaces(currentExtendedKnowledgebase.getPropertyNamespaces());
 		Set<String> relevantKeywords = tbsl.getRelevantKeywords();
 		logger.info("Relevant filter keywords: " + relevantKeywords);
@@ -205,14 +223,26 @@ public class TBSLManager {
 			tbsl.setPopularityMap(null);
 		} else {
 			tbsl.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex"});
-			PopularityMap map = new PopularityMap(
-					this.getClass().getClassLoader().getResource("dbpedia_popularity.map").getPath(), currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), cache);
+			PopularityMap map;
+			Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
+			if(kb instanceof RemoteKnowledgebase){
+				map = new PopularityMap(this.getClass().getClassLoader().getResource("dbpedia_popularity.map").getPath(),
+						 ((RemoteKnowledgebase) kb).getEndpoint(), cache);
+			} else {
+				map = new PopularityMap(this.getClass().getClassLoader().getResource("dbpedia_popularity.map").getPath(),
+						 ((LocalKnowledgebase) kb).getModel());
+			}
 			map.init();
 			tbsl.setUseDomainRangeRestriction(true);
 			tbsl.setPopularityMap(map);
 		}
-		nlg = new SimpleNLGwithPostprocessing(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), Manager.getInstance().getWordnetDir());
-//		tbsl.setCache(cache);
+		Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
+		if(kb instanceof RemoteKnowledgebase){
+			nlg = new SimpleNLGwithPostprocessing(((RemoteKnowledgebase) kb).getEndpoint(), Manager.getInstance().getWordnetDir());
+		} else {
+			nlg = new SimpleNLGwithPostprocessing(((LocalKnowledgebase) kb).getModel(), Manager.getInstance().getWordnetDir());
+		}
+		//		tbsl.setCache(cache);
 		fallback = ekb.getFallbackIndex();
 	}
 	
@@ -931,13 +961,20 @@ public class TBSLManager {
 		logger.info("Executing SPARQL query\n" + sparqlQuery);
 		ResultSet rs = null;
 		try {
-			if (cache == null) {
-				QueryEngineHTTP qe = new QueryEngineHTTP(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint().getURL().toString(), sparqlQuery);
-				qe.setDefaultGraphURIs(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint().getDefaultGraphURIs());
-				rs = qe.execSelect();
+			Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
+			if(kb instanceof RemoteKnowledgebase){
+				SparqlEndpoint endpoint = ((RemoteKnowledgebase) kb).getEndpoint();
+				if (cache == null) {
+					QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), sparqlQuery);
+					qe.setDefaultGraphURIs(endpoint.getDefaultGraphURIs());
+					rs = qe.execSelect();
+				} else {
+					rs = SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(endpoint, sparqlQuery));
+				}
 			} else {
-				rs = SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(currentExtendedKnowledgebase.getKnowledgebase().getEndpoint(), sparqlQuery));
+				rs = QueryExecutionFactory.create(sparqlQuery, ((LocalKnowledgebase) kb).getModel()).execSelect();
 			}
+			
 			logger.info("...done.");
 		} catch (Exception e) {
 			logger.error("Error executing SPARQL query.", e);

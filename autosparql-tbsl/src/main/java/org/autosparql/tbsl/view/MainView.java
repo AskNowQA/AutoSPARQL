@@ -32,6 +32,9 @@ import org.autosparql.tbsl.widget.FeedBackListener;
 import org.autosparql.tbsl.widget.InfoLabel;
 import org.autosparql.tbsl.widget.OxfordPriceChartWindow;
 import org.autosparql.tbsl.widget.TBSLProgressListener;
+import org.dllearner.algorithm.tbsl.util.Knowledgebase;
+import org.dllearner.algorithm.tbsl.util.LocalKnowledgebase;
+import org.dllearner.algorithm.tbsl.util.RemoteKnowledgebase;
 import org.vaadin.appfoundation.view.View;
 import org.vaadin.appfoundation.view.ViewContainer;
 import org.vaadin.sasha.portallayout.PortalLayout;
@@ -844,7 +847,11 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 		Query query = QueryFactory.create(queryString, Syntax.syntaxARQ);
 		query = JENAUtils.writeOutPrefixes(query);
 		String targetVar = query.getProjectVars().get(0).getVarName();
-		String serviceURI = UserSession.getManager().getCurrentExtendedKnowledgebase().getKnowledgebase().getEndpoint().getURL().toString();
+		Knowledgebase kb = UserSession.getManager().getCurrentExtendedKnowledgebase().getKnowledgebase();
+		if(kb instanceof LocalKnowledgebase){
+			return;
+		}
+		String serviceURI = ((RemoteKnowledgebase) kb).getEndpoint().getURL().toString();
 		String url = "";
 		try {
 			url = Manager.getInstance().getSemMapURL() 

@@ -27,19 +27,22 @@ import org.dllearner.algorithm.tbsl.nlp.ApachePartOfSpeechTagger;
 import org.dllearner.algorithm.tbsl.nlp.PartOfSpeechTagger;
 import org.dllearner.algorithm.tbsl.nlp.WordNet;
 import org.dllearner.algorithm.tbsl.util.Knowledgebase;
+import org.dllearner.algorithm.tbsl.util.LocalKnowledgebase;
+import org.dllearner.algorithm.tbsl.util.RemoteKnowledgebase;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.MappingBasedIndex;
 import org.dllearner.common.index.SOLRIndex;
+import org.dllearner.common.index.SPARQLClassesIndex;
 import org.dllearner.common.index.SPARQLIndex;
-import org.dllearner.common.index.VirtuosoClassesIndex;
-import org.dllearner.common.index.VirtuosoPropertiesIndex;
-import org.dllearner.common.index.VirtuosoResourcesIndex;
+import org.dllearner.common.index.SPARQLPropertiesIndex;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.Ini;
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Profile.Section;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.vaadin.terminal.ThemeResource;
@@ -109,7 +112,7 @@ public class Manager {
 					this.getClass().getClassLoader().getResource("dbpedia_objectproperty_mappings.txt").getPath()
 					);
 			
-			Knowledgebase kb = new Knowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
+			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
 			String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +
         	 		"<div style='float: right; height: 100px; width: 200px'>" +
         	 		"<div style='height: 100%;'><img style='height: 100%;' src=\"imageURL\"/></div>" +
@@ -147,12 +150,18 @@ public class Manager {
 	}
 	
 	private ExtendedKnowledgebase createOxfordKnowledgebase(ExtractionDBCache cache){
-		try {
-			SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
+//			SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
+//			SPARQLIndex resourcesIndex = new VirtuosoResourcesIndex(endpoint, cache);
+//			SPARQLIndex classesIndex = new VirtuosoClassesIndex(endpoint, cache);
+//			SPARQLIndex propertiesIndex = new VirtuosoPropertiesIndex(endpoint, cache);
 			
-			SPARQLIndex resourcesIndex = new VirtuosoResourcesIndex(endpoint, cache);
-			SPARQLIndex classesIndex = new VirtuosoClassesIndex(endpoint, cache);
-			SPARQLIndex propertiesIndex = new VirtuosoPropertiesIndex(endpoint, cache);
+			
+			Model model = ModelFactory.createDefaultModel();
+			model.read(this.getClass().getClassLoader().getResourceAsStream("oxford-data.ttl"), null, "TURTLE");
+			
+			Index resourcesIndex = new SPARQLIndex(model);
+			Index classesIndex = new SPARQLClassesIndex(model);
+			Index propertiesIndex = new SPARQLPropertiesIndex(model);
 			MappingBasedIndex mappingIndex= new MappingBasedIndex(
 					this.getClass().getClassLoader().getResource("oxford_class_mappings.txt").getPath(), 
 					this.getClass().getClassLoader().getResource("oxford_resource_mappings.txt").getPath(),
@@ -160,7 +169,7 @@ public class Manager {
 					this.getClass().getClassLoader().getResource("oxford_objectproperty_mappings.txt").getPath()
 					);
 			
-			Knowledgebase kb = new Knowledgebase(endpoint, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
+			Knowledgebase kb = new LocalKnowledgebase(model, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
 			
 			String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +
         	 		"<div style='float: right; height: 100px; width: 200px'>" +
@@ -192,10 +201,6 @@ public class Manager {
 			
 			ekb.setIcon(new ThemeResource("images/oxford_logo.gif"));
 			return ekb;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 	private List<String> loadQuestions(InputStream fileInputStream){
