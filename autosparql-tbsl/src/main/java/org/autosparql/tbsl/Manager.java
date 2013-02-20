@@ -25,6 +25,7 @@ import org.autosparql.tbsl.widget.DBpediaInfoLabel;
 import org.autosparql.tbsl.widget.OxfordInfoLabel;
 import org.dllearner.algorithm.tbsl.nlp.ApachePartOfSpeechTagger;
 import org.dllearner.algorithm.tbsl.nlp.PartOfSpeechTagger;
+import org.dllearner.algorithm.tbsl.nlp.StanfordPartOfSpeechTagger;
 import org.dllearner.algorithm.tbsl.nlp.WordNet;
 import org.dllearner.algorithm.tbsl.util.Knowledgebase;
 import org.dllearner.algorithm.tbsl.util.LocalKnowledgebase;
@@ -32,17 +33,16 @@ import org.dllearner.algorithm.tbsl.util.RemoteKnowledgebase;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.MappingBasedIndex;
 import org.dllearner.common.index.SOLRIndex;
-import org.dllearner.common.index.SPARQLClassesIndex;
 import org.dllearner.common.index.SPARQLIndex;
-import org.dllearner.common.index.SPARQLPropertiesIndex;
+import org.dllearner.common.index.VirtuosoClassesIndex;
+import org.dllearner.common.index.VirtuosoPropertiesIndex;
+import org.dllearner.common.index.VirtuosoResourcesIndex;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.Ini;
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Profile.Section;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.vaadin.terminal.ThemeResource;
@@ -70,7 +70,7 @@ public class Manager {
 		logger.info("Initializing global settings...");
 		loadSettings();
 		
-		posTagger = new ApachePartOfSpeechTagger();
+		posTagger = new StanfordPartOfSpeechTagger();
 		wordNet = new WordNet(this.getClass().getClassLoader().getResourceAsStream("wordnet_properties.xml"));
 		logger.info("...done.");
 	}
@@ -150,18 +150,26 @@ public class Manager {
 	}
 	
 	private ExtendedKnowledgebase createOxfordKnowledgebase(ExtractionDBCache cache){
-//			SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
-//			SPARQLIndex resourcesIndex = new VirtuosoResourcesIndex(endpoint, cache);
-//			SPARQLIndex classesIndex = new VirtuosoClassesIndex(endpoint, cache);
-//			SPARQLIndex propertiesIndex = new VirtuosoPropertiesIndex(endpoint, cache);
+			SparqlEndpoint endpoint = null;
+			try {
+				endpoint = new SparqlEndpoint(new URL("http://[2001:638:902:2010:0:168:35:138]/sparql"),
+						Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			SPARQLIndex resourcesIndex = new VirtuosoResourcesIndex(endpoint, cache);
+			SPARQLIndex classesIndex = new VirtuosoClassesIndex(endpoint, cache);
+			SPARQLIndex propertiesIndex = new VirtuosoPropertiesIndex(endpoint, cache);
 			
 			
-			Model model = ModelFactory.createDefaultModel();
-			model.read(this.getClass().getClassLoader().getResourceAsStream("oxford-data.ttl"), null, "TURTLE");
+//			Model model = ModelFactory.createDefaultModel();
+//			model.read(this.getClass().getClassLoader().getResourceAsStream("oxford-data.ttl"), null, "TURTLE");
+//			Index resourcesIndex = new SPARQLIndex(model);
+//			Index classesIndex = new SPARQLClassesIndex(model);
+//			Index propertiesIndex = new SPARQLPropertiesIndex(model);
 			
-			Index resourcesIndex = new SPARQLIndex(model);
-			Index classesIndex = new SPARQLClassesIndex(model);
-			Index propertiesIndex = new SPARQLPropertiesIndex(model);
+			
+			
 			MappingBasedIndex mappingIndex= new MappingBasedIndex(
 					this.getClass().getClassLoader().getResource("oxford_class_mappings.txt").getPath(), 
 					this.getClass().getClassLoader().getResource("oxford_resource_mappings.txt").getPath(),
@@ -169,7 +177,9 @@ public class Manager {
 					this.getClass().getClassLoader().getResource("oxford_objectproperty_mappings.txt").getPath()
 					);
 			
-			Knowledgebase kb = new LocalKnowledgebase(model, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
+//			Knowledgebase kb = new LocalKnowledgebase(model, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
+			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
+			
 			
 			String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +
         	 		"<div style='float: right; height: 100px; width: 200px'>" +

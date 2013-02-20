@@ -61,13 +61,22 @@ public class OxfordInfoLabel extends HorizontalLayout implements InfoLabel{
 		buttons.setComponentAlignment(negExampleButton, Alignment.MIDDLE_CENTER);
 		addComponent(buttons);
 		
-		String s1 = "<div><h3><b>" + item.getLabel() +"</b></h3></div>";
+		String s1 = "";
+		//label
+		if(item.getLabel() != null){
+			s1 += "<div><h3><b>" + item.getLabel() +"</b></h3></div>";;
+		}
+		//image
 		if(item.getImageURL() != null){
 			s1 += "<div style='float: right; height: 100px; width: 200px'>" +
 	    	 		"<div style='height: 100%;'><img style='height: 100%;' src=\"" + item.getImageURL() + "\"/></div>" +
 	    	 		"</div>";
 		}
-		s1 += "<div>" + item.getDescription() + "</div>";
+		//description
+		if(item.getDescription() != null){
+			s1 += "<div>" + item.getDescription() + "</div>";
+		}
+		
 		Label l1 = new Label(s1, Label.CONTENT_XHTML);
 		l1.addStyleName("wrap");
 		l1.setWidth("500px");
