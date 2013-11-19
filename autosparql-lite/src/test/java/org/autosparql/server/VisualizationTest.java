@@ -2,7 +2,9 @@ package org.autosparql.server;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.autosparql.shared.Example;
+import org.aksw.autosparql.server.AutoSPARQLSession;
+import org.aksw.autosparql.server.Visualization;
+import org.aksw.autosparql.shared.Example;
 import org.junit.Test;
 
 public class VisualizationTest

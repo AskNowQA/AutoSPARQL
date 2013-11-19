@@ -1,14 +1,13 @@
 package org.autosparql.server;
 
 import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.autosparql.shared.Example;
+import org.aksw.autosparql.server.AutoSPARQLSession;
+import org.aksw.autosparql.shared.Example;
 import org.junit.Test;
 
 public class AutoSPARQLSessionTest

@@ -1,11 +1,10 @@
 package org.autosparql.server.util;
 
 import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-
+import org.aksw.autosparql.server.util.SameAsLinks;
 import org.junit.Test;
 
 public class SameAsLinksTest {

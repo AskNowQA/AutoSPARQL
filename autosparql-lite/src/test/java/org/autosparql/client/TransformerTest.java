@@ -1,7 +1,7 @@
 package org.autosparql.client;
 
 import static org.junit.Assert.assertTrue;
-
+import org.aksw.autosparql.client.Transformer;
 import org.junit.Test;
 
 public class TransformerTest

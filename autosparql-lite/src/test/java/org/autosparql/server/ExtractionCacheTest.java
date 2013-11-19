@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.autosparql.server.util.ExtractionDBCacheUtils;
+import org.aksw.autosparql.server.util.ExtractionDBCacheUtils;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;

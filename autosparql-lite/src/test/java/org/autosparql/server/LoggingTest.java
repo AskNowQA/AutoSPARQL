@@ -1,5 +1,6 @@
 package org.autosparql.server;
 
+import org.aksw.autosparql.server.AutoSPARQLSession;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

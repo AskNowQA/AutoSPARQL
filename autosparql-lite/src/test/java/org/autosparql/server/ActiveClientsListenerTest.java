@@ -1,7 +1,7 @@
 package org.autosparql.server;
 
 import static org.junit.Assert.*;
-
+import org.aksw.autosparql.server.ActiveClientsListener;
 import org.junit.Test;
 
 public class ActiveClientsListenerTest

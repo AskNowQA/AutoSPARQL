@@ -1,6 +1,6 @@
 package org.autosparql.server;
 
-import org.autosparql.client.Application;
+import org.aksw.autosparql.client.Application;
 import org.junit.Test;
 
 public class PropertiesTest

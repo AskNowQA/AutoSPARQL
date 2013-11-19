@@ -3,7 +3,8 @@ package org.autosparql.server.search;
 import static org.junit.Assert.assertTrue;
 import java.net.MalformedURLException;
 import java.util.SortedSet;
-import org.autosparql.shared.Example;
+import org.aksw.autosparql.server.search.TBSLSearch;
+import org.aksw.autosparql.shared.Example;
 import org.junit.Test;
 import com.hp.hpl.jena.query.ARQ; 
 

@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.dllearner</groupId>
+	<groupId>org.aksw.autosparql</groupId>
 	<artifactId>autosparql-parent</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>${autosparql.version}</version>
 	<packaging>pom</packaging>
 
 	<modules>
 		<module>autosparql</module>
 		<module>autosparql-lite</module>
-    <module>autosparql-tbsl</module>
-  </modules>
+    	<module>autosparql-tbsl</module>
+		<module>algorithm-tbsl</module>
+		<module>commons</module>
+	</modules>
 
 	<properties>
-		<!-- tell the compiler we can use 1.6 -->
-		<compiler.version>1.6</compiler.version>
+		<compiler.version>1.7</compiler.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- convenience to define GWT version in one place -->
 		<gwt.version>2.3.0</gwt.version>
 		<gxt.version>2.2.5</gxt.version>
-
 		<!--Define the AKSW dependency version -->
 		<aksw.version>0.2-SNAPSHOT</aksw.version>
+		<!-- from qa -->	
+		<dllearner.version>1.0-SNAPSHOT</dllearner.version>
+		<solr.version>4.1.0</solr.version>
+		<autosparql.version>1.0-SNAPSHOT</autosparql.version>
 	</properties>
 
 	<build>
-		<!-- - Plugin Management defines the plugins that the child components 
-			can use - It's good practice to do this as we can ensure all children use 
-			common versions - of the plugins, and we can look in one place to see all 
-			plugin dependencies. -->
 		<pluginManagement>
 			<plugins>
 				<!--Surefire - for JUnits -->
@@ -41,7 +41,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.0.2</version>
+					<version>3.0</version>
 					<configuration>
 						<!--We use 1.6 -->
 						<source>${compiler.version}</source>
@@ -49,10 +49,6 @@
 						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
 				</plugin>
-
-				<!-- - Maven Jar Plugin - if you want to create and/or sign jars. - I'm 
-					putting this in so we can create a jar for the test classes - in components 
-					core so that other components' tests can leverage them -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -73,8 +69,43 @@
 		</pluginManagement>
 	</build>
 
-	<dependencyManagement>
+	<dependencyManagement>		
 		<dependencies>
+			<dependency>
+				<groupId>org.aksw.autosparql</groupId>
+				<artifactId>commons</artifactId>
+				<version>${autosparql.version}</version>		
+			</dependency>
+			<dependency>
+				<groupId>org.aksw.autosparql</groupId>
+				<artifactId>autosparql</artifactId>
+				<version>${autosparql.version}</version>		
+			</dependency>
+			<dependency>
+				<groupId>org.aksw.autosparql</groupId>
+				<artifactId>autosparql-tbsl</artifactId>
+				<version>${autosparql.version}</version>		
+			</dependency>
+			<dependency>
+				<groupId>org.aksw.autosparql</groupId>
+				<artifactId>commons</artifactId>
+				<version>${autosparql.version}</version>		
+			</dependency>
+			<dependency>
+				<groupId>org.aksw.autosparql</groupId>
+				<artifactId>algorithm-tbsl</artifactId>
+				<version>${autosparql.version}</version>		
+			</dependency>			
+		<dependency> 
+   <groupId>javax</groupId>   
+    <artifactId>javaee-web-api</artifactId>   
+    <version>7.0</version> 
+</dependency> 
+	 <dependency>
+      <groupId>org.openrdf.sesame</groupId>
+      <artifactId>sesame-rio-ntriples</artifactId>
+      <version>2.7.6</version>
+    </dependency>
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
@@ -325,14 +356,8 @@
 			<dependency>
 				<groupId>org.openrdf.sesame</groupId>
 				<artifactId>sesame-rio-api</artifactId>
-				<version>2.3.2</version>
+				<version>2.7.6</version>
 			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-ntriples</artifactId>
-				<version>2.3.2</version>
-			</dependency>
-
 			<dependency>
 				<groupId>commons-dbcp</groupId>
 				<artifactId>commons-dbcp</artifactId>
@@ -369,15 +394,15 @@
 				<type>jar</type>
 				<scope>compile</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.solr</groupId>
-				<artifactId>solr-solrj</artifactId>
-				<version>3.5.0</version>
-			</dependency>
+	<dependency>
+		<groupId>org.apache.solr</groupId>
+		<artifactId>solr-solrj</artifactId>
+      	<version>4.4.0</version>
+	</dependency>
 			<dependency>
 				<groupId>org.apache.solr</groupId>
 				<artifactId>solr-core</artifactId>
-				<version>3.5.0</version>
+				<version>4.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>

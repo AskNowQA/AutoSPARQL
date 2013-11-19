@@ -1,0 +1,1915 @@
+<?xml version="1.0" ?>
+<dataset id="dbpedia-train">
+
+<question id="1" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me all female Russian astronauts.
+]]></string>
+<keywords><![CDATA[ 
+astronaut, female, Russian
+]]></keywords>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type yago:RussianCosmonauts .
+    ?uri rdf:type yago:FemaleAstronauts .
+}
+]]></query>
+</question>
+
+<question id="2" answertype="date" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Give me the birthdays of all actors of the television show Charmed.
+]]></string>
+<keywords><![CDATA[ 
+birthday, actor, television show, Charmed
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?date 
+WHERE { 
+	res:Charmed dbo:starring ?actor .
+    ?actor dbo:birthDate ?date .
+}
+]]></query>
+</question>
+
+<question id="3" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Who is the daughter of Bill Clinton married to?
+]]></string>
+<keywords><![CDATA[ 
+Bill Clinton, daughter, married
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        res:Bill_Clinton dbo:child ?child .
+        ?child dbp:spouse ?string .
+        ?uri rdfs:label ?string .
+}
+]]></query>
+</question>
+
+<question id="4" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Which river does the Brooklyn Bridge cross?
+]]></string>
+<keywords><![CDATA[ 
+Brooklyn Bridge, river, cross
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {       
+        res:Brooklyn_Bridge dbo:crosses ?uri . 
+}
+]]></query>
+</question>
+
+<question id="5" answertype="number" aggregation="true" onlydbo="false">
+<string><![CDATA[
+How many monarchical countries are there in Europe?
+]]></string>
+<keywords><![CDATA[ 
+Europe, monarchical country
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT COUNT(DISTINCT ?uri) 
+WHERE {
+	?uri rdf:type yago:EuropeanCountries .
+        ?uri dbo:governmentType ?govern .
+        FILTER regex(?govern,'monarchy') .
+}
+]]></query>
+</question>
+
+<question id="6" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Where did Abraham Lincoln die?
+]]></string>
+<keywords><![CDATA[ 
+Abraham Lincoln, die
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri WHERE
+{ 
+        res:Abraham_Lincoln dbo:deathPlace ?uri .
+}
+]]></query>
+</question>
+
+<question id="7" answertype="boolean" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Is the wife of president Obama called Michelle?
+]]></string>
+<keywords><![CDATA[ 
+Obama, president, wife, called, Michelle
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+ASK 
+WHERE {
+        res:Barack_Obama dbo:spouse ?spouse .
+        ?spouse rdfs:label ?name .
+        FILTER(regex(?name,'Michelle')) 
+}
+]]></query>
+</question>
+
+<question id="8" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which states of Germany are governed by the Social Democratic Party?
+]]></string>
+<keywords><![CDATA[ 
+Germany, Social Democratic Party, state, governed
+]]></keywords>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        ?uri rdf:type yago:StatesOfGermany .
+        { ?uri dbp:rulingParty 'SPD'@en . } UNION { ?uri dbp:rulingParty res:Social_Democratic_Party_of_Germany . } 
+}
+]]></query>
+</question>
+
+<question id="9" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which U.S. states possess gold minerals?
+]]></string>
+<keywords><![CDATA[ 
+U.S., state, mineral, possess, gold
+]]></keywords>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        ?uri rdf:type yago:StatesOfTheUnitedStates .
+        ?uri dbp:mineral ?mineral .
+        FILTER (regex(?mineral,'Gold')) .
+}
+]]></query>
+</question>
+
+<question id="10" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+In which country does the Nile start?
+]]></string>
+<keywords><![CDATA[ 
+Nile, country, start
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {       
+        res:Nile dbo:sourceCountry ?uri .
+}
+]]></query>
+</question>
+
+<question id="11" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Which countries have places with more than two caves?
+]]></string>
+<keywords><![CDATA[ 
+cave, country, place, two
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {       
+        ?cave rdf:type dbo:Cave . 
+        ?cave dbo:location ?uri .
+        ?uri rdf:type dbo:Country .
+} 
+GROUP BY ?uri ?string
+HAVING (COUNT(?cave) > 2)
+]]></query>
+</question>
+
+<question id="12" answertype="boolean" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Is proinsulin a protein?
+]]></string>
+<keywords><![CDATA[ 
+protein, proinsulin
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+ASK 
+WHERE {
+	res:Proinsulin rdf:type dbo:Protein .
+}
+]]></query>
+</question>
+
+<question id="13" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which classis does the Millepede belong to?
+]]></string>
+<keywords><![CDATA[ 
+millepede, classis, belong
+]]></keywords>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri ?string
+WHERE {
+       res:Millipede dbp:classis ?string .
+       ?uri rdfs:label ?string .
+}
+]]></query>
+</question>
+
+<question id="14" answertype="number" aggregation="false" onlydbo="true">
+<string><![CDATA[
+How tall is Claudia Schiffer?
+]]></string>
+<keywords><![CDATA[ 
+Claudia Schiffer, tall
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+SELECT DISTINCT ?height 
+WHERE {       
+        res:Claudia_Schiffer dbo:height ?height .      
+}
+]]></query>
+</question>
+
+<question id="15" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who created Goofy?
+]]></string>
+<keywords><![CDATA[ 
+created, Goofy
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        res:Goofy dbo:creator ?uri .
+}
+]]></query>
+</question>
+
+<question id="16" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me the capitals of all countries in Africa.
+]]></string>
+<keywords><![CDATA[ 
+Africa, country, capital
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?states rdf:type yago:AfricanCountries .
+        ?states dbo:capital ?uri .
+}
+]]></query>
+</question>
+
+<question id="17" answertype="resource" aggregation="true" onlydbo="false">
+<string><![CDATA[
+Give me all cities in New Jersey with more than 100000 inhabitants.
+]]></string>
+<keywords><![CDATA[ 
+New Jersey, city, inhabitants, more than 100000
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:City .
+        ?uri dbo:isPartOf res:New_Jersey .
+        ?uri dbp:populationTotal ?inhabitants .
+        FILTER (?inhabitants > 100000) .
+}
+]]></query>
+</question>
+
+<question id="18" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which museum exhibits The Scream by Munch?
+]]></string>
+<keywords><![CDATA[ 
+museum, exhibit, Scream, Munch
+]]></keywords>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	res:The_Scream dbp:museum ?uri .
+}
+]]></query>
+</question>
+
+<question id="19" answertype="boolean" aggregation="true" onlydbo="true">
+<string><![CDATA[
+Is Egypts largest city also its capital?
+]]></string>
+<keywords><![CDATA[ 
+largest city, Egypt, capital
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+ASK 
+WHERE {
+        res:Egypt dbo:largestCity ?large .
+        res:Egypt dbo:capital ?capital .
+        FILTER (?large = ?capital)
+}
+]]></query>
+</question>
+
+<question id="20" answertype="number" aggregation="false" onlydbo="true">
+<string><![CDATA[
+How many employees does IBM have?
+]]></string>
+<keywords><![CDATA[ 
+IBM, employees
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT ?number 
+WHERE {
+	res:IBM dbo:numberOfEmployees ?number .
+}
+]]></query>
+</question>
+
+<question id="21" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which states border Illinois?
+]]></string>
+<keywords><![CDATA[ 
+Illinois, state, border
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+      res:Illinois dbp:borderingstates ?uri .
+}
+]]></query>
+</question>
+
+<question id="22" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+In which country is the Limerick Lake?
+]]></string>
+<keywords><![CDATA[ 
+Limerick Lake, country
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	res:Limerick_Lake dbo:country ?uri .
+}
+]]></query>
+</question>
+
+<question id="23" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Which television shows were created by Walt Disney?
+]]></string>
+<keywords><![CDATA[ 
+Walt Disney, television show, created
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:TelevisionShow .
+        ?uri dbo:creator res:Walt_Disney .
+}
+]]></query>
+</question>
+
+<question id="24" answertype="resource" aggregation="true" onlydbo="true">
+<string><![CDATA[
+Which mountain is the highest after the Annapurna?
+]]></string>
+<keywords><![CDATA[ 
+mountain, highest, after, Annapurna
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {       
+        res:Annapurna dbo:elevation ?elevation .
+        ?uri rdf:type dbo:Mountain . 
+        ?uri dbo:elevation ?otherelevation .
+        FILTER (?otherelevation < ?elevation) .
+} 
+ORDER BY DESC(?otherelevation) LIMIT 1
+]]></query>
+</question>
+
+<question id="25" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+In which films directed by Garry Marshall was Julia Roberts starring?
+]]></string>
+<keywords><![CDATA[ 
+film, directed, Garry Marhsall, starring, Julia Roberts
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:Film .
+        ?uri dbo:starring res:Julia_Roberts .
+        ?uri dbo:director res:Garry_Marshall .
+}
+]]></query>
+</question>
+
+<question id="26" answertype="resource" aggregation="true" onlydbo="false">
+<string><![CDATA[
+Which bridges are of the same type as the Manhattan Bridge?
+]]></string>
+<keywords><![CDATA[ 
+Manhattan Bridge, same type
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {       
+        ?uri rdf:type dbo:Bridge .
+        ?uri dbp:design ?design .
+        res:Manhattan_Bridge dbp:design ?mdesign . 
+        FILTER (regex(?design, ?mdesign)).
+        FILTER (?uri != res:Manhattan_Bridge) . 
+}
+]]></query>
+</question>
+
+<question id="27" answertype="boolean" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Was U.S. president Jackson involved in a war?
+]]></string>
+<keywords><![CDATA[ 
+U.S., president, Jackson, involved, war
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+ASK 
+WHERE {
+	res:Andrew_Jackson dbo:battle ?battle .    
+}
+]]></query>
+</question>
+
+<question id="28" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which European countries have a constitutional monarchy?
+]]></string>
+<keywords><![CDATA[ 
+constitutional monarchy, European country
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type yago:EuropeanCountries .
+        ?uri dbo:governmentType res:Constitutional_monarchy .
+}
+]]></query>
+</question>
+
+<question id="29" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which awards did WikiLeaks win?
+]]></string>
+<keywords><![CDATA[ 
+award, WikiLeaks, win
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        res:WikiLeaks dbp:awards ?uri .
+}
+]]></query>
+</question>
+
+<question id="30" answertype="resource" aggregation="true" onlydbo="false">
+<string><![CDATA[
+Which state of the USA has the highest population density?
+]]></string>
+<keywords><![CDATA[ 
+state, USA, population density, highest
+]]></keywords>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type yago:StatesOfTheUnitedStates .
+        ?uri dbp:densityrank ?rank .
+} 
+ORDER BY ASC(?rank) LIMIT 1
+]]></query>
+</question>
+
+<question id="31" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+What is the currency of the Czech Republic?
+]]></string>
+<keywords><![CDATA[ 
+Czech republic, currency
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Czech_Republic dbo:currency ?uri .
+}
+]]></query>
+</question>
+
+<question id="32" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which countries in the European Union adopted the Euro?
+]]></string>
+<keywords><![CDATA[ 
+European Union, country, adopted, Euro
+]]></keywords>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type yago:EuropeanUnionMemberStates .
+        { ?uri dbp:currency res:Euro . } 
+        UNION 
+        { ?uri dbp:currencyCode 'EUR'@en . }
+        UNION 
+        { ?uri dbp:currencyCode 'Euro'@en . }
+}
+]]></query>
+</question>
+
+<question id="33" answertype="number" aggregation="false" onlydbo="true">
+<string><![CDATA[
+What is the area code of Berlin?
+]]></string>
+<keywords><![CDATA[ 
+Berlin, area code
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?string 
+WHERE {
+	res:Berlin dbo:areaCode ?string .
+}
+]]></query>
+</question>
+
+<question id="34" answertype="resource" aggregation="true" onlydbo="true">
+<string><![CDATA[
+Which countries have more than two official languages?
+]]></string>
+<keywords><![CDATA[ 
+official language, country, more than two
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri WHERE
+{ 
+	?uri rdf:type dbo:Country  .
+        ?uri dbo:officialLanguage ?language .
+} 
+GROUP BY ?uri ?string
+HAVING (COUNT(?language) > 2)
+]]></query>
+</question>
+
+<question id="35" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who is the owner of Universal Studios?
+]]></string>
+<keywords><![CDATA[ 
+Universal Studios, owner
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Universal_Studios dbo:owner ?uri .
+}
+]]></query>
+</question>
+
+<question id="36" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Through which countries does the Yenisei river flow?
+]]></string>
+<keywords><![CDATA[ 
+Yenisei river, flow through, country
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        res:Yenisei_River dbp:country ?uri .
+}
+]]></query>
+</question>
+
+<question id="37" answertype="date" aggregation="false" onlydbo="false">
+<string><![CDATA[
+When did Finland join the EU?
+]]></string>
+<keywords><![CDATA[ 
+Finland, European Union, join
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+SELECT DISTINCT ?date 
+WHERE {       
+        res:Finland dbp:accessioneudate ?date .      
+}
+]]></query>
+</question>
+
+<question id="38" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which monarchs of the United Kingdom were married to a German?
+]]></string>
+<keywords><![CDATA[ 
+United Kingdom, monarch, married, German
+]]></keywords>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        ?uri rdf:type yago:MonarchsOfTheUnitedKingdom .
+        ?uri dbo:spouse ?spouse .
+        ?spouse dbo:birthPlace res:Germany.
+}
+]]></query>
+</question>
+
+<question id="39" answertype="date" aggregation="false" onlydbo="true">
+<string><![CDATA[
+When was the Battle of Gettysburg?
+]]></string>
+<keywords><![CDATA[ 
+Battle of Gettysburg
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?date 
+WHERE { 
+       res:Battle_of_Gettysburg dbo:date ?date .
+}
+]]></query>
+</question>
+
+<question id="40" answertype="resource" aggregation="true" onlydbo="true">
+<string><![CDATA[
+What is the highest mountain in Australia?
+]]></string>
+<keywords><![CDATA[ 
+Australia, highest mountain
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:Mountain .
+        ?uri dbo:locatedInArea res:Australia .
+        ?uri dbo:elevation ?elevation .
+} 
+ORDER BY DESC(?elevation) LIMIT 1
+]]></query>
+</question>
+
+<question id="41" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me all soccer clubs in Spain.
+]]></string>
+<keywords><![CDATA[ 
+Spain, soccer club
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:SoccerClub .
+        { ?uri dbo:ground res:Spain . }
+        UNION 
+        { ?uri dbp:ground ?ground . FILTER (regex(?ground, 'Spain')) }
+}
+]]></query>
+</question>
+
+<question id="42" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+What are the official languages of the Philippines?
+]]></string>
+<keywords><![CDATA[ 
+Philippines, official language
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+        res:Philippines dbo:officialLanguage ?uri .
+}
+]]></query>
+</question>
+
+<question id="43" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who is the mayor of New York City?
+]]></string>
+<keywords><![CDATA[ 
+New York City, mayor
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?uri
+WHERE { 
+        res:New_York_City dbo:leaderName ?uri .
+}
+]]></query>
+</question>
+
+<question id="44" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Who designed the Brooklyn Bridge?
+]]></string>
+<keywords><![CDATA[ 
+Brooklyn Bridge, designed
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        res:Brooklyn_Bridge dbp:designer ?uri .
+}
+]]></query>
+</question>
+
+<question id="45" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which telecommunications organizations are located in Belgium?
+]]></string>
+<keywords><![CDATA[ 
+Belgium, telecommunications organization, located
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 	
+	?uri  rdf:type dbo:Organisation  .
+	{ ?uri dbp:industry res:Telecommunications . } UNION { ?uri dbp:industry ?industry . FILTER (regex(?industry, 'Telecommunication')) . }
+	{ ?uri dbo:location res:Belgium. } UNION { ?uri dbp:location res:Belgium. } UNION { ?uri dbp:locationCountry 'Belgium'@en . }
+}
+]]></query>
+</question>
+
+<question id="46" answertype="boolean" aggregation="true" onlydbo="true">
+<string><![CDATA[
+Is Frank Herbert still alive?
+]]></string>
+<keywords><![CDATA[ 
+Frank Herbert, alive
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+ASK 
+WHERE {
+	OPTIONAL { res:Frank_Herbert dbo:deathDate ?date . }
+        FILTER (!BOUND(?date))
+}
+]]></query>
+</question>
+
+<question id="47" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+What is the highest place of Karakoram?
+]]></string>
+<keywords><![CDATA[ 
+Karakoram, highest place
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {       
+        res:Karakoram dbo:highestPlace ?uri .  
+}
+]]></query>
+</question>
+
+<question id="48" answertype="string" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me the homepage of Forbes.
+]]></string>
+<keywords><![CDATA[ 
+Forbes, homepage
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT DISTINCT ?string 
+WHERE {
+	res:Forbes foaf:homepage ?string .
+}
+]]></query>
+</question>
+
+<question id="49" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me all companies in the advertising industry.
+]]></string>
+<keywords><![CDATA[ 
+advertising industry, company
+]]></keywords>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?uri rdf:type dbo:Company  .
+        ?uri dbp:industry ?industry .
+        FILTER regex(?industry,'advertising','i') .
+}
+]]></query>
+</question>
+
+<question id="50" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+What did Bruce Carver die from?
+]]></string>
+<keywords><![CDATA[ 
+Bruce Carver, die
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        res:Bruce_Carver dbo:deathCause ?uri .     
+}
+]]></query>
+</question>
+
+<question id="51" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me all school types.
+]]></string>
+<keywords><![CDATA[ 
+school type
+]]></keywords>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?uri rdf:type yago:SchoolTypes .
+}
+]]></query>
+</question>
+
+<question id="52" answertype="resource" aggregation="true" onlydbo="false">
+<string><![CDATA[
+Which presidents were born in 1945?
+]]></string>
+<keywords><![CDATA[ 
+president, born, 1945
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	{ ?uri rdf:type dbo:President . }
+	UNION
+	{ ?uri rdf:type yago:Presidents . }
+        ?uri dbo:birthDate ?date .
+	FILTER regex(?date, '^1945') .
+}
+]]></query>
+</question>
+
+<question id="53" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me all presidents of the United States.
+]]></string>
+<keywords><![CDATA[ 
+United States, president
+]]></keywords>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        ?uri rdf:type dbo:Person .
+        { ?uri rdf:type yago:PresidentsOfTheUnitedStates. }
+        UNION
+        { ?uri rdf:type dbo:President.
+          ?uri dbp:title res:President_of_the_United_States. }
+        FILTER (!regex(?string,'Presidency','i') && !regex(?string,'and the')) .
+}
+]]></query>
+</question>
+
+<question id="54" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who was the wife of U.S. president Lincoln?
+]]></string>
+<keywords><![CDATA[ 
+United States, Lincoln, president, wife
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Abraham_Lincoln dbo:spouse ?uri.
+}
+]]></query>
+</question>
+
+<question id="55" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who developed the video game World of Warcraft?
+]]></string>
+<keywords><![CDATA[ 
+video game, World of Warcraft, developed
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	res:World_of_Warcraft dbo:developer ?uri . 
+}
+]]></query>
+</question>
+
+<question id="56" answertype="string" aggregation="false" onlydbo="false">
+<string><![CDATA[
+What is the official website of Tom Cruise?
+]]></string>
+<keywords><![CDATA[ 
+Tom Cruise, official website
+]]></keywords>
+<query><![CDATA[
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?string 
+WHERE { 
+	res:Tom_Cruise foaf:homepage ?string .
+}
+]]></query>
+</question>
+
+<question id="57" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+List all episodes of the first season of the HBO television series The Sopranos!
+]]></string>
+<keywords><![CDATA[ 
+HBO, television series, Sopranos, first season, list, episode
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri dbo:series res:The_Sopranos  .
+        ?uri dbo:seasonNumber 1 .
+}
+]]></query>
+</question>
+
+<question id="58" answertype="resource" aggregation="true" onlydbo="true">
+<string><![CDATA[
+Who produced the most films?
+]]></string>
+<keywords><![CDATA[ 
+film, produced, most
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?film rdf:type dbo:Film .
+    ?film dbo:producer ?uri .
+}
+GROUP BY ?uri 
+ORDER BY DESC(COUNT(?film)) LIMIT 1
+]]></query>
+</question>
+
+<question id="59" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me all people with first name Jimmy.
+]]></string>
+<keywords><![CDATA[ 
+person, first name, Jimmy
+]]></keywords>
+<query><![CDATA[
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type foaf:Person.       
+        ?uri foaf:givenName 'Jimmy'@en   .
+}
+]]></query>
+</question>
+
+<question id="60" answertype="boolean" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Is there a video game called Battle Chess?
+]]></string>
+<keywords><![CDATA[ 
+Battle Chess, video game, called
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+ASK 
+WHERE {
+	?uri rdf:type dbo:VideoGame .
+        ?uri rdfs:label 'Battle Chess'@en .
+}
+]]></query>
+</question>
+
+<question id="61" answertype="resource" aggregation="true" onlydbo="false">
+<string><![CDATA[
+Which mountains are higher than the Nanga Parbat?
+]]></string>
+<keywords><![CDATA[ 
+Nanga Parbat, mountain, higher
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri 
+WHERE {
+        res:Nanga_Parbat dbp:elevationM ?elevation .
+	?uri rdf:type dbo:Mountain .
+        ?uri dbp:elevationM ?otherelevation .
+        FILTER (?otherelevation > ?elevation) .
+}
+]]></query>
+</question>
+
+<question id="62" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who created Wikipedia?
+]]></string>
+<keywords><![CDATA[ 
+Wikipedia, created
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Wikipedia dbo:author ?uri .
+}
+]]></query>
+</question>
+
+<question id="63" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Give me all actors starring in Batman Begins.
+]]></string>
+<keywords><![CDATA[ 
+Batman Begins, actor, starring
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Batman_Begins dbo:starring ?uri .
+}
+]]></query>
+</question>
+
+<question id="64" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Which software has been developed by organizations founded in California?
+]]></string>
+<keywords><![CDATA[ 
+software, developed, organization, founded, California
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?company rdf:type dbo:Organisation  .
+        ?company dbo:foundationPlace res:California .
+        ?uri dbo:developer ?company .
+        ?uri rdf:type dbo:Software .
+}
+]]></query>
+</question>
+
+<question id="65" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which companies work in the aerospace industry as well as on nuclear reactor technology?
+]]></string>
+<keywords><![CDATA[ 
+aerospace industry, nuclear reactor technology, company, work
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?uri rdf:type dbo:Company  .
+	?uri dbp:industry res:Aerospace .
+        ?uri dbp:industry res:Nuclear_reactor_technology .
+}
+]]></query>
+</question>
+
+<question id="66" answertype="boolean" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Is Christian Bale starring in Batman Begins?
+]]></string>
+<keywords><![CDATA[ 
+Christian Bale, starring, Batman Begins
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+ASK 
+WHERE {
+	res:Batman_Begins dbo:starring res:Christian_Bale .
+}
+]]></query>
+</question>
+
+<question id="67" answertype="string" aggregation="true" onlydbo="false">
+<string><![CDATA[
+Give me the websites of companies with more than 500000 employees.
+]]></string>
+<keywords><![CDATA[ 
+website, company, more than 500000, employee
+]]></keywords>
+<query><![CDATA[
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?string 
+WHERE {
+	?subject rdf:type dbo:Company .
+	?subject dbp:numEmployees ?employees .
+	FILTER( xsd:integer(?employees) > 500000 ) .
+	?subject foaf:homepage ?string .
+}
+]]></query>
+</question>
+
+<question id="68" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Which actors were born in Germany?
+]]></string>
+<keywords><![CDATA[ 
+Germany, actor, born
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+  ?uri rdf:type dbo:Actor .
+  { ?uri dbo:birthPlace res:Germany . }
+  UNION 
+  { ?uri dbo:birthPlace ?place .
+    ?place dbo:country res:Germany . }
+}
+]]></query>
+</question>
+
+<question id="69" answertype="resource" aggregation="true" onlydbo="true">
+<string><![CDATA[
+Which caves have more than 3 entrances?
+]]></string>
+<keywords><![CDATA[ 
+cave, more than 3, entrance
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?uri rdf:type dbo:Cave .
+        ?uri dbo:numberOfEntrances ?entrance .
+        FILTER (?entrance > 3) .
+}
+]]></query>
+</question>
+
+<question id="70" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Give me all films produced by Hal Roach.
+]]></string>
+<keywords><![CDATA[ 
+Hal Roach, film, produce
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:Film .
+        ?uri dbo:producer res:Hal_Roach .
+}
+]]></query>
+</question>
+
+<question id="71" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me all video games published by Mean Hamster Software.
+]]></string>
+<keywords><![CDATA[ 
+Mean Hamster Software, video game, publish
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+      ?uri rdf:type dbo:VideoGame .
+      { ?uri dbp:publisher 'Mean Hamster Software'@en . }
+      UNION 
+      { ?uri dbo:publisher res:Mean_Hamster_Software . }
+}
+]]></query>
+</question>
+
+<question id="72" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Which languages are spoken in Estonia?
+]]></string>
+<keywords><![CDATA[ 
+Estonia, language, spoken
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+      { res:Estonia dbo:language ?uri . } 
+      UNION 
+      { ?uri dbo:spokenIn res:Estonia . }
+}
+]]></query>
+</question>
+
+<question id="73" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who owns Aldi?
+]]></string>
+<keywords><![CDATA[ 
+own, Aldi
+]]></keywords>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Aldi dbo:keyPerson ?uri .
+}
+]]></query>
+</question>
+
+<question id="74" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which capitals in Europe were host cities of the summer olympic games?
+]]></string>
+<keywords><![CDATA[ 
+capital, Europe, host city, summer olympic games
+]]></keywords>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type yago:CapitalsInEurope .
+        ?uri rdf:type yago:HostCitiesOfTheSummerOlympicGames .
+}
+]]></query>
+</question>
+
+<question id="75" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who has been the 5th president of the United States of America?
+]]></string>
+<keywords><![CDATA[ 
+5th, president, United States of America
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri dbo:orderInOffice '5th President of the United States'@en .
+}
+]]></query>
+</question>
+
+<question id="76" answertype="number" aggregation="true" onlydbo="true">
+<string><![CDATA[
+How many films did Hal Roach produce?
+]]></string>
+<keywords><![CDATA[ 
+Hal Roach, film, produce
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+SELECT COUNT(DISTINCT ?uri) 
+WHERE {
+      ?uri dbo:producer res:Hal_Roach .
+}
+]]></query>
+</question>
+
+<question id="77" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which music albums contain the song Last Christmas?
+]]></string>
+<keywords><![CDATA[ 
+Last Christmas, music album, contain, song
+]]></keywords>
+<query><![CDATA[
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        ?single dbo:album ?uri .
+        ?single foaf:name 'Last Christmas'@en .
+}
+]]></query>
+</question>
+
+<question id="78" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Give me all books written by Danielle Steel.
+]]></string>
+<keywords><![CDATA[ 
+Danielle Steel, book, written
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:Book .
+        ?uri dbo:author res:Danielle_Steel .
+}
+]]></query>
+</question>
+
+<question id="79" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Which airports are located in California, USA?
+]]></string>
+<keywords><![CDATA[ 
+United States, California, airport, located
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?uri rdf:type dbo:Airport .
+        ?uri dbo:location res:California .
+}
+]]></query>
+</question>
+
+<question id="80" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Give me all Canadian Grunge record labels.
+]]></string>
+<keywords><![CDATA[ 
+record label, Canadian, Grunge
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:RecordLabel .
+        ?uri dbo:genre res:Grunge .
+        ?uri dbo:country res:Canada .
+}
+]]></query>
+</question>
+
+<question id="81" answertype="resource" aggregation="true" onlydbo="false">
+<string><![CDATA[
+Which country has the most official languages?
+]]></string>
+<keywords><![CDATA[ 
+country, official language, most
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri WHERE
+{ 
+	?uri rdf:type dbo:Country  .
+        ?uri dbp:officialLanguages ?language .
+} 
+GROUP BY ?uri
+ORDER BY DESC(COUNT(?language)) LIMIT 1
+]]></query>
+</question>
+
+<question id="82" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+In which programming language is GIMP written?
+]]></string>
+<keywords><![CDATA[ 
+programming language, GIMP, written
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	res:GIMP dbo:programmingLanguage ?uri .
+}
+]]></query>
+</question>
+
+<question id="83" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who produced films starring Natalie Portman?
+]]></string>
+<keywords><![CDATA[ 
+produced, film, starring, Natalie Portman
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?film rdf:type dbo:Film .
+        ?film dbo:starring res:Natalie_Portman .
+        ?film dbo:producer ?uri .
+}
+]]></query>
+</question>
+
+<question id="84" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Give me all movies with Tom Cruise.
+]]></string>
+<keywords><![CDATA[ 
+Tom Cruise, movie
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:Film.
+	?uri dbo:starring res:Tom_Cruise .
+}
+]]></query>
+</question>
+
+<question id="85" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+In which films did Julia Roberts as well as Richard Gere play?
+]]></string>
+<keywords><![CDATA[ 
+Julia Roberts, Richard Gere, film, play
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:Film .
+        ?uri dbo:starring res:Julia_Roberts .
+        ?uri dbo:starring res:Richard_Gere.
+}
+]]></query>
+</question>
+
+<question id="86" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me all female German chancellors.
+]]></string>
+<keywords><![CDATA[ 
+German chancellor, female
+]]></keywords>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type yago:FemaleHeadsOfGovernment.
+        ?uri dbp:office res:Chancellor_of_Germany .
+}
+]]></query>
+</question>
+
+<question id="87" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Who wrote the book The pillars of the Earth?
+]]></string>
+<keywords><![CDATA[ 
+wrote, book, The pillars of the Earth
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	res:The_Pillars_of_the_Earth dbo:author ?uri .
+}
+]]></query>
+</question>
+
+<question id="88" answertype="number" aggregation="false" onlydbo="true">
+<string><![CDATA[
+How many films did Leonardo DiCaprio star in?
+]]></string>
+<keywords><![CDATA[ 
+Leonardo DiCaprio, film, star
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT COUNT(DISTINCT ?uri) 
+WHERE {
+	?uri rdf:type dbo:Film .
+        ?uri dbo:starring res:Leonardo_DiCaprio . 
+}
+]]></query>
+</question>
+
+<question id="89" answertype="resource" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Give me all soccer clubs in the Premier League.
+]]></string>
+<keywords><![CDATA[ 
+Premier League, soccer club
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+   ?uri dbo:league res:Premier_League . 
+}
+]]></query>
+</question>
+
+<question id="90" answertype="date" aggregation="false" onlydbo="false">
+<string><![CDATA[
+When was Capcom founded?
+]]></string>
+<keywords><![CDATA[ 
+Capcom, founded
+]]></keywords>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?date 
+WHERE {
+     res:Capcom dbp:foundation ?date .
+}
+]]></query>
+</question>
+
+<question id="91" answertype="resource" aggregation="true" onlydbo="false">
+<string><![CDATA[
+Which organizations were founded in 1950?
+]]></string>
+<keywords><![CDATA[ 
+organization, founded, 1950
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:Organisation .
+        { ?uri dbp:foundation ?date . } UNION { ?uri dbo:formationYear ?date . }
+        FILTER regex(?date,'^1950') .
+}
+]]></query>
+</question>
+
+<question id="92" answertype="resource" aggregation="true" onlydbo="true">
+<string><![CDATA[
+What is the highest mountain?
+]]></string>
+<keywords><![CDATA[ 
+highest mountain
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?uri rdf:type dbo:Mountain  .
+        ?uri dbo:elevation ?elevation .
+} 
+ORDER BY DESC(?elevation) LIMIT 1
+]]></query>
+</question>
+
+<question id="93" answertype="boolean" aggregation="false" onlydbo="true">
+<string><![CDATA[
+Was Natalie Portman born in the United States?
+]]></string>
+<keywords><![CDATA[ 
+Natalie Portman, born, United States
+]]></keywords>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+ASK 
+WHERE { 
+	res:Natalie_Portman dbo:birthPlace ?city .
+      	?city dbo:country res:United_States .
+}
+]]></query>
+</question>
+
+<question id="94" answertype="number" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Which budget did the first movie of Zdenek Sverak have?
+]]></string>
+<keywords><![CDATA[ 
+Zdenek Sverak, budget, first movie
+]]></keywords>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="95" answertype="number" aggregation="false" onlydbo="false">
+<string><![CDATA[
+How many big fires struck Paris during the Middle Ages?
+]]></string>
+<keywords><![CDATA[ 
+Paris, middle ages, fire, big, struck
+]]></keywords>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="96" answertype="boolean" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Is Jens Friebe a vegan?
+]]></string>
+<keywords><![CDATA[ 
+Jens Friebe, vegan
+]]></keywords>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="97" answertype="number" aggregation="false" onlydbo="false">
+<string><![CDATA[
+How often was Michael Jordan divorced?
+]]></string>
+<keywords><![CDATA[ 
+Micheal Jordan, divorced
+]]></keywords>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="98" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+What is the most beautiful painting?
+]]></string>
+<keywords><![CDATA[ 
+painting, most, beautiful
+]]></keywords>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="99" answertype="resource" aggregation="false" onlydbo="false">
+<string><![CDATA[
+Give me all animal species that live in the Teutoburg Forest.
+]]></string>
+<keywords><![CDATA[ 
+Teutoburg Forest, animal species, live
+]]></keywords>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="100" answertype="date" aggregation="false" onlydbo="false">
+<string><![CDATA[
+When is the movie Worst Case Scenario going to be in cinemas in the Netherlands?
+]]></string>
+<keywords><![CDATA[ 
+Worst Case Scenario, movie, cinema, Netherlands
+]]></keywords>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+</dataset>

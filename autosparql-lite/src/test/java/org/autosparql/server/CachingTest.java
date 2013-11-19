@@ -1,19 +1,17 @@
 package org.autosparql.server;
 import static org.junit.Assert.assertTrue;
-import static org.autosparql.server.AutoSPARQLSession.*;
-
+import static org.aksw.autosparql.server.AutoSPARQLSession.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
-import org.autosparql.shared.Example;
+import org.aksw.autosparql.server.AutoSPARQLSession;
+import org.aksw.autosparql.shared.Example;
 import org.junit.Before;
 import org.junit.Test;
 

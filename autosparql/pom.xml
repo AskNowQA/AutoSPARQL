@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>autosparql-parent</artifactId>
-		<groupId>org.dllearner</groupId>
-		<version>1.0-SNAPSHOT</version>
+        <groupId>org.aksw.autosparql</groupId>
+		<version>${autosparql.version}</version>
 	</parent>
 	<groupId>org.dllearner</groupId>
 	<artifactId>autosparql</artifactId>

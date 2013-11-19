@@ -1,12 +1,12 @@
 package org.autosparql.server.search;
 
 import static org.junit.Assert.*;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.SortedSet;
-import org.autosparql.shared.Example;
+import org.aksw.autosparql.server.search.TBSLSearch;
+import org.aksw.autosparql.shared.Example;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.junit.Test;
 
