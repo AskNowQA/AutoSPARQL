@@ -1,8 +1,5 @@
 package org.aksw.autosparql.algorithm.tbsl.learning;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,23 +36,22 @@ import org.aksw.autosparql.algorithm.tbsl.templator.Templator;
 import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.PopularityMap;
+import org.aksw.autosparql.algorithm.tbsl.util.PopularityMap.EntityType;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.Similarity;
-import org.aksw.autosparql.algorithm.tbsl.util.PopularityMap.EntityType;
 import org.aksw.autosparql.algorithm.tbsl.util.UnknownPropertyHelper.SymPropertyDirection;
+import org.aksw.autosparql.commons.nlp.lemma.Lemmatizer;
+import org.aksw.autosparql.commons.nlp.lemma.LingPipeLemmatizer;
+import org.aksw.autosparql.commons.nlp.pling.PlingStemmer;
+import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
+import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
+import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.apache.log4j.Logger;
+import org.dllearner.common.index.HierarchicalIndex;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.IndexResultItem;
 import org.dllearner.common.index.IndexResultSet;
 import org.dllearner.common.index.MappingBasedIndex;
-import org.dllearner.common.index.SOLRIndex;
-import org.dllearner.common.index.SPARQLDatatypePropertiesIndex;
-import org.dllearner.common.index.SPARQLIndex;
-import org.dllearner.common.index.SPARQLObjectPropertiesIndex;
-import org.dllearner.common.index.SPARQLPropertiesIndex;
-import org.dllearner.common.index.VirtuosoDatatypePropertiesIndex;
-import org.dllearner.common.index.VirtuosoObjectPropertiesIndex;
-import org.dllearner.common.index.VirtuosoPropertiesIndex;
 import org.dllearner.core.ComponentInitException;
 import org.dllearner.core.LearningProblem;
 import org.dllearner.core.SparqlQueryLearningAlgorithm;
@@ -63,33 +59,24 @@ import org.dllearner.core.owl.Description;
 import org.dllearner.core.owl.NamedClass;
 import org.dllearner.core.owl.ObjectProperty;
 import org.dllearner.core.owl.Thing;
-import org.dllearner.kb.LocalModelBasedSparqlEndpointKS;
 import org.dllearner.kb.SparqlEndpointKS;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.dllearner.reasoning.SPARQLReasoner;
-import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Options;
-import org.aksw.autosparql.commons.nlp.lemma.Lemmatizer;
-import org.aksw.autosparql.commons.nlp.lemma.LingPipeLemmatizer;
-import org.aksw.autosparql.commons.nlp.pling.PlingStemmer;
-import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
-import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
-import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import com.google.common.collect.Sets;
-import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
+@Deprecated
 public class SPARQLTemplateBasedLearner2 implements SparqlQueryLearningAlgorithm{
 
 	enum Mode{
@@ -116,9 +103,9 @@ public class SPARQLTemplateBasedLearner2 implements SparqlQueryLearningAlgorithm
 
 	private Index resourcesIndex;
 	private Index classesIndex;
-	private Index propertiesIndex;
+//	private Index propertiesIndex;
 
-	private Index datatypePropertiesIndex;
+	private Index dataPropertiesIndex;
 	private Index objectPropertiesIndex;
 
 	private MappingBasedIndex mappingIndex;
@@ -156,10 +143,6 @@ public class SPARQLTemplateBasedLearner2 implements SparqlQueryLearningAlgorithm
 
 	private boolean useDomainRangeRestriction = true;
 
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex){
-		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, new StanfordPartOfSpeechTagger());
-	}
-
 	public SPARQLTemplateBasedLearner2(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
 		this(knowledgebase, posTagger, wordNet, options, null);
 	}
@@ -167,147 +150,37 @@ public class SPARQLTemplateBasedLearner2 implements SparqlQueryLearningAlgorithm
 	public SPARQLTemplateBasedLearner2(Knowledgebase knowledgebase){
 		this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(), new Options());
 	}
-	
-	public SPARQLTemplateBasedLearner2(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){
-		if(knowledgebase instanceof LocalKnowledgebase){
-			this.model = ((LocalKnowledgebase) knowledgebase).getModel();
-		} else {
-			this.endpoint = ((RemoteKnowledgebase) knowledgebase).getEndpoint();
-		}
-		this.resourcesIndex = knowledgebase.getResourceIndex();
-		this.classesIndex = knowledgebase.getClassIndex();
-		this.propertiesIndex = knowledgebase.getPropertyIndex();
-		this.mappingIndex = knowledgebase.getMappingIndex();
-		if(propertiesIndex instanceof SPARQLPropertiesIndex){
-			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
-				datatypePropertiesIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-				objectPropertiesIndex = new VirtuosoObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-			} else {
-				datatypePropertiesIndex = new SPARQLDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-				objectPropertiesIndex = new SPARQLObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-			}
-		} else {
-			datatypePropertiesIndex = propertiesIndex;
-			objectPropertiesIndex = propertiesIndex;
-		}
+
+	public SPARQLTemplateBasedLearner2(Knowledgebase kb, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){
+		if(kb instanceof RemoteKnowledgebase)	{this.endpoint = ((RemoteKnowledgebase) kb).getEndpoint();}
+		else if(kb instanceof LocalKnowledgebase) {this.model= ((LocalKnowledgebase) kb).getModel();}
+		else {throw new RuntimeException("should never happen");}
+		
+		this.resourcesIndex = kb.getResourceIndex();
+		this.classesIndex = kb.getClassIndex();
+		this.objectPropertiesIndex = kb.getObjectPropertyIndex();
+		this.dataPropertiesIndex = kb.getDataPropertyIndex();
+		this.mappingIndex = kb.getMappingIndex();
+//		if(propertiesIndex instanceof SPARQLPropertiesIndex){
+//			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
+//				dataPropertiesIndex = new VirtuosodataPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
+//				objectPropertiesIndex = new VirtuosoObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
+//			} else {
+//				dataPropertiesIndex = new SPARQLDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
+//				objectPropertiesIndex = new SPARQLObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
+//			}
+//		} else {
+//			dataPropertiesIndex = propertiesIndex;
+//			objectPropertiesIndex = propertiesIndex;
+//		}
 		this.posTagger = posTagger;
 		this.wordNet = wordNet;
 		this.cache = cache;
-		
+
 		reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint));
 		setOptions(options);
-		
-		setMappingIndex(knowledgebase.getMappingIndex());
-	}
 
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index index){
-		this(endpoint, index, new StanfordPartOfSpeechTagger());
-	}
-
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger){
-		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, posTagger, new WordNet(), new Options());
-	}
-
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index index, PartOfSpeechTagger posTagger){
-		this(endpoint, index, posTagger, new WordNet(), new Options());
-	}
-
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, WordNet wordNet){
-		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, new StanfordPartOfSpeechTagger(), wordNet, new Options());
-	}
-
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index index, WordNet wordNet){
-		this(endpoint, index, new StanfordPartOfSpeechTagger(), wordNet, new Options());
-	}
-
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet){
-		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, posTagger, wordNet, new Options(), new ExtractionDBCache("cache"));
-	}
-
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index index, PartOfSpeechTagger posTagger, WordNet wordNet){
-		this(endpoint, index, index, index, posTagger, wordNet, new Options(), new ExtractionDBCache("cache"));
-	}
-
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
-		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, posTagger, wordNet, options, new ExtractionDBCache("cache"));
-	}
-
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index index, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
-		this(endpoint, index, index, index, posTagger, wordNet, options, new ExtractionDBCache("cache"));
-	}
-
-	public SPARQLTemplateBasedLearner2(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){
-		this.endpoint = endpoint;
-		this.resourcesIndex = resourcesIndex;
-		this.classesIndex = classesIndex;
-		this.propertiesIndex = propertiesIndex;
-		this.posTagger = posTagger;
-		this.wordNet = wordNet;
-		this.cache = cache;
-
-		setOptions(options);
-
-		if(propertiesIndex instanceof SPARQLPropertiesIndex){
-			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
-				datatypePropertiesIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-				objectPropertiesIndex = new VirtuosoObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-			} else {
-				datatypePropertiesIndex = new SPARQLDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-				objectPropertiesIndex = new SPARQLObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-			}
-		} else {
-			datatypePropertiesIndex = propertiesIndex;
-			objectPropertiesIndex = propertiesIndex;
-		}
-		reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint), cache);
-	}
-
-	public SPARQLTemplateBasedLearner2(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex){
-		this(model, resourcesIndex, classesIndex, propertiesIndex, new StanfordPartOfSpeechTagger());
-	}
-
-	public SPARQLTemplateBasedLearner2(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger){
-		this(model, resourcesIndex, classesIndex, propertiesIndex, posTagger, new WordNet(), new Options());
-	}
-
-	public SPARQLTemplateBasedLearner2(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, WordNet wordNet){
-		this(model, resourcesIndex, classesIndex, propertiesIndex, new StanfordPartOfSpeechTagger(), wordNet, new Options());
-	}
-
-	public SPARQLTemplateBasedLearner2(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
-		this(model, resourcesIndex, classesIndex, propertiesIndex, posTagger, wordNet, options, new ExtractionDBCache("cache"));
-	}
-
-	public SPARQLTemplateBasedLearner2(Model model, MappingBasedIndex mappingBasedIndex, PartOfSpeechTagger posTagger)
-	{
-		this(model, new SPARQLIndex(model),new SPARQLIndex(model),new SPARQLIndex(model),posTagger);
-		setMappingIndex(mappingBasedIndex);
-	}
-
-	public SPARQLTemplateBasedLearner2(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){
-		this.model = model;
-		this.resourcesIndex = resourcesIndex;
-		this.classesIndex = classesIndex;
-		this.propertiesIndex = propertiesIndex;
-		this.posTagger = posTagger;
-		this.wordNet = wordNet;
-		this.cache = cache;
-
-		setOptions(options);
-
-		if(propertiesIndex instanceof SPARQLPropertiesIndex){
-			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
-				datatypePropertiesIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-				objectPropertiesIndex = new VirtuosoObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-			} else {
-				datatypePropertiesIndex = new SPARQLDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-				objectPropertiesIndex = new SPARQLObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-			}
-		} else {
-			datatypePropertiesIndex = propertiesIndex;
-			objectPropertiesIndex = propertiesIndex;
-		}
-		reasoner = new SPARQLReasoner(new LocalModelBasedSparqlEndpointKS(ModelFactory.createOntologyModel(OntModelSpec.RDFS_MEM, model)), cache);
+		setMappingIndex(kb.getMappingIndex());
 	}
 
 	public void setGrammarFiles(String[] grammarFiles)
@@ -338,20 +211,21 @@ public class SPARQLTemplateBasedLearner2 implements SparqlQueryLearningAlgorithm
 		}
 		this.resourcesIndex = knowledgebase.getResourceIndex();
 		this.classesIndex = knowledgebase.getClassIndex();
-		this.propertiesIndex = knowledgebase.getPropertyIndex();
+		this.objectPropertiesIndex = knowledgebase.getObjectPropertyIndex();
+		this.dataPropertiesIndex = knowledgebase.getDataPropertyIndex();
 		this.mappingIndex = knowledgebase.getMappingIndex();
-		if(propertiesIndex instanceof SPARQLPropertiesIndex){
-			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
-				datatypePropertiesIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-				objectPropertiesIndex = new VirtuosoObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-			} else {
-				datatypePropertiesIndex = new SPARQLDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-				objectPropertiesIndex = new SPARQLObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
-			}
-		} else {
-			datatypePropertiesIndex = propertiesIndex;
-			objectPropertiesIndex = propertiesIndex;
-		}
+//		if(propertiesIndex instanceof SPARQLPropertiesIndex){
+//			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
+//				dataPropertiesIndex = new VirtuosodataPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
+//				objectPropertiesIndex = new VirtuosoObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
+//			} else {
+//				dataPropertiesIndex = new SPARQLdataPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
+//				objectPropertiesIndex = new SPARQLObjectPropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
+//			}
+//		} else {
+//			dataPropertiesIndex = propertiesIndex;
+//			objectPropertiesIndex = propertiesIndex;
+//		}
 		reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint));
 	}
 
@@ -554,6 +428,7 @@ public class SPARQLTemplateBasedLearner2 implements SparqlQueryLearningAlgorithm
 
 	private SortedSet<WeightedQuery> getWeightedSPARQLQueries(Set<Template> templates){
 		logger.debug("Generating SPARQL query candidates...");
+		if(templates==null) throw new AssertionError("templates are null");
 
 		Map<Slot, Set<Allocation>> slot2Allocations = new TreeMap<Slot, Set<Allocation>>(new Comparator<Slot>() {
 
@@ -1007,9 +882,9 @@ public class SPARQLTemplateBasedLearner2 implements SparqlQueryLearningAlgorithm
 		if(type == SlotType.CLASS){
 			index = classesIndex;
 		} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY){
-			index = propertiesIndex;
+			index = new HierarchicalIndex(objectPropertiesIndex, dataPropertiesIndex);
 		} else if(type == SlotType.DATATYPEPROPERTY){
-			index = datatypePropertiesIndex;
+			index = dataPropertiesIndex;
 		} else if(type == SlotType.OBJECTPROPERTY){
 			index = objectPropertiesIndex;
 		} else if(type == SlotType.RESOURCE || type == SlotType.UNSPEC){
@@ -1259,9 +1134,9 @@ public class SPARQLTemplateBasedLearner2 implements SparqlQueryLearningAlgorithm
 			if(type == SlotType.CLASS){
 				index = classesIndex;
 			} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY){
-				index = propertiesIndex;
+				index = new HierarchicalIndex(objectPropertiesIndex, dataPropertiesIndex);
 			} else if(type == SlotType.DATATYPEPROPERTY){
-				index = datatypePropertiesIndex;
+				index = dataPropertiesIndex;
 			} else if(type == SlotType.OBJECTPROPERTY){
 				index = objectPropertiesIndex;
 			} else if(type == SlotType.RESOURCE || type == SlotType.UNSPEC){
@@ -1289,34 +1164,30 @@ public class SPARQLTemplateBasedLearner2 implements SparqlQueryLearningAlgorithm
 		}
 		return isDatatypeProperty;
 	}
-
-	/**
-	 * @param args
-	 * @throws NoTemplateFoundException 
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 * @throws InvalidFileFormatException 
-	 */
-	public static void main(String[] args) throws Exception {
-		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://greententacle.techfak.uni-bielefeld.de:5171/sparql"), 
-				Collections.<String>singletonList(""), Collections.<String>emptyList());
-		Index resourcesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_resources");
-		Index classesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_classes");
-		Index propertiesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_properties");
-
-		SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2(endpoint, resourcesIndex, classesIndex, propertiesIndex);
-		learner.init();
-
-		String question = "What is the highest mountain?";
-
-		learner.setQuestion(question);
-		learner.learnSPARQLQueries();
-		System.out.println("Learned query:\n" + learner.getBestSPARQLQuery());
-		System.out.println("Lexical answer type is: " + learner.getTemplates().iterator().next().getLexicalAnswerType());
-		System.out.println(learner.getLearnedPosition());
-
-	}
-
-
-
+//	/**
+//	 * @param args
+//	 * @throws NoTemplateFoundException 
+//	 * @throws IOException 
+//	 * @throws FileNotFoundException 
+//	 * @throws InvalidFileFormatException 
+//	 */
+//	public static void main(String[] args) throws Exception {
+//		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://greententacle.techfak.uni-bielefeld.de:5171/sparql"), 
+//				Collections.<String>singletonList(""), Collections.<String>emptyList());
+//		Index resourcesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_resources");
+//		Index classesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_classes");
+//		Index propertiesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_properties");
+//
+//		SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2(endpoint, resourcesIndex, classesIndex, propertiesIndex);
+//		learner.init();
+//
+//		String question = "What is the highest mountain?";
+//
+//		learner.setQuestion(question);
+//		learner.learnSPARQLQueries();
+//		System.out.println("Learned query:\n" + learner.getBestSPARQLQuery());
+//		System.out.println("Lexical answer type is: " + learner.getTemplates().iterator().next().getLexicalAnswerType());
+//		System.out.println(learner.getLearnedPosition());
+//
+//	}
 }

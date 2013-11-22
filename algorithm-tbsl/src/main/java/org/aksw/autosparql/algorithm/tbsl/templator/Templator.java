@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
-import net.didion.jwnl.data.POS;
 import org.aksw.autosparql.algorithm.tbsl.converter.DRS2SPARQL_Converter;
 import org.aksw.autosparql.algorithm.tbsl.converter.DUDE2UDRS_Converter;
 import org.aksw.autosparql.algorithm.tbsl.ltag.parser.LTAGLexicon;
@@ -20,11 +19,12 @@ import org.aksw.autosparql.algorithm.tbsl.sem.dudes.reader.ParseException;
 import org.aksw.autosparql.algorithm.tbsl.sparql.Slot;
 import org.aksw.autosparql.algorithm.tbsl.sparql.SlotType;
 import org.aksw.autosparql.algorithm.tbsl.sparql.Template;
-import org.apache.log4j.Logger;
 import org.aksw.autosparql.commons.nlp.lemma.LingPipeLemmatizer;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
+import org.apache.log4j.Logger;
+import edu.mit.jwi.item.POS;
 
 public class Templator {
 	
@@ -255,6 +255,7 @@ public class Templator {
 	                					
 	               						List<String> strings = new ArrayList<String>();
 	               						if (wordnetpos != null && wordnetpos.equals(POS.ADJECTIVE)) {
+	               							
 	               							strings = wordnet.getAttributes(word);
 	               						}
 	                					

@@ -4,13 +4,13 @@
 <question answertype="resource" id="5">
 <string>houses in Headington</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://www.w3.org/2006/vcard/ns#street-address> ?y.
-	FILTER(regex(?y,'Headington','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y.
+	FILTER(regex(?y,&apos;Headington&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -19,15 +19,15 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="22">
 <string>houses with garden in Wheatley</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://www.w3.org/2006/vcard/ns#street-address> ?y0.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'garden','i')).
-	FILTER(regex(?y0,'Wheatley','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y0.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;garden&apos;,&apos;i&apos;)).
+	FILTER(regex(?y0,&apos;Wheatley&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -37,15 +37,15 @@ SELECT ?x0 WHERE {
 <string>Victorian houses in Oxfordshire</string>
 <query>
 
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://www.w3.org/2006/vcard/ns#street-address> ?y0.
-	?x0 <http://purl.org/goodrelations/v1#description> ?y.
-	FILTER(regex(?y0,'Oxfordshire','i')).
-	FILTER(regex(?y,'Victorian','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y0.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?y.
+	FILTER(regex(?y0,&apos;Oxfordshire&apos;,&apos;i&apos;)).
+	FILTER(regex(?y,&apos;Victorian&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -54,13 +54,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="61">
 <string>houses in Old Marston</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://www.w3.org/2006/vcard/ns#street-address> ?y.
-	FILTER(regex(?y,'Old Marston','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y.
+	FILTER(regex(?y,&apos;Old Marston&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -69,16 +69,16 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="78">
 <string>houses in Summertown for less than 400000 pounds</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?v ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?v <http://purl.org/goodrelations/v1#includes> ?x0.
-	?x0 <http://www.w3.org/2006/vcard/ns#street-address> ?y.
-	?v <http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice> ?y0.
-	FILTER(?y0 < 400000).
-	FILTER(regex(?y,'Summertown','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?v &lt;http://purl.org/goodrelations/v1#includes&gt; ?x0.
+	?x0 &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y.
+	?v &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice&gt; ?y0.
+	FILTER(?y0 &lt; 400000).
+	FILTER(regex(?y,&apos;Summertown&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -87,13 +87,13 @@ SELECT ?v ?x0 WHERE {
 <question answertype="resource" id="98">
 <string>houses with electric heating</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'electric heating','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;electric heating&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -102,13 +102,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="115">
 <string>houses with underfloor heating</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'underfloor heating','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;underfloor heating&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -117,13 +117,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="132">
 <string>houses with wood floor</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'wood floor','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;wood floor&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -132,13 +132,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="149">
 <string>houses with balcony</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'balcony','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;balcony&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -147,13 +147,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="166">
 <string>houses with double glazed windows</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'double glazed windows','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;double glazed windows&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -162,13 +162,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="183">
 <string>houses on Rawlinson Road</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://www.w3.org/2006/vcard/ns#street-address> ?y.
-	FILTER(regex(?y,'Rawlinson Road','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y.
+	FILTER(regex(?y,&apos;Rawlinson Road&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -177,15 +177,15 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="200">
 <string>find a representative house in Summertown.</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?y WHERE {
-	?y <http://purl.org/goodrelations/v1#description> ?y1.
-	?y <http://www.w3.org/2006/vcard/ns#street-address> ?y0.
-	?y rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	FILTER(regex(?y1,'representative','i')).
-	FILTER(regex(?y0,'Summertown','i')).
+	?y &lt;http://purl.org/goodrelations/v1#description&gt; ?y1.
+	?y &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y0.
+	?y rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	FILTER(regex(?y1,&apos;representative&apos;,&apos;i&apos;)).
+	FILTER(regex(?y0,&apos;Summertown&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -194,13 +194,13 @@ SELECT ?y WHERE {
 <question answertype="resource" id="219">
 <string>houses in Botley Road</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://www.w3.org/2006/vcard/ns#street-address> ?y.
-	FILTER(regex(?y,'Botley Road','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y.
+	FILTER(regex(?y,&apos;Botley Road&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -209,13 +209,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="236">
 <string>houses in Littlemore</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://www.w3.org/2006/vcard/ns#street-address> ?y.
-	FILTER(regex(?y,'Littlemore','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y.
+	FILTER(regex(?y,&apos;Littlemore&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -224,13 +224,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="253">
 <string>house with electric central heating system</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'electric central heating system','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;electric central heating system&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -239,13 +239,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="270">
 <string>houses with farmland views</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'farmland views','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;farmland views&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -254,13 +254,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="287">
 <string>houses with river views</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'river views','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;river views&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -269,13 +269,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="304">
 <string>house with a courtyard</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://purl.org/goodrelations/v1#description> ?z.
-	FILTER(regex(?z,'courtyard','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://purl.org/goodrelations/v1#description&gt; ?z.
+	FILTER(regex(?z,&apos;courtyard&apos;,&apos;i&apos;)).
 }
 
 </query>
@@ -284,13 +284,13 @@ SELECT ?x0 WHERE {
 <question answertype="resource" id="321">
 <string>house in Banbury Road</string>
 <query>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
 
 SELECT ?x0 WHERE {
-	?x0 rdf:type <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.
-	?x0 <http://www.w3.org/2006/vcard/ns#street-address> ?y.
-	FILTER(regex(?y,'Banbury Road','i')).
+	?x0 rdf:type &lt;http://diadem.cs.ox.ac.uk/ontologies/real-estate#House&gt;.
+	?x0 &lt;http://www.w3.org/2006/vcard/ns#street-address&gt; ?y.
+	FILTER(regex(?y,&apos;Banbury Road&apos;,&apos;i&apos;)).
 }
 </query>
 </question>

@@ -27,12 +27,12 @@ import org.aksw.autosparql.tbsl.util.SolrIndex;
 import org.aksw.autosparql.tbsl.widget.DBpediaInfoLabel;
 import org.aksw.autosparql.tbsl.widget.OxfordInfoLabel;
 import org.apache.log4j.Logger;
-import org.dllearner.common.index.Index;
 import org.dllearner.common.index.MappingBasedIndex;
 import org.dllearner.common.index.SOLRIndex;
 import org.dllearner.common.index.SPARQLIndex;
 import org.dllearner.common.index.VirtuosoClassesIndex;
-import org.dllearner.common.index.VirtuosoPropertiesIndex;
+import org.dllearner.common.index.VirtuosoDatatypePropertiesIndex;
+import org.dllearner.common.index.VirtuosoObjectPropertiesIndex;
 import org.dllearner.common.index.VirtuosoResourcesIndex;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
@@ -44,7 +44,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 import com.vaadin.terminal.ThemeResource;
 
 public class Manager {
-	
+	private static final String	SOLR_SERVER_URI_EN	= "http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_";	
 	private static final Logger logger = Logger.getLogger(TBSLManager.class);
 	
 	private static Manager instance;
@@ -66,7 +66,8 @@ public class Manager {
 		loadSettings();
 		
 		posTagger = new StanfordPartOfSpeechTagger();
-		wordNet = new WordNet(this.getClass().getClassLoader().getResourceAsStream("wordnet_properties.xml"));
+//		wordNet = new WordNet(this.getClass().getClassLoader().getResourceAsStream("wordnet_properties.xml"));
+		wordNet = new WordNet();
 		logger.info("...done.");
 	}
 	
@@ -97,8 +98,14 @@ public class Manager {
 			SOLRIndex resourcesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_resources");
 			resourcesIndex.setPrimarySearchField("label");
 //			resourcesIndex.setSortField("pagerank");
-			Index classesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_classes");
-			Index propertiesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_properties");
+			SOLRIndex classesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_classes");
+			SOLRIndex objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+			SOLRIndex dataPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+			for(SOLRIndex index: new SOLRIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
+			{
+				index.setPrimarySearchField("label");
+			}
+
 			
 			MappingBasedIndex mappingIndex= new MappingBasedIndex(
 					this.getClass().getClassLoader().getResource("dbpedia_class_mappings.txt").getPath(), 
@@ -107,7 +114,7 @@ public class Manager {
 					this.getClass().getClassLoader().getResource("dbpedia_objectproperty_mappings.txt").getPath()
 					);
 			
-			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
+			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, objectPropertiesIndex,dataPropertiesIndex, classesIndex, mappingIndex);
 			String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +
         	 		"<div style='float: right; height: 100px; width: 200px'>" +
         	 		"<div style='height: 100%;'><img style='height: 100%;' src=\"imageURL\"/></div>" +
@@ -154,7 +161,9 @@ public class Manager {
 			}
 			SPARQLIndex resourcesIndex = new VirtuosoResourcesIndex(endpoint, cache);
 			SPARQLIndex classesIndex = new VirtuosoClassesIndex(endpoint, cache);
-			SPARQLIndex propertiesIndex = new VirtuosoPropertiesIndex(endpoint, cache);
+			// @todo: add cache when constructor in dl learner
+			SPARQLIndex objectPropertiesIndex = new VirtuosoObjectPropertiesIndex(endpoint);
+			SPARQLIndex dataPropertiesIndex = new VirtuosoDatatypePropertiesIndex(endpoint);
 			
 			
 //			Model model = ModelFactory.createDefaultModel();
@@ -173,7 +182,7 @@ public class Manager {
 					);
 			
 //			Knowledgebase kb = new LocalKnowledgebase(model, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
-			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
+			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "Oxford - Real estate", "TODO", resourcesIndex, objectPropertiesIndex, dataPropertiesIndex, classesIndex, mappingIndex);
 			
 			
 			String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +

@@ -19,45 +19,45 @@ public class CLI {
 	
 
 	    public static void main(String[] args) throws InvalidFileFormatException, FileNotFoundException, IOException {
-	    	
-//	    	Logger.getLogger(SPARQLTemplateBasedLearner.class).setLevel(Level.OFF);
-	    	SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://live.dbpedia.org/sparql"), Collections.singletonList("http://dbpedia.org"), Collections.<String>emptyList());
-			
-			SOLRIndex resourcesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_resources");
-			resourcesIndex.setPrimarySearchField("label");
-//			resourcesIndex.setSortField("pagerank");
-			Index classesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_classes");
-			Index propertiesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_properties");
-			
-			
-			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex, classesIndex, null);
-			SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2(kb);
-	    	
-	        System.out.println("======= TBSL v0.1 =============");       
-	        System.out.println("\nType ':q' to quit.");
-
-	        while (true) {
-	            String question = getStringFromUser("Question > ").trim(); 
-	            
-	            if (question.equals(":q")) {
-	                System.exit(0);
-	            }
-	         
-	            learner.setEndpoint(endpoint);
-				learner.setQuestion(question);
-				try {
-					learner.learnSPARQLQueries();
-					String learnedQuery = learner.getBestSPARQLQuery();
-					if(learnedQuery != null){
-						System.out.println("Learned query:\n" + learnedQuery);
-					} else {
-						System.out.println("Could not learn a SPARQL query.");
-					}
-				} catch (NoTemplateFoundException e) {
-					System.out.println("Sorry, could not generate a template.");
-				}
-	            
-	        }
+//	    	
+////	    	Logger.getLogger(SPARQLTemplateBasedLearner.class).setLevel(Level.OFF);
+//	    	SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://live.dbpedia.org/sparql"), Collections.singletonList("http://dbpedia.org"), Collections.<String>emptyList());
+//			
+//			SOLRIndex resourcesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_resources");
+//			resourcesIndex.setPrimarySearchField("label");
+////			resourcesIndex.setSortField("pagerank");
+//			Index classesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_classes");
+//			Index propertiesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_properties");
+//			
+//			
+//			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex, classesIndex, null);
+//			SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2(kb);
+//	    	
+//	        System.out.println("======= TBSL v0.1 =============");       
+//	        System.out.println("\nType ':q' to quit.");
+//
+//	        while (true) {
+//	            String question = getStringFromUser("Question > ").trim(); 
+//	            
+//	            if (question.equals(":q")) {
+//	                System.exit(0);
+//	            }
+//	         
+//	            learner.setEndpoint(endpoint);
+//				learner.setQuestion(question);
+//				try {
+//					learner.learnSPARQLQueries();
+//					String learnedQuery = learner.getBestSPARQLQuery();
+//					if(learnedQuery != null){
+//						System.out.println("Learned query:\n" + learnedQuery);
+//					} else {
+//						System.out.println("Could not learn a SPARQL query.");
+//					}
+//				} catch (NoTemplateFoundException e) {
+//					System.out.println("Sorry, could not generate a template.");
+//				}
+//	            
+//	        }
 	    }
 
 	    public static String getStringFromUser(String msg) {

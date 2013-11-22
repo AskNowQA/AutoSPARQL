@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import net.didion.jwnl.JWNLException;
-import net.didion.jwnl.data.POS;
 import org.aksw.autosparql.algorithm.tbsl.exploration.Index.SQLiteIndex;
 import org.aksw.autosparql.algorithm.tbsl.exploration.Sparql.Hypothesis;
 import org.aksw.autosparql.algorithm.tbsl.exploration.Utils.Levenshtein;
 import org.aksw.autosparql.algorithm.tbsl.exploration.exploration_main.Setting;
 import org.aksw.autosparql.commons.nlp.lemma.StanfordLemmatizer;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
+import edu.mit.jwi.item.POS;
 
 public class WordnetModule {
 	

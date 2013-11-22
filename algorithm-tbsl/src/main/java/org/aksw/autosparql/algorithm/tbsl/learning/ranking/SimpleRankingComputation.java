@@ -52,7 +52,8 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 	
 	@Override
 	public Ranking computeRanking(Map<Template, List<TemplateInstantiation>> template2Instantiations,
-			Map<Template, Map<Slot, Collection<Entity>>> template2Allocations, List<Double> parameters) {
+			Map<Template, Map<Slot, Collection<Entity>>> template2Allocations, List<Double> parameters) {		
+		System.out.println();
 		Ranking ranking = new Ranking();
 		for (Entry<Template, List<TemplateInstantiation>> entry : template2Instantiations.entrySet()) {
 			Template template = entry.getKey();
@@ -76,8 +77,11 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 					//compute the overall score
 					double score = 0;
 					int index = 0;
-					for(Entry<Feature, Double> feature2score : templateInstantiation.getFeaturesWithScore().entrySet()){
-						score += feature2score.getValue() * parameters.get(index++);
+										
+					for(Entry<Feature, Double> feature2score : templateInstantiation.getFeaturesWithScore().entrySet())
+					{
+						double weight = parameters.size()>index?parameters.get(index++):1;
+						score += feature2score.getValue() * weight;
 					}
 					ranking.add(templateInstantiation, score);
 				} catch (Exception e) {

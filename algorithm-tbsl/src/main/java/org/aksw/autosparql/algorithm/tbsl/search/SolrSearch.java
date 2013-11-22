@@ -180,10 +180,6 @@ public class SolrSearch implements Search{
 	@Override
 	public void setHitsPerPage(int hitsPerPage) {
 		this.hitsPerPage = hitsPerPage;
-	}
-	
-	public static void main(String[] args) {
-		new SolrSearch("http://139.18.2.173:8080/apache-solr-3.3.0/dbpedia_classes").getResources("Leipzig");
-	}
+	}	
 	
 }

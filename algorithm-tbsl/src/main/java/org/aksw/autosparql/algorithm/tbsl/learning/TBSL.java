@@ -92,7 +92,8 @@ public class TBSL {
 	private static final String DEFAULT_WORDNET_PROPERTIES_FILE = "tbsl/wordnet_properties.xml";
 	
 	public TBSL(Knowledgebase knowledgebase){
-		this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(DEFAULT_WORDNET_PROPERTIES_FILE), new Options(), null);
+		this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(), new Options(), null);
+		//this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(DEFAULT_WORDNET_PROPERTIES_FILE), new Options(), null);
 	}
 	
 	public TBSL(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
@@ -157,6 +158,9 @@ public class TBSL {
 	private void reset(){
 		
 	}
+	
+	public TemplateInstantiation answerQuestion(String question) throws NoTemplateFoundException
+	{return answerQuestion(question,Collections.<Double>emptyList());}
 	
 	public TemplateInstantiation answerQuestion(String question, List<Double> parameters) throws NoTemplateFoundException{
 		reset();
@@ -344,38 +348,6 @@ public class TBSL {
 		}
 		
 		return rs;
-	}
-	
-	/**
-	 * @param args
-	 * @throws NoTemplateFoundException 
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 * @throws InvalidFileFormatException 
-	 */
-	public static void main(String[] args) throws Exception {
-		Logger.getRootLogger().setLevel(Level.INFO);
-		Logger.getLogger(TBSL.class).setLevel(Level.INFO);
-		Logger.getRootLogger().removeAllAppenders();
-		Logger.getRootLogger().addAppender(new ConsoleAppender(new SimpleLayout()));
-		SparqlEndpoint endpoint = SparqlEndpoint.getEndpointDBpedia();
-		SOLRIndex resourcesIndex = new SOLRIndex("http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_dbpedia_resources");
-		resourcesIndex.setPrimarySearchField("label");
-		SOLRIndex classesIndex = new SOLRIndex("http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_dbpedia_classes");
-		classesIndex.setPrimarySearchField("label");
-		Index propertiesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_properties");
-		SOLRIndex boa_propertiesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/boa_fact_detail");
-		boa_propertiesIndex.setSortField("boa-score");
-		propertiesIndex = new HierarchicalIndex(boa_propertiesIndex, propertiesIndex);
-		
-		Knowledgebase kb = new RemoteKnowledgebase(endpoint, null, null, resourcesIndex, propertiesIndex, classesIndex, null);
-		TBSL learner = new TBSL(kb);
-		learner.init();
-		
-		String question = "Give me all books written by Dan Brown.";
-		
-		TemplateInstantiation answer = learner.answerQuestion(question, Arrays.asList(1D, 1D, 1D));
-		System.out.println(answer.asQuery().toString());
 	}
 
 }

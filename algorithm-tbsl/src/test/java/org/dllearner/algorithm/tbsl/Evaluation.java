@@ -98,7 +98,7 @@ public class Evaluation{
 		Index propertiesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_properties");
 		
 		
-		Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex, classesIndex, null);
+		Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex,propertiesIndex, classesIndex, null);
 		stbl = new SPARQLTemplateBasedLearner2(kb);
 		try {
 			stbl.init();

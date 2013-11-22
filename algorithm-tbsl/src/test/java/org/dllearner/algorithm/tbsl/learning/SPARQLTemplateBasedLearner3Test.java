@@ -37,6 +37,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import javax.management.RuntimeErrorException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,7 +51,9 @@ import org.aksw.autosparql.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
 import org.aksw.autosparql.algorithm.tbsl.ltag.parser.Parser;
 import org.aksw.autosparql.algorithm.tbsl.templator.Templator;
 import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
+import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
+import org.apache.http.MethodNotSupportedException;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -797,14 +800,14 @@ public class SPARQLTemplateBasedLearner3Test
 				SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("test/dbpedia_objectproperty_mappings.txt").getPath()
 				);
 
-		Knowledgebase kb = new RemoteKnowledgebase(dbpediaLiveEndpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
+		Knowledgebase kb = new RemoteKnowledgebase(dbpediaLiveEndpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex,classesIndex, mappingIndex);
 		return kb;
 	}
 
 	@Before
 	public void setup() throws IOException
 	{			
-		Logger.getRootLogger().setLevel(Level.WARN);
+		Logger.getRootLogger().setLevel(Level.WARN);	
 		Logger.getLogger(Templator.class).setLevel(Level.WARN);
 		Logger.getLogger(Parser.class).setLevel(Level.WARN);
 		Logger.getLogger(SPARQLTemplateBasedLearner2.class).setLevel(Level.WARN);
@@ -945,20 +948,22 @@ public class SPARQLTemplateBasedLearner3Test
 			this.question=question;
 			this.id=id;					
 			this.testData=testData;
-			MappingBasedIndex mappingIndex= new MappingBasedIndex(
-					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
-					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
-					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
-					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
-					);
-
-			learner = new SPARQLTemplateBasedLearner2(model,mappingIndex,pretagged?null:POSTaggerHolder.posTagger);
-			try {learner.init();} catch (ComponentInitException e) {throw new RuntimeException(e);}
-			learner.setUseIdealTagger(pretagged);
-			learner.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
-			learner.setUseDomainRangeRestriction(false);
+			learner = null;
+			throw new RuntimeException("method must be changed because the learner has changed");
+//			MappingBasedIndex mappingIndex= new MappingBasedIndex(
+//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
+//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
+//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
+//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
+//					);
+//
+//			
+//			learner = new SPARQLTemplateBasedLearner2(model,mappingIndex,pretagged?null:POSTaggerHolder.posTagger);
+//			try {learner.init();} catch (ComponentInitException e) {throw new RuntimeException(e);}
+//			learner.setUseIdealTagger(pretagged);
+//			learner.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
+//			learner.setUseDomainRangeRestriction(false);
 		}								
-
 
 		@Override public LearnStatus call()
 		{
