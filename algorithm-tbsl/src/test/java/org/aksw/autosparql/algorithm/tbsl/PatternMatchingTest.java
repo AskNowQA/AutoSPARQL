@@ -1,4 +1,4 @@
-package org.dllearner.algorithm.tbsl;
+package org.aksw.autosparql.algorithm.tbsl;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

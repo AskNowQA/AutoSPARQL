@@ -1,27 +1,19 @@
-package org.dllearner.algorithm.tbsl;
+package org.aksw.autosparql.algorithm.tbsl;
 
 import java.net.URL;
 import java.util.Collections;
 import junit.framework.TestCase;
-import org.aksw.autosparql.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
 import org.aksw.autosparql.algorithm.tbsl.learning.TBSL;
 import org.aksw.autosparql.algorithm.tbsl.learning.TemplateInstantiation;
 import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
-import org.apache.velocity.exception.TemplateInitException;
 import org.dllearner.common.index.Index;
-import org.dllearner.common.index.MappingBasedIndex;
 import org.dllearner.common.index.SOLRIndex;
 import org.dllearner.common.index.SPARQLClassesIndex;
 import org.dllearner.common.index.SPARQLDatatypePropertiesIndex;
 import org.dllearner.common.index.SPARQLIndex;
 import org.dllearner.common.index.SPARQLObjectPropertiesIndex;
-import org.dllearner.common.index.SPARQLPropertiesIndex;
-import org.dllearner.common.index.VirtuosoClassesIndex;
-import org.dllearner.common.index.VirtuosoPropertiesIndex;
-import org.dllearner.common.index.VirtuosoResourcesIndex;
-import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.junit.Test;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -106,7 +98,7 @@ public class TBSLTest extends TestCase{
 		TBSL learner = new TBSL(kb);
 		learner.init();
 		
-		String question = "Give me all houses with more than 3 bathrooms and more than 2 bedrooms.";
+		String question = "Give me all houses with more than 3 bathrooms.";// and more than 2 bedrooms
 		
 		TemplateInstantiation ti = learner.answerQuestion(question);
 		

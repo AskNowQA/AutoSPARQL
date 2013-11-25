@@ -13,36 +13,42 @@ import org.aksw.autosparql.algorithm.tbsl.learning.feature.EntityProminenceFeatu
 import org.aksw.autosparql.algorithm.tbsl.learning.feature.EntityStringSimilarityFeatureExtractor;
 import org.aksw.autosparql.algorithm.tbsl.learning.feature.Feature;
 import org.aksw.autosparql.algorithm.tbsl.learning.feature.FeatureExtractor;
-import org.aksw.autosparql.algorithm.tbsl.learning.feature.TripleProbabilityFeatureExtractor;
 import org.aksw.autosparql.algorithm.tbsl.sparql.Slot;
 import org.aksw.autosparql.algorithm.tbsl.sparql.SlotType;
 import org.aksw.autosparql.algorithm.tbsl.sparql.Template;
 import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
+import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.Prominences;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
 import org.apache.log4j.Logger;
 import org.dllearner.core.owl.Individual;
 import org.dllearner.core.owl.NamedClass;
 import org.dllearner.core.owl.ObjectProperty;
-import org.dllearner.kb.sparql.ExtractionDBCache;
-import org.aksw.autosparql.commons.metric.SPARQLEndpointMetrics;
+import org.dllearner.kb.LocalModelBasedSparqlEndpointKS;
+import org.dllearner.kb.SparqlEndpointKS;
+import org.dllearner.reasoning.SPARQLReasoner;
 
 public class SimpleRankingComputation extends AbstractRankingComputation{
 	
 	
 	private static final Logger logger = Logger.getLogger(SimpleRankingComputation.class.getName());
 	
-	private SPARQLEndpointMetrics metrics;
+	protected SPARQLReasoner reasoner;
+//	private SPARQLEndpointMetrics metrics;
 	private List<Feature> features = Arrays.asList(
 			Feature.PROMINENCE_AVERAGE
 			,Feature.STRING_SIMILARITY_AVERAGE
 //			,Feature.TRIPLE_PROBABILITY
 			);
 	
-	public SimpleRankingComputation(Knowledgebase knowledgebase) {
+	public SimpleRankingComputation(Knowledgebase knowledgebase)
+	{
 		super(knowledgebase);
-		
-		metrics = new SPARQLEndpointMetrics(((RemoteKnowledgebase) knowledgebase).getEndpoint(), new ExtractionDBCache("/opt/tbsl/dbpedia_pmi_cache_v2"));
+		if(knowledgebase instanceof RemoteKnowledgebase)
+		{reasoner = new SPARQLReasoner(new SparqlEndpointKS(((RemoteKnowledgebase)knowledgebase).getEndpoint()));}
+		else
+		{reasoner = new SPARQLReasoner(new LocalModelBasedSparqlEndpointKS(((LocalKnowledgebase)knowledgebase).getModel()));}		
+//		metrics = new SPARQLEndpointMetrics(((RemoteKnowledgebase) knowledgebase).getEndpoint(), new ExtractionDBCache("/opt/tbsl/dbpedia_pmi_cache_v2"));
 	}
 
 	@Override
@@ -60,7 +66,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 			
 			//precompute the prominence scores here to be able to perform a min-max normalization 
 			Map<Slot, Collection<Entity>> allocations = template2Allocations.get(template);
-			Map<Slot, Prominences> entityProminenceScores = computeEntityProminenceScores(allocations);
+			Map<Slot, Prominences> entityProminenceScores = computeEntityProminenceScoresWithReasoner(allocations);
 			
 			//create the feature extractors only once for each template
 			Collection<FeatureExtractor> featureExtractors = createFeatureExtractors(entityProminenceScores);
@@ -106,19 +112,49 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 			} else if(feature == Feature.STRING_SIMILARITY_AVERAGE){
 				featureExtractor = new EntityStringSimilarityFeatureExtractor(knowledgebase);
 				featureExtractors.add(featureExtractor);
-			} else if(feature == Feature.TRIPLE_PROBABILITY){
-				featureExtractor = new TripleProbabilityFeatureExtractor(knowledgebase, metrics);
-				featureExtractors.add(featureExtractor);
 			}
+//				else if(feature == Feature.TRIPLE_PROBABILITY){
+//				featureExtractor = new TripleProbabilityFeatureExtractor(knowledgebase, metrics);
+//				featureExtractors.add(featureExtractor);
+//			}
 		}
 		return featureExtractors;
 	}
 	
+//	/**
+//	 * Compute the (unnormalized) prominence score for each entity depending on the slot type.
+//	 * @param slot2Allocations
+//	 */
+//	private Map<Slot, Prominences> computeEntityProminenceScores(Map<Slot, Collection<Entity>> slot2Allocations){
+//		Map<Slot, Prominences> prominenceScores = new HashMap<Slot, Prominences>();
+//		for (Entry<Slot, Collection<Entity>> entry : slot2Allocations.entrySet()) {
+//			Slot slot = entry.getKey();
+//			SlotType slotType = slot.getSlotType();
+//			Collection<Entity> entities = entry.getValue();
+//			Prominences entity2Prominence = new Prominences();
+//			for (Entity entity : entities) {
+//				double prominence = 0;
+//				if (slotType == SlotType.CLASS) {
+//					prominence = metrics.getOccurences(new NamedClass(entity.getURI()));
+//				} else if (slotType == SlotType.DATATYPEPROPERTY || slotType == SlotType.OBJECTPROPERTY
+//						|| slotType == SlotType.PROPERTY || slotType == SlotType.SYMPROPERTY) {
+//					prominence = metrics.getOccurences(new ObjectProperty(entity.getURI()));
+//				} else {
+//					prominence = metrics.getOccurencesInSubjectPosition(new Individual(entity.getURI()));
+//				}
+//				entity2Prominence.put(entity, prominence);
+//			}
+//			prominenceScores.put(slot, entity2Prominence);
+//		}
+//		return prominenceScores;
+//	}
+
 	/**
 	 * Compute the (unnormalized) prominence score for each entity depending on the slot type.
 	 * @param slot2Allocations
 	 */
-	private Map<Slot, Prominences> computeEntityProminenceScores(Map<Slot, Collection<Entity>> slot2Allocations){
+	private Map<Slot, Prominences> computeEntityProminenceScoresWithReasoner(Map<Slot, Collection<Entity>> slot2Allocations)
+	{
 		Map<Slot, Prominences> prominenceScores = new HashMap<Slot, Prominences>();
 		for (Entry<Slot, Collection<Entity>> entry : slot2Allocations.entrySet()) {
 			Slot slot = entry.getKey();
@@ -128,12 +164,13 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 			for (Entity entity : entities) {
 				double prominence = 0;
 				if (slotType == SlotType.CLASS) {
-					prominence = metrics.getOccurences(new NamedClass(entity.getURI()));
+					prominence = reasoner.getPopularity(new NamedClass(entity.getURI()));
 				} else if (slotType == SlotType.DATATYPEPROPERTY || slotType == SlotType.OBJECTPROPERTY
 						|| slotType == SlotType.PROPERTY || slotType == SlotType.SYMPROPERTY) {
-					prominence = metrics.getOccurences(new ObjectProperty(entity.getURI()));
+					prominence = reasoner.getPopularity(new ObjectProperty(entity.getURI()));
 				} else {
-					prominence = metrics.getOccurencesInSubjectPosition(new Individual(entity.getURI()));
+					prominence = reasoner.getPopularity(new Individual(entity.getURI()));
+//					prominence = reasoner.get(new Individual(entity.getURI()));
 				}
 				entity2Prominence.put(entity, prominence);
 			}

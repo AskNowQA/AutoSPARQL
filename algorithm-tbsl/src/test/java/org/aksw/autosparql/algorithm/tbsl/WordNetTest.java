@@ -1,4 +1,4 @@
-package org.dllearner.algorithm.tbsl;
+package org.aksw.autosparql.algorithm.tbsl;
 
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.junit.Test;

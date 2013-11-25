@@ -1,4 +1,4 @@
-package org.dllearner.algorithm.tbsl;
+package org.aksw.autosparql.algorithm.tbsl;
 
 
 // commented out because the NIF dependency was removed

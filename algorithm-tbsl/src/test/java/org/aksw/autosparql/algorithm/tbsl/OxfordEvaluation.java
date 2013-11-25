@@ -1,31 +1,4 @@
-package org.dllearner.algorithm.tbsl;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import org.aksw.autosparql.algorithm.tbsl.learning.NoTemplateFoundException;
-import org.aksw.autosparql.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
-import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
-import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
-import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner3Test;
-import org.dllearner.common.index.MappingBasedIndex;
-import org.dllearner.common.index.SPARQLIndex;
-import org.dllearner.common.index.VirtuosoClassesIndex;
-import org.dllearner.common.index.VirtuosoPropertiesIndex;
-import org.dllearner.common.index.VirtuosoResourcesIndex;
-import org.dllearner.kb.sparql.ExtractionDBCache;
-import org.dllearner.kb.sparql.SparqlEndpoint;
-import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
-import com.hp.hpl.jena.query.QueryParseException;
-import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
-import com.jamonapi.Monitor;
-import com.jamonapi.MonitorFactory;
+package org.aksw.autosparql.algorithm.tbsl;
 
 public class OxfordEvaluation {
 	

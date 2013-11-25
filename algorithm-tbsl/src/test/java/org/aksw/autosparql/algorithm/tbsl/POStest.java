@@ -1,4 +1,4 @@
-package org.dllearner.algorithm.tbsl;
+package org.aksw.autosparql.algorithm.tbsl;
 
 import java.io.IOException;
 import java.util.List;

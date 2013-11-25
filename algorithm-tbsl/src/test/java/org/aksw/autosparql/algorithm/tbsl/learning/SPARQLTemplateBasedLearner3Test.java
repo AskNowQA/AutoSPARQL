@@ -1,4 +1,4 @@
-package org.dllearner.algorithm.tbsl.learning;
+package org.aksw.autosparql.algorithm.tbsl.learning;
 
 import static org.junit.Assert.fail;
 import java.io.BufferedReader;
@@ -37,7 +37,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import javax.management.RuntimeErrorException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,9 +50,11 @@ import org.aksw.autosparql.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
 import org.aksw.autosparql.algorithm.tbsl.ltag.parser.Parser;
 import org.aksw.autosparql.algorithm.tbsl.templator.Templator;
 import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
-import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
-import org.apache.http.MethodNotSupportedException;
+import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
+import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
+import org.aksw.autosparql.commons.nlp.pos.SynchronizedStanfordPartOfSpeechTagger;
+import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -73,10 +74,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
-import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
-import org.aksw.autosparql.commons.nlp.pos.SynchronizedStanfordPartOfSpeechTagger;
-import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
@@ -120,7 +117,7 @@ public class SPARQLTemplateBasedLearner3Test
 		test("QALD 2 Benchmark ideally tagged", file,SparqlEndpoint.getEndpointDBpedia(),dbpediaLiveCache,dbpediaLiveKnowledgebase,null,null);
 	}
 
-	@Test public void testOxford() throws Exception
+	/*@Test*/ public void testOxford() throws Exception
 	{
 		File file = new File(getClass().getClassLoader().getResource("tbsl/evaluation/oxford_working_questions.xml").getFile());
 		test("Oxford 19 working questions", file,null,null,null,loadOxfordModel(),getOxfordMappingIndex());

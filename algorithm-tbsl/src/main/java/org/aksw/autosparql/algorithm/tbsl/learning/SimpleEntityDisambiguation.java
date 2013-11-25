@@ -44,8 +44,7 @@ public class SimpleEntityDisambiguation {
 		for(Template template : templates){
 			Map<Slot, Collection<Entity>> slot2Entities = performEntityDisambiguation(template);
 			template2Allocations.put(template, slot2Entities);
-		}
-		
+		}		
 		return template2Allocations;
 	}
 
@@ -59,6 +58,8 @@ public class SimpleEntityDisambiguation {
 		return slot2Entities;
 	}
 	
+	/** get sorted list of entities
+	 */
 	private Collection<Entity> getCandidateEntities(Slot slot){
 		logger.debug("Generating entity candidates for slot " + slot + "...");
 		Set<Entity> candidateEntities = new HashSet<Entity>();
@@ -66,7 +67,7 @@ public class SimpleEntityDisambiguation {
 			List<String> words = slot.getWords();
 			List<Resource> uriCandidates = new ArrayList<Resource>();
 			for(String word : words){
-				uriCandidates.addAll(UriDisambiguation.getUri(UriDisambiguation.getUriCandidates(word, "en"), word, "en"));
+				uriCandidates.addAll(UriDisambiguation.getTopUris(UriDisambiguation.getUriCandidates(word, "en"), word, "en"));
 			}
 			for (Resource resource : uriCandidates) {
 				candidateEntities.add(new Entity(resource.uri, resource.label));

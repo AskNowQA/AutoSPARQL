@@ -1,6 +1,6 @@
 /** Helper Class for SPARQLTemplateBasedLearner3Test that encapsulates questions, their learned SPARQL queries and the answers of those SPARQL queries.
  * Also provides methods for serialization and import/export in the QALD benchmark XML format.**/
-package org.dllearner.algorithm.tbsl.learning;
+package org.aksw.autosparql.algorithm.tbsl.learning;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +25,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.dllearner.algorithm.tbsl.learning.SPARQLTemplateBasedLearner3Test.LearnStatus;
+import org.aksw.autosparql.algorithm.tbsl.learning.SPARQLTemplateBasedLearner3Test.LearnStatus;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.w3c.dom.DOMException;
