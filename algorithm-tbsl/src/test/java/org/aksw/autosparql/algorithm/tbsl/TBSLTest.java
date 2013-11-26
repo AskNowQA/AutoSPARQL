@@ -86,6 +86,18 @@ public class TBSLTest extends TestCase{
 	}
 	
 	@Test
+	public void testOxfordIndices()
+	{
+		Index resourceIndex = new SPARQLIndex(model);
+		Index classIndex = new SPARQLClassesIndex(model);
+		Index objectPropertyIndex = new SPARQLObjectPropertiesIndex(model);
+		Index dataPropertyIndex = new SPARQLDatatypePropertiesIndex(model);
+		System.out.println(classIndex.getResources("House"));
+		System.out.println(classIndex.getResources("house"));
+		System.out.println(classIndex.getResources("houses"));
+	}
+	
+	@Test
 	public void testOxfordLocal() throws Exception
 	{
 		assertNotNull(model);

@@ -1,0 +1,33 @@
+## tagger training invoked at Wed Nov 30 15:11:15 PST 2011 with arguments:
+                   model = french.tagger
+                    arch = left3words,naacl2003unknowns,unicodeshapes(-1,1)
+               trainFile = format=TREES,../data/french/ptb/candito.train.all
+         closedClassTags = 
+ closedClassTagThreshold = 40
+ curWordMinFeatureThresh = 2
+                   debug = false
+             debugPrefix = 
+            tagSeparator = _
+                encoding = utf-8
+              iterations = 100
+                    lang = french
+    learnClosedClassTags = false
+        minFeatureThresh = 2
+           openClassTags = 
+rareWordMinFeatureThresh = 10
+          rareWordThresh = 5
+                  search = qn
+                    sgml = false
+            sigmaSquared = 0.5
+                   regL1 = 1.0
+               tagInside = 
+                tokenize = true
+        tokenizerFactory = 
+        tokenizerOptions = asciiQuotes
+                 verbose = false
+          verboseResults = true
+    veryCommonWordThresh = 250
+                xmlInput = null
+              outputFile = 
+            outputFormat = slashTags
+     outputFormatOptions = 

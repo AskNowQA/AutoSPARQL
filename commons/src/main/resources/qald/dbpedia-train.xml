@@ -1,0 +1,5043 @@
+<?xml version="1.0" ?>
+<dataset id="dbpedia-train">
+
+<question id="1" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all female Russian astronauts.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle russischen Astronautinnen.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todas las astronautas rusas.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutte le austronaute russe.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les astronautes féminins russes.
+]]></string>
+<string lang="nl"><![CDATA[
+Geef alle vrouwelijke Russische astronauten.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+astronaut, female, Russian
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Astronautin, russisch
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+astronautas rusas
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+austronaute, russe
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+astronaute, russes, féminins
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+astronaut, vrouwelijk, Russisch
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type yago:RussianCosmonauts .
+        ?uri rdf:type yago:FemaleAstronauts .
+}
+]]></query>
+</question>
+
+<question id="2" answertype="date" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Give me the birthdays of all actors of the television show Charmed.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir die Geburtstage von allen Darstellern der Fernsehserie Charmed.
+]]></string>
+<string lang="es"><![CDATA[
+Dame los cumpleaños de los actores de la serie de televisión Charmed.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi le date dei compleanni di tutti gli attori della serie televisiva Charmed.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi les dates de naissance des acteurs de la série télévisée Charmed. 
+]]></string>
+<string lang="nl"><![CDATA[
+Noem de verjaardag van alle acteurs uit de televisieserie Charmed.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+television show, Charmed, actor, birthday 
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Fernsehserie, Charmed, Darsteller, Geburtstag
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+serie televisiva, Charmed, actores, cumpleaños
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+serie televisiva, Charmed, attore, compleanno
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+série télévisée, Charmed, acteurs, date de naissance 
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+verjaardag, acteur, televisieserie, Charmed
+]]></keywords>
+<enEntities>Charmed:[Charmed]</enEntities>
+<deEntities>Charmed:[Charmed]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?date 
+WHERE { 
+	res:Charmed dbo:starring ?actor .
+        ?actor dbo:birthDate ?date .
+}
+]]></query>
+</question>
+
+<question id="3" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Who is the daughter of Ingrid Bergman married to?
+]]></string>
+<string lang="de"><![CDATA[
+Mit wem ist die Tochter von Ingrid Bergman verheiratet?
+]]></string>
+<string lang="es"><![CDATA[
+Con quién está casada la hija de Ingrid Bergman?
+]]></string>
+<string lang="it"><![CDATA[
+Con chi è sposata la figlia di Ingrid Bergman?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui est l'épou de la fille d'Ingrid Bergman?
+]]></string>
+<string lang="nl"><![CDATA[
+Met wie is de dochter van Ingrid Bergman getrouwd?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Ingrid Bergman, daughter, married
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Ingrid Bergman, Tochter, verheiratet
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Ingrid Bergman, hija, casada
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Ingrid Bergman, figlia, sposata
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+épou, fille, Ingrid Bergman
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Ingrid Bergman, dochter, getrouwd
+]]></keywords>
+<enEntities>Ingrid_Bergman:[Ingrid Bergman]</enEntities>
+<deEntities>Ingrid_Bergman:[Ingrid Bergman]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri
+WHERE {
+        res:Ingrid_Bergman dbo:child ?child .
+        ?child dbp:spouse ?uri .
+}
+]]></query>
+</question>
+
+<question id="4" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Which river does the Brooklyn Bridge cross?
+]]></string>
+<string lang="de"><![CDATA[
+Welchen Fluss überspannt die Brooklyn Bridge?
+]]></string>
+<string lang="es"><![CDATA[
+Por qué río cruza la Brooklyn Bridge?
+]]></string>
+<string lang="it"><![CDATA[
+Quale fiume attraversa il ponte di Brooklyn?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelle cours d'eau est traversé par le pont de Brooklyn?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke rivier overspant de Brooklyn Bridge?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+river, cross, Brooklyn Bridge
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Fluss, überspannen, Brooklyn Bridge
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+río, cruza, Brooklyn Bridge
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+fiume, attraversare, ponte di Brooklyn
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+cours d'eau, pont de Brooklyn
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+rivier, Brooklyn Bridge, overspant
+]]></keywords>
+<enEntities>Brooklyn_Bridge:[Brooklyn Bridge]</enEntities>
+<deEntities>Brooklyn_Bridge:[Brooklyn Bridge]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE {       
+        res:Brooklyn_Bridge dbo:crosses ?uri . 
+}
+]]></query>
+</question>
+
+<question id="5" answertype="number" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+How many monarchical countries are there in Europe?
+]]></string>
+<string lang="de"><![CDATA[
+Wieviele Monarchien gibt es in Europa?
+]]></string>
+<string lang="es"><![CDATA[
+Cuántas monarquías existen en Europa?
+]]></string>
+<string lang="it"><![CDATA[
+Quante monarchie ci sono in Europa?
+]]></string>
+<string lang="fr"><![CDATA[
+Combien de monarchies existent en Europe?
+]]></string>
+<string lang="nl"><![CDATA[
+Hoeveel monarchieën zijn er in Europa?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Europe, monarchical country
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Europa, Monarchie
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Europa, monarquía, país
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Europa, monarchia, nazione
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Europe, monarchies, combien
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+monarchie, Europa, hoeveel
+]]></keywords>
+<enEntities>Europe:[Europe]</enEntities>
+<deEntities>Europe:[Europa]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT COUNT(DISTINCT ?uri) 
+WHERE {
+	?uri rdf:type yago:EuropeanCountries .
+        ?uri dbo:governmentType ?govern .
+        FILTER regex(?govern,'monarchy') .
+}
+]]></query>
+</question>
+
+<question id="6" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+In which city did John F. Kennedy die?
+]]></string>
+<string lang="de"><![CDATA[
+In welcher Stadt ist John F. Kennedy gestorben?
+]]></string>
+<string lang="es"><![CDATA[
+En qué ciudad murió John F. Kennedy?
+]]></string>
+<string lang="it"><![CDATA[
+In quale città morì John F. Kennedy?
+]]></string>
+<string lang="fr"><![CDATA[
+Dans quelle ville est mort John F. Kennedy?
+]]></string>
+<string lang="nl"><![CDATA[
+In welke stad kwam John F. Kennedy om het leven?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+city, John F. Kennedy, die
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Stadt, John F. Kennedy, gestorben
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+cuidad, John F. Kennedy, murió
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+città, John F. Kennedy, morto
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+ville, John F. Kennedy
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+stad, John F. Kennedy, gestorven
+]]></keywords>
+<enEntities>John_F._Kennedy:[John F. Kennedy]</enEntities>
+<deEntities>John_F._Kennedy:[John F. Kennedy]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE { 
+        res:John_F._Kennedy dbo:deathPlace ?uri .
+        ?uri rdf:type dbo:City .
+}
+]]></query>
+</question>
+
+<question id="7" answertype="boolean" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Is the wife of president Obama called Michelle?
+]]></string>
+<string lang="de"><![CDATA[
+Heißt die Frau von Präsident Obama Michelle?
+]]></string>
+<string lang="es"><![CDATA[
+La mujer del presidente Obama se llama Michelle?
+]]></string>
+<string lang="it"><![CDATA[
+La moglie del presidente Obama si chiama Michelle?
+]]></string>
+<string lang="fr"><![CDATA[
+L'épouse du président Obama s'appelle-t-elle Michelle?
+]]></string>
+<string lang="nl"><![CDATA[
+Heet de echtgenote van president Barack Obama Michelle?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Obama, president, wife, called, Michelle
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Obama, Präsident, Frau, heißen, Michelle
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+mujer, presidente, Obama, se lamma, Michelle
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+moglie, presidente, Obama, si chiama, Michelle
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+épouse, Obama, Michelle, appelle 
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+echtgenote, Barack Obama, Michelle
+]]></keywords>
+<enEntities>Barack_Obama:[Obama],Michelle_Obama:[Michelle]</enEntities>
+<deEntities>Barack_Obama:[Obama],Michelle_Obama:[Michelle]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+ASK 
+WHERE {
+        res:Barack_Obama dbo:spouse ?spouse .
+        ?spouse rdfs:label ?name .
+        FILTER(regex(?name,'Michelle')) 
+}
+]]></query>
+</question>
+
+<question id="8" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which states of Germany are governed by the Social Democratic Party?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Bundesländer in Deutschland werden von der SPD regiert?
+]]></string>
+<string lang="es"><![CDATA[
+En qué estados federales de Alemania gobierna la SPD?
+]]></string>
+<string lang="it"><![CDATA[
+In quali stati federati della Germania governa il Partito Socialista Democratico?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels sont les états d'Allemagne gouvernés par le parti social-démocrate d'Allemagne?
+]]></string>
+<string lang="nl"><![CDATA[
+In welke Duitse deelstaten is de SPD aan de macht?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+state, Germany, govern, Social Democratic Party
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Deutschland, Bundesland, regieren, SPD
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+estado federal, Alemania, gobierna, SPD
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+stato federato, Germania, governo, Partito Socialista Democratico
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+états d'Allemagne, parti social-démocrate d'Allemagne, gouvernés
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Duitse deelstaat, SPD, aan de macht
+]]></keywords>
+<enEntities>Social_Democratic_Party_of_Germany:[Social Democratic Party],Germany:[Germany]</enEntities>
+<deEntities>Social_Democratic_Party_of_Germany:[SPD],Germany:[Deutschland]</deEntities>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+        ?uri rdf:type yago:StatesOfGermany .
+        { ?uri dbp:rulingParty 'SPD'@en . } UNION { ?uri dbp:rulingParty res:Social_Democratic_Party_of_Germany . } 
+}
+]]></query>
+</question>
+
+<question id="9" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which U.S. states possess gold minerals?
+]]></string>
+<string lang="de"><![CDATA[
+In welchen US-Staaten gibt es Goldvorkommen?
+]]></string>
+<string lang="es"><![CDATA[
+En qué estados de los estados unidos de américa hay oro?
+]]></string>
+<string lang="it"><![CDATA[
+In quali stati degli Stati Uniti c'è l'oro?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels états des Etats-Unis d'Amérique possèdent de l'or?
+]]></string>
+<string lang="nl"><![CDATA[
+In welke deelstaat van de Verenigde Staten komt goud voor?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+U.S. state, mineral, gold
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+US-Staat, Goldvorkommen
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+estado, estados unidos de américa, oro
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Stati Uniti d'America, oro
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+états, Etats-Unis d'Amérique, or
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+deelstaat, Verenigde Staten, goud
+]]></keywords>
+<enEntities>United_States:[U.S.]</enEntities>
+<deEntities>United_States:[U.S.]</deEntities>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+        ?uri rdf:type yago:StatesOfTheUnitedStates .
+        ?uri dbp:mineral ?mineral .
+        FILTER (regex(?mineral,'gold','i')) .
+}
+]]></query>
+</question>
+
+<question id="10" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+In which country does the Nile start?
+]]></string>
+<string lang="de"><![CDATA[
+In welchem Land entspringt der Nil?
+]]></string>
+<string lang="es"><![CDATA[
+En qué país nace el Nilo?
+]]></string>
+<string lang="it"><![CDATA[
+In quale stato nasce il Nilo?
+]]></string>
+<string lang="fr"><![CDATA[
+Dans quel pays commence le Nil?
+]]></string>
+<string lang="nl"><![CDATA[
+In welk land ontspringt de Nijl?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Nile, start, country
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Nil, entspringen, Land
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Nilo, país, orígen
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Nilo, stato, origine
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+pays, commence, Nil
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+ontspringt, Nijl
+]]></keywords>
+<enEntities>Nile:[Nile]</enEntities>
+<deEntities>Nile:[Nil]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE {       
+        res:Nile dbo:sourceCountry ?uri .
+}
+]]></query>
+</question>
+
+<question id="11" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Which countries have places with more than two caves?
+]]></string>
+<string lang="de"><![CDATA[
+In welchen Ländern gibt es Orte mit mehr als zwei Höhlen?
+]]></string>
+<string lang="es"><![CDATA[
+Qué países tienen lugares con más de dos cuevas?
+]]></string>
+<string lang="it"><![CDATA[
+Quali nazioni hanno luoghi con più di due grotte?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels pays ont des lieux avec plus de deux grottes?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke landen hebben plaatsen met meer dan twee grotten?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+country, place, cave, more than two
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Land, Ort, Höhle, mehr als zwei
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+país, lugar, cuevas, más de dos
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+nazione, luogo, grotta, più di due
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+pays, lieux, grottes, plus de deux
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+land, plaatsen, grotten, meer dan twee
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {       
+        ?cave rdf:type dbo:Cave . 
+        ?cave dbo:location ?uri .
+        ?uri rdf:type dbo:Country .
+} 
+GROUP BY ?uri
+HAVING (COUNT(?cave) > 2)
+]]></query>
+</question>
+
+<question id="12" answertype="boolean" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Is proinsulin a protein?
+]]></string>
+<string lang="de"><![CDATA[
+Ist Proinsulin ein Protein?
+]]></string>
+<string lang="es"><![CDATA[
+La proinsulina es una proteina?
+]]></string>
+<string lang="it"><![CDATA[
+a proinsulina è una proteina?
+]]></string>
+<string lang="fr"><![CDATA[
+La pro-insuline est-elle une protéine?
+]]></string>
+<string lang="nl"><![CDATA[
+Is proinsuline een proteïne?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+proinsulin, protein
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Proinsulin, Protein
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+proinsulina, protein
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+proinsulina, proteina
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+pro-insuline, protéine
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+proinsuline, proteïne
+]]></keywords>
+<enEntities>Proinsulin:[proinsulin],Protein:[Protein]</enEntities>
+<deEntities>Proinsulin:[proinsulin],Protein:[Protein]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+ASK 
+WHERE {
+	res:Proinsulin rdf:type dbo:Protein .
+}
+]]></query>
+</question>
+
+<question id="13" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which classis do tree frogs belong to?
+]]></string>
+<string lang="de"><![CDATA[
+Welcher Klasse gehören Laubfrösche an?
+]]></string>
+<string lang="es"><![CDATA[
+A qué especie pertenece la rana verde?
+]]></string>
+<string lang="it"><![CDATA[
+A quale specie appartiene la rana verde?
+]]></string>
+<string lang="fr"><![CDATA[
+A quelle classe apartiennent les grenouilles arboricoles?
+]]></string>
+<string lang="nl"><![CDATA[
+Tot welke klasse behoren boomkikkers?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+tree frog, classis
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Laubfrosch, Klasse
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+rana verde, especie
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+rana verde, specie
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+grenouilles arboricoles, classe
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+klasse, boomkikker
+]]></keywords>
+<enEntities>Hylidae:[tree frogs]</enEntities>
+<deEntities>Hylidae:[Laubfrösche]</deEntities>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE {
+       res:Hylidae dbp:classis ?uri .
+}
+]]></query>
+</question>
+
+<question id="14" answertype="number" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+How tall is Claudia Schiffer?
+]]></string>
+<string lang="de"><![CDATA[
+Wie groß ist Claudia Schiffer?
+]]></string>
+<string lang="es"><![CDATA[
+Cómo de alta es Claudia Schiffer?
+]]></string>
+<string lang="it"><![CDATA[
+Quanto è alta Claudia Schiffer?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelle est la taille de Claudia Schiffer?
+]]></string>
+<string lang="nl"><![CDATA[
+Hoe lang is Claudia Schiffer?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Claudia Schiffer, tall
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Claudia Schiffer, groß
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Claudia Schiffer, altura
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Claudia Schiffer, altezza
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+taille, Claudia Schiffer
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+lengte, Claudia Schiffer
+]]></keywords>
+<enEntities>Claudia_Schiffer:[Claudia Schiffer]</enEntities>
+<deEntities>Claudia_Schiffer:[Claudia Schiffer]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+SELECT DISTINCT ?height 
+WHERE {       
+        res:Claudia_Schiffer dbo:height ?height .      
+}
+]]></query>
+</question>
+
+<question id="15" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who created Goofy?
+]]></string>
+<string lang="de"><![CDATA[
+Wer hat Goofy erfunden?
+]]></string>
+<string lang="es"><![CDATA[
+Quién es el creador de Goofy?
+]]></string>
+<string lang="it"><![CDATA[
+Chi è il creatore di Goofy?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui est le créateur de Goofy?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie bedacht Goofy?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+created, Goofy
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+erfinden, Goofy
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+creador, Goofy
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+creatore, Goofy
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Goofy, créateur
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+bedenker, Goofy
+]]></keywords>
+<enEntities>Goofy:[Goofy]</enEntities>
+<deEntities>Goofy:[Goofy]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE {
+        res:Goofy dbo:creator ?uri .
+}
+]]></query>
+</question>
+
+<question id="16" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me the capitals of all countries in Africa.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir die Haupstädte von allen Ländern in Afrika.
+]]></string>
+<string lang="es"><![CDATA[
+Dame las capitales de todos los países africanos.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi le capitali di tutti gli stati dell'Africa.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi la capitale de chaque pays d'Afrique.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem de hoofdsteden van alle landen in Afrika.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Africa, country, capital
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Afrika, Land, Hauptstadt
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+países, africanos, capital
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Africa, stato, capitale
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+capitale, pays, Afrique
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Africa, land, hoof
+]]></keywords>
+<enEntities>Africa:[Africa]</enEntities>
+<deEntities>Africa:[Afrika]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?states rdf:type yago:AfricanCountries .
+        ?states dbo:capital ?uri .
+}
+]]></query>
+</question>
+
+<question id="17" answertype="resource" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all cities in New Jersey with more than 100000 inhabitants.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Städte in New Jersey, die mehr als 100000 Einwohner haben.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todas las cuidades en New Jersey que tengan más de 100000 habitantes.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutte le città del New Jersey con più di 100000 abitanti.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi toutes les villes du New Jersey avec plus de 100000 habitants.
+]]></string>
+<string lang="nl"><![CDATA[
+Geef alle steden in New Jersey met meer dan 100000 inwoners.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+New Jersey, city, inhabitants, more than 100000
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+New Jersey, Stadt, Einwohner, mehr als 100000
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+New Jersey, ciudad, habitantes, más de 100000
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+New Jersey, città, abitanti, più di 100000
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+New Jersey, villes, habitants, plus de 100000
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+New Jersey, stad, inwoners, meer dan 100000
+]]></keywords>
+<enEntities>New_Jersey:[New Jersey]</enEntities>
+<deEntities>New_Jersey:[New Jersey]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type dbo:City .
+        ?uri dbo:isPartOf res:New_Jersey .
+        ?uri dbp:populationTotal ?inhabitants .
+        FILTER (?inhabitants > 100000) .
+}
+]]></query>
+</question>
+
+<question id="18" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which museum exhibits The Scream by Munch?
+]]></string>
+<string lang="de"><![CDATA[
+In welchem Museum ist Der Schrei von Munch ausgestellt?
+]]></string>
+<string lang="es"><![CDATA[
+En qué museo está expuesto el Grito de Munch?
+]]></string>
+<string lang="it"><![CDATA[
+Quale museo è esposto l'Urlo di Munch?
+]]></string>
+<string lang="fr"><![CDATA[
+Dans quel musée est exposé Le Cri de Munch?
+]]></string>
+<string lang="nl"><![CDATA[
+In welk museum hangt De Schreeuw van Munch?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+museum, Scream, Munch
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Museum, Schrei, Munch
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+museo, El Grito, Munch
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+museo, l'Urlo, Munch
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+musée, le Cri, Munch
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+museum, De Schreeuw, Munch
+]]></keywords>
+<enEntities>The_Scream:[The Scream],Edvard_Munch:[Munch]</enEntities>
+<deEntities>The_Scream:[Der Schrei],Edvard_Munch:[Munch]</deEntities>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE {
+	res:The_Scream dbp:museum ?uri .
+}
+]]></query>
+</question>
+
+<question id="19" answertype="boolean" aggregation="true" onlydbo="true">
+<string lang="en"><![CDATA[
+Is Egypts largest city also its capital?
+]]></string>
+<string lang="de"><![CDATA[
+Ist Ägyptens größte Stadt auch seine Hauptstadt?
+]]></string>
+<string lang="es"><![CDATA[
+Es la cuidad más grande de Egipto también capital?
+]]></string>
+<string lang="it"><![CDATA[
+La città più grande dell'Egitto è anche la sua capitale?
+]]></string>
+<string lang="fr"><![CDATA[
+La ville la plus grande de l'Egypte est-elle sa capitale?
+]]></string>
+<string lang="nl"><![CDATA[
+Is de grootste stad van Egypte ook de hoofdstad?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+largest city, Egypt, capital
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+größte Stadt, Ägypten, Hauptstadt
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+cuidad más grande, Egipto, capital
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+città più grande, Egitto, capitale
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+ville plus grande, Egypte, capitale 
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+grootste stad, Egypte, hoofdstad
+]]></keywords>
+<enEntities>Egypt:[Egypts]</enEntities>
+<deEntities>Egypt:[Ägyptens]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+ASK 
+WHERE {
+        res:Egypt dbo:largestCity ?large .
+        res:Egypt dbo:capital ?capital .
+        FILTER (?large = ?capital)
+}
+]]></query>
+</question>
+
+<question id="20" answertype="number" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+How many employees does IBM have?
+]]></string>
+<string lang="de"><![CDATA[
+Wieviele Angestellte hat IBM?
+]]></string>
+<string lang="es"><![CDATA[
+Cuántos empleados tiene IBM?
+]]></string>
+<string lang="it"><![CDATA[
+Quanti dipendenti ha IBM?
+]]></string>
+<string lang="fr"><![CDATA[
+Combien d'employés a IBM?
+]]></string>
+<string lang="nl"><![CDATA[
+Hoeveel medewerkers heeft IBM?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+IBM, employees
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+IBM, Angestellte
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+IBM, empleados
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+IBM, dipendenti
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+employés, IBM
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+medewerkers, IBM
+]]></keywords>
+<enEntities>IBM:[IBM]</enEntities>
+<deEntities>IBM:[IBM]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT ?number 
+WHERE {
+	res:IBM dbo:numberOfEmployees ?number .
+}
+]]></query>
+</question>
+
+<question id="21" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which states border Illinois?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Staaten grenzen an Illinois?
+]]></string>
+<string lang="es"><![CDATA[
+Qué estados tienen frontera con Illinois?
+]]></string>
+<string lang="it"><![CDATA[
+Con quali stati confina l'Illinois?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels sont les états voisins de l'Illinois?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke staten grenzen aan Illinois?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+state, border, Illinois
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Staat, angrenzen, Illinois
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+estado, frontera, Illinois
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+stati, confine, Illinois
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+états voisins, Illinois
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+staat, grenzen aan, Illinois
+]]></keywords>
+<enEntities>Illinois:[Illinois]</enEntities>
+<deEntities>Illinois:[Illinois]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+SELECT DISTINCT ?uri 
+WHERE {
+      res:Illinois dbp:borderingstates ?uri .
+}
+]]></query>
+</question>
+
+<question id="22" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+In which country is the Limerick Lake?
+]]></string>
+<string lang="de"><![CDATA[
+In welchem Land befindet sich der Limerick Lake?
+]]></string>
+<string lang="es"><![CDATA[
+En qué país se encuentra el lago Limerick?
+]]></string>
+<string lang="it"><![CDATA[
+In quale stato si trova il lago Limerick?
+]]></string>
+<string lang="fr"><![CDATA[
+Dans quel pays se trouve le lac Limerick?
+]]></string>
+<string lang="nl"><![CDATA[
+In welk land ligt Limerick Lake?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Limerick Lake, country
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Limerick Lake, Land
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+lago Limerick, país
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+lago Limerick, stato
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+pays, lac Limerick
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Limerick Lake, land
+]]></keywords>
+<enEntities>Limerick_Lake:[Limerick Lake]</enEntities>
+<deEntities>Limerick_Lake:[Limerick Lake]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri 
+WHERE { 
+	res:Limerick_Lake dbo:country ?uri .
+}
+]]></query>
+</question>
+
+<question id="23" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Which television shows were created by Walt Disney?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Fernsehserien hat Walt Disney entworfen?
+]]></string>
+<string lang="es"><![CDATA[
+Qué series televisivas ideó Walt Disney?
+]]></string>
+<string lang="it"><![CDATA[
+Quali serie televisive sono state create dalla Walt Disney?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelles séries télevisées ont été créées par Walt Disney?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke televisieseries werden bedacht door Walt Disney?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+television show, create, Walt Disney
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Fernsehserie, entwerfen, Walt Disney
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+serie televisica, ideó, Walt Disney
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+serie televisiva, ideata, Walt Disney?
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+séries télevisées, créées, Walt Disney
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+televisieserie, bedacht, Walt Disney
+]]></keywords>
+<enEntities>Walt_Disney:[Walt Disney]</enEntities>
+<deEntities>Walt_Disney:[Walt Disney]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:TelevisionShow .
+        ?uri dbo:creator res:Walt_Disney .
+}
+]]></query>
+</question>
+
+<question id="24" answertype="resource" aggregation="true" onlydbo="true">
+<string lang="en"><![CDATA[
+Which mountain is the highest after the Annapurna?
+]]></string>
+<string lang="de"><![CDATA[
+Was ist der höchste Berg nach dem Annapurna?
+]]></string>
+<string lang="es"><![CDATA[
+Cuál es la montaña más alta después del Annapurna?
+]]></string>
+<string lang="it"><![CDATA[
+Qual è la montagna più alta dopo l'Annapurna?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelle est la montagne la plus haute après l'Annapurna?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke berg is na de Annapurna de hoogste berg?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+mountain, highest after, Annapurna
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Berg, höchster nach, Annapurna
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+montaña, más alta después de, Annapurna
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+montagna, più alta dopo, Annapurna
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+montagne, la plus haute, Annapurna
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+berg, hoogste na, Annapurna
+]]></keywords>
+<enEntities>Annapurna:[Annapurna]</enEntities>
+<deEntities>Annapurna:[Annapurna]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {       
+        res:Annapurna dbo:elevation ?elevation .
+        ?uri rdf:type dbo:Mountain . 
+        ?uri dbo:elevation ?otherelevation .
+        FILTER (?otherelevation < ?elevation) .
+} 
+ORDER BY DESC(?otherelevation) LIMIT 1
+]]></query>
+</question>
+
+<question id="25" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+In which films directed by Garry Marshall was Julia Roberts starring?
+]]></string>
+<string lang="de"><![CDATA[
+In welchem Filmen, bei denen Garry Marshall Regie geführt hat, hat Julia Roberts mitgespielt?
+]]></string>
+<string lang="es"><![CDATA[
+En qué películas dirigidas por Garry Mashall actuó Julia Roberts?
+]]></string>
+<string lang="it"><![CDATA[
+In quale film diretto da Garry Marshall recita Julia Roberts?
+]]></string>
+<string lang="fr"><![CDATA[
+Dans quels films dirigés par Garry Marshall joue Julia Roberts?
+]]></string>
+<string lang="nl"><![CDATA[
+In welke films die werden geregisseerd door Garry Marshall speelde Julia Roberts?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+film, directed, Garry Marshall, starring, Julia Roberts
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Film, Regie, Garry Marshall, mitspielen, Julia Roberts
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+película, director, Garry Marshall, actuar, Julia Roberts
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+film, regista, Garry Marshall, recitare, Julia Roberts
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+film, dirigés, Garry Marshall, joue Julia Roberts
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+film, regisseur, Garry Marshall, speelt, Julia Roberts
+]]></keywords>
+<enEntities>Julia_Roberts:[Julia Roberts],Garry_Marshall:[Garry Marshall]</enEntities>
+<deEntities>Julia_Roberts:[Julia Roberts],Garry_Marshall:[Garry Marshall]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:Film .
+        ?uri dbo:starring res:Julia_Roberts .
+        ?uri dbo:director res:Garry_Marshall .
+}
+]]></query>
+</question>
+
+<question id="26" answertype="resource" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+Which bridges are of the same type as the Manhattan Bridge?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Brücken sind vom gleichen Typ wie die Manhattan Bridge?
+]]></string>
+<string lang="es"><![CDATA[
+Qué puentes son del mismo tipo que el puente de Manhattan?
+]]></string>
+<string lang="it"><![CDATA[
+Quali ponti sono dello stesso tipo del ponte di Manhattan?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels ponts sont du même type que le pont de Manhattan?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke bruggen zijn van hetzelfde type als de Manhattan Bridge?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+bridge, same type, Manhattan Bridge
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Brücke, gleicher Typ, Manhattan Bridge
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+puente, mismo tipo, puente de Manhattan
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+ponte, stesso tipo, ponte di Manhattan
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+ponts, même type, pont de Manhattan
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+brug, zelfde type, Manhattan Bridge
+]]></keywords>
+<enEntities>Manhattan_Bridge:[Manhattan Bridge]</enEntities>
+<deEntities>Manhattan_Bridge:[Manhattan Bridge]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {       
+        ?uri rdf:type dbo:Bridge .
+        ?uri dbp:design ?design .
+        res:Manhattan_Bridge dbp:design ?mdesign . 
+        FILTER (regex(?design, ?mdesign)).
+        FILTER (?uri != res:Manhattan_Bridge) . 
+}
+]]></query>
+</question>
+
+<question id="27" answertype="boolean" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Was U.S. president Jackson involved in a war?
+]]></string>
+<string lang="de"><![CDATA[
+War US-Präsident Jackson in einen Krieg verwickelt?
+]]></string>
+<string lang="es"><![CDATA[
+Estuvo el el presidente de los estados unidos Jackson involucrado en una guerra?
+]]></string>
+<string lang="it"><![CDATA[
+Il presidente degli Stati Uniti Jackson è stato coinvolto in una guerra?
+]]></string>
+<string lang="fr"><![CDATA[
+Le président Jackson a-t-il participé à une guerre?
+]]></string>
+<string lang="nl"><![CDATA[
+Was president Jackson van de Verenigde Staten betrokken bij een oorlog?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+U.S. president, Jackson, war
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+US-Präsident, Jackson, Krieg
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+presidente de los estados unidos, Jackson, guerra
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+presidente degli Stati Uniti, Jackson, guerra
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+président Jackson, guerre, participé
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+president van de Verenigde Staten, Jackson, oorlog, betrokken bij
+]]></keywords>
+<enEntities>Andrew_Jackson:[Jackson],President_of_the_United_States:[U.S. president]</enEntities>
+<deEntities>Andrew_Jackson:[Jackson],President_of_the_United_States:[US-Präsident]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+ASK 
+WHERE {
+	res:Andrew_Jackson dbo:battle ?battle .    
+}
+]]></query>
+</question>
+
+<question id="28" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which European countries have a constitutional monarchy?
+]]></string>
+<string lang="de"><![CDATA[
+Welche europäischen Länder haben eine konstitutionelle Monarchie?
+]]></string>
+<string lang="es"><![CDATA[
+Qué países europeos tienen una monarquía constitucional?
+]]></string>
+<string lang="it"><![CDATA[
+Quali nazioni europee hanno una monarchia costituzionale?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels pays d'Europe ont une monarchie constitutionnelle?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke Europese landen zijn een constitutionele monarchie?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+European country, constitutional monarchy
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+euopäisches Land, konstitutionelle Monarchie
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+países europeos, monarquía constitucional
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+nazione europea, monarchia costituzionale
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+monarchie constitutionnelle, pays, Europe
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Europees land, constitutionele monarchie
+]]></keywords>
+<enEntities>Constitutional_monarchy:[constitutional monarchy]</enEntities>
+<deEntities>Constitutional_monarchy:[konstitutionelle Monarchie]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type yago:EuropeanCountries .
+        ?uri dbo:governmentType res:Constitutional_monarchy .
+}
+]]></query>
+</question>
+
+<question id="29" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which awards did WikiLeaks win?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Preise hat WikiLeaks gewonnen?
+]]></string>
+<string lang="es"><![CDATA[
+Qué premios ha ganado WikiLeaks?
+]]></string>
+<string lang="it"><![CDATA[
+Quali premi ha vinto WikiLeaks?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels prix ont été gagnés par Wikileaks?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke prijzen heeft WikiLeaks gewonnen?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+WikiLeaks, award
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+WikiLeaks, Preise
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Wikileaks, premios
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+WikiLeaks, premio
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+prix, WikiLeaks
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+prijs, Wikileaks
+]]></keywords>
+<enEntities>WikiLeaks:[WikiLeaks]</enEntities>
+<deEntities>WikiLeaks:[WikiLeaks]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+SELECT DISTINCT ?uri
+WHERE {
+        res:WikiLeaks dbp:awards ?uri .
+}
+]]></query>
+</question>
+
+<question id="30" answertype="resource" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+Which state of the USA has the highest population density?
+]]></string>
+<string lang="de"><![CDATA[
+Welcher Staat in den USA hat die höchste Bevölkerungsdichte?
+]]></string>
+<string lang="es"><![CDATA[
+Que estado de los estados unidos de america tiene la mayor densidad de población?
+]]></string>
+<string lang="it"><![CDATA[
+Quale stato appartenente agli Stati Uniti d'America ha la densità di popolazione maggiore?
+]]></string>
+<string lang="fr"><![CDATA[
+Quel état des Etats-Unis a la plus haute densité de population?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke deelstaat van de Verenigde Staten heeft de hoogste bevolkingsdichtheid?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+state, USA, population density, highest
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Staat, USA, Bevölkerungsdichte, höchste
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+estado, estados unidos de america, densidad de población 
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+stato, Stati Uniti d'America, maggiore densità di popolazione
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+densité de population, état des Etats-Unis
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+deelstaat van de Verenigde Staten, hoogste bevolkingsdichtheid
+]]></keywords>
+<enEntities>United_States:[USA]</enEntities>
+<deEntities>United_States:[USA]</deEntities>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type yago:StatesOfTheUnitedStates .
+        ?uri dbp:densityrank ?rank .
+} 
+ORDER BY ASC(?rank) LIMIT 1
+]]></query>
+</question>
+
+<question id="31" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+What is the currency of the Czech Republic?
+]]></string>
+<string lang="de"><![CDATA[
+Was ist die Währung der Tschechischen Republik?
+]]></string>
+<string lang="es"><![CDATA[
+Cuál es la moneda de la república checa?
+]]></string>
+<string lang="it"><![CDATA[
+Qual è la valuta della Repubblica Ceca?
+]]></string>
+<string lang="fr"><![CDATA[
+Quel est la devise de la Tchéquie?
+]]></string>
+<string lang="nl"><![CDATA[
+Wat is de munteenheid van Tsjechië?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Czech republic, currency
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Tschechischen Republik, Währung
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+moneda, república checa
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+valuta, Repubblica Ceca
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+devise, Tchéquie
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Tsjechië, munteenheid
+]]></keywords>
+<enEntities>Czech_Republic:[Czech Republic]</enEntities>
+<deEntities>Czech_Republic:[Tschechischen Republik]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Czech_Republic dbo:currency ?uri .
+}
+]]></query>
+</question>
+
+<question id="32" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which countries in the European Union adopted the Euro?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Länder in der Europäischen Union haben den Euro übernommen?
+]]></string>
+<string lang="es"><![CDATA[
+Qué países de la unión europea han introducido el Euro?
+]]></string>
+<string lang="it"><![CDATA[
+Quali stati dell'Unione Europea hanno introdotto l'Euro?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels pays de l'Union Européene ont adopté l'Euro?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke landen in de Europese Unie hebben de Euro geïntroduceerd?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+European Union, country, adopt, Euro
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Europäische Union, Land, übernehmen, Euro
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+países, unión europea, introducido, Euro
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Unione Europea, stato, introdurre, Euro
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+pays de l'Union Européene, adopté, Euro
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+land, Europese Unie, Euro,  geïntroduceerd
+]]></keywords>
+<enEntities>European_Union:[European Union],Euro:[Euro]</enEntities>
+<deEntities>European_Union:[Europäischen Union],Euro:[Euro]</deEntities>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type yago:EuropeanUnionMemberStates .
+        { ?uri dbp:currency res:Euro . } 
+        UNION 
+        { ?uri dbp:currencyCode 'EUR'@en . }
+        UNION 
+        { ?uri dbp:currencyCode 'Euro'@en . }
+}
+]]></query>
+</question>
+
+<question id="33" answertype="number" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+What is the area code of Berlin?
+]]></string>
+<string lang="de"><![CDATA[
+Was ist die Vorwahl von Berlin?
+]]></string>
+<string lang="es"><![CDATA[
+Cuál es el prefijo de Berlin?
+]]></string>
+<string lang="it"><![CDATA[
+Qual è il prefisso di Berlino?
+]]></string>
+<string lang="fr"><![CDATA[
+Quel est l'indicatif téléphonique de Berlin?
+]]></string>
+<string lang="nl"><![CDATA[
+Wat is het kengetal van Berlijn?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Berlin, area code
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Berlin, Vorwahl
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+prefijo, Berlin
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+prefisso, Berlino
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+indicatif téléphonique, Berlin
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+kengetal, Berlijn
+]]></keywords>
+<enEntities>Berlin:[Berlin]</enEntities>
+<deEntities>Berlin:[Berlin]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?string 
+WHERE {
+	res:Berlin dbo:areaCode ?string .
+}
+]]></query>
+</question>
+
+<question id="34" answertype="resource" aggregation="true" onlydbo="true">
+<string lang="en"><![CDATA[
+Which countries have more than two official languages?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Länder haben mehr als zwei Amtssprachen?
+]]></string>
+<string lang="es"><![CDATA[
+Qué países tienes más de dos lenguas oficiales?
+]]></string>
+<string lang="it"><![CDATA[
+Quali stati hanno più di due lingue ufficiali?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels pays ont plus de deux langues officielles?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke landen hebben meer dan twee officiële talen?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+country, official language, more than two
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Land, Amtssprache, mehr als zwei
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+país, lengua oficial, más de dos
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+stato, lingua ufficiale, più di due
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+pays, langues officielles, plus de deux
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+land, officiële taal, meer dan twee
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE { 
+	?uri rdf:type dbo:Country  .
+        ?uri dbo:officialLanguage ?language .
+} 
+GROUP BY ?uri
+HAVING (COUNT(?language) > 2)
+]]></query>
+</question>
+
+<question id="35" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who is the owner of Universal Studios?
+]]></string>
+<string lang="de"><![CDATA[
+Wem gehören die Universal Studios?
+]]></string>
+<string lang="es"><![CDATA[
+A quién le pertenecen los Universal Studios?
+]]></string>
+<string lang="it"><![CDATA[
+Chi è il proprietario degli Universal Studios?
+]]></string>
+<string lang="fr"><![CDATA[
+A qui appartient Universal Studios?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie is de eigenaar van Universal Studios?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Universal Studios, owner
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Universal Studios, gehören
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Universal Studios, dueño
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Universal Studios, proprietario
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+appartient, Universal Studios
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+eigenaar, Universal Studios
+]]></keywords>
+<enEntities>Universal_Studios:[Universal Studios]</enEntities>
+<deEntities>Universal_Studios:[Universal Studios]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Universal_Studios dbo:owner ?uri .
+}
+]]></query>
+</question>
+
+<question id="36" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Through which countries does the Yenisei river flow?
+]]></string>
+<string lang="de"><![CDATA[
+Durch welche Länder fließt der Yenisei?
+]]></string>
+<string lang="es"><![CDATA[
+Por qué países fluye el río Yenisei?
+]]></string>
+<string lang="it"><![CDATA[
+Attraverso quali stati scorre il fiume Yenisei?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels sont les pays traversés par l'Ienisseï?
+]]></string>
+<string lang="nl"><![CDATA[
+Door welke landen stroomt de Jenisej?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Yenisei river, flow through, country
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Yenisei, fließen, Land
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+países, fluye, río Yenisei
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+fiume Yenisei, scorrere attraverso, stato
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Ienisseï, pays traversés
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Jenisej, land, stroomt door
+]]></keywords>
+<enEntities>Yenisei_River:[Yenisei]</enEntities>
+<deEntities>Yenisei_River:[Yenisei]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+SELECT DISTINCT ?uri 
+WHERE {
+        res:Yenisei_River dbp:country ?uri .
+}
+]]></query>
+</question>
+
+<question id="37" answertype="date" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+When did Latvia join the EU?
+]]></string>
+<string lang="de"><![CDATA[
+Wann ist Lettland der EU beigetreten?
+]]></string>
+<string lang="es"><![CDATA[
+Cuándo ingresó Letonia a la unión europea?
+]]></string>
+<string lang="it"><![CDATA[
+Quando la Lettonia è entrata nell'Unione Europea?
+]]></string>
+<string lang="fr"><![CDATA[
+Quand est la Lettonie devenue membre de l'Union européene?
+]]></string>
+<string lang="nl"><![CDATA[
+Wanneer trad Letland toe tot de EU?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Latvia, join, EU
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Lettland, beitreten, EU
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Letonia, ingreso, unión europea
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Lettonia, entrare, Unione Europea
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Lettonie, membre, Union européene
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Letland, toetreden, EU
+]]></keywords>
+<enEntities>Latvia:[Latvia],European_Union:[EU]</enEntities>
+<deEntities>Latvia:[Lettland],European_Union:[EU]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+SELECT DISTINCT ?date 
+WHERE {       
+        res:Latvia dbp:accessioneudate ?date .      
+}
+]]></query>
+</question>
+
+<question id="38" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which monarchs of the United Kingdom were married to a German?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Monarchen des Vereinigten Königreichs waren mit jemand deutschem verheiratet?
+]]></string>
+<string lang="es"><![CDATA[
+Qué monárcas del reino unido estaban casados con una persona alemana?
+]]></string>
+<string lang="it"><![CDATA[
+Quali monarchi del Regno Unito erano sposati a persone tedesche?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels monarques du Royaume-Uni ont épousé une personne allemande?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke monarchen van het Verenigd Koninkrijk waren getrouwd met een Duitser?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+United Kingdom, monarch, married, German
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Vereinigtes Königreich, Monarch, verheiratet, deutsch
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Reino Unido, monarcha, casado, alemán
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Regno Unito, monarca, sposato, tedesco
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+monarques, Royaume-Uni, épousé, allemand
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+monarch, Verenigd Koninkrijk, getrouwd, Duitser
+]]></keywords>
+<enEntities>United_Kingdom:[United Kingdom]</enEntities>
+<deEntities>United_Kingdom:[Vereinigten Königreichs]</deEntities>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+        ?uri rdf:type yago:MonarchsOfTheUnitedKingdom .
+        ?uri dbo:spouse ?spouse .
+        ?spouse dbo:birthPlace res:Germany.
+}
+]]></query>
+</question>
+
+<question id="39" answertype="date" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+When was the Battle of Gettysburg?
+]]></string>
+<string lang="de"><![CDATA[
+Wann fand die Schlacht von Gettysburg statt?
+]]></string>
+<string lang="es"><![CDATA[
+Cuándo tuvo lugar la batalla de Gettysburg?
+]]></string>
+<string lang="it"><![CDATA[
+Quando ha avuto luogo la battaglia di Gettysburg?
+]]></string>
+<string lang="fr"><![CDATA[
+Quand se déroula la bataille de Gettysburg?
+]]></string>
+<string lang="nl"><![CDATA[
+Wanneer was de Slag bij Gettysburg?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Battle of Gettysburg
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Schlacht von Gettysburg
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+batalla de Gettysburg
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+battaglia di Gettysburg
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+bataille de Gettysburg, quand
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Slag bij Gettysburg
+]]></keywords>
+<enEntities>Battle_of_Gettysburg:[Battle of Gettysburg]</enEntities>
+<deEntities>Battle_of_Gettysburg:[Schlacht von Gettysburg]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?date 
+WHERE { 
+       res:Battle_of_Gettysburg dbo:date ?date .
+}
+]]></query>
+</question>
+
+<question id="40" answertype="resource" aggregation="true" onlydbo="true">
+<string lang="en"><![CDATA[
+What is the highest mountain in Australia?
+]]></string>
+<string lang="de"><![CDATA[
+Was ist der höchste Berg in Australien?
+]]></string>
+<string lang="es"><![CDATA[
+Cuál es la montaña más alta de Australia?
+]]></string>
+<string lang="it"><![CDATA[
+Qual è la montagna più alta d'Australia?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelle est la plus haute montagne d'Australie?
+]]></string>
+<string lang="nl"><![CDATA[
+Wat is de hoogste berg van Australië?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Australia, highest mountain
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Australien, höchster Berg
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Australia, montaña más alta
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Australia, montagna più alta
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+plus haute montagne, Australie
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Australië, hoogste berg
+]]></keywords>
+<enEntities>Australia:[Australia]</enEntities>
+<deEntities>Australia:[Australien]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type dbo:Mountain .
+        ?uri dbo:locatedInArea res:Australia .
+        ?uri dbo:elevation ?elevation .
+} 
+ORDER BY DESC(?elevation) LIMIT 1
+]]></query>
+</question>
+
+<question id="41" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all soccer clubs in Spain.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Fußballvereine in Spanien.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todos los club de fútbol de España.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutti i club calcistici della Spagna
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les clubs de football d'Espagne.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle Spaanse voetbalclubs.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Spain, soccer club
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Fußballverein, Spanien
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+España, club de fútbol
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Spagna, club calcistico
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Espagne, clubs de football
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Spanje, voetbalclub
+]]></keywords>
+<enEntities>Spain:[Spain]</enEntities>
+<deEntities>Spain:[Spanien]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:SoccerClub .
+        { ?uri dbo:ground res:Spain . }
+        UNION 
+        { ?uri dbp:ground ?ground . FILTER (regex(?ground,'Spain')) }
+}
+]]></query>
+</question>
+
+<question id="42" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+What are the official languages of the Philippines?
+]]></string>
+<string lang="de"><![CDATA[
+Was sind die Amtssprachen der Philippinen?
+]]></string>
+<string lang="es"><![CDATA[
+Cuáles son los idiomas oficiales de Las Philipinas?
+]]></string>
+<string lang="it"><![CDATA[
+Quali sono le lingue ufficiali delle Filippine?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels sont les langues officielles des Philippines?
+]]></string>
+<string lang="nl"><![CDATA[
+Wat zijn de  officiële talen van de Filippijnen?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Philippines, official language
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Philippinen, Amtssprache
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Philipinas, idiomas oficiales
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Filippine, lingua ufficiale
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+langues officielles, Philippines
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+officiële talen, Filippijnen
+]]></keywords>
+<enEntities>Philippines:[Philippines]</enEntities>
+<deEntities>Philippines:[Philippinen]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE { 
+        res:Philippines dbo:officialLanguage ?uri .
+}
+]]></query>
+</question>
+
+<question id="43" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who is the mayor of New York City?
+]]></string>
+<string lang="de"><![CDATA[
+Wer ist der Bürgermeister von New York City?
+]]></string>
+<string lang="es"><![CDATA[
+Quién es el alcalde de la cuidad de Nueva York?
+]]></string>
+<string lang="it"><![CDATA[
+Chi è il sindaco della città di New York?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui est le maire de New York City?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie is de burgemeester van New York?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+New York City, mayor
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+New York City, Bürgermeister
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+cuidad de Nueva York, alcalde
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+città di New York, sindaco
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+maire, New York City
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+burgemeester, New York
+]]></keywords>
+<enEntities>New_York_City:[New York City]</enEntities>
+<deEntities>New_York_City:[New York City]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT ?uri
+WHERE { 
+        res:New_York_City dbo:leaderName ?uri .
+}
+]]></query>
+</question>
+
+<question id="44" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Who designed the Brooklyn Bridge?
+]]></string>
+<string lang="de"><![CDATA[
+Wer hat die Brooklyn Bridge entworfen?
+]]></string>
+<string lang="es"><![CDATA[
+Quién diseñó la Brooklyn Bridge?
+]]></string>
+<string lang="it"><![CDATA[
+Chi ha progettato il ponte di Brooklyn?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui a conçu le pont de Brooklyn?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie ontwierp de Brooklyn Bridge?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Brooklyn Bridge, design
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Brooklyn Bridge, entwerfen
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+diseñador, Brooklyn Bridge
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+ponte di Brooklyn, progettare
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+pont de Brooklyn, conçu
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+ontwerp, Brooklyn Bridge
+]]></keywords>
+<enEntities>Brooklyn_Bridge:[Brooklyn Bridge]</enEntities>
+<deEntities>Brooklyn_Bridge:[Brooklyn Bridge]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbp: <http://dbpedia.org/property/>
+SELECT DISTINCT ?uri 
+WHERE {
+        res:Brooklyn_Bridge dbp:designer ?uri .
+}
+]]></query>
+</question>
+
+<question id="45" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which telecommunications organizations are located in Belgium?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Telekommunikationsunternehmen haben ihren Sitz in Belgien?
+]]></string>
+<string lang="es"><![CDATA[
+Qué empresas de telecomunicaciones tienen su sede en Bélgica?
+]]></string>
+<string lang="it"><![CDATA[
+Quali aziende di telecomunicazioni hanno sede in Belgio?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelles agences de télécommunication sont situées en Belgique?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke telecom-bedrijven zijn gevestigd in België?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+telecommunications organization, located, Belgium
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Telekommunikationsunternehmen, Sitz, Belgien
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+empresas de telecomunicaciones, sede, Bélgica
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+azienda di telecomunicazioni, sede, Belgio
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+agences de télécommunication, situées, Belgique
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+België, telecom-bedrijf, gevestigd
+]]></keywords>
+<enEntities>Belgium:[Belgium]</enEntities>
+<deEntities>Belgium:[Belgien]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE { 	
+	?uri  rdf:type dbo:Organisation  .
+	{ ?uri dbp:industry res:Telecommunications . } UNION { ?uri dbp:industry ?industry . FILTER (regex(?industry, 'Telecommunication')) . }
+	{ ?uri dbo:location res:Belgium. } UNION { ?uri dbp:location res:Belgium. } UNION { ?uri dbp:locationCountry 'Belgium'@en . }
+}
+]]></query>
+</question>
+
+<question id="46" answertype="boolean" aggregation="true" onlydbo="true">
+<string lang="en"><![CDATA[
+Is Frank Herbert still alive?
+]]></string>
+<string lang="de"><![CDATA[
+Lebt Frank Herbert noch?
+]]></string>
+<string lang="es"><![CDATA[
+Todavía vive Frank Herbert?
+]]></string>
+<string lang="it"><![CDATA[
+Frank Herbert è ancora vivo?
+]]></string>
+<string lang="fr"><![CDATA[
+Frank Herbert est-il encore en vie?
+]]></string>
+<string lang="nl"><![CDATA[
+Leeft Frank Herbert nog?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Frank Herbert, alive
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Frank Herbert, leben
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Frank Herbert, vive
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Frank Herbert, vivente
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Frank Herbert, en vie
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Frank Herbert, leeft
+]]></keywords>
+<enEntities>Frank_Herbert:[Frank Herbert]</enEntities>
+<deEntities>Frank_Herbert:[Frank Herbert]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+ASK 
+WHERE {
+	OPTIONAL { res:Frank_Herbert dbo:deathDate ?date . }
+        FILTER (!BOUND(?date))
+}
+]]></query>
+</question>
+
+<question id="47" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+What is the highest place of Karakoram?
+]]></string>
+<string lang="de"><![CDATA[
+Was ist die höchste Stelle des Karakorum?
+]]></string>
+<string lang="es"><![CDATA[
+Cuál es el punto más alto del Karakorum?
+]]></string>
+<string lang="it"><![CDATA[
+Qual è il punto più alto del Karakoram?
+]]></string>
+<string lang="fr"><![CDATA[
+Quel est l'endroit le plus haut du Karakoram?
+]]></string>
+<string lang="nl"><![CDATA[
+Wat is het hoogste punt van de Karakoram?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Karakoram, highest place
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Karakorum, höchste Stelle
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Karakorum, punto más alto
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Karakoram, punto più alto
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Karakoram, endroit le plus haut
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+hoogste punt, Karakoram
+]]></keywords>
+<enEntities>Karakoram:[Karakoram]</enEntities>
+<deEntities>Karakoram:[Karakorum]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE {       
+        res:Karakoram dbo:highestPlace ?uri .  
+}
+]]></query>
+</question>
+
+<question id="48" answertype="string" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me the homepage of Forbes.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir die Homepage von Forbes.
+]]></string>
+<string lang="es"><![CDATA[
+Dame la página de web de Forbes.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi il sito internet di Forbes.
+]]></string>
+<string lang="fr"><![CDATA[
+Quel est la site web de Forbes?
+]]></string>
+<string lang="nl"><![CDATA[
+Geef de homepage van Forbes.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Forbes, homepage
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Forbes, Homepage
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+página de web, Forbes
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+sito internet, Forbes
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Forbes, site web
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+homepage, Forbes
+]]></keywords>
+<enEntities>Forbes:[Forbes]</enEntities>
+<deEntities>Forbes:[Forbes]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT DISTINCT ?string 
+WHERE {
+	res:Forbes foaf:homepage ?string .
+}
+]]></query>
+</question>
+
+<question id="49" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all companies in the advertising industry.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Unternehmen, die in der Werbebranche tätig sind.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todas las empresas publicitarias.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutte le aziende pubblicitarie.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi toutes les agences de publicité.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle bedrijven die in de reclamebranche actief zijn.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+company, advertising industry
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Unternehmen, Werbebranche
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+empresas publicitarias
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+aziende pubblicitarie
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+agences de publicité
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+bedrijf, reclamebranche
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?uri rdf:type dbo:Company  .
+        ?uri dbp:industry ?industry .
+        FILTER regex(?industry,'advertising','i') .
+}
+]]></query>
+</question>
+
+<question id="50" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+What did Bruce Carver die from?
+]]></string>
+<string lang="de"><![CDATA[
+Woran ist Bruce Carver gestorben?
+]]></string>
+<string lang="es"><![CDATA[
+De qué murió Bruce Carver?
+]]></string>
+<string lang="it"><![CDATA[
+Di cosa è morto Bruce Carver?
+]]></string>
+<string lang="fr"><![CDATA[
+Quel est la cause de décès de Bruce Carver?
+]]></string>
+<string lang="nl"><![CDATA[
+Waaraan overleed Bruce Carver?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Bruce Carver, die
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Bruce Carver, gestorben an
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Bruce Caver, muerte
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Bruce Caver, morire
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+cause de décès, Bruce Carver
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Bruce Carver, gestorven aan
+]]></keywords>
+<enEntities>Bruce_Carver:[Bruce Carver]</enEntities>
+<deEntities>Bruce_Carver:[Bruce Carver]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+SELECT DISTINCT ?uri
+WHERE {
+        res:Bruce_Carver dbo:deathCause ?uri .     
+}
+]]></query>
+</question>
+
+<question id="51" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all school types.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Schultypen.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todos los tipos de escuela.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutti i tipi di scuola.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous ley types d'écoles.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle schooltypes.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+school type
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Schultyp
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+tipos de escuela
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+tipo di scuola
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+types d'écoles
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+schooltype
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE { 
+	?uri rdf:type yago:SchoolTypes .
+}
+]]></query>
+</question>
+
+<question id="52" answertype="resource" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+Which presidents were born in 1945?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Präsidenten wurden 1945 geboren?
+]]></string>
+<string lang="es"><![CDATA[
+Qué presidentes nacieron en 1945?
+]]></string>
+<string lang="it"><![CDATA[
+Quali presidenti sono nati nel 1945?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels présidents sont nés en 1945?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke presidenten werden geboren in 1945?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+president, born, 1945
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Präsident, geboren, 1945
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+presidentes nacidos 1945
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+presidente, nato, 1945
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+présidents, nés, 1945
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+president, geboren, 1945
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	{ ?uri rdf:type dbo:President . }
+	UNION
+	{ ?uri rdf:type yago:Presidents . }
+        ?uri dbo:birthDate ?date .
+	FILTER regex(?date, '^1945') .
+}
+]]></query>
+</question>
+
+<question id="53" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all presidents of the United States.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Präsidenten der Vereinigten Staaten.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todos los presidentes de los estados unidos de américa.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutti i presidenti degli Stati Uniti.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les présidents des Etats-Unis.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle presidenten van de Verenigde Staten.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+United States, president
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Vereinigte Staaten, Präsident
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+estados unidos, presidente
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Stati Uniti, presidente
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Etats-Unis, présidents
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+president, Verenigde Staten
+]]></keywords>
+<enEntities>United_States:[United States],President_of_the_United_States:[presidents]</enEntities>
+<deEntities>United_States:[Vereinigten Staaten],President_of_the_United_States:[Präsidenten]</deEntities>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+        ?uri rdf:type dbo:Person .
+        { ?uri rdf:type yago:PresidentsOfTheUnitedStates. }
+        UNION
+        { ?uri rdf:type dbo:President.
+          ?uri dbp:title res:President_of_the_United_States. }
+}
+]]></query>
+</question>
+
+<question id="54" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who was the wife of U.S. president Lincoln?
+]]></string>
+<string lang="de"><![CDATA[
+Wer war die Frau von US-Präsident Lincoln?
+]]></string>
+<string lang="es"><![CDATA[
+Quién fué la mujer del presidente americano Lincoln?
+]]></string>
+<string lang="it"><![CDATA[
+Chi era la moglie del presidente degli Stati Uniti Lincoln?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui était l'épouse du président américain Lincoln?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie was de vrouw van de Amerikaanse president Lincoln?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+U.S. president, Lincoln, wife
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+US-Präsident, Lincoln, Frau
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+presidente Americano, Lincoln, mujer
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+presidente degli Stati Uniti, Lincoln, moglie
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+épouse, président américain Lincoln
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+vrouw, president van America, Lincoln
+]]></keywords>
+<enEntities>President_of_the_United_States:[U.S. president],Abraham_Lincoln:[Lincoln]</enEntities>
+<deEntities>President_of_the_United_States:[US-Präsident],Abraham_Lincoln:[Lincoln]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri 
+WHERE {
+	res:Abraham_Lincoln dbo:spouse ?uri.
+}
+]]></query>
+</question>
+
+<question id="55" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who developed the video game World of Warcraft?
+]]></string>
+<string lang="de"><![CDATA[
+Wer hat das Videospiel World of Warcraft entwickelt?
+]]></string>
+<string lang="es"><![CDATA[
+Quién desarrolló el videojuego Warcraft?
+]]></string>
+<string lang="it"><![CDATA[
+Chi ha creato il videogioco World of Warcraft?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui a développé World of Warcraft?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie heeft het videospel World of Warcraft ontwikkeld?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+video game, World of Warcraft, develop
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Videospiel, World of Warcraft, entwickeln
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+videojuego, Warcraft, desarrollar
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+videogioco, World of Warcraft, creare
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+développé, World of Warcraft
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+World of Warcraft, ontwikkelaar
+]]></keywords>
+<enEntities>World_of_Warcraft:[World of Warcraft]</enEntities>
+<deEntities>World_of_Warcraft:[World of Warcraft]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri 
+WHERE {
+	res:World_of_Warcraft dbo:developer ?uri . 
+}
+]]></query>
+</question>
+
+<question id="56" answertype="string" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+What is the official website of Tom Cruise?
+]]></string>
+<string lang="de"><![CDATA[
+Was ist die offizielle Website von Tom Cruise?
+]]></string>
+<string lang="es"><![CDATA[
+Cuál el la página de Web oficial de Tom Cruise?
+]]></string>
+<string lang="it"><![CDATA[
+Qual è il sito internet ufficiale di Tom Cruise?
+]]></string>
+<string lang="fr"><![CDATA[
+Quel est le site web officiel de Tom Cruise?
+]]></string>
+<string lang="nl"><![CDATA[
+Wat is de officiële website van Tom Cruise?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Tom Cruise, official website
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Tom Cruise, offizielle Website
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Tom Cruise, página de Web oficial
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Tom Cruise, sito internet ufficiale
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+site web officiel, Tom Cruise
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+officiële website, Tom Cruise
+]]></keywords>
+<enEntities>Tom_Cruise:[Tom Cruise]</enEntities>
+<deEntities>Tom_Cruise:[Tom Cruise]</deEntities>
+<query><![CDATA[
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?string 
+WHERE { 
+	res:Tom_Cruise foaf:homepage ?string .
+}
+]]></query>
+</question>
+
+<question id="57" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+List all episodes of the first season of the HBO television series The Sopranos!
+]]></string>
+<string lang="de"><![CDATA[
+Liste alle Episoden der ersten Staffel der HBO-Fernsehserie Die Sopranos auf.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todos los episodios de la prímera época de la serie de HBO Los Sporanos.
+]]></string>
+<string lang="it"><![CDATA[
+Elenca tutti gli episodi della prima stagione della serie televisiva di HBO i Sopranos!
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les épisodes de la première saison de la série télévisée de HBO les Sopranos.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle afleveringen van het eerste seizoen van de HBO-serie The Sopranos.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+HBO, television series, Sopranos, first season, episode
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+HBO-Fernsehserie, Sopranos, erste Staffel, Episode
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+serie televisiva de HBO, Los Sopranos, primera época, episodios
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+serie televisiva di HBO, i Sopranos, prima stagione, episodio
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+épisodes de la première saison, HBO, les Sopranos
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+HBO-serie, The Sopranos, eerste seizoen, aflevering
+]]></keywords>
+<enEntities>The_Sopranos:[The Sopranos],HBO:[HBO]</enEntities>
+<deEntities>The_Sopranos:[Die Sopranos],HBO:[HBO]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri dbo:series res:The_Sopranos  .
+        ?uri dbo:seasonNumber 1 .
+}
+]]></query>
+</question>
+
+<question id="58" answertype="resource" aggregation="true" onlydbo="true">
+<string lang="en"><![CDATA[
+Who produced the most films?
+]]></string>
+<string lang="de"><![CDATA[
+Wer hat die meisten Filme produziert?
+]]></string>
+<string lang="es"><![CDATA[
+Quién ha producido más películas?
+]]></string>
+<string lang="it"><![CDATA[
+Chi ha prodotto più film?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui a produit le plus de films?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie produceerde de meeste films?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+film, produced, most
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Film, produzieren, die meisten
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+películas, producido más
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+film, prodotto, più
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+films, le plus de
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+producent, films, de meeste
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?film rdf:type dbo:Film .
+        ?film dbo:producer ?uri .
+}
+GROUP BY ?uri
+ORDER BY DESC(COUNT(?film)) LIMIT 1
+]]></query>
+</question>
+
+<question id="59" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all people with first name Jimmy.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Personen, die den Vornamen Jimmy haben.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todas las personas con el nombre propio Jimmy.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutte le persone il cui nome è Jimmy.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi toutes les personnes dont le prénom est Jimmy.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle personen met de voornaam Jimmy.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+person, first name, Jimmy
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Person, Vorname, Jimmy
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+personas, nombre propio, Jimmy
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+persone, nome, Jimmy
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+personnes, prénom, Jimmy
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+persoon, voornaam, Jimmy
+]]></keywords>
+<enEntities>Jimmy:[Jimmy]</enEntities>
+<deEntities>Jimmy:[Jimmy]</deEntities>
+<query><![CDATA[
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type foaf:Person.       
+        ?uri foaf:givenName 'Jimmy'@en   .
+}
+]]></query>
+</question>
+
+<question id="60" answertype="boolean" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Is there a video game called Battle Chess?
+]]></string>
+<string lang="de"><![CDATA[
+Gibt es ein Videospiel, das Battle Chess heißt?
+]]></string>
+<string lang="es"><![CDATA[
+Hay algún videojuego que se llame Battle Chess?
+]]></string>
+<string lang="it"><![CDATA[
+Esiste un videogioco che si chiama Battle Chess?
+]]></string>
+<string lang="fr"><![CDATA[
+Existe-t-il un jeu vidéo appelé Battle Chess?
+]]></string>
+<string lang="nl"><![CDATA[
+Bestaat er een videospel met de naam Battle Chess?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+video game, Battle Chess
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Videospiel, Battle Chess
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+videojuego, Battle Chess
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+videogioco, Battle Chess
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+jeu vidéo, Battle Chess
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+videospel, Battle Chess
+]]></keywords>
+<enEntities>Battle_Chess:[Battle Chess]</enEntities>
+<deEntities>Battle_Chess:[Battle Chess]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+ASK 
+WHERE {
+	?uri rdf:type dbo:VideoGame .
+        ?uri rdfs:label 'Battle Chess'@en .
+}
+]]></query>
+</question>
+
+<question id="61" answertype="resource" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+Which mountains are higher than the Nanga Parbat?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Berge sind höher als der Nanga Parbat?
+]]></string>
+<string lang="es"><![CDATA[
+Qué montañas son más altas que el Nanga Parbat?
+]]></string>
+<string lang="it"><![CDATA[
+Quali montagne sono più alte del Nanga Parbat?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelles montagnes sont plus hautes que le Nanga Parbat?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke bergen zijn hoger dan de Nanga Parbat?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+mountain, higher, Nanga Parbat
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Berg, höher, Nanga Parbat
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+montañas, más altas, Nanga Parbat
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+montagna, più alta, Nanga Parbat
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+montagnes, plus hautes, Nanga Parbat
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+bergen, hoger, Nanga Parbat
+]]></keywords>
+<enEntities>Nanga_Parbat:[Nanga Parbat]</enEntities>
+<deEntities>Nanga_Parbat:[Nanga Parbat]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+        res:Nanga_Parbat dbp:elevationM ?elevation .
+	?uri rdf:type dbo:Mountain .
+        ?uri dbp:elevationM ?otherelevation .
+        FILTER (?otherelevation > ?elevation) .
+}
+]]></query>
+</question>
+
+<question id="62" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who created Wikipedia?
+]]></string>
+<string lang="de"><![CDATA[
+Wer hat Wikipedia gegründet?
+]]></string>
+<string lang="es"><![CDATA[
+Quién creó Wikipedia?
+]]></string>
+<string lang="it"><![CDATA[
+Chi ha creato Wikipedia?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui est le créateur de Wikipedia?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie heeft Wikipedia opgericht?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Wikipedia, created
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Wikipedia, gründen
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Wikipedia, creador
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Wikipedia, creatore
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+créateur, Wikipedia 
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Wikipedia, oprichter
+]]></keywords>
+<enEntities>Wikipedia:[Wikipedia]</enEntities>
+<deEntities>Wikipedia:[Wikipedia]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Wikipedia dbo:author ?uri .
+}
+]]></query>
+</question>
+
+<question id="63" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all actors starring in Last Action Hero.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Schauspieler, die in Last Action Hero mitgespielt haben.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todos los actores que hayan actuado en Last Action Hero.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutti gli attori che hanno recitato in Last Action Hero.
+]]></string>
+<string lang="fr"><![CDATA[
+Noem alle acteurs uit de film Last Action Hero.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle acteurs uit de film Last Action Hero.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+actor, starring, Last Action Hero
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Schauspieler, mitspielen, Last Action Hero
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+actores, Last Action Hero
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+attori, Last Action Hero
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+acteurs, Last Action Hero
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+acteur, Last Action Hero
+]]></keywords>
+<enEntities>Last_Action_Hero:[Last Action Hero]</enEntities>
+<deEntities>Last_Action_Hero:[Last Action Hero]</deEntities>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri 
+WHERE {
+	res:Last_Action_Hero dbp:starring ?uri .
+}
+]]></query>
+</question>
+
+<question id="64" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Which software has been developed by organizations founded in California?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Softwareprodukte wurde von Unternehmen entwickelt, die in Kalifornien gegründet wurden?
+]]></string>
+<string lang="es"><![CDATA[
+Qué productos de software han sido desarrollados por empresas fundadas en California?
+]]></string>
+<string lang="it"><![CDATA[
+Quali software sono stati sviluppati da aziende fondate in California?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels logiciels ont été dévelopés par des agences fondées en Californie?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke software is ontwikkeld door bedrijven opgericht in Californië?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+organization, founded, California, develop, software
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Unternehmen, gründen, Kalifornien, entwickeln, Softwareprodukt
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+empresas, fundadas, California, desarrolar, productos de software
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+azienda, fondata, California, sviluppare, software
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Californie, agences, fondées, logiciels
+]]></keywords>
+<keywords lang="nl"><![CDATA[
+bedrijf, opgericht, Californië, ontwikkeld, software
+]]></keywords>
+<enEntities>California:[California]</enEntities>
+<deEntities>California:[Kalifornien]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE { 
+	?company rdf:type dbo:Organisation  .
+        ?company dbo:foundationPlace res:California .
+        ?uri dbo:developer ?company .
+        ?uri rdf:type dbo:Software .
+}
+]]></query>
+</question>
+
+<question id="65" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which companies work in the aerospace industry as well as on nuclear reactor technology?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Unternehmen sind sowohl in der Luft- und Raumfahrt als auch im Bereich der Reaktortechnologie tätig?
+]]></string>
+<string lang="es"><![CDATA[
+Qué empresas aerospaciales trabajar también en en tecnología de reactores?
+]]></string>
+<string lang="it"><![CDATA[
+Quali aziende lavorano sia nell'industria aerospaziale che sulle tecnologie dei reattori nucleari?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelles companies travaillent dans l'aérospatial et dans les réacteurs nucléaires?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke bedrijven zijn zowel actief in de ruimtevaartindustrie als in de nucleaire industrie?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+company, aerospace industry, nuclear reactor technology
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Unternehmen, Luft- und Raumfahrt, Reaktortechnologie
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+empresas, areospaciales, tecnología de reactores
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+azienda, industria aerospaziale, tecnologia dei reattori nucleari
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+companies, aérospatial, réacteurs nucléaires
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+bedrijf, ruimtevaartindustrie, nucleaire industrie
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE { 
+	?uri rdf:type dbo:Company  .
+	?uri dbp:industry res:Aerospace .
+        ?uri dbp:industry res:Nuclear_reactor_technology .
+}
+]]></query>
+</question>
+
+<question id="66" answertype="boolean" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Is Christian Bale starring in Batman Begins?
+]]></string>
+<string lang="de"><![CDATA[
+Spielt Christian Bale in Batman Begins mit?
+]]></string>
+<string lang="es"><![CDATA[
+Actúa Christian Bale en Batman Begins?
+]]></string>
+<string lang="it"><![CDATA[
+Christian Bale ha recitato in Batman Begins?
+]]></string>
+<string lang="fr"><![CDATA[
+Christian Bale joue-t-il dans Batman Begins?
+]]></string>
+<string lang="nl"><![CDATA[
+Speelt Christian Bale in Batman Begins?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Christian Bale, starring, Batman Begins
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Christian Bale, mitspielen, Batman Begins
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Christian Bale, actúa, Batman Begins
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Christian Bale, recitare, Batman Begins
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Christian Bale, joue, Batman Begins
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Christian Bale, speelt in, Batman Begins
+]]></keywords>
+<enEntities>Batman_Begins:[Batman Begins],Christian_Bale:[Christian Bale]</enEntities>
+<deEntities>Batman_Begins:[Batman Begins],Christian_Bale:[Christian Bale]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+ASK 
+WHERE {
+	res:Batman_Begins dbo:starring res:Christian_Bale .
+}
+]]></query>
+</question>
+
+<question id="67" answertype="string" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me the websites of companies with more than 500000 employees.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Webseiten von Unternehmen mit mehr als 500000 Angestellten.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todas las páginas de Web de empresas con más de 500000 empleados.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutti i siti internet di aziende con più di 500000 dipendenti.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi les sites webs de companies avec plus de 500000 employés.
+]]></string>
+<string lang="nl"><![CDATA[
+Geef me de websites van alle ondernemingen met meer dan 500000 werknemers.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+website, company, employee, more than 500000
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Webseite, Unternehmen, Angestellte, mehr als 500000
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+página de Web, empreasas, empleados, más de 500000
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+sito internet, azienda, dipendenti, più di 500000
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+sites webs, companies, plus de 500000 employés
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+website, onderneming, werknemers, meer dan 500000
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?string 
+WHERE {
+	?subject rdf:type dbo:Company .
+	?subject dbp:numEmployees ?employees .
+	FILTER( xsd:integer(?employees) > 500000 ) .
+	?subject foaf:homepage ?string .
+}
+]]></query>
+</question>
+
+<question id="68" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Which actors were born in Germany?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Schauspieler wurden in Deutschland geboren?
+]]></string>
+<string lang="es"><![CDATA[
+Qué actores nacieron en Alemania?
+]]></string>
+<string lang="it"><![CDATA[
+Quali attori sono nati in Germania?
+]]></string>
+<string lang="fr"><![CDATA[
+Quels acteurs sont nés en Allemagne?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke acteurs zijn geboren in Duitsland?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+actor, born, Germany
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Schauspieler, geboren, Deutschland
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Actores, nacidos, Alemania
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+attore, nato, Germania
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+acteurs, nés, Allemagne
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+acteur, geboren, Duitsland
+]]></keywords>
+<enEntities>Germany:[Germany]</enEntities>
+<deEntities>Germany:[Deutschland]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+  ?uri rdf:type dbo:Actor .
+  { ?uri dbo:birthPlace res:Germany . }
+  UNION 
+  { ?uri dbo:birthPlace ?place .
+    ?place dbo:country res:Germany . }
+}
+]]></query>
+</question>
+
+<question id="69" answertype="resource" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+Which caves have more than 3 entrances?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Höhlen haben mehr als 3 Eingänge?
+]]></string>
+<string lang="es"><![CDATA[
+Qué cuevas tienen más de 3 entradas?
+]]></string>
+<string lang="it"><![CDATA[
+Quali grotte hanno più di 3 entrate?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelles grottes ont plus de 3 entrées?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke grotten hebben meer dan drie ingangen?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+cave, entrance, more than 3
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Höhle, Eingang, mehr als 3
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+cueva, entrada, más de 3
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+grotta, entrata, più di 3
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+grottes, plus de 3 entrées
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+grot, ingang, meer dan drie
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE { 
+	?uri rdf:type dbo:Cave .
+        ?uri dbp:entranceCount ?entrance .
+        FILTER (?entrance > 3) .
+}
+]]></query>
+</question>
+
+<question id="70" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Give me all films produced by Hal Roach.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Filme des Produzenten Hal Roach.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todas las películas del producente Hal Roach.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutti i film prodotti da Hal Roach.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les films produits par Hal Roach.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle films die zijn geproduceerd door Hal Roach.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+film, produce, Hal Roach
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Film, Produzent, Hal Roach
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+película, producente, Hal Roach
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+film, produrre, Hal Roach
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+films, produits, Hal Roach
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+film, producent, Hal Roach
+]]></keywords>
+<enEntities>Hal_Roach:[Hal Roach]</enEntities>
+<deEntities>Hal_Roach:[Hal Roach]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type dbo:Film .
+        ?uri dbo:producer res:Hal_Roach .
+}
+]]></query>
+</question>
+
+<question id="71" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all video games published by Mean Hamster Software.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Videospiele von Mean Hamster Software.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todos los videojuegos de Mean Hamster Software.
+]]></string>
+<string lang="it"><![CDATA[
+Dammi tutti i videogiochi di Mean Hamster Software.
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les jeux vidéos publiés par Mean Hamster Software.
+]]></string>
+<string lang="nl"><![CDATA[
+Geef me alle videogames van Mean Hamster Software.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+video game, publish, Mean Hamster Software
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Videospiel, Mean Hamster Software
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+videojuego, Mean Hamster Software
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+videogioco, prodotto, Mean Hamster Software
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+jeux vidéos, publiés, Mean Hamster Software
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+videogame, Mean Hamster Software
+]]></keywords>
+<enEntities>Mean_Hamster_Software:[Mean Hamster Software]</enEntities>
+<deEntities>Mean_Hamster_Software:[Mean Hamster Software]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+      ?uri rdf:type dbo:VideoGame .
+      { ?uri dbp:publisher 'Mean Hamster Software'@en . }
+      UNION 
+      { ?uri dbo:publisher res:Mean_Hamster_Software . }
+}
+]]></query>
+</question>
+
+<question id="72" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Which languages are spoken in Estonia?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Sprachen werden in Estland gesprochen?
+]]></string>
+<string lang="es"><![CDATA[
+Qué idiomas se hablan en Estonia?
+]]></string>
+<string lang="it"><![CDATA[
+Quali lingue sono parlate in Estonia?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelles langues parle-t-on en Estonie?	
+]]></string>
+<string lang="nl"><![CDATA[
+Welke talen worden gesproken in Estland?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+language, spoken, Estonia
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Sprache, sprechen, Estland
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+idiomas, Estonia
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+lingua, Estonia
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+langues, Estonie
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+taal, gesproken, Estland
+]]></keywords>
+<enEntities>Estonia:[Estonia]</enEntities>
+<deEntities>Estonia:[Estland]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri 
+WHERE { 
+      { res:Estonia dbo:language ?uri . } 
+      UNION 
+      { ?uri dbo:spokenIn res:Estonia . }
+}
+]]></query>
+</question>
+
+<question id="73" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who owns Aldi?
+]]></string>
+<string lang="de"><![CDATA[
+Wem gehört Aldi?
+]]></string>
+<string lang="es"><![CDATA[
+A quién pertenece Aldi?
+]]></string>
+<string lang="it"><![CDATA[
+Chi possiede Aldi?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui possède Aldi?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie is de eigenaar van Aldi?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+own, Aldi
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+gehören, Aldi
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+pertenece, Aldi
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+possedere, Aldi
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+possède, Aldi
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+eigenaar, Aldi
+]]></keywords>
+<enEntities>Aldi:[Aldi]</enEntities>
+<deEntities>Aldi:[Aldi]</deEntities>
+<query><![CDATA[
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+SELECT DISTINCT ?uri
+WHERE {
+	res:Aldi dbo:keyPerson ?uri .
+}
+]]></query>
+</question>
+
+<question id="74" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which capitals in Europe were host cities of the summer olympic games?
+]]></string>
+<string lang="de"><![CDATA[
+In welchen europäischen Hauptstädten fanden olympische Sommerspiele statt?
+]]></string>
+<string lang="es"><![CDATA[
+En qué capitales europeas tuvieron lugar los juegos olímpicos de verano?
+]]></string>
+<string lang="it"><![CDATA[
+Quali capitali europee hanno ospitato i giochi olimpici estivi?
+]]></string>
+<string lang="fr"><![CDATA[
+Quelles capitales européenes ont été hôtes de jeux olympiques d'été?
+]]></string>
+<string lang="nl"><![CDATA[
+In welke Europese hoofdsteden waren de Olympische Zomerspelen?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+capital, Europe, host city, summer olympic games
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+europäisch, Hauptstadt, stattfinden, olympische Sommerspiele
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+capital europea, juegos olímpicos de verano
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+capitale, Europa, ospitare, giochi olimpici estivi 
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+capitales européenes, hôtes, jeux olympiques d'été
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Europese hoofdstad, plaatvinden, Olympische Zomerspelen
+]]></keywords>
+<enEntities>Summer_Olympic_Games:[summer olympic games],Europe:[Europe]</enEntities>
+<deEntities>Summer_Olympic_Games:[olympische Sommerspiele]</deEntities>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type yago:CapitalsInEurope .
+        ?uri rdf:type yago:HostCitiesOfTheSummerOlympicGames .
+}
+]]></query>
+</question>
+
+<question id="75" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who has been the 5th president of the United States of America?
+]]></string>
+<string lang="de"><![CDATA[
+Wer war der 5. Präsident der Vereinigten Staaten von Amerika?
+]]></string>
+<string lang="es"><![CDATA[
+Quién fue el quinto presidente de los estados unidos de américa?
+]]></string>
+<string lang="it"><![CDATA[
+Chi è stato il quinto presidente degli Stati Uniti d'America?
+]]></string>
+<string lang="fr"><![CDATA[
+Qui fut le 5e président des Etats-Unis?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie was de vijfde president van de Verenigde Staten?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+United States of America, president, 5th
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Vereinigte Staaten von Amerika, Präsident, 5.
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+estados unidos de américa, presidente, quinto
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Stati Uniti d'America, presidente, quinto
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+5e président, Etats-Unis
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+president, Verenigde Staten, vijfde
+]]></keywords>
+<enEntities>United_States:[United States of America],President_of_the_United_States:[president]</enEntities>
+<deEntities>United_States:[Vereinigten Staaten von Amerika],President_of_the_United_States:[Präsident]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri dbo:orderInOffice '5th President of the United States'@en .
+}
+]]></query>
+</question>
+
+<question id="76" answertype="number" aggregation="true" onlydbo="true">
+<string lang="en"><![CDATA[
+How many films did Hal Roach produce?
+]]></string>
+<string lang="de"><![CDATA[
+Wieviele Filme hat Hal Roach produziert?
+]]></string>
+<string lang="es"><![CDATA[
+Cuántas películas ha producido Hal Roach?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Combien de films ont été produit par Hal Roach?
+]]></string>
+<string lang="nl"><![CDATA[
+Hoeveel films heeft Hal Roach geproduceerd?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Hal Roach, produce, film
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Hal Roach, produzieren, Film
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+películas, producido, Hal Roach
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+combien, films, Hal Roach
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Hal Roach, producent, film
+]]></keywords>
+<enEntities>Hal_Roach:[Hal Roach]</enEntities>
+<deEntities>Hal_Roach:[Hal Roach]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+SELECT COUNT(DISTINCT ?uri) 
+WHERE {
+      ?uri dbo:producer res:Hal_Roach .
+}
+]]></query>
+</question>
+
+<question id="77" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which music albums contain the song Last Christmas?
+]]></string>
+<string lang="de"><![CDATA[
+Auf welchen Musikalben ist das Lied Last Christmas?
+]]></string>
+<string lang="es"><![CDATA[
+Qué albums musicales contienen la canción Las Christmas?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Quels albums contiennent le morceau Last Christmas?
+]]></string>
+<string lang="nl"><![CDATA[
+Op welke muziekalbums staat het nummer Last Christmas?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+music album, song, Last Christmas
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Musikalbum, Lied, Last Christmas
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+album musical, canción, Last Christmas
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+albums, contiennent, Last Christmas?
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+muziekalbum, nummer, Last Christmas
+]]></keywords>
+<enEntities>Last_Christmas:[Last Christmas]</enEntities>
+<deEntities>Last_Christmas:[Last Christmas]</deEntities>
+<query><![CDATA[
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+SELECT DISTINCT ?uri 
+WHERE {
+        ?single dbo:album ?uri .
+        ?single foaf:name 'Last Christmas'@en .
+}
+]]></query>
+</question>
+
+<question id="78" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Give me all books written by Danielle Steel.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Bücher, die Danielle Steel geschrieben hat.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todos los libros escritos por Danielle Steel.
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les livres écrits par Danielle Steel.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle boeken van Danielle Steel.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+book, written, Danielle Steel
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Buch, schreiben, Danielle Steel
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+libors, escritos, Danielle Steel
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+livres, écrits, Danielle Steele
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+boek, Danielle Steel
+]]></keywords>
+<enEntities>Danielle_Steel:[Danielle Steel]</enEntities>
+<deEntities>Danielle_Steel:[Danielle Steel]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res:  <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type dbo:Book .
+        ?uri dbo:author res:Danielle_Steel .
+}
+]]></query>
+</question>
+
+<question id="79" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Which airports are located in California, USA?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Flughäfen gibt es in Kalifornien?
+]]></string>
+<string lang="es"><![CDATA[
+Cuántos aeropuertos hay en California?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Quels aéroports se trouvent en Californie?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke vliegvelden liggen in Californië?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+airport, located, California, USA
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Flughafen, Kalifornien
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+aeropuertos, california
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+aéroports, Californie
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+vliegveld, Californië
+]]></keywords>
+<enEntities>California:[California_ USA]</enEntities>
+<deEntities>California:[Kalifornien]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE { 
+	?uri rdf:type dbo:Airport .
+        ?uri dbo:location res:California .
+}
+]]></query>
+</question>
+
+<question id="80" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Give me all Canadian Grunge record labels.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle kanadischen Grunge-Plattenfirmen.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todos las empresas canadienses productoras de música Grunge.
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les labels discographiques canadiens de grunge. 
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle Canadese grunge-platenlabels.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+record label, Canadian, Grunge
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+kanadisch, Plattenfirma, Grunge
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+empresa productora de música, canadiense, Grunge
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+labels discographiques, canadiens, grunge
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Canadees, platenlabel, Grunge
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type dbo:RecordLabel .
+        ?uri dbo:genre res:Grunge .
+        ?uri dbo:country res:Canada .
+}
+]]></query>
+</question>
+
+<question id="81" answertype="resource" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+Which country has the most official languages?
+]]></string>
+<string lang="de"><![CDATA[
+Welches Land hat die meisten Amtssprachen?
+]]></string>
+<string lang="es"><![CDATA[
+Qué país tiene más idiomas oficiales?
+]]></string>
+<string lang="it"><![CDATA[
+Quels pays a le plus de langues officielles?
+]]></string>
+<string lang="fr"><![CDATA[
+
+]]></string>
+<string lang="nl"><![CDATA[
+Welk land heeft de meeste officiële talen.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+country, official language, most
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Land, Amtssprache, die meisten
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+país, idiomas oficiales, más
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+pays, plus de langues officielles
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+land, officiële taal, meeste
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE { 
+	?uri rdf:type dbo:Country  .
+        ?uri dbp:officialLanguages ?language .
+}
+GROUP BY ?uri
+ORDER BY DESC(COUNT(?language)) LIMIT 1
+]]></query>
+</question>
+
+<question id="82" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+In which programming language is GIMP written?
+]]></string>
+<string lang="de"><![CDATA[
+In welcher Programmiersprache wurde GIMP geschrieben?
+]]></string>
+<string lang="es"><![CDATA[
+En qué lenguaje de programación esta programado GIMP?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+En quel langage de programmation a été écrit GIMP?
+]]></string>
+<string lang="nl"><![CDATA[
+In welke programmeertaal is GIMP geschreven?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+GIMP, programming language
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+GIMP, Programmiersprache
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+GIMP, lenguaje de programación
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+langage de programmation, GIMP
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+GIMP, programmeertaal
+]]></keywords>
+<enEntities>GIMP:[GIMP]</enEntities>
+<deEntities>GIMP:[GIMP]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri 
+WHERE { 
+	res:GIMP dbo:programmingLanguage ?uri .
+}
+]]></query>
+</question>
+
+<question id="83" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who produced films starring Natalie Portman?
+]]></string>
+<string lang="de"><![CDATA[
+Wer produzierte Filme, in denen Natalie Portman mitspielt?
+]]></string>
+<string lang="es"><![CDATA[
+Quién ha producido películas en las que actua Natalie Portman?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Qui a produit des films dans lesquels joue Natalie Portman?
+]]></string>
+<string lang="nl"><![CDATA[
+Wie produceerde films waarin Natalie Portman speelde?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+produce, film, starring, Natalie Portman
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+produzieren, Film, mitspielen, Natalie Portman
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+producente, perlículas, actua, Natalie Portman
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+produit, films, Natalie Portman
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+producent, film, Natalie Portman, speelt
+]]></keywords>
+<enEntities>Natalie_Portman:[Natalie Portman]</enEntities>
+<deEntities>Natalie_Portman:[Natalie Portman]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?film rdf:type dbo:Film .
+        ?film dbo:starring res:Natalie_Portman .
+        ?film dbo:producer ?uri .
+}
+]]></query>
+</question>
+
+<question id="84" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Give me all movies with Tom Cruise.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Filme mit Tom Cruise.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todas las películas con Tom Cruise
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les films avec Tom Cruise.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle films met Tom Cruise.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+movie, Tom Cruise
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Film, Tom Cruise
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+films, Tom Cruise
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+film, Tom Cruise
+]]></keywords>
+<enEntities>Tom_Cruise:[Tom Cruise]</enEntities>
+<deEntities>Tom_Cruise:[Tom Cruise]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri
+WHERE {
+	?uri rdf:type dbo:Film.
+	?uri dbo:starring res:Tom_Cruise .
+}
+]]></query>
+</question>
+
+<question id="85" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+In which films did Julia Roberts as well as Richard Gere play?
+]]></string>
+<string lang="de"><![CDATA[
+In welchen Filmen spielen sowohl Julia Roberts als auch Richard Gere mit?
+]]></string>
+<string lang="es"><![CDATA[
+En qué películas actúan Julia Roberts y Richard Gere?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Dans quels films jouent Julia Roberts et Richard Gere?
+]]></string>
+<string lang="nl"><![CDATA[
+In welke films speelden zowel Julia Roberts als Richard Gere?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+film, play, Julia Roberts, Richard Gere
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Film, mitspielen, Julia Roberts, Richard Gere
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+película, actores, Julia Roberts, Richard Gere
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+films, Julia Roberts, Richard Gere
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+film, speel, Julia Roberts, Richard Gere
+]]></keywords>
+<enEntities>Julia_Roberts:[Julia Roberts],Richard_Gere:[Richard Gere]</enEntities>
+<deEntities>Julia_Roberts:[Julia Roberts],Richard_Gere:[Richard Gere]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type dbo:Film .
+        ?uri dbo:starring res:Julia_Roberts .
+        ?uri dbo:starring res:Richard_Gere.
+}
+]]></query>
+</question>
+
+<question id="86" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all female German chancellors.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle deutschen Kanzlerinnen.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todas las cancilleres alemanas.
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi tous les chancelières allemandes.
+]]></string>
+<string lang="nl"><![CDATA[
+Geef me alle vrouwelijke Duitse bondskanseliers.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+German chancellor, female
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+deutsch, Kanzlerin
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+canciller alemásn, mujer
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+chancelières, allemandes
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+vrouwelijk, Duits, bondskanselier
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX yago: <http://dbpedia.org/class/yago/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type yago:FemaleHeadsOfGovernment.
+        ?uri dbp:office res:Chancellor_of_Germany .
+}
+]]></query>
+</question>
+
+<question id="87" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Who wrote the book Les Piliers de la terre?
+]]></string>
+<string lang="de"><![CDATA[
+Wer schrieb das Buch Die Säulen der Erde?
+]]></string>
+<string lang="es"><![CDATA[
+Quen escribió el libro Los pilares de la Tierra?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Qui a écrit le livre 
+]]></string>
+<string lang="nl"><![CDATA[
+Wie schreef het boek De Pilaren van de Aarde?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+wrote, book, The pillars of the Earth
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+schreiben, Buch, Die Säulen der Erde
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+escritor, libro, Pilares de la Tierra
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+Les Piliers de la terre, écrit
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+auteur, De Pilaren van de Aarde
+]]></keywords>
+<enEntities>The_Pillars_of_the_Earth:[Les Piliers de la terre]</enEntities>
+<deEntities>The_Pillars_of_the_Earth:[Die Säulen der Erde]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri 
+WHERE {
+	res:The_Pillars_of_the_Earth dbo:author ?uri .
+}
+]]></query>
+</question>
+
+<question id="88" answertype="number" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+How many films did Leonardo DiCaprio star in?
+]]></string>
+<string lang="de"><![CDATA[
+In wievielen Filmen hat Leonardo DiCaprio mitgespielt?
+]]></string>
+<string lang="es"><![CDATA[
+En cuántas películas ha actuado Leonardo DiCaprio?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Dans combien de films Leonard DiCaprio a-t-il joué?
+]]></string>
+<string lang="nl"><![CDATA[
+In hoeveel films speelde Leonardo DiCaprio?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+film, star, Leonardo DiCaprio
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Film, mitspielen, Leonardo DiCaprio
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+películas, cuántas, actúa, Leonardo DiCaprio
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+combien, films, Leonard DiCaprio
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+film, speelt, Leonardo DiCaprio
+]]></keywords>
+<enEntities>Leonardo_DiCaprio:[Leonardo DiCaprio]</enEntities>
+<deEntities>Leonardo_DiCaprio:[Leonardo DiCaprio]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT COUNT(DISTINCT ?uri) 
+WHERE {
+	?uri rdf:type dbo:Film .
+        ?uri dbo:starring res:Leonardo_DiCaprio . 
+}
+]]></query>
+</question>
+
+<question id="89" answertype="resource" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Give me all soccer clubs in the Premier League.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Vereine in der Premier League.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todos los clubs de la Premier League.
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi toutes les équipes de la Premier League.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle clubs uit de Premier League.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Premier League, soccer club
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Premier League, Verein
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Premier League, club
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+équipes, Premier League
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+club, Premier League
+]]></keywords>
+<enEntities>Premier_League:[Premier League]</enEntities>
+<deEntities>Premier_League:[Premier League]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?uri
+WHERE { 
+   ?uri dbo:league res:Premier_League . 
+}
+]]></query>
+</question>
+
+<question id="90" answertype="date" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+When was Capcom founded?
+]]></string>
+<string lang="de"><![CDATA[
+Wann wurde Capcom gegründet?
+]]></string>
+<string lang="es"><![CDATA[
+Cúando se fundó Capcom?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Quand a été fondé Capcom?
+]]></string>
+<string lang="nl"><![CDATA[
+Wanneer werd Capcom opgericht?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Capcom, founded
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Capcom, gründen
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Capcom, fundada
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+fondé, Capcom
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Capcom, opgericht
+]]></keywords>
+<enEntities>Capcom:[Capcom]</enEntities>
+<deEntities>Capcom:[Capcom]</deEntities>
+<query><![CDATA[
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX res: <http://dbpedia.org/resource/>
+SELECT DISTINCT ?date 
+WHERE {
+     res:Capcom dbp:foundation ?date .
+}
+]]></query>
+</question>
+
+<question id="91" answertype="resource" aggregation="true" onlydbo="false">
+<string lang="en"><![CDATA[
+Which organizations were founded in 1950?
+]]></string>
+<string lang="de"><![CDATA[
+Welche Unternehmen wurden 1950 gegründet?
+]]></string>
+<string lang="es"><![CDATA[
+Qué empresas fueron fundadas en 1950?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Quels organisations ont été fondées en 1950?
+]]></string>
+<string lang="nl"><![CDATA[
+Welke organisaties werden opgericht in 1950?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+organization, founded, 1950
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Unternehmen, gründen, 1950
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+empresas, fundadas, 1950
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+ organisations, fondées, 1950
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+organisatie, opgericht, 1950
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE {
+	?uri rdf:type dbo:Organisation .
+        { ?uri dbp:foundation ?date . } UNION { ?uri dbo:formationYear ?date . }
+        FILTER regex(?date,'^1950') .
+}
+]]></query>
+</question>
+
+<question id="92" answertype="resource" aggregation="true" onlydbo="true">
+<string lang="en"><![CDATA[
+What is the highest mountain?
+]]></string>
+<string lang="de"><![CDATA[
+Was ist der höchste Berg?
+]]></string>
+<string lang="es"><![CDATA[
+Cuál es la montaña más alta?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Quelle est la montagne la plus haute?
+]]></string>
+<string lang="nl"><![CDATA[
+Wat is de hoogste berg?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+mountain, highest
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+höchster, Berg
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+montaña, más alta
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+montagne, la plus haute
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+hoogste berg
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?uri 
+WHERE { 
+	?uri rdf:type dbo:Mountain  .
+        ?uri dbo:elevation ?elevation .
+} 
+ORDER BY DESC(?elevation) LIMIT 1
+]]></query>
+</question>
+
+<question id="93" answertype="boolean" aggregation="false" onlydbo="true">
+<string lang="en"><![CDATA[
+Was Natalie Portman born in the United States?
+]]></string>
+<string lang="de"><![CDATA[
+Wurde Natalie Portman in den Vereinigten Staaten geboren?
+]]></string>
+<string lang="es"><![CDATA[
+Nació Natalie Portman en los estados unidos de américa?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Natalie Portman est-elle née aux Etats-Unis?
+]]></string>
+<string lang="nl"><![CDATA[
+Werd Natalie Portman geboren in de Verenigde Staten?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Natalie Portman, born, United States
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Natalie Portman, geboren, Vereinigte Staaten
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Natalie Portman
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Natalie Portman, née, Etats-Unis
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Natalie Portman, geboren, Verenigde Staten
+]]></keywords>
+<enEntities>United_States:[United States],Natalie_Portman:[Natalie Portman]</enEntities>
+<deEntities>United_States:[Vereinigten Staaten],Natalie_Portman:[Natalie Portman]</deEntities>
+<query><![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX res: <http://dbpedia.org/resource/>
+ASK 
+WHERE { 
+	res:Natalie_Portman dbo:birthPlace ?city .
+      	?city dbo:country res:United_States .
+}
+]]></query>
+</question>
+
+<question id="94" answertype="number" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Which budget did the first movie of Zdenek Sverak have?
+]]></string>
+<string lang="de"><![CDATA[
+Welches Budget hatte der erste Film von Zdenek Sverak?
+]]></string>
+<string lang="es"><![CDATA[
+Cuál fué el presupuesto de la primera película de Zdenek Sverak?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Quel était le budget du premier film de Zdenek Sverak?
+]]></string>
+<string lang="nl"><![CDATA[
+Welk budget had de eerste film van Zdenek Sverak
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Zdenek Sverak, movie, first, budget
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Zdenek Sverak, Film, erster, Budget
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+budget, premier film, Zdenek Sverak
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+budget, eerste film, Zdenek Sverak
+]]></keywords>
+<enEntities>Zdeněk_Svěrák:[Zdenek Sverak]</enEntities>
+<deEntities>Zdeněk_Svěrák:[Zdenek Sverak]</deEntities>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="95" answertype="number" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+How many big fires struck Paris during the Middle Ages?
+]]></string>
+<string lang="de"><![CDATA[
+Wieviele Großbrände wüteten im Paris des Mittelalters?
+]]></string>
+<string lang="es"><![CDATA[
+Cuántos grandes incendios se produjeron en el Paris medieval?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Quels grands incendies ont frappé Paris pendant le Moyen Âge?
+]]></string>
+<string lang="nl"><![CDATA[
+Hoeveel grote branden troffen Parijs in de Middeleeuwen?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Paris, middle ages, fire
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Paris, Mittelalter, Großbrand
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Paris, edad media, gran incendio
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+grands incendies, frappé, Paris, Moyen Âge
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+grote brand, Parijs, Middeleeuwen
+]]></keywords>
+<enEntities>Paris:[Paris],Middle_Ages:[Middle Ages]</enEntities>
+<deEntities>Paris:[Paris],Middle_Ages:[Mittelalters]</deEntities>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="96" answertype="boolean" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Is Jens Friebe a vegan?
+]]></string>
+<string lang="de"><![CDATA[
+Ist Jens Friebe Veganer?
+]]></string>
+<string lang="es"><![CDATA[
+Es Jens Friebe vegano?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Jens Friebe est-il un végétarien?
+]]></string>
+<string lang="nl"><![CDATA[
+Is Jens Friebe vegetariër?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Jens Friebe, vegan
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Jens Friebe, Veganer
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Jens Friebe, vegano
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Jens Friebe, végétarien
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+Jens Friebe, vegetariër
+]]></keywords>
+<enEntities>NO_URI_FOUND:[Jens Friebe]</enEntities>
+<deEntities>NO_URI_FOUND:[Jens Friebe]</deEntities>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="97" answertype="number" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+How often was Michael Jordan divorced?
+]]></string>
+<string lang="de"><![CDATA[
+Wie oft hat sich Michael Jordan scheiden lassen?
+]]></string>
+<string lang="es"><![CDATA[
+Cuántas veces se ha divorciado Michael Jordan?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Combien de fois a divorcé Michael Jordan?
+]]></string>
+<string lang="nl"><![CDATA[
+Hoe vaak is Michael Jordan gescheiden?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Michael Jordan, divorced
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Michael Jordan, scheiden
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Michael Jordan, divorcio
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Michael Jordan, divorcé
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+gescheiden, Michael Jackson
+]]></keywords>
+<enEntities>Michael_Jordan:[Michael Jordan]</enEntities>
+<deEntities>Michael_Jordan:[Michael Jordan]</deEntities>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="98" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+What is the most beautiful painting?
+]]></string>
+<string lang="de"><![CDATA[
+Welches Gemälde ist das schönste?
+]]></string>
+<string lang="es"><![CDATA[
+Cuál es la pintur más bonita?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Quelle est la plus belle peinture du monde?
+]]></string>
+<string lang="nl"><![CDATA[
+Wat is het mooiste schilderij?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+painting, most, beautiful
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Gemälde, schönstes
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+pintura, más bonita
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+plus belle peinture du monde
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+schilderij, mooiste
+]]></keywords>
+<enEntities></enEntities>
+<deEntities></deEntities>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="99" answertype="resource" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+Give me all animal species that live in the Teutoburg Forest.
+]]></string>
+<string lang="de"><![CDATA[
+Gib mir alle Tierarten, die im Teutoburger Wald leben.
+]]></string>
+<string lang="es"><![CDATA[
+Dame todas las especies animales qué vivan en el Bosque Teutónico.
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Donnes-moi toutes les espèces animales qui vivent dans la forêt de Teutberg.
+]]></string>
+<string lang="nl"><![CDATA[
+Noem alle diersoorten die leven in het Teutoburgerwoud.
+]]></string>
+<keywords lang="en"><![CDATA[ 
+Teutoburg Forest, animal species
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Teutoburger Wald, Tierart
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+Bosque Teutónico, especies animales
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+ espèces animales, forêt de Teutberg
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+diersoort, voorkomen, Teutoburgerwoud
+]]></keywords>
+<enEntities>Teutoburg_Forest:[Teutoburg Forest]</enEntities>
+<deEntities>Teutoburg_Forest:[Teutoburger Wald]</deEntities>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+<question id="100" answertype="date" aggregation="false" onlydbo="false">
+<string lang="en"><![CDATA[
+When is the movie Worst Case Scenario going to be in cinemas in the Netherlands?
+]]></string>
+<string lang="de"><![CDATA[
+Wann kommt der Film Worst Case Scenario in den Niederlanden in die Kinos?
+]]></string>
+<string lang="es"><![CDATA[
+Cuándo se estrena la película Worst Case Scenario en los países bajos?
+]]></string>
+<string lang="it"><![CDATA[
+
+]]></string>
+<string lang="fr"><![CDATA[
+Quand sera la film Worst Case Scenario à voir dans les cinémas néerlandais?
+]]></string>
+<string lang="nl"><![CDATA[
+Wanneer komt de film Worst Case Scenario in Nederland in de bioscoop?
+]]></string>
+<keywords lang="en"><![CDATA[ 
+movie, Worst Case Scenario, cinema, Netherlands
+]]></keywords>
+<keywords lang="de"><![CDATA[ 
+Film, Worst Case Scenario, Kino, Niederlande
+]]></keywords>
+<keywords lang="es"><![CDATA[ 
+película, Worst Case Scenario, cines, páises bajos
+]]></keywords>
+<keywords lang="it"><![CDATA[ 
+
+]]></keywords>
+<keywords lang="fr"><![CDATA[ 
+Worst Case Scenario, cinémas néerlandais
+]]></keywords>
+<keywords lang="nl"><![CDATA[ 
+film, Worst Case Scenario, bioscoop, Nederland
+]]></keywords>
+<enEntities>Worst_Case_Scenario_(film):[Worst Case Scenario],Netherlands:[Netherlands]</enEntities>
+<deEntities>Worst_Case_Scenario_(film):[Worst Case Scenario],Netherlands:[Niederlanden]</deEntities>
+<query><![CDATA[
+OUT OF SCOPE
+]]></query>
+</question>
+
+</dataset>
