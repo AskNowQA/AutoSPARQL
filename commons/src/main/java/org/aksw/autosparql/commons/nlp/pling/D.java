@@ -272,7 +272,7 @@ public class D {
   }
 
   /** Compares pairs of comparable things (a1,a2,b1,b2,...), including NULL */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public static int comparePairs(Object... o) {
     for (int i = 0; i < o.length; i += 2) {
       int c = compare((Comparable) o[i], (Comparable) o[i + 1]);

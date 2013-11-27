@@ -21,6 +21,7 @@ import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.Prominences;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
 import org.apache.log4j.Logger;
+import org.dllearner.core.owl.DatatypeProperty;
 import org.dllearner.core.owl.Individual;
 import org.dllearner.core.owl.NamedClass;
 import org.dllearner.core.owl.ObjectProperty;
@@ -153,7 +154,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 	 * Compute the (unnormalized) prominence score for each entity depending on the slot type.
 	 * @param slot2Allocations
 	 */
-	private Map<Slot, Prominences> computeEntityProminenceScoresWithReasoner(Map<Slot, Collection<Entity>> slot2Allocations)
+	 public Map<Slot, Prominences> computeEntityProminenceScoresWithReasoner(Map<Slot, Collection<Entity>> slot2Allocations)
 	{
 		Map<Slot, Prominences> prominenceScores = new HashMap<Slot, Prominences>();
 		for (Entry<Slot, Collection<Entity>> entry : slot2Allocations.entrySet()) {
@@ -165,8 +166,14 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 				double prominence = 0;
 				if (slotType == SlotType.CLASS) {
 					prominence = reasoner.getPopularity(new NamedClass(entity.getURI()));
-				} else if (slotType == SlotType.DATATYPEPROPERTY || slotType == SlotType.OBJECTPROPERTY
+				}
+				else if(slotType == SlotType.DATATYPEPROPERTY )
+				{
+					prominence = reasoner.getPopularity(new DatatypeProperty(entity.getURI()));
+				}				
+				else if (slotType == SlotType.OBJECTPROPERTY
 						|| slotType == SlotType.PROPERTY || slotType == SlotType.SYMPROPERTY) {
+// TODO: prominence of 0 for bathrooms on oxford
 					prominence = reasoner.getPopularity(new ObjectProperty(entity.getURI()));
 				} else {
 					prominence = reasoner.getPopularity(new Individual(entity.getURI()));
