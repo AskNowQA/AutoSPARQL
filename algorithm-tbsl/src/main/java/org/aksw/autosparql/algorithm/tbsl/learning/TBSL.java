@@ -176,7 +176,7 @@ public class TBSL {
 		}
 		logger.debug("Generated " + templates.size() + " templates:");
 		for(Template t : templates){
-			logger.trace(t);
+			logger.debug(t);
 		}
 		//1.b filter out invalid templates
 		filterTemplates(templates);
@@ -199,7 +199,7 @@ public class TBSL {
 		//4. Rank the template instantiations
 		logger.debug("Running ranking...");
 		monitor.start();
-		RankingComputation rankingComputation = new SimpleRankingComputation(knowledgebase);
+		SimpleRankingComputation rankingComputation = new SimpleRankingComputation(knowledgebase);
 		Ranking ranking = rankingComputation.computeRanking(template2Instantiations, template2Allocations, parameters);
 		monitor.stop();
 		logger.debug("Done in " + monitor.getLastValue() + "ms.");

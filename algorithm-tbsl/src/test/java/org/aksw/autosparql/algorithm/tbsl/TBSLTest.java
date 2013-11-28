@@ -124,7 +124,6 @@ public class TBSLTest extends TestCase{
 		System.out.println(scores);
 	}
 
-
 		@Test
 		public void testOxfordLocal() throws Exception
 		{

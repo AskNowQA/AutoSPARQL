@@ -59,7 +59,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 	
 	@Override
 	public Ranking computeRanking(Map<Template, List<TemplateInstantiation>> template2Instantiations,
-			Map<Template, Map<Slot, Collection<Entity>>> template2Allocations, List<Double> parameters) {		
+			Map<Template, Map<Slot, Collection<Entity>>> template2Allocations, List<Double> weights) {		
 		System.out.println();
 		Ranking ranking = new Ranking();
 		for (Entry<Template, List<TemplateInstantiation>> entry : template2Instantiations.entrySet()) {
@@ -87,15 +87,23 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 										
 					for(Entry<Feature, Double> feature2score : templateInstantiation.getFeaturesWithScore().entrySet())
 					{
-						double weight = parameters.size()>index?parameters.get(index++):1;
+						double weight = weights.size()>index?weights.get(index++):1;
 						score += feature2score.getValue() * weight;
 					}
+					// penalize unallocated slots
+					score*=(double)templateInstantiation.getAllocations().size()/template.getSlots().size();
 					ranking.add(templateInstantiation, score);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
+		// extra step: remove template instantiations from the top, whose slot types do not fit the types of the resources
+		// it is done at this point, because it uses SPARQL and is thus slow, especially if using a remote endpoint
+//		while(true)
+//		{
+//			break;
+//		}
 		//print top n 
 		for(TemplateInstantiation t : ranking.getTopN(5)){
 			logger.debug(t.asQuery() + "(Score: " + ranking.getScore(t) + ")");
@@ -167,13 +175,12 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 				if (slotType == SlotType.CLASS) {
 					prominence = reasoner.getPopularity(new NamedClass(entity.getURI()));
 				}
-				else if(slotType == SlotType.DATATYPEPROPERTY )
+				else if(slotType == SlotType.DATATYPEPROPERTY)
 				{
 					prominence = reasoner.getPopularity(new DatatypeProperty(entity.getURI()));
 				}				
 				else if (slotType == SlotType.OBJECTPROPERTY
 						|| slotType == SlotType.PROPERTY || slotType == SlotType.SYMPROPERTY) {
-// TODO: prominence of 0 for bathrooms on oxford
 					prominence = reasoner.getPopularity(new ObjectProperty(entity.getURI()));
 				} else {
 					prominence = reasoner.getPopularity(new Individual(entity.getURI()));

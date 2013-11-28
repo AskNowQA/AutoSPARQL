@@ -28,19 +28,19 @@ import org.aksw.autosparql.commons.uri.Resource;
 import org.aksw.autosparql.commons.uri.UriDisambiguation;
 
 public class SimpleEntityDisambiguation {
-	
+
 	private static final Logger logger = Logger.getLogger(SimpleEntityDisambiguation.class.getName());
-	
+
 	private Knowledgebase knowledgebase;
 	private SimpleIRIShortFormProvider iriSfp = new SimpleIRIShortFormProvider(); 
 
 	public SimpleEntityDisambiguation(Knowledgebase knowledgebase) {
 		this.knowledgebase = knowledgebase;
 	}
-	
+
 	public Map<Template, Map<Slot, Collection<Entity>>> performEntityDisambiguation(Collection<Template> templates){
 		Map<Template, Map<Slot, Collection<Entity>>> template2Allocations = new HashMap<Template, Map<Slot,Collection<Entity>>>();
-		
+
 		for(Template template : templates){
 			Map<Slot, Collection<Entity>> slot2Entities = performEntityDisambiguation(template);
 			template2Allocations.put(template, slot2Entities);
@@ -57,7 +57,7 @@ public class SimpleEntityDisambiguation {
 		}
 		return slot2Entities;
 	}
-	
+
 	/** get sorted list of entities
 	 */
 	private Collection<Entity> getCandidateEntities(Slot slot){
@@ -91,7 +91,7 @@ public class SimpleEntityDisambiguation {
 		logger.debug(candidateEntities);
 		return candidateEntities;
 	}
-	
+
 	private Index getIndexForSlot(Slot slot){
 		Index index = null;
 		SlotType type = slot.getSlotType();
@@ -100,47 +100,9 @@ public class SimpleEntityDisambiguation {
 		} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY){
 			index = knowledgebase.getPropertyIndex();
 		} else if(type == SlotType.DATATYPEPROPERTY){
-			index = knowledgebase.getPropertyIndex();
-			if(index instanceof VirtuosoPropertiesIndex){
-				index = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)index);
-			} else if (index instanceof SPARQLPropertiesIndex){
-				index = new SPARQLDatatypePropertiesIndex((SPARQLPropertiesIndex)index);
-			} else if(index instanceof HierarchicalIndex){
-				Index primaryIndex = ((HierarchicalIndex)index).getPrimaryIndex();
-				if(primaryIndex instanceof VirtuosoPropertiesIndex){
-					primaryIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)primaryIndex);
-				} else if(primaryIndex instanceof SPARQLPropertiesIndex){
-					primaryIndex = new SPARQLDatatypePropertiesIndex((SPARQLPropertiesIndex)primaryIndex);
-				}
-				Index secondaryIndex = ((HierarchicalIndex)index).getSecondaryIndex();
-				if(secondaryIndex instanceof VirtuosoPropertiesIndex){
-					secondaryIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)secondaryIndex);
-				} else if(primaryIndex instanceof SPARQLPropertiesIndex){
-					secondaryIndex = new SPARQLDatatypePropertiesIndex((SPARQLPropertiesIndex)secondaryIndex);
-				}
-				index = new HierarchicalIndex(primaryIndex, secondaryIndex);
-			}
+			index = knowledgebase.getDataPropertyIndex();			
 		} else if(type == SlotType.OBJECTPROPERTY){
-			index = knowledgebase.getPropertyIndex();
-			if(index instanceof VirtuosoPropertiesIndex){
-				index = new VirtuosoObjectPropertiesIndex((SPARQLPropertiesIndex)index);
-			} else if (index instanceof SPARQLPropertiesIndex){
-				index = new SPARQLObjectPropertiesIndex((SPARQLPropertiesIndex)index);
-			} else if(index instanceof HierarchicalIndex){
-				Index primaryIndex = ((HierarchicalIndex)index).getPrimaryIndex();
-				if(primaryIndex instanceof VirtuosoPropertiesIndex){
-					primaryIndex = new VirtuosoObjectPropertiesIndex((SPARQLPropertiesIndex)primaryIndex);
-				} else if(primaryIndex instanceof SPARQLPropertiesIndex){
-					primaryIndex = new SPARQLObjectPropertiesIndex((SPARQLPropertiesIndex)primaryIndex);
-				}
-				Index secondaryIndex = ((HierarchicalIndex)index).getSecondaryIndex();
-				if(secondaryIndex instanceof VirtuosoPropertiesIndex){
-					secondaryIndex = new VirtuosoObjectPropertiesIndex((SPARQLPropertiesIndex)secondaryIndex);
-				} else if(primaryIndex instanceof SPARQLPropertiesIndex){
-					secondaryIndex = new SPARQLObjectPropertiesIndex((SPARQLPropertiesIndex)secondaryIndex);
-				}
-				index = new HierarchicalIndex(primaryIndex, secondaryIndex);
-			}
+			index = knowledgebase.getObjectPropertyIndex();		
 		} else if(type == SlotType.RESOURCE || type == SlotType.UNSPEC){
 			index = knowledgebase.getResourceIndex();
 		}

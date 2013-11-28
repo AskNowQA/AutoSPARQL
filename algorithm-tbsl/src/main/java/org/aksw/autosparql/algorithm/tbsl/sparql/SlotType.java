@@ -1,6 +1,6 @@
 package org.aksw.autosparql.algorithm.tbsl.sparql;
 
-public enum SlotType {
+@Deprecated public enum SlotType {
 	RESOURCE, CLASS, OBJECTPROPERTY, DATATYPEPROPERTY, PROPERTY, LITERAL, STRING, INTEGER, BOOLEAN, UNSPEC,
-        SYMPROPERTY // TODO don't use them anymore
+        SYMPROPERTY
 }

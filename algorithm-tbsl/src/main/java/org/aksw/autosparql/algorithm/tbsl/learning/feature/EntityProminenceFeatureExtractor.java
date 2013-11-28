@@ -31,8 +31,9 @@ public class EntityProminenceFeatureExtractor extends AbstractFeatureExtractor{
 			double normalizedProminence = Statistics.minMaxNorm(prominence, prominencesValues.getMax(), prominencesValues.getMin());
 			totalScore += normalizedProminence;
 		}
-		//compute the average
-		totalScore /= allocations.size();
+		//compute the average		 
+//		totalScore /= templateInstantiation.getTemplate().getSlots().size();
+		totalScore /= allocations.size();				
 		return totalScore;
 	}
 	
