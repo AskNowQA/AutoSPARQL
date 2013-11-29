@@ -17,6 +17,7 @@ import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.Prominences;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
+import org.aksw.autosparql.commons.index.Indices;
 import org.aksw.autosparql.commons.index.LemmatizedIndex;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.SOLRIndex;
@@ -81,10 +82,12 @@ public class TBSLTest extends TestCase{
 		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://dbpedia.org/sparql"),
 				Collections.<String>singletonList(""), Collections.<String>emptyList());
 
-		SOLRIndex resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");
+		SOLRIndex resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
 		SOLRIndex classesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
 		SOLRIndex objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
 		SOLRIndex dataPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+		Indices indices = new Indices(resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex);
+		
 		for(SOLRIndex index: new SOLRIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
 		{
 			index.setPrimarySearchField("label");

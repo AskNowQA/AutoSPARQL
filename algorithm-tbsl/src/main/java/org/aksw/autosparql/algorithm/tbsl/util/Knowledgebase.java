@@ -1,6 +1,6 @@
 package org.aksw.autosparql.algorithm.tbsl.util;
 
-import org.dllearner.common.index.HierarchicalIndex;
+import org.aksw.autosparql.commons.index.Indices;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.MappingBasedIndex;
 
@@ -8,33 +8,15 @@ public abstract class Knowledgebase {
 
 	private String label;
 	private String description;
-
-	private Index resourceIndex;
-	private Index objectPropertyIndex;
-	private Index dataPropertyIndex;
+	protected final Indices indices;
 	
-	private Index propertyIndex;
-	
-	private Index classIndex;
-	
-	private MappingBasedIndex mappingIndex;
-
-	public Knowledgebase(String label, String description,
-			Index resourceIndex, Index objectPropertyIndex, Index dataPropertyIndex, Index classIndex) {
-		this(label, description, resourceIndex, objectPropertyIndex, dataPropertyIndex, classIndex, null);
-	}
-	
-	public Knowledgebase(String label, String description,
-			Index resourceIndex, Index objectPropertyIndex, Index dataPropertyIndex, Index classIndex, MappingBasedIndex mappingIndex) {
+	public Knowledgebase(String label, String description, Indices indices)
+	{
 		this.label = label;
 		this.description = description;
-		this.resourceIndex = resourceIndex;
-		this.objectPropertyIndex = objectPropertyIndex;
-		this.dataPropertyIndex = dataPropertyIndex;
-		this.classIndex = classIndex;
-		this.mappingIndex = mappingIndex;
+		this.indices = indices;
 	}
-	
+
 	public String getLabel() {
 		return label;
 	}
@@ -42,37 +24,13 @@ public abstract class Knowledgebase {
 	public String getDescription() {
 		return description;
 	}
-
-	public Index getResourceIndex() {
-		return resourceIndex;
-	}
-
-	public Index getObjectPropertyIndex() {
-		return objectPropertyIndex;
-	}
-
-	public Index getDataPropertyIndex() {
-		return dataPropertyIndex;
-	}
 	
-	public Index getPropertyIndex()
-	{
-		if(propertyIndex==null) propertyIndex = new HierarchicalIndex(objectPropertyIndex,dataPropertyIndex); 
-		return propertyIndex;
-	}
-
-
-	public Index getClassIndex() {
-		return classIndex;
-	}
+	@Override public String toString() {return label;}
 	
-	public MappingBasedIndex getMappingIndex() {
-		return mappingIndex;
-	}
-
-	@Override
-	public String toString() {
-		return label;
-	}
-
+	@Deprecated public Index getResourceIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
+	@Deprecated public Index getClassIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}	
+	@Deprecated public Index getPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
+	@Deprecated public Index getObjectPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
+	@Deprecated public Index getDataPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
+	@Deprecated public MappingBasedIndex getMappingIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
 }

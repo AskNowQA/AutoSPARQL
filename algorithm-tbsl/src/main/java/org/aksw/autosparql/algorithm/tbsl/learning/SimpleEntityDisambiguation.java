@@ -96,15 +96,15 @@ public class SimpleEntityDisambiguation {
 		Index index = null;
 		SlotType type = slot.getSlotType();
 		if(type == SlotType.CLASS){
-			index = knowledgebase.getClassIndex();
+			index = knowledgebase.getIndices().getClassIndex();
 		} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY){
-			index = knowledgebase.getPropertyIndex();
+			index = knowledgebase.getIndices().getPropertyIndex();
 		} else if(type == SlotType.DATATYPEPROPERTY){
-			index = knowledgebase.getDataPropertyIndex();			
+			index = knowledgebase.getIndices().getDataPropertyIndex();			
 		} else if(type == SlotType.OBJECTPROPERTY){
-			index = knowledgebase.getObjectPropertyIndex();		
+			index = knowledgebase.getIndices().getObjectPropertyIndex();		
 		} else if(type == SlotType.RESOURCE || type == SlotType.UNSPEC){
-			index = knowledgebase.getResourceIndex();
+			index = knowledgebase.getIndices().getResourceIndex();
 		}
 		return index;
 	}
