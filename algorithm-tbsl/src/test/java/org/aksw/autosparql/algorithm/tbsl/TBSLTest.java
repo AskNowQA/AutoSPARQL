@@ -18,13 +18,8 @@ import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.Prominences;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
 import org.aksw.autosparql.commons.index.Indices;
-import org.aksw.autosparql.commons.index.LemmatizedIndex;
 import org.dllearner.common.index.Index;
-import org.dllearner.common.index.SOLRIndex;
 import org.dllearner.common.index.SPARQLClassesIndex;
-import org.dllearner.common.index.SPARQLDatatypePropertiesIndex;
-import org.dllearner.common.index.SPARQLIndex;
-import org.dllearner.common.index.SPARQLObjectPropertiesIndex;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.junit.Test;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -38,21 +33,14 @@ public class TBSLTest extends TestCase{
 	private static final String	SOLR_SERVER_URI_EN	= "http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_";
 	private Model model = null;
 	private SparqlEndpoint endpoint;
-
-	protected Index resourceIndex;
-	protected Index classIndex;
-	protected Index objectPropertyIndex;
-	protected Index dataPropertyIndex;
+	protected Knowledgebase oxfordKb;
 
 	@Override
 	protected void setUp() throws Exception {		
 		super.setUp();
 		model = ModelFactory.createMemModelMaker().createDefaultModel();
 		model.read(this.getClass().getClassLoader().getResourceAsStream("oxford.ttl"),null,"TTL");
-		resourceIndex = new LemmatizedIndex(new SPARQLIndex(model));
-		classIndex = new LemmatizedIndex(new SPARQLClassesIndex(model));
-		objectPropertyIndex = new LemmatizedIndex(new SPARQLObjectPropertiesIndex(model));
-		dataPropertyIndex = new LemmatizedIndex(new SPARQLDatatypePropertiesIndex(model));
+		oxfordKb = new LocalKnowledgebase(model, "oxford", "oxford", new Indices(model));
 		endpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
 		//		model = ModelFactory.createOntologyModel();
 		//		File dir = new File("/home/lorenz/arbeit/papers/question-answering-iswc-2012/examples/data");
@@ -82,18 +70,19 @@ public class TBSLTest extends TestCase{
 		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://dbpedia.org/sparql"),
 				Collections.<String>singletonList(""), Collections.<String>emptyList());
 
-		SOLRIndex resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
-		SOLRIndex classesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
-		SOLRIndex objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
-		SOLRIndex dataPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
-		Indices indices = new Indices(resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex);
-		
-		for(SOLRIndex index: new SOLRIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
-		{
-			index.setPrimarySearchField("label");
-		}
-		Knowledgebase kb = new RemoteKnowledgebase(endpoint,"dbpedia","DBpedia",resourcesIndex, classesIndex, objectPropertiesIndex,dataPropertiesIndex,null);
-		//		SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2(kb);
+//		SOLRIndex resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
+//		SOLRIndex classesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
+//		SOLRIndex objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+//		SOLRIndex dataPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+//		Indices indices = new Indices(resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex);
+//		
+//		for(SOLRIndex index: new SOLRIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
+//		{
+//			index.setPrimarySearchField("label");
+//		}
+//		Knowledgebase kb = new RemoteKnowledgebase(endpoint,"dbpedia","DBpedia",new Indices(resourcesIndex, classesIndex, objectPropertiesIndex,dataPropertiesIndex,null));
+		Knowledgebase kb = new RemoteKnowledgebase(endpoint,"dbpedia","DBpedia",new Indices(endpoint));
+		//		
 		TBSL learner = new TBSL(kb);
 		learner.init();
 
@@ -107,13 +96,13 @@ public class TBSLTest extends TestCase{
 		//		System.out.println(learner.getLearnedPosition());
 	}
 
-	//	@Test
-	public void testOxfordIndices()
-	{
-		System.out.println(classIndex.getResources("House"));
-		System.out.println(classIndex.getResources("house"));
-		System.out.println(classIndex.getResources("houses"));
-	}
+//	//	@Test
+//	public void testOxfordIndices()
+//	{
+//		System.out.println(classIndex.getResources("House"));
+//		System.out.println(classIndex.getResources("house"));
+//		System.out.println(classIndex.getResources("houses"));
+//	}
 
 	@Test
 	public void testProminence()
@@ -122,22 +111,17 @@ public class TBSLTest extends TestCase{
 		Slot slot = new Slot("p1",SlotType.DATATYPEPROPERTY,Arrays.asList(new String[]{"BEDROOMS"}));		
 		HashMap<Slot, Collection<Entity>> map = new HashMap<>();
 		map.put(slot, Collections.singleton(bedrooms));
-		Map<Slot, Prominences> scores = new SimpleRankingComputation(new LocalKnowledgebase(model, "oxford", "oxford", resourceIndex, objectPropertyIndex, dataPropertyIndex, classIndex,null))
-		.computeEntityProminenceScoresWithReasoner(map);
+		Map<Slot, Prominences> scores = new SimpleRankingComputation(oxfordKb).computeEntityProminenceScoresWithReasoner(map);
 		System.out.println(scores);
 	}
 
 		@Test
 		public void testOxfordLocal() throws Exception
 		{
-		assertNotNull(model);
-		Knowledgebase kb = new LocalKnowledgebase(model, "oxford", "oxford", resourceIndex, objectPropertyIndex, dataPropertyIndex, classIndex,null);
 		//		SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2(model, resourcesIndex, classesIndex, propertiesIndex);
-		TBSL learner = new TBSL(kb);
+		TBSL learner = new TBSL(oxfordKb);
 		learner.init();
-
 		String question = "Give me all houses with more than 3 bedrooms.";// and more than 2 bedrooms
-
 		TemplateInstantiation ti = learner.answerQuestion(question);
 
 		System.out.println("Learned query:\n" + ti.getQuery());
@@ -196,5 +180,4 @@ public class TBSLTest extends TestCase{
 		}
 
 	}
-
 }

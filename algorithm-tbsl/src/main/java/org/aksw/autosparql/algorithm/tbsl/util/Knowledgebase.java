@@ -10,6 +10,8 @@ public abstract class Knowledgebase {
 	private String description;
 	protected final Indices indices;
 	
+	public Indices getIndices() {return indices;}
+
 	public Knowledgebase(String label, String description, Indices indices)
 	{
 		this.label = label;
