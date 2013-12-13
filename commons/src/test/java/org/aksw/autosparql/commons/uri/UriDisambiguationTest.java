@@ -1,6 +1,6 @@
 package org.aksw.autosparql.commons.uri;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class UriDisambiguationTest

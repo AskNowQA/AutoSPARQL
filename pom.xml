@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.aksw.autosparql</groupId>
 	<artifactId>autosparql-parent</artifactId>
-	<version>${autosparql.version}</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -15,6 +15,8 @@
 	</modules>
 
 	<properties>
+		<slf4j.version>1.6.4</slf4j.version>
+        <log4j.version>1.2.16</log4j.version>
 		<compiler.version>1.7</compiler.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- convenience to define GWT version in one place -->
@@ -24,7 +26,7 @@
 		<aksw.version>0.2-SNAPSHOT</aksw.version>
 		<!-- from qa -->	
 		<dllearner.version>1.0-SNAPSHOT</dllearner.version>
-		<solr.version>4.1.0</solr.version>
+		<solr.version>4.6.0</solr.version>
 		<autosparql.version>1.0-SNAPSHOT</autosparql.version>
 	</properties>
 
@@ -71,6 +73,11 @@
 
 	<dependencyManagement>		
 		<dependencies>
+		 <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>2.11.0</version>
+        </dependency>
 		<dependency>
 		 <groupId>org.slf4j</groupId>
     <artifactId>slf4j-parent</artifactId>
@@ -93,14 +100,14 @@
 			</dependency>
 			<dependency>
 				<groupId>org.aksw.autosparql</groupId>
-				<artifactId>commons</artifactId>
-				<version>${autosparql.version}</version>		
-			</dependency>
-			<dependency>
-				<groupId>org.aksw.autosparql</groupId>
 				<artifactId>algorithm-tbsl</artifactId>
 				<version>${autosparql.version}</version>		
-			</dependency>			
+			</dependency>
+			  <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-core</artifactId>
+            <version>${solr.version}</version>
+        </dependency>			
 		<dependency> 
    <groupId>javax</groupId>   
     <artifactId>javaee-web-api</artifactId>   
@@ -399,28 +406,58 @@
 				<type>jar</type>
 				<scope>compile</scope>
 			</dependency>
-	<dependency>
-		<groupId>org.apache.solr</groupId>
-		<artifactId>solr-solrj</artifactId>
-      	<version>4.4.0</version>
-	</dependency>
-			<dependency>
-				<groupId>org.apache.solr</groupId>
-				<artifactId>solr-core</artifactId>
-				<version>4.4.0</version>
-			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>1.6.1</version>
 			</dependency>
-
-			<dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+      		<version>${solr.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-core</artifactId>
+			<version>${solr.version}</version>
+		</dependency>
+		
+<!-- 
+ 	<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpcore</artifactId>
 				<version>4.3</version>
 			</dependency>
-            
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.3.1</version>
+			</dependency>
+            <dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpmime</artifactId>
+				<version>4.3.1</version>
+			</dependency>
+      -->  
+       <!--  solr doesn't seem ready for the newest apache stuff -->
+
+        <dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpcore</artifactId>
+				<version>4.2.5</version>
+			</dependency>
+		<!--	<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.2.6</version>
+			</dependency>
+            <dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpmime</artifactId>
+				<version>4.2.6</version>
+			</dependency>
+			 -->
+			  
 <dependency>
 	<groupId>net.sf.jwordnet</groupId>
 	<artifactId>jwnl</artifactId>
@@ -430,14 +467,7 @@
 
 	</dependencyManagement>
 
-	<repositories>
-		<repository>
-			<id>official</id>
-			<url>http://repo1.maven.org/maven2/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
+	<repositories>		
 		<repository>
 			<id>apache-repo-releases</id>
 			<url>https://repository.apache.org/content/repositories/releases/</url>
@@ -452,14 +482,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-
-		<repository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Repository for Maven</name>
-			<url>http://download.java.net/maven/2/</url>
-			<layout>default</layout>
-		</repository>
-
+		
 		<repository>
 			<id>maven.aksw.internal</id>
 			<name>University Leipzig, AKSW Maven2 Repository</name>
@@ -471,29 +494,29 @@
 			<name>University Leipzig, AKSW Maven2 Repository</name>
 			<url>http://maven.aksw.org:8081/archiva/repository/snapshots</url>
 		</repository>
-
+<!-- 
 		<repository>
 			<id>GXT</id>
 			<url>http://maven.jahia.org/maven2/</url>
 		</repository>
-
+ -->
 		<!-- - This is so we can get the 1.3-SNAPSHOT of GWT Maven Plugin cause 
 			1.2 is broken on the hudson - - Here's a good place to browse the repository: 
 			https://nexus.codehaus.org -->
-		<repository>
+<!-- 		<repository>
 			<id>maven.codehaus.snapshots</id>
 			<name>Codehaus repository Repository</name>
 			<url>https://nexus.codehaus.org/content/repositories/public</url>
 		</repository>
-
-		<repository>
+ -->
+<!-- 		<repository>
 			<id>google-maven-snapshot-repository</id>
 			<name>Google Maven Snapshot Repository</name>
 			<url>https://oss.sonatype.org/content/repositories/google-snapshots/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</repository>
+		</repository> -->
 	</repositories>
   	<dependencies>
   	

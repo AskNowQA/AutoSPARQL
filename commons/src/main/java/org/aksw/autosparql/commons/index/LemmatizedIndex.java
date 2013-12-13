@@ -22,14 +22,14 @@ public class LemmatizedIndex extends Index
 	@Override public List<String> getResources(String queryString, int limit, int offset)
 	{
 		List<String> resources = index.getResources(queryString, limit, offset);
-		if(resources.isEmpty()) {resources = index.getResources(lemmatize(queryString), limit, offset);}
+		if(offset==0&&resources.isEmpty()) {resources = index.getResources(lemmatize(queryString), limit, offset);}
 		return resources;
 	}
 
 	@Override public IndexResultSet getResourcesWithScores(String queryString, int limit, int offset)
 	{
 		IndexResultSet rs = index.getResourcesWithScores(queryString, limit, offset);
-		if(rs.isEmpty()) {rs = index.getResourcesWithScores(PlingStemmer.stem(queryString), limit, offset);}
+		if(offset==0&&rs.isEmpty()) {rs = index.getResourcesWithScores(PlingStemmer.stem(queryString), limit, offset);}
 		return rs;
 	}
 

@@ -37,8 +37,12 @@ import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
  */
 public class UriDisambiguation {
 	
-	static SolrServer enSolrServer = new HttpSolrServer("http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_dbpedia_resources");
-	static SolrServer deSolrServer = new HttpSolrServer("http://[2001:638:902:2010:0:168:35:138]:8080/solr/de_dbpedia_resources");
+	static protected class SolrServerHolder
+	{
+		static SolrServer enSolrServer = new HttpSolrServer("http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_dbpedia_resources");
+		static SolrServer deSolrServer = new HttpSolrServer("http://[2001:638:902:2010:0:168:35:138]:8080/solr/de_dbpedia_resources");
+	}
+	
 	private static Map<String,List<Resource>> labelToResources = new HashMap<String, List<Resource>>();
 	public static Double APRIORI_PARAMETER = 0.2D;
 //	public static Double CONTEXT_SIMILARTY_PARAMETER = 0.11D;
@@ -147,19 +151,19 @@ public class UriDisambiguation {
 	 */
 	public static List<Resource> getUriCandidates(String label, String language) {
 
-		SolrServer server = language.equals("en") ? enSolrServer : language.equals("de") ? deSolrServer : enSolrServer;
+		SolrServer server = language.equals("en") ? SolrServerHolder.enSolrServer : language.equals("de") ? SolrServerHolder.deSolrServer : SolrServerHolder.enSolrServer;
 		List<Resource> candidates = query(server, label);
 
 		// if we have a word in plural an no resources have been found so far, try singular
 		if ( label.endsWith("s") && candidates.isEmpty() ) candidates = query(server, label.replaceAll("s$", ""));
 		// german solr query didnt return any results, so use the english one
-		if ( language.equals("de") && candidates.isEmpty() ) candidates = query(enSolrServer, label);
+		if ( language.equals("de") && candidates.isEmpty() ) candidates = query(SolrServerHolder.enSolrServer, label);
 		// remove the plural "n" of the first word
-		if ( language.equals("de") && candidates.isEmpty() && label.split(" ")[0].endsWith("n") ) candidates = query(deSolrServer, label.replaceFirst("n ", " "));
+		if ( language.equals("de") && candidates.isEmpty() && label.split(" ")[0].endsWith("n") ) candidates = query(SolrServerHolder.deSolrServer, label.replaceFirst("n ", " "));
 		// uppercase all letters
-		if ( language.equals("de") && candidates.isEmpty() ) candidates = query(deSolrServer, WordUtils.capitalize(label));
+		if ( language.equals("de") && candidates.isEmpty() ) candidates = query(SolrServerHolder.deSolrServer, WordUtils.capitalize(label));
 		// remove plural n
-		if ( language.equals("de") && candidates.isEmpty() ) candidates = query(deSolrServer, label.replaceAll("n$", ""));
+		if ( language.equals("de") && candidates.isEmpty() ) candidates = query(SolrServerHolder.deSolrServer, label.replaceAll("n$", ""));
 		
 		labelToResources.put(label, candidates);
 		

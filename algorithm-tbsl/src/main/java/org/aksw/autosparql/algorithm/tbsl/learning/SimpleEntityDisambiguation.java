@@ -63,16 +63,16 @@ public class SimpleEntityDisambiguation {
 	private Collection<Entity> getCandidateEntities(Slot slot){
 		logger.debug("Generating entity candidates for slot " + slot + "...");
 		Set<Entity> candidateEntities = new HashSet<Entity>();
-		if(slot.getSlotType() == SlotType.RESOURCE){
-			List<String> words = slot.getWords();
-			List<Resource> uriCandidates = new ArrayList<Resource>();
-			for(String word : words){
-				uriCandidates.addAll(UriDisambiguation.getTopUris(UriDisambiguation.getUriCandidates(word, "en"), word, "en"));
-			}
-			for (Resource resource : uriCandidates) {
-				candidateEntities.add(new Entity(resource.uri, resource.label));
-			}
-		} else {
+//		if(slot.getSlotType() == SlotType.RESOURCE){
+//			List<String> words = slot.getWords();
+//			List<Resource> uriCandidates = new ArrayList<Resource>();
+//			for(String word : words){
+//				uriCandidates.addAll(UriDisambiguation.getTopUris(UriDisambiguation.getUriCandidates(word, "en"), word, "en"));
+//			}
+//			for (Resource resource : uriCandidates) {
+//				candidateEntities.add(new Entity(resource.uri, resource.label));
+//			}
+//		} else {
 			Index index = getIndexForSlot(slot);
 			List<String> words = slot.getWords();
 			for(String word : words){
@@ -86,7 +86,7 @@ public class SimpleEntityDisambiguation {
 					candidateEntities.add(new Entity(uri, label));
 				}
 			}
-		}
+//		}
 		logger.debug("Found " + candidateEntities.size() + " entities.");
 		logger.debug(candidateEntities);
 		return candidateEntities;

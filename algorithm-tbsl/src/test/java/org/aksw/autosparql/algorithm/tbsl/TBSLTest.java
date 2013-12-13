@@ -18,7 +18,9 @@ import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.Prominences;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
 import org.aksw.autosparql.commons.index.Indices;
+import org.dllearner.common.index.HierarchicalIndex;
 import org.dllearner.common.index.Index;
+import org.dllearner.common.index.SOLRIndex;
 import org.dllearner.common.index.SPARQLClassesIndex;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.junit.Test;
@@ -30,7 +32,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class TBSLTest extends TestCase{
-	private static final String	SOLR_SERVER_URI_EN	= "http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_";
+	private static final String SOLR_SERVER_URI_EN	= "http://solr.aksw.org/en_";
+//	private static final String	SOLR_SERVER_URI_EN	= "http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_";
 	private Model model = null;
 	private SparqlEndpoint endpoint;
 	protected Knowledgebase oxfordKb;
@@ -64,24 +67,41 @@ public class TBSLTest extends TestCase{
 		assertNotNull(model);
 	}
 
+	@Test public void bla()
+	{
+	System.out.println("bla");	
+	}
+
+	@Test public void solrTest()	
+	{
+		System.out.println("test");
+		if(1==1) throw new RuntimeException("bla");
+		SOLRIndex objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+		System.out.println("written: "+objectPropertiesIndex.getResources("written"));
+	}
+
 	@Test
 	public void testDBpedia() throws Exception{
 		//		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://greententacle.techfak.uni-bielefeld.de:5171/sparql"), 
 		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://dbpedia.org/sparql"),
 				Collections.<String>singletonList(""), Collections.<String>emptyList());
 
-//		SOLRIndex resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
-//		SOLRIndex classesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
-//		SOLRIndex objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
-//		SOLRIndex dataPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
-//		Indices indices = new Indices(resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex);
-//		
-//		for(SOLRIndex index: new SOLRIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
-//		{
-//			index.setPrimarySearchField("label");
-//		}
+		SOLRIndex resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
+		SOLRIndex classesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
+		SOLRIndex dataPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+		SOLRIndex objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");		
+		
+		for(SOLRIndex index: new SOLRIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
+		{
+			index.setPrimarySearchField("label");
+		}
+		SOLRIndex boaIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"boa","nlr-no-var");		
+		Index newDataPropertiesIndex = new HierarchicalIndex(dataPropertiesIndex,boaIndex);
+		Index newObjectPropertiesIndex = new HierarchicalIndex(objectPropertiesIndex,boaIndex);
 //		Knowledgebase kb = new RemoteKnowledgebase(endpoint,"dbpedia","DBpedia",new Indices(resourcesIndex, classesIndex, objectPropertiesIndex,dataPropertiesIndex,null));
-		Knowledgebase kb = new RemoteKnowledgebase(endpoint,"dbpedia","DBpedia",new Indices(endpoint));
+//		Knowledgebase kb = new RemoteKnowledgebase(endpoint,"dbpedia","DBpedia",new Indices(endpoint));
+		Indices indices = new Indices(resourcesIndex,classesIndex,newObjectPropertiesIndex,newDataPropertiesIndex);
+		Knowledgebase kb = new RemoteKnowledgebase(endpoint,"dbpedia","DBpedia",indices);
 		//		
 		TBSL learner = new TBSL(kb);
 		learner.init();

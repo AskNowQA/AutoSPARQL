@@ -2,6 +2,7 @@ package org.aksw.autosparql.commons.index;
 
 import java.util.Arrays;
 import java.util.Collection;
+import org.dllearner.common.index.HierarchicalIndex;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.MappingBasedIndex;
 import org.dllearner.common.index.SPARQLClassesIndex;
@@ -16,8 +17,10 @@ public class Indices
 	public final Index resourceIndex;
 	public final Index classIndex;
 	public final Index objectPropertyIndex;
-	public final Index dataPropertyIndex;
+	public final Index dataPropertyIndex;	
 	public final MappingBasedIndex mappingIndex;
+	
+	public Index propertyIndex;
 
 	public Collection<Index> getIndices() {	return Arrays.asList(new Index[]{resourceIndex,classIndex,objectPropertyIndex,dataPropertyIndex});}
 	
@@ -39,26 +42,21 @@ public class Indices
 	public Index getObjectPropertyIndex() {return objectPropertyIndex;}
 	public Index getDataPropertyIndex() {return dataPropertyIndex;}
 	public MappingBasedIndex getMappingIndex() 	{return mappingIndex;}
-//	public Index getPropertyIndex()
-//	{
-//		if(propertyIndex==null) propertyIndex = new HierarchicalIndex(objectPropertyIndex,dataPropertyIndex); 
-//		return propertyIndex;
-//	}
 //	public MappingBasedIndex getMappingIndex() {return mappingIndex;}
 
 	@Deprecated public Index getPropertyIndex()
 	{
-		throw new UnsupportedOperationException("use get datapropertyindex or objectpropertyindex");
-//		return null;
-	}
+		if(propertyIndex==null) propertyIndex = new HierarchicalIndex(objectPropertyIndex,dataPropertyIndex); 
+		return propertyIndex;
+	}	
 	
 	public Indices(SparqlEndpoint endpoint)
 	 {
-		 this(new SPARQLIndex(endpoint), new SPARQLClassesIndex(endpoint), new SPARQLObjectPropertiesIndex(endpoint), new SPARQLDatatypePropertiesIndex(endpoint));
+		 this(new LemmatizedIndex(new SPARQLIndex(endpoint)), new LemmatizedIndex(new SPARQLClassesIndex(endpoint)), new LemmatizedIndex(new SPARQLObjectPropertiesIndex(endpoint)), new LemmatizedIndex(new SPARQLDatatypePropertiesIndex(endpoint)));
 	 }
 
 	 public Indices(Model model)
 	 {
-		 this(new SPARQLIndex(model), new SPARQLClassesIndex(model), new SPARQLObjectPropertiesIndex(model), new SPARQLDatatypePropertiesIndex(model));
+		 this(new LemmatizedIndex(new SPARQLIndex(model)), new LemmatizedIndex(new SPARQLClassesIndex(model)), new LemmatizedIndex(new SPARQLObjectPropertiesIndex(model)), new LemmatizedIndex(new SPARQLDatatypePropertiesIndex(model)));
 	 }
 }

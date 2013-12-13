@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
+import org.aksw.autosparql.commons.index.Indices;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
@@ -113,8 +114,9 @@ public class Manager {
 					this.getClass().getClassLoader().getResource("dbpedia_dataproperty_mappings.txt").getPath(),
 					this.getClass().getClassLoader().getResource("dbpedia_objectproperty_mappings.txt").getPath()
 					);
+			Indices indices = new Indices(resourcesIndex, objectPropertiesIndex,dataPropertiesIndex, classesIndex, mappingIndex);
 			
-			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, objectPropertiesIndex,dataPropertiesIndex, classesIndex, mappingIndex);
+			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", indices);
 			String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +
         	 		"<div style='float: right; height: 100px; width: 200px'>" +
         	 		"<div style='height: 100%;'><img style='height: 100%;' src=\"imageURL\"/></div>" +
@@ -164,7 +166,7 @@ public class Manager {
 			// @todo: add cache when constructor in dl learner
 			SPARQLIndex objectPropertiesIndex = new VirtuosoObjectPropertiesIndex(endpoint);
 			SPARQLIndex dataPropertiesIndex = new VirtuosoDatatypePropertiesIndex(endpoint);
-			
+			Indices indices = new Indices(resourcesIndex,objectPropertiesIndex, dataPropertiesIndex, classesIndex);
 			
 //			Model model = ModelFactory.createDefaultModel();
 //			model.read(this.getClass().getClassLoader().getResourceAsStream("oxford-data.ttl"), null, "TURTLE");
@@ -182,7 +184,7 @@ public class Manager {
 					);
 			
 //			Knowledgebase kb = new LocalKnowledgebase(model, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
-			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "Oxford - Real estate", "TODO", resourcesIndex, objectPropertiesIndex, dataPropertiesIndex, classesIndex, mappingIndex);
+			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "Oxford - Real estate", "TODO",indices);
 			
 			
 			String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +
