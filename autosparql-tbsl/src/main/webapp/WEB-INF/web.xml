@@ -7,11 +7,11 @@
         <param-value>false</param-value>
     </context-param>
     <listener>
-		<listener-class>org.autosparql.tbsl.TBSLContextListener</listener-class>
+		<listener-class>org.aksw.autosparql.tbsl.TBSLContextListener</listener-class>
 	</listener>
     <servlet>
 		<servlet-name>AutoSPARQL Lite Application</servlet-name>
-		<servlet-class>org.autosparql.tbsl.TBSLAppServlet</servlet-class>
+		<servlet-class>org.aksw.autosparql.tbsl.TBSLAppServlet</servlet-class>
         <!--
         <servlet-name>Vaadin Application Servlet</servlet-name>
         <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
@@ -19,12 +19,12 @@
         <init-param>
             <description>Vaadin application class to start</description>
             <param-name>application</param-name>
-            <param-value>org.autosparql.tbsl.TBSLApplication</param-value>
+            <param-value>org.aksw.autosparql.tbsl.TBSLApplication</param-value>
         </init-param>
         <init-param>
 			<description>Application widgetset</description>
 			<param-name>widgetset</param-name>
-			<param-value>org.autosparql.tbsl.CustomWidgetset</param-value>
+			<param-value>org.aksw.autosparql.tbsl.CustomWidgetset</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
     </servlet>
