@@ -18,7 +18,7 @@ public class Indices
 	public final Index classIndex;
 	public final Index objectPropertyIndex;
 	public final Index dataPropertyIndex;	
-	public final MappingBasedIndex mappingIndex;
+	public MappingBasedIndex mappingIndex = null;
 	
 	public Index propertyIndex;
 

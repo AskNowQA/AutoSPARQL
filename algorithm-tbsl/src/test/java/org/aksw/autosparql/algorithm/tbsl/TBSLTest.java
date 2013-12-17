@@ -72,7 +72,8 @@ public class TBSLTest extends TestCase{
 	System.out.println("bla");	
 	}
 
-	@Test public void solrTest()	
+	@Test
+	public void solrTest()	
 	{
 		System.out.println("test");
 		if(1==1) throw new RuntimeException("bla");

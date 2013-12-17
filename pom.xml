@@ -103,11 +103,6 @@
 				<artifactId>algorithm-tbsl</artifactId>
 				<version>${autosparql.version}</version>		
 			</dependency>
-			  <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-core</artifactId>
-            <version>${solr.version}</version>
-        </dependency>			
 		<dependency> 
    <groupId>javax</groupId>   
     <artifactId>javaee-web-api</artifactId>   
@@ -129,13 +124,6 @@
 				<artifactId>gxt</artifactId>
 				<version>${gxt.version}</version>
 			</dependency>
-
-  			<dependency>
-  <groupId>org.apache.jena</groupId>
-  <artifactId>jena-arq</artifactId>
-  <version>2.9.2</version>
-</dependency>
-
 			<!--SwingX is in central -->
 
 			<dependency>

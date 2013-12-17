@@ -20,7 +20,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.aksw.autosparql.algorithm.tbsl.learning.NoTemplateFoundException;
-import org.aksw.autosparql.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
+import org.aksw.autosparql.algorithm.tbsl.learning.SPARQLTemplateBasedLearner3;
 import org.aksw.autosparql.algorithm.tbsl.sparql.WeightedQuery;
 import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
@@ -80,11 +80,10 @@ public class TBSLManager {
 	
 	private final Logger logger = Logger.getLogger(TBSLManager.class);
 	
-	
 	private ExtractionDBCache cache;
 	private ExtendedKnowledgebase currentExtendedKnowledgebase;
 	
-	private SPARQLTemplateBasedLearner2 tbsl;
+	private SPARQLTemplateBasedLearner3 tbsl;
 	private FallbackIndex fallback;
 	
 	private String learnedSPARQLQuery;
@@ -99,7 +98,6 @@ public class TBSLManager {
 	
 	private Map<String, Map<String, Set<Object>>> property2URI2Values;
 	private String currentQuestion;
-	
 	
 	private List<ExtendedKnowledgebase> knowledgebases = new ArrayList<ExtendedKnowledgebase>();
 	
@@ -116,8 +114,9 @@ public class TBSLManager {
 			knowledgebases = Manager.getInstance().getKnowledgebases(cache);
 			currentExtendedKnowledgebase = knowledgebases.get(0);
 
-			tbsl = new SPARQLTemplateBasedLearner2(currentExtendedKnowledgebase.getKnowledgebase(), Manager
+			tbsl = new SPARQLTemplateBasedLearner3(currentExtendedKnowledgebase.getKnowledgebase(), Manager
 					.getInstance().getPosTagger(), Manager.getInstance().getWordNet(), new Options(), cache);
+				
 			tbsl.init();
 
 			setKnowledgebase(currentExtendedKnowledgebase);

@@ -1,17 +1,12 @@
 package org.aksw.autosparql.commons.nlp.wordnet;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import net.didion.jwnl.JWNLException;
-import net.didion.jwnl.data.IndexWord;
-import net.didion.jwnl.data.PointerUtils;
 import net.didion.jwnl.data.Synset;
-import net.didion.jwnl.data.Word;
-import net.didion.jwnl.data.list.PointerTargetNode;
-import net.didion.jwnl.data.list.PointerTargetNodeList;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.RAMDictionary;
 import edu.mit.jwi.data.ILoadPolicy;
@@ -29,9 +24,20 @@ public class WordNet {
 
 	public WordNet()
 	{		
-		URL url = this.getClass().getClassLoader().getResource("models/en/wordnet/dict");
-		dict = new RAMDictionary(url, ILoadPolicy.NO_LOAD);
-		try{dict.open();} catch(IOException e) {throw new RuntimeException("couldn't open dictionary",e);}
+		//		String dictPath = "models/en/wordnet/dict/";
+		//		URL url = this.getClass().getClassLoader().getResource(dictPath);
+		//		System.out.println("loading wordnet from "+url);
+		//		JWNL.initialize(this.getClass().getClassLoader().getResourceAsStream("models/en/wordnet/wordnet_properties.xml"));
+		//		dict = new RAMDictionary(Dictionary.getInstance(), ILoadPolicy.NO_LOAD);
+		//		dict = new RAMDictionary(url, ILoadPolicy.NO_LOAD);
+		try
+		{
+			File dictDirectory = WordNetUnpacker.getUnpackedWordNetDir();
+			System.out.println("loading wordnet from "+dictDirectory);
+			dict = new RAMDictionary(dictDirectory, ILoadPolicy.NO_LOAD);
+			dict.open();
+		}
+		catch(IOException e) {throw new RuntimeException("couldn't open dictionary",e);}
 	}
 
 	public List<String> getBestSynonyms(POS pos, String s)

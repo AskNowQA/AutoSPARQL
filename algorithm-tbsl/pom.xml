@@ -181,10 +181,6 @@
             <artifactId>jena-arq</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
             <groupId>net.sf.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
             <version>0.8.3</version>

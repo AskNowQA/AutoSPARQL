@@ -18,8 +18,8 @@
 
   <build>
   <finalName>autosparql-lite</finalName>
-    <plugins>
-      <plugin>
+  <plugins>
+   <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -27,12 +27,12 @@
           <target>1.7</target>
           <encoding>UTF-8</encoding>
         </configuration>
-      </plugin>
-      <plugin>
+   </plugin>
+   <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-war-plugin</artifactId>
     <version>2.1.1</version>
-</plugin>
+   </plugin>
 
       <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
       <!--
@@ -88,22 +88,38 @@
 
       <!-- A simple Jetty test server at http://localhost:8080/autosparql-tbsl can be launched with the Maven goal jetty:run 
         and stopped with jetty:stop -->
-      <plugin>
+
+<plugin>
+  <groupId>org.eclipse.jetty</groupId>
+  <artifactId>jetty-maven-plugin</artifactId>
+  <version>9.0.7.v20131107</version>
+   <configuration>
+  <webApp>
+    <contextPath>/${project.build.finalName}</contextPath>
+    <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
+      <resourcesAsCSV>src/main/webapp,${project.build.directory}/classes</resourcesAsCSV>
+    </baseResource>
+  </webApp>
+</configuration>      
+</plugin>
+<!-- 
+ <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.24</version>
         <configuration>
           <stopPort>9966</stopPort>
           <stopKey>autosparql-lite</stopKey>
-          <!-- Redeploy every x seconds if changes are detected, 0 for no automatic redeployment -->
+          
           <scanIntervalSeconds>0</scanIntervalSeconds>
-          <!-- make sure Jetty also finds the widgetset -->
+          
           <webAppConfig>
             <contextPath>/autosparql-lite</contextPath>
-            <baseResource implementation="org.mortbay.resource.ResourceCollection">
+            <baseResource implementation="org.mortbay.resource.ResourceCollection">-->
               <!-- Workaround for Maven/Jetty issue http://jira.codehaus.org/browse/JETTY-680 -->
               <!-- <resources>src/main/webapp,${project.build.directory}/${project.build.finalName}</resources> -->
-              <resourcesAsCSV>src/main/webapp,${project.build.directory}/${project.build.finalName}</resourcesAsCSV>
+<!--               <resourcesAsCSV>src/main/webapp,${project.build.directory}/${project.build.finalName}</resourcesAsCSV> -->
+<!--               <resourcesAsCSV>src/main/webapp,${project.build.directory}/classes</resourcesAsCSV>
             </baseResource>
           </webAppConfig>
           <connectors>
@@ -114,6 +130,7 @@
 					</connectors>
         </configuration>
       </plugin>
+       -->
     </plugins>
   </build>
 
@@ -285,7 +302,6 @@
 			<dependency>
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-arq</artifactId>
-				<version>2.9.2</version>
 			</dependency>
              <dependency>
                 <groupId>org.aksw.sparql2nl</groupId>
