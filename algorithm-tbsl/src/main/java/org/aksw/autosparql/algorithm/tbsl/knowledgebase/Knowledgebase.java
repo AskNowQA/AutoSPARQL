@@ -1,4 +1,4 @@
-package org.aksw.autosparql.algorithm.tbsl.util;
+package org.aksw.autosparql.algorithm.tbsl.knowledgebase;
 
 import org.aksw.autosparql.commons.index.Indices;
 import org.dllearner.common.index.Index;

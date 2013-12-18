@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
+import org.aksw.autosparql.algorithm.tbsl.knowledgebase.Knowledgebase;
+import org.aksw.autosparql.algorithm.tbsl.knowledgebase.RemoteKnowledgebase;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.dllearner.core.owl.Individual;
@@ -22,7 +23,6 @@ import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.dllearner.reasoning.SPARQLReasoner;
-
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 

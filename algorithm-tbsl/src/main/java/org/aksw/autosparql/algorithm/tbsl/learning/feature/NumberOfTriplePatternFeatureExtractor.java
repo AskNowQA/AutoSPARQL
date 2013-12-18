@@ -1,8 +1,8 @@
 package org.aksw.autosparql.algorithm.tbsl.learning.feature;
 
 import java.util.Set;
+import org.aksw.autosparql.algorithm.tbsl.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.learning.TemplateInstantiation;
-import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.TriplePatternExtractor;
 import com.hp.hpl.jena.graph.Triple;
 

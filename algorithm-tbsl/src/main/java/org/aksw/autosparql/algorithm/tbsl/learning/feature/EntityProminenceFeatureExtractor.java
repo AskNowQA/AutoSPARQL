@@ -2,10 +2,10 @@ package org.aksw.autosparql.algorithm.tbsl.learning.feature;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import org.aksw.autosparql.algorithm.tbsl.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.learning.Entity;
 import org.aksw.autosparql.algorithm.tbsl.learning.TemplateInstantiation;
 import org.aksw.autosparql.algorithm.tbsl.sparql.Slot;
-import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.util.Prominences;
 import org.aksw.autosparql.algorithm.tbsl.util.Statistics;
 

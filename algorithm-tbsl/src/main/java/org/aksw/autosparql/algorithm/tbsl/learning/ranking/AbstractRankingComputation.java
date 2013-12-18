@@ -1,6 +1,6 @@
 package org.aksw.autosparql.algorithm.tbsl.learning.ranking;
 
-import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
+import org.aksw.autosparql.algorithm.tbsl.knowledgebase.Knowledgebase;
 
 public abstract class AbstractRankingComputation implements RankingComputation{
 
