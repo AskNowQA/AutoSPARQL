@@ -176,7 +176,7 @@
   -->
 
   <dependencies>
-<dependency>
+ <dependency>
 	<groupId>org.aksw.autosparql</groupId>
     <artifactId>algorithm-tbsl</artifactId>        
 </dependency>
@@ -253,7 +253,7 @@
 </dependency>
 
 
-
+<!-- 
 	<dependency>
 		<groupId>org.dllearner</groupId>
 		<artifactId>components-ext</artifactId>
@@ -284,6 +284,7 @@
 			</exclusion>
 		</exclusions>
 	</dependency>
+	 -->
 	<dependency>
 		<groupId>org.ini4j</groupId>
 		<artifactId>ini4j</artifactId>
@@ -299,10 +300,11 @@
 				<artifactId>h2</artifactId>
 				<version>1.2.143</version>
 			</dependency>
-			<dependency>
+
+<!-- 			<dependency>
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-arq</artifactId>
-			</dependency>
+			</dependency> -->
              <dependency>
                 <groupId>org.aksw.sparql2nl</groupId>
                 <artifactId>sparql2nl</artifactId>
@@ -314,11 +316,12 @@
              	<artifactId>guava</artifactId>
              	<version>12.0</version>
              </dependency>
+              
              <dependency>
              	<groupId>org.apache.lucene</groupId>
              	<artifactId>lucene-core</artifactId>
-             	<version>3.6.0</version>
              </dependency>
+              
              <dependency>
              	<groupId>commons-collections</groupId>
              	<artifactId>commons-collections</artifactId>

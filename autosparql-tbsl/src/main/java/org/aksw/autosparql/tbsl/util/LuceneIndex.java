@@ -10,19 +10,19 @@ import org.aksw.autosparql.tbsl.model.BasicResultItem;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.IOContext;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
-import org.dllearner.common.index.Index;
-import org.dllearner.common.index.IndexResultSet;
 
 public class LuceneIndex implements FallbackIndex{
 	
@@ -30,8 +30,9 @@ public class LuceneIndex implements FallbackIndex{
 	
 	public LuceneIndex(String directoryPath) {
 		 try {
-			Directory index = new RAMDirectory(NIOFSDirectory.open(new File(directoryPath)));
-			 IndexReader reader = IndexReader.open(index);
+			Directory index = new RAMDirectory(NIOFSDirectory.open(new File(directoryPath)),IOContext.READ);
+//			 IndexReader reader = IndexReader.open(index);
+			IndexReader reader = DirectoryReader.open(index);
 			 searcher = new IndexSearcher(reader);
 		} catch (CorruptIndexException e) {
 			 e.printStackTrace();
@@ -45,7 +46,7 @@ public class LuceneIndex implements FallbackIndex{
 	public List<BasicResultItem> getData(String queryString, int limit, int offset) {
 		List<BasicResultItem> items = new ArrayList<BasicResultItem>();
         try {
-			Query q = new QueryParser(Version.LUCENE_36, "description", new StandardAnalyzer(Version.LUCENE_36)).parse(queryString);
+			Query q = new QueryParser(Version.LUCENE_46, "description", new StandardAnalyzer(Version.LUCENE_36)).parse(queryString);
 			TopScoreDocCollector collector = TopScoreDocCollector.create(limit, true);
 			searcher.search(q, collector);
 			ScoreDoc[] hits = collector.topDocs().scoreDocs;
@@ -82,17 +83,14 @@ public class LuceneIndex implements FallbackIndex{
 			}
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch (ParseException e)
+		{
 			e.printStackTrace();
 		}
         return items;
 	}
-
-	public static void main(String[] args) {
-		LuceneIndex index = new LuceneIndex("/home/lorenz/arbeit/oxford_index");
-		System.out.println(index.getData("houses in headington", 10, 0));
-	}
-
+	
 }

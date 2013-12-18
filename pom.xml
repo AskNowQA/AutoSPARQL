@@ -71,8 +71,14 @@
 		</pluginManagement>
 	</build>
 
-	<dependencyManagement>		
-		<dependencies>
+	<dependencyManagement>
+	<dependencies>	
+	<dependency>
+             	<groupId>org.apache.lucene</groupId>
+             	<artifactId>lucene-core</artifactId>
+             	<version>${solr.version}</version>
+    </dependency>
+            	
 		 <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-arq</artifactId>
@@ -409,6 +415,11 @@
 			<artifactId>solr-core</artifactId>
 			<version>${solr.version}</version>
 		</dependency>
+		<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.2.6</version>
+		</dependency>
 		
 <!-- 
  	<dependency>
@@ -428,17 +439,14 @@
 			</dependency>
       -->  
        <!--  solr doesn't seem ready for the newest apache stuff -->
-
+<!-- 
         <dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpcore</artifactId>
 				<version>4.2.5</version>
 			</dependency>
-		<!--	<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.2.6</version>
-			</dependency>
+			 -->
+			<!-- 
             <dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpmime</artifactId>
