@@ -1,8 +1,5 @@
 package org.aksw.autosparql.tbsl.view;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -14,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
-import org.aksw.autosparql.algorithm.tbsl.util.LocalKnowledgebase;
-import org.aksw.autosparql.algorithm.tbsl.util.RemoteKnowledgebase;
+import org.aksw.autosparql.algorithm.tbsl.knowledgebase.Knowledgebase;
+import org.aksw.autosparql.algorithm.tbsl.knowledgebase.LocalKnowledgebase;
+import org.aksw.autosparql.algorithm.tbsl.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.Manager;
 import org.aksw.autosparql.tbsl.TBSLManager;
 import org.aksw.autosparql.tbsl.UserSession;
@@ -53,7 +50,6 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractSelect.Filtering;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -76,7 +72,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.themes.BaseTheme;
 
-public class MainView extends VerticalLayout implements ViewContainer, TBSLProgressListener{
+@SuppressWarnings("serial") public class MainView extends VerticalLayout implements ViewContainer, TBSLProgressListener{
 	
 	private static final int REFRESH_INTERVAL = 1000;
 	
@@ -87,7 +83,7 @@ public class MainView extends VerticalLayout implements ViewContainer, TBSLProgr
 	private NativeSelect knowledgebaseSelector;
 	
 	private NativeButton executeButton;
-	private TextField questionField;
+//	private TextField questionField;
 	private ComboBox questionBox;
 	
 	private VerticalLayout resultHolderPanel;

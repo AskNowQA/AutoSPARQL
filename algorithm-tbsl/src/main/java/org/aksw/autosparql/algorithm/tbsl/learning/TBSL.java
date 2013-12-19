@@ -1,9 +1,6 @@
 package org.aksw.autosparql.algorithm.tbsl.learning;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.aksw.autosparql.algorithm.tbsl.graph.Template2GraphConverter;
 import org.aksw.autosparql.algorithm.tbsl.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.knowledgebase.RemoteKnowledgebase;
@@ -22,35 +18,24 @@ import org.aksw.autosparql.algorithm.tbsl.learning.ranking.SimpleRankingComputat
 import org.aksw.autosparql.algorithm.tbsl.sparql.Slot;
 import org.aksw.autosparql.algorithm.tbsl.sparql.Template;
 import org.aksw.autosparql.algorithm.tbsl.templator.Templator;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
-import org.dllearner.common.index.HierarchicalIndex;
-import org.dllearner.common.index.Index;
-import org.dllearner.common.index.SOLRIndex;
-import org.dllearner.kb.LocalModelBasedSparqlEndpointKS;
-import org.dllearner.kb.SparqlEndpointKS;
-import org.dllearner.kb.sparql.ExtractionDBCache;
-import org.dllearner.kb.sparql.SparqlEndpoint;
-import org.dllearner.kb.sparql.SparqlQuery;
-import org.dllearner.reasoning.SPARQLReasoner;
-import org.ini4j.InvalidFileFormatException;
-import org.ini4j.Options;
 import org.aksw.autosparql.commons.nlp.lemma.Lemmatizer;
 import org.aksw.autosparql.commons.nlp.lemma.LingPipeLemmatizer;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
+import org.apache.log4j.Logger;
+import org.dllearner.kb.LocalModelBasedSparqlEndpointKS;
+import org.dllearner.kb.SparqlEndpointKS;
+import org.dllearner.kb.sparql.SparqlEndpoint;
+import org.ini4j.Options;
 import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
+// TODO: reasoner.setCache(cache) somewhere else 
 public class TBSL {
 	
 	enum Mode{
@@ -73,7 +58,7 @@ public class TBSL {
 	private Model model;
 	private Knowledgebase knowledgebase;
 	
-	private ExtractionDBCache cache = new ExtractionDBCache("cache");
+//	private ExtractionDBCache cache = new ExtractionDBCache("cache");
 	
 	private Templator templateGenerator;
 	private Lemmatizer lemmatizer;
@@ -82,7 +67,7 @@ public class TBSL {
 	
 	private Set<Template> templates;
 	
-	private SPARQLReasoner reasoner;
+//	private SPARQLReasoner reasoner;
 	
 	private String [] grammarFiles = new String[]{"tbsl/lexicon/english.lex"};
 	
@@ -92,23 +77,19 @@ public class TBSL {
 	private static final String DEFAULT_WORDNET_PROPERTIES_FILE = "tbsl/wordnet_properties.xml";
 	
 	public TBSL(Knowledgebase knowledgebase){
-		this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(), new Options(), null);
+		this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(), new Options());
 		//this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(DEFAULT_WORDNET_PROPERTIES_FILE), new Options(), null);
 	}
 	
-	public TBSL(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
-		this(knowledgebase, posTagger, wordNet, options, null);
-	}
-	
 	public TBSL(Knowledgebase knowledgebase, WordNet wordNet){
-		this(knowledgebase, new StanfordPartOfSpeechTagger(), wordNet, new Options(), null);
+		this(knowledgebase, new StanfordPartOfSpeechTagger(), wordNet, new Options());
 	}
 	
-	public TBSL(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){
+	public TBSL(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options/*, ExtractionDBCache cache*/){
 		this.knowledgebase = knowledgebase;
 		this.posTagger = posTagger;
 		this.wordNet = wordNet;
-		this.cache = cache;
+//		this.cache = cache;
 		
 		SparqlEndpointKS ks;
 		if(knowledgebase instanceof RemoteKnowledgebase){
@@ -116,8 +97,8 @@ public class TBSL {
 		} else {
 			ks = new LocalModelBasedSparqlEndpointKS(((LocalKnowledgebase) knowledgebase).getModel());
 		}
-		reasoner = new SPARQLReasoner(ks);
-		reasoner.setCache(cache);
+//		reasoner = new SPARQLReasoner(ks);
+//		reasoner.setCache(cache);
 //		reasoner.prepareSubsumptionHierarchy();
 		setOptions(options);
 	}
@@ -142,9 +123,9 @@ public class TBSL {
 		maxIndexResults = Integer.parseInt(options.get("solr.query.limit", "10"));
 		
 		maxQueryExecutionTimeInSeconds = Integer.parseInt(options.get("sparql.query.maxExecutionTimeInSeconds", "100"));
-		if(cache != null){
-			cache.setMaxExecutionTimeInSeconds(maxQueryExecutionTimeInSeconds);
-		}
+//		if(cache != null){
+//			cache.setMaxExecutionTimeInSeconds(maxQueryExecutionTimeInSeconds);
+//		}
 		
 		useRemoteEndpointValidation = options.get("learning.validationType", "remote").equals("remote") ? true : false;
 		stopIfQueryResultNotEmpty = Boolean.parseBoolean(options.get("learning.stopAfterFirstNonEmptyQueryResult", "true"));
@@ -332,22 +313,22 @@ public class TBSL {
 		return ret;
 	}
 	
-	public ResultSet executeSelect(String query) {
-		ResultSet rs;
-		if (model == null) {
-			if (cache == null) {
-				QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), query);
-				qe.setDefaultGraphURIs(endpoint.getDefaultGraphURIs());
-				rs = qe.execSelect();
-			} else {
-				rs = SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(endpoint, query));
-			}
-		} else {
-			rs = QueryExecutionFactory.create(QueryFactory.create(query, Syntax.syntaxARQ), model)
-					.execSelect();
-		}
-		
-		return rs;
-	}
+//	public ResultSet executeSelect(String query) {
+//		ResultSet rs;
+//		if (model == null) {
+//			if (cache == null) {
+//				QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), query);
+//				qe.setDefaultGraphURIs(endpoint.getDefaultGraphURIs());
+//				rs = qe.execSelect();
+//			} else {
+//				rs = SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(endpoint, query));
+//			}
+//		} else {
+//			rs = QueryExecutionFactory.create(QueryFactory.create(query, Syntax.syntaxARQ), model)
+//					.execSelect();
+//		}
+//		
+//		return rs;
+//	}
 
 }

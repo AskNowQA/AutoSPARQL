@@ -3,7 +3,7 @@ package org.aksw.autosparql.tbsl.model;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aksw.autosparql.algorithm.tbsl.util.Knowledgebase;
+import org.aksw.autosparql.algorithm.tbsl.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.util.FallbackIndex;
 import com.vaadin.terminal.Resource;
 

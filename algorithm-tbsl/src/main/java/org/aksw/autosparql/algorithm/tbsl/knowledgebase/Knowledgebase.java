@@ -3,9 +3,10 @@ package org.aksw.autosparql.algorithm.tbsl.knowledgebase;
 import org.aksw.autosparql.commons.index.Indices;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.MappingBasedIndex;
+import com.hp.hpl.jena.query.ResultSet;
 
 public abstract class Knowledgebase {
-
+	
 	private String label;
 	private String description;
 	protected final Indices indices;
@@ -26,6 +27,8 @@ public abstract class Knowledgebase {
 	public String getDescription() {
 		return description;
 	}
+	
+	public abstract ResultSet querySelect(String query);
 	
 	@Override public String toString() {return label;}
 	
