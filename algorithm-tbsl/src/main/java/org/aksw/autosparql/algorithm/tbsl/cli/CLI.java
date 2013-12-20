@@ -9,7 +9,6 @@ import java.util.Collections;
 import org.aksw.autosparql.algorithm.tbsl.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.learning.NoTemplateFoundException;
-import org.aksw.autosparql.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.SOLRIndex;
 import org.dllearner.kb.sparql.SparqlEndpoint;

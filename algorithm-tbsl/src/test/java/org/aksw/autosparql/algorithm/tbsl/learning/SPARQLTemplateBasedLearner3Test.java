@@ -47,8 +47,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.aksw.autosparql.algorithm.tbsl.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.algorithm.tbsl.knowledgebase.RemoteKnowledgebase;
-import org.aksw.autosparql.algorithm.tbsl.learning.NoTemplateFoundException;
-import org.aksw.autosparql.algorithm.tbsl.learning.SPARQLTemplateBasedLearner2;
 import org.aksw.autosparql.algorithm.tbsl.ltag.parser.Parser;
 import org.aksw.autosparql.algorithm.tbsl.templator.Templator;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
@@ -69,7 +67,6 @@ import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.ini4j.Options;
 import org.junit.Before;
-import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -152,7 +149,7 @@ public class SPARQLTemplateBasedLearner3Test
 	{
 		Logger.getLogger(Templator.class).setLevel(Level.DEBUG);
 		Logger.getLogger(Parser.class).setLevel(Level.DEBUG);
-		Logger.getLogger(SPARQLTemplateBasedLearner2.class).setLevel(Level.DEBUG);
+		Logger.getLogger(SPARQLTemplateBasedLearner3.class).setLevel(Level.DEBUG);
 		//		String question = "houses for less than 900000 pounds";
 		String question = "houses/NNS for/IN less/JJR than/IN 900000/CD pounds/NNS";
 		//question = new StanfordPartOfSpeechTagger().tag(question);
@@ -193,10 +190,10 @@ public class SPARQLTemplateBasedLearner3Test
 	public static MappingBasedIndex getOxfordMappingIndex()
 	{
 		return new MappingBasedIndex(
-				SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
-				SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
-				SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
-				SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
+				SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
+				SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
+				SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
+				SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
 				);
 	}
 
@@ -638,7 +635,7 @@ public class SPARQLTemplateBasedLearner3Test
 		//		try{service.invokeAll(todo);} catch (InterruptedException e) {throw new RuntimeException(e);}			
 		//			logger.debug("generating query for question \""+question+"\", id "+i);			
 		//			long start = System.currentTimeMillis();	
-		//			SPARQLTemplateBasedLearner2 dbpediaLiveLearner = new SPARQLTemplateBasedLearner2(dbpediaLiveKnowledgebase,posTagger,wordnet,options);
+		//			SPARQLTemplateBasedLearner3 dbpediaLiveLearner = new SPARQLTemplateBasedLearner3(dbpediaLiveKnowledgebase,posTagger,wordnet,options);
 		//			//			dbpediaLiveLearner.setUseIdealTagger(true); // TODO: use this or not?
 		//			dbpediaLiveLearner.init();
 		//			dbpediaLiveLearner.setQuestion(question);
@@ -766,8 +763,8 @@ public class SPARQLTemplateBasedLearner3Test
 
 	private static final Logger logger = Logger.getLogger(SPARQLTemplateBasedLearner3Test.class);
 
-	//	private SPARQLTemplateBasedLearner2 oxfordLearner;
-	//	private SPARQLTemplateBasedLearner2 dbpediaLiveLearner;
+	//	private SPARQLTemplateBasedLearner3 oxfordLearner;
+	//	private SPARQLTemplateBasedLearner3 dbpediaLiveLearner;
 
 	//	private final ExtractionDBCache oxfordCache = new ExtractionDBCache("cache");
 	private final static ExtractionDBCache dbpediaLiveCache = new ExtractionDBCache("cache");
@@ -791,10 +788,10 @@ public class SPARQLTemplateBasedLearner3Test
 		boa_propertiesIndex.setSortField("boa-score");
 		propertiesIndex = new HierarchicalIndex(boa_propertiesIndex, propertiesIndex);
 		MappingBasedIndex mappingIndex= new MappingBasedIndex(
-				SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("test/dbpedia_class_mappings.txt").getPath(), 
-				SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("test/dbpedia_resource_mappings.txt").getPath(),
-				SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("test/dbpedia_dataproperty_mappings.txt").getPath(),
-				SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("test/dbpedia_objectproperty_mappings.txt").getPath()
+				SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("test/dbpedia_class_mappings.txt").getPath(), 
+				SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("test/dbpedia_resource_mappings.txt").getPath(),
+				SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("test/dbpedia_dataproperty_mappings.txt").getPath(),
+				SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("test/dbpedia_objectproperty_mappings.txt").getPath()
 				);
 
 		Knowledgebase kb = new RemoteKnowledgebase(dbpediaLiveEndpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex,classesIndex, mappingIndex);
@@ -807,13 +804,13 @@ public class SPARQLTemplateBasedLearner3Test
 		Logger.getRootLogger().setLevel(Level.WARN);	
 		Logger.getLogger(Templator.class).setLevel(Level.WARN);
 		Logger.getLogger(Parser.class).setLevel(Level.WARN);
-		Logger.getLogger(SPARQLTemplateBasedLearner2.class).setLevel(Level.WARN);
-		//		Logger.getLogger(SPARQLTemplateBasedLearner2.class).setLevel(Level.INFO);
+		Logger.getLogger(SPARQLTemplateBasedLearner3.class).setLevel(Level.WARN);
+		//		Logger.getLogger(SPARQLTemplateBasedLearner3.class).setLevel(Level.INFO);
 		logger.setLevel(Level.INFO); // TODO: remove when finishing implementation of this class
 		logger.addAppender(new FileAppender(new SimpleLayout(), "log/"+this.getClass().getSimpleName()+".log", false));
 
 		//		oxfordEndpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());		
-		//		oxfordLearner = new SPARQLTemplateBasedLearner2(createOxfordKnowledgebase(oxfordCache));
+		//		oxfordLearner = new SPARQLTemplateBasedLearner3(createOxfordKnowledgebase(oxfordCache));
 	}
 
 	public static Set<String> getUris(final SparqlEndpoint endpoint, final String query, ExtractionDBCache cache, Model model)
@@ -904,10 +901,10 @@ public class SPARQLTemplateBasedLearner3Test
 	//			SPARQLIndex classesIndex = new VirtuosoClassesIndex(endpoint, cache);
 	//			SPARQLIndex propertiesIndex = new VirtuosoPropertiesIndex(endpoint, cache);
 	//			MappingBasedIndex mappingIndex= new MappingBasedIndex(
-	//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
-	//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
-	//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
-	//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
+	//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
+	//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
+	//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
+	//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
 	//					);
 	//	
 	//			Knowledgebase kb = new Knowledgebase(oxfordEndpoint, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
@@ -928,14 +925,14 @@ public class SPARQLTemplateBasedLearner3Test
 
 		static private final WordNet wordnet = new WordNet();
 		static private final Options options = new Options();	
-		private final SPARQLTemplateBasedLearner2 learner;
+		private final SPARQLTemplateBasedLearner3 learner;
 
 		public LearnQueryCallable(String question, int id, QueryTestData testData, Knowledgebase knowledgeBase,boolean pretagged)
 		{
 			this.question=question;
 			this.id=id;					
 			this.testData=testData;
-			learner = new SPARQLTemplateBasedLearner2(knowledgeBase,pretagged?null:POSTaggerHolder.posTagger,wordnet,options);
+			learner = new SPARQLTemplateBasedLearner3(knowledgeBase,pretagged?null:POSTaggerHolder.posTagger,wordnet,options);
 			try {learner.init();} catch (ComponentInitException e) {throw new RuntimeException(e);}
 			learner.setUseIdealTagger(pretagged);
 		}								
@@ -948,14 +945,14 @@ public class SPARQLTemplateBasedLearner3Test
 			learner = null;
 			throw new RuntimeException("method must be changed because the learner has changed");
 //			MappingBasedIndex mappingIndex= new MappingBasedIndex(
-//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
-//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
-//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
-//					SPARQLTemplateBasedLearner2.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
+//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
+//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
+//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
+//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
 //					);
 //
 //			
-//			learner = new SPARQLTemplateBasedLearner2(model,mappingIndex,pretagged?null:POSTaggerHolder.posTagger);
+//			learner = new SPARQLTemplateBasedLearner3(model,mappingIndex,pretagged?null:POSTaggerHolder.posTagger);
 //			try {learner.init();} catch (ComponentInitException e) {throw new RuntimeException(e);}
 //			learner.setUseIdealTagger(pretagged);
 //			learner.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
@@ -1191,7 +1188,7 @@ public class SPARQLTemplateBasedLearner3Test
 	//		// get question and answer from file 
 	//		dbpediaLiveEndpoint = new SparqlEndpoint(new URL(DBPEDIA_LIVE_ENDPOINT_URL_STRING), Collections.singletonList("http://dbpedia.org"), Collections.<String>emptyList());
 	//
-	//		//		dbpediaLiveLearner = new SPARQLTemplateBasedLearner2(createDBpediaLiveKnowledgebase(dbpediaLiveCache));
+	//		//		dbpediaLiveLearner = new SPARQLTemplateBasedLearner3(createDBpediaLiveKnowledgebase(dbpediaLiveCache));
 	//		//		dbpediaLiveLearner.init();
 	//
 	//		// TODO: use thread pools

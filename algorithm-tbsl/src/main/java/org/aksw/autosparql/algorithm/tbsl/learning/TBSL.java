@@ -91,12 +91,12 @@ public class TBSL {
 		this.wordNet = wordNet;
 //		this.cache = cache;
 		
-		SparqlEndpointKS ks;
-		if(knowledgebase instanceof RemoteKnowledgebase){
-			ks = new SparqlEndpointKS(((RemoteKnowledgebase) knowledgebase).getEndpoint());
-		} else {
-			ks = new LocalModelBasedSparqlEndpointKS(((LocalKnowledgebase) knowledgebase).getModel());
-		}
+//		SparqlEndpointKS ks;
+//		if(knowledgebase instanceof RemoteKnowledgebase){
+//			ks = new SparqlEndpointKS(((RemoteKnowledgebase) knowledgebase).getEndpoint());
+//		} else {
+//			ks = new LocalModelBasedSparqlEndpointKS(((LocalKnowledgebase) knowledgebase).getModel());
+//		}
 //		reasoner = new SPARQLReasoner(ks);
 //		reasoner.setCache(cache);
 //		reasoner.prepareSubsumptionHierarchy();
@@ -231,9 +231,7 @@ public class TBSL {
 		
 		return ranking.getBest();
 	}
-	
-	
-	
+		
 	private List<TemplateInstantiation> instantiateTemplate(Template template, Map<Slot, Collection<Entity>> slot2Entities){
 		List<TemplateInstantiation> instantiations = new ArrayList<TemplateInstantiation>();
 		List<Map<Slot, Entity>> allocations = new ArrayList<Map<Slot,Entity>>();

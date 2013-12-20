@@ -32,10 +32,10 @@ public abstract class Knowledgebase {
 	
 	@Override public String toString() {return label;}
 	
-	@Deprecated public Index getResourceIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
-	@Deprecated public Index getClassIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}	
-	@Deprecated public Index getPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
-	@Deprecated public Index getObjectPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
-	@Deprecated public Index getDataPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
-	@Deprecated public MappingBasedIndex getMappingIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
+//	@Deprecated public Index getResourceIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
+//	@Deprecated public Index getClassIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}	
+//	@Deprecated public Index getPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
+//	@Deprecated public Index getObjectPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
+//	@Deprecated public Index getDataPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
+//	@Deprecated public MappingBasedIndex getMappingIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
 }

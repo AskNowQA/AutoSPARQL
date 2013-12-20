@@ -37,9 +37,15 @@ import org.aksw.autosparql.algorithm.tbsl.sparql.Template;
 import org.aksw.autosparql.algorithm.tbsl.sparql.WeightedQuery;
 import org.aksw.autosparql.algorithm.tbsl.templator.Templator;
 import org.aksw.autosparql.algorithm.tbsl.util.PopularityMap;
+import org.aksw.autosparql.algorithm.tbsl.util.PopularityMap.EntityType;
 import org.aksw.autosparql.algorithm.tbsl.util.SPARQLEndpointMetrics;
 import org.aksw.autosparql.algorithm.tbsl.util.Similarity;
-import org.aksw.autosparql.algorithm.tbsl.util.PopularityMap.EntityType;
+import org.aksw.autosparql.commons.nlp.lemma.Lemmatizer;
+import org.aksw.autosparql.commons.nlp.lemma.LingPipeLemmatizer;
+import org.aksw.autosparql.commons.nlp.pling.PlingStemmer;
+import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
+import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
+import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.apache.log4j.Logger;
 import org.dllearner.common.index.HierarchicalIndex;
 import org.dllearner.common.index.Index;
@@ -68,12 +74,6 @@ import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Options;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
-import org.aksw.autosparql.commons.nlp.lemma.Lemmatizer;
-import org.aksw.autosparql.commons.nlp.lemma.LingPipeLemmatizer;
-import org.aksw.autosparql.commons.nlp.pling.PlingStemmer;
-import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
-import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
-import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
@@ -160,7 +160,7 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 	
 	public SPARQLTemplateBasedLearner3(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
 		this(knowledgebase, posTagger, wordNet, options, null);
-		setMappingIndex(knowledgebase.getMappingIndex());
+		setMappingIndex(knowledgebase.getIndices().getMappingIndex());
 	}
 	
 	public SPARQLTemplateBasedLearner3(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){
@@ -169,10 +169,10 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 		} else {
 			this.endpoint = ((RemoteKnowledgebase) knowledgebase).getEndpoint();
 		}
-		this.resourcesIndex = knowledgebase.getResourceIndex();
-		this.classesIndex = knowledgebase.getClassIndex();
-		this.propertiesIndex = knowledgebase.getPropertyIndex();
-		this.mappingIndex = knowledgebase.getMappingIndex();
+		this.resourcesIndex = knowledgebase.getIndices().getResourceIndex();
+		this.classesIndex = knowledgebase.getIndices().getClassIndex();
+		this.propertiesIndex = knowledgebase.getIndices().getPropertyIndex();
+		this.mappingIndex = knowledgebase.getIndices().getMappingIndex();
 		if(propertiesIndex instanceof SPARQLPropertiesIndex){
 			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
 				datatypePropertiesIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
@@ -192,12 +192,12 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 		reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint));
 		setOptions(options);
 		
-		setMappingIndex(knowledgebase.getMappingIndex());
+		setMappingIndex(knowledgebase.getIndices().getMappingIndex());
 	}
 	
 	public SPARQLTemplateBasedLearner3(Knowledgebase knowledgebase){
 		this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(), new Options());
-		setMappingIndex(knowledgebase.getMappingIndex());
+		setMappingIndex(knowledgebase.getIndices().getMappingIndex());
 	}
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index index){
@@ -323,10 +323,10 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 		} else {
 			this.endpoint = ((RemoteKnowledgebase) knowledgebase).getEndpoint();
 		}
-		this.resourcesIndex = knowledgebase.getResourceIndex();
-		this.classesIndex = knowledgebase.getClassIndex();
-		this.propertiesIndex = knowledgebase.getPropertyIndex();
-		this.mappingIndex = knowledgebase.getMappingIndex();
+		this.resourcesIndex = knowledgebase.getIndices().getResourceIndex();
+		this.classesIndex = knowledgebase.getIndices().getClassIndex();
+		this.propertiesIndex = knowledgebase.getIndices().getPropertyIndex();
+		this.mappingIndex = knowledgebase.getIndices().getMappingIndex();
 		if(propertiesIndex instanceof SPARQLPropertiesIndex){
 			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
 				datatypePropertiesIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
