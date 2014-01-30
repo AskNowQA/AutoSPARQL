@@ -22,6 +22,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 import edu.stanford.nlp.util.StringUtils;
 
+/** will be moved to org.aksw.autosparql.algorithm.tbsl.knowledgebase*/
+@Deprecated
 public class OxfordDataExtension {
 	
 	private static final String featurePropertyURI = "http://diadem.cs.ox.ac.uk/ontologies/real-estate#feature";

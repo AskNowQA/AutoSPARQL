@@ -7,7 +7,7 @@
 	<parent>
 		<artifactId>autosparql-parent</artifactId>
 		<groupId>org.aksw.autosparql</groupId>
-		<version>${autosparql.version}</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>autosparql-lite</artifactId>
 	<packaging>war</packaging>

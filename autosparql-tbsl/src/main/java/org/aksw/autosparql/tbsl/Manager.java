@@ -78,7 +78,8 @@ public class Manager {
 			Ini ini = new Ini(is);
 			//base section
 			Section baseSection = ini.get("base");
-			cacheDir = baseSection.get("cacheDir", String.class);
+			//			cacheDir = baseSection.get("cacheDir", String.class);
+			cacheDir = System.getProperty("java.io.tmpdir");
 			wordnetDir = baseSection.get("wordnetDir", String.class);
 			oxfordFallbackIndexDir = baseSection.get("oxfordFallbackIndexDir", String.class);
 			semMapURL = baseSection.get("SemMapURL", String.class);
@@ -215,8 +216,8 @@ public class Manager {
 				"http://purl.org/goodrelations/v1#name", 
 				"http://purl.org/goodrelations/v1#description",
 				"http://xmlns.com/foaf/0.1/depiction", null, optionalProperties, OxfordInfoLabel.class, "x0", false, exampleQuestions);
-//		FallbackIndex fallback = new LuceneIndex(oxfordFallbackIndexDir);
-//		ekb.setFallbackIndex(fallback);
+		//		FallbackIndex fallback = new LuceneIndex(oxfordFallbackIndexDir);
+		//		ekb.setFallbackIndex(fallback);
 
 		ekb.setIcon(new ThemeResource("images/oxford_logo.gif"));
 		return ekb;

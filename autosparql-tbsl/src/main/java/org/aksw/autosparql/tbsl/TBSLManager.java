@@ -76,7 +76,8 @@ import com.hp.hpl.jena.sparql.syntax.ElementGroup;
 import com.hp.hpl.jena.sparql.syntax.ElementOptional;
 import com.hp.hpl.jena.sparql.syntax.ElementPathBlock;
 
-public class TBSLManager {
+public class TBSLManager
+{
 	
 	private final Logger logger = Logger.getLogger(TBSLManager.class);
 	

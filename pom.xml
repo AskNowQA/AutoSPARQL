@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.aksw.autosparql</groupId>
 	<artifactId>autosparql-parent</artifactId>
@@ -9,23 +10,22 @@
 	<modules>
 		<module>autosparql</module>
 		<module>autosparql-lite</module>
-    	<module>autosparql-tbsl</module>
+		<module>autosparql-tbsl</module>
 		<module>algorithm-tbsl</module>
 		<module>commons</module>
 	</modules>
 
 	<properties>
 		<slf4j.version>1.6.4</slf4j.version>
-        <log4j.version>1.2.16</log4j.version>
+		<log4j.version>1.2.16</log4j.version>
 		<compiler.version>1.7</compiler.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- convenience to define GWT version in one place -->
 		<gwt.version>2.3.0</gwt.version>
 		<gxt.version>2.2.5</gxt.version>
 		<!--Define the AKSW dependency version -->
-		<aksw.version>0.2-SNAPSHOT</aksw.version>
-		<!-- from qa -->	
-		<dllearner.version>1.0-SNAPSHOT</dllearner.version>
+		<aksw.version>0.7.2</aksw.version>
+		<!-- from qa -->
 		<solr.version>4.6.0</solr.version>
 		<autosparql.version>1.0-SNAPSHOT</autosparql.version>
 	</properties>
@@ -72,53 +72,53 @@
 	</build>
 
 	<dependencyManagement>
-	<dependencies>	
-	<dependency>
-             	<groupId>org.apache.lucene</groupId>
-             	<artifactId>lucene-core</artifactId>
-             	<version>${solr.version}</version>
-    </dependency>
-            	
-		 <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>jena-arq</artifactId>
-            <version>2.11.0</version>
-        </dependency>
-		<dependency>
-		 <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-parent</artifactId>
-    <version>1.6.4</version>
-		</dependency>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.lucene</groupId>
+				<artifactId>lucene-core</artifactId>
+				<version>${solr.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.jena</groupId>
+				<artifactId>jena-arq</artifactId>
+				<version>2.11.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-parent</artifactId>
+				<version>1.6.4</version>
+			</dependency>
 			<dependency>
 				<groupId>org.aksw.autosparql</groupId>
 				<artifactId>commons</artifactId>
-				<version>${autosparql.version}</version>		
+				<version>${autosparql.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.aksw.autosparql</groupId>
 				<artifactId>autosparql</artifactId>
-				<version>${autosparql.version}</version>		
+				<version>${autosparql.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.aksw.autosparql</groupId>
 				<artifactId>autosparql-tbsl</artifactId>
-				<version>${autosparql.version}</version>		
+				<version>${autosparql.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.aksw.autosparql</groupId>
 				<artifactId>algorithm-tbsl</artifactId>
-				<version>${autosparql.version}</version>		
+				<version>${autosparql.version}</version>
 			</dependency>
-		<dependency> 
-   <groupId>javax</groupId>   
-    <artifactId>javaee-web-api</artifactId>   
-    <version>7.0</version> 
-</dependency> 
-	 <dependency>
-      <groupId>org.openrdf.sesame</groupId>
-      <artifactId>sesame-rio-ntriples</artifactId>
-      <version>2.7.6</version>
-    </dependency>
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-web-api</artifactId>
+				<version>7.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-rio-ntriples</artifactId>
+				<version>2.7.6</version>
+			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
@@ -184,34 +184,37 @@
 				<scope>test</scope>
 			</dependency>
 
-
-
-
-
-			<!--Dependencies that are generated as part of this parent pom -->
-			<dependency>
-				<groupId>org.dllearner</groupId>
-				<artifactId>components-core</artifactId>
-				<version>${project.version}</version>
+			<!-- dl learner -->
+<!-- 			<dependency>
+			<groupId>org.dllearner</groupId>
+			<artifactId>dllearner-parent</artifactId>
+			<version>1.0-20140130.084757-498</version>			
 			</dependency>
 
-			<!--This is the jar of the tests from components-core -->
 			<dependency>
 				<groupId>org.dllearner</groupId>
 				<artifactId>components-core</artifactId>
-				<version>${project.version}</version>
-				<classifier>tests</classifier>
+				<version>1.0-20140130.084529-501</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.dllearner</groupId>
 				<artifactId>components-ext</artifactId>
-				<version>${project.version}</version>
+				<version>1.0-20140130.084749-500</version>
+			</dependency>
+ -->
+ 			<dependency>
+				<groupId>org.dllearner</groupId>
+				<artifactId>components-core</artifactId>
+				<version>0.9</version>
 			</dependency>
 
-
-
-
+			<dependency>
+				<groupId>org.dllearner</groupId>
+				<artifactId>components-ext</artifactId>
+				<version>0.9</version>
+			</dependency>
+			
 			<dependency>
 				<groupId>org.aksw.commons</groupId>
 				<artifactId>sparql</artifactId>
@@ -247,8 +250,6 @@
 				<version>2.2.2</version>
 			</dependency>
 
-
-
 			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
@@ -264,7 +265,7 @@
 			<dependency>
 				<groupId>commons-configuration</groupId>
 				<artifactId>commons-configuration</artifactId>
-				<version>1.6</version>
+				<version>1.8</version>
 			</dependency>
 
 			<!--GWT Dependencies -->
@@ -283,7 +284,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>r07</version>
+				<version>12.0</version>
 			</dependency>
 
 			<!--used in the webservice in interfaces -->
@@ -311,11 +312,8 @@
 				<artifactId>bliki-core</artifactId>
 				<version>3.0.16</version>
 			</dependency>
-			<!-- <dependency>
-				<groupId>opennlp</groupId>
-				<artifactId>tools</artifactId>
-				<version>1.5.0</version>
-			</dependency> -->
+			<!-- <dependency> <groupId>opennlp</groupId> <artifactId>tools</artifactId> 
+				<version>1.5.0</version> </dependency> -->
 
 
 			<!-- Jars for SIMBA stuff from Axel -->
@@ -405,171 +403,105 @@
 				<artifactId>slf4j-api</artifactId>
 				<version>1.6.1</version>
 			</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-solrj</artifactId>
-      		<version>${solr.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-core</artifactId>
-			<version>${solr.version}</version>
-		</dependency>
-		<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.2.6</version>
-		</dependency>
-		
-<!-- 
- 	<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpcore</artifactId>
-				<version>4.3</version>
+			<dependency>
+				<groupId>org.apache.solr</groupId>
+				<artifactId>solr-solrj</artifactId>
+				<version>${solr.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.solr</groupId>
+				<artifactId>solr-core</artifactId>
+				<version>${solr.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
-				<version>4.3.1</version>
-			</dependency>
-            <dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpmime</artifactId>
-				<version>4.3.1</version>
-			</dependency>
-      -->  
-       <!--  solr doesn't seem ready for the newest apache stuff -->
-<!-- 
-        <dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpcore</artifactId>
-				<version>4.2.5</version>
-			</dependency>
-			 -->
-			<!-- 
-            <dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpmime</artifactId>
 				<version>4.2.6</version>
 			</dependency>
-			 -->
-			  
-<dependency>
-	<groupId>net.sf.jwordnet</groupId>
-	<artifactId>jwnl</artifactId>
-	<version>1.4_rc3</version>
-</dependency>
+			<dependency>
+				<groupId>net.sf.jwordnet</groupId>
+				<artifactId>jwnl</artifactId>
+				<version>1.4_rc3</version>
+			</dependency>
 		</dependencies>
 
 	</dependencyManagement>
 
-	<repositories>		
-		<repository>
-			<id>apache-repo-releases</id>
-			<url>https://repository.apache.org/content/repositories/releases/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>apache-repo-snapshots</id>
-			<url>https://repository.apache.org/content/repositories/snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		
+	<repositories>
+		<!-- <repository> -->
+		<!-- <id>apache-repo-snapshots</id> -->
+		<!-- <url>https://repository.apache.org/content/repositories/snapshots/</url> -->
+		<!-- <snapshots> -->
+		<!-- <enabled>true</enabled> -->
+		<!-- </snapshots> -->
+		<!-- </repository> -->
 		<repository>
 			<id>maven.aksw.internal</id>
 			<name>University Leipzig, AKSW Maven2 Repository</name>
 			<url>http://maven.aksw.org:8081/archiva/repository/internal</url>
 		</repository>
-
 		<repository>
 			<id>maven.aksw.snapshots</id>
 			<name>University Leipzig, AKSW Maven2 Repository</name>
 			<url>http://maven.aksw.org:8081/archiva/repository/snapshots</url>
 		</repository>
-<!-- 
-		<repository>
-			<id>GXT</id>
-			<url>http://maven.jahia.org/maven2/</url>
-		</repository>
- -->
-		<!-- - This is so we can get the 1.3-SNAPSHOT of GWT Maven Plugin cause 
-			1.2 is broken on the hudson - - Here's a good place to browse the repository: 
-			https://nexus.codehaus.org -->
-<!-- 		<repository>
-			<id>maven.codehaus.snapshots</id>
-			<name>Codehaus repository Repository</name>
-			<url>https://nexus.codehaus.org/content/repositories/public</url>
-		</repository>
- -->
-<!-- 		<repository>
-			<id>google-maven-snapshot-repository</id>
-			<name>Google Maven Snapshot Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/google-snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository> -->
+		<!-- <repository> <id>apache-repo-releases</id> <url>https://repository.apache.org/content/repositories/releases/</url> 
+			<releases> <enabled>true</enabled> </releases> </repository> -->
 	</repositories>
-  	<dependencies>
-  	
-  				<dependency>
-				<groupId>org.apache.solr</groupId>
-				<artifactId>solr-solrj</artifactId>				
-			</dependency>
-  	
-  	
-		<dependency>
-		<groupId>org.apache.jena</groupId>
-		<artifactId>jena-arq</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.dllearner</groupId>
-			<artifactId>components-core</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-log4j12</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jena</artifactId>
-					<groupId>com.hp.hpl.jena</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>any23-core</artifactId>
-					<groupId>org.deri.any23</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>nif</artifactId>
-					<groupId>org.nlp2rdf</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 
-		<dependency>
-			<groupId>org.dllearner</groupId>
-			<artifactId>components-ext</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-log4j12</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jena</artifactId>
-					<groupId>com.hp.hpl.jena</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>any23-core</artifactId>
-					<groupId>org.deri.any23</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>nif</artifactId>
-					<groupId>org.nlp2rdf</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
+<!-- 	<dependencies> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.apache.solr</groupId> -->
+<!-- 			<artifactId>solr-solrj</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.apache.jena</groupId> -->
+<!-- 			<artifactId>jena-arq</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.dllearner</groupId> -->
+<!-- 			<artifactId>components-core</artifactId> -->
+<!-- 			<exclusions> -->
+<!-- 				<exclusion> -->
+<!-- 					<artifactId>slf4j-log4j12</artifactId> -->
+<!-- 					<groupId>org.slf4j</groupId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<artifactId>jena</artifactId> -->
+<!-- 					<groupId>com.hp.hpl.jena</groupId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<artifactId>any23-core</artifactId> -->
+<!-- 					<groupId>org.deri.any23</groupId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<artifactId>nif</artifactId> -->
+<!-- 					<groupId>org.nlp2rdf</groupId> -->
+<!-- 				</exclusion> -->
+<!-- 			</exclusions> -->
+<!-- 		</dependency> -->
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.dllearner</groupId> -->
+<!-- 			<artifactId>components-ext</artifactId> -->
+<!-- 			<exclusions> -->
+<!-- 				<exclusion> -->
+<!-- 					<artifactId>slf4j-log4j12</artifactId> -->
+<!-- 					<groupId>org.slf4j</groupId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<artifactId>jena</artifactId> -->
+<!-- 					<groupId>com.hp.hpl.jena</groupId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<artifactId>any23-core</artifactId> -->
+<!-- 					<groupId>org.deri.any23</groupId> -->
+<!-- 				</exclusion> -->
+<!-- 				<exclusion> -->
+<!-- 					<artifactId>nif</artifactId> -->
+<!-- 					<groupId>org.nlp2rdf</groupId> -->
+<!-- 				</exclusion> -->
+<!-- 			</exclusions> -->
+<!-- 		</dependency> -->
+<!-- 	</dependencies> -->
 </project>

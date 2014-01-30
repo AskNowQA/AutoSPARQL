@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>autosparql-parent</artifactId>
-        <groupId>org.aksw.autosparql</groupId>
-        <version>1.0-SNAPSHOT</version>
+		<groupId>org.aksw.autosparql</groupId>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>commons</artifactId>
 	<name>commons</name>
@@ -16,16 +16,16 @@
 		<solr.version>4.1.0</solr.version>
 	</properties>
 	<dependencies>
-	<dependency>
-	<groupId>edu.mit</groupId>
-	<artifactId>jwi</artifactId>
-	<version>2.3.0</version>
-</dependency>
-		 <dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<scope>test</scope>
-			</dependency>
+		<dependency>
+			<groupId>edu.mit</groupId>
+			<artifactId>jwi</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -50,7 +50,6 @@
 		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-solrj</artifactId>
-			<version>${solr.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -60,12 +59,12 @@
 		<dependency>
 			<groupId>org.apache.opennlp</groupId>
 			<artifactId>opennlp-tools</artifactId>
-			<version>1.5.1-incubating</version>
+			<version>1.5.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.opennlp</groupId>
 			<artifactId>opennlp-maxent</artifactId>
-			<version>3.0.1-incubating</version>
+			<version>3.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.aliasi</groupId>
@@ -80,12 +79,10 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20090211</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-core</artifactId>
-			<version>${solr.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
@@ -95,12 +92,10 @@
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-ntriples</artifactId>
-			<version>2.7.0-beta2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-api</artifactId>
-			<version>2.7.0-beta2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -110,7 +105,6 @@
 		<dependency>
 			<groupId>org.dllearner</groupId>
 			<artifactId>components-core</artifactId>
-			<version>${dllearner.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -129,7 +123,6 @@
 		<dependency>
 			<groupId>org.dllearner</groupId>
 			<artifactId>components-ext</artifactId>
-			<version>${dllearner.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>postagger</artifactId>
@@ -138,29 +131,27 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-				<groupId>org.apache.jena</groupId>
-				<artifactId>jena-arq</artifactId>
-				<version>2.9.2</version>
-			</dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-arq</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.23</version>
 		</dependency>
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>karussell_snapshots</id>
-			<url>https://github.com/karussell/mvnrepo/raw/master/snapshots/</url>
-		</repository>
-		<repository>
-			<id>gerb_snapshots</id>
-			<url>https://raw.github.com/gerbsen/maven-repo/tree/master/snapshots</url>
-		</repository>
-		<repository>
-			<id>maven.aksw.internal</id>
-			<url>http://maven.aksw.org/archiva/repository/internal</url>
-		</repository>
-	</repositories>
+	<!-- <repositories> -->
+	<!-- <repository> -->
+	<!-- <id>karussell_snapshots</id> -->
+	<!-- <url>https://github.com/karussell/mvnrepo/raw/master/snapshots/</url> -->
+	<!-- </repository> -->
+	<!-- <repository> -->
+	<!-- <id>gerb_snapshots</id> -->
+	<!-- <url>https://raw.github.com/gerbsen/maven-repo/tree/master/snapshots</url> -->
+	<!-- </repository> -->
+	<!-- <repository> -->
+	<!-- <id>maven.aksw.internal</id> -->
+	<!-- <url>http://maven.aksw.org/archiva/repository/internal</url> -->
+	<!-- </repository> -->
+	<!-- </repositories> -->
 </project>
