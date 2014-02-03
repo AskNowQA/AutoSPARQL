@@ -12,3 +12,8 @@ autosparql/select-cache
 autosparql/construct-cache
 autosparql/log
 autosparql/logs
+algorithm-tbsl/logs/
+autosparql-tbsl/cache/
+autosparql-tbsl/logs/
+algorithm-tbsl/dbpedia/
+autosparql-tbsl/DBpedia Live/
