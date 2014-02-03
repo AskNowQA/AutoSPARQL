@@ -20,6 +20,7 @@ import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.NoTemplateFoundException;
 import org.aksw.autosparql.tbsl.algorithm.learning.TBSL;
+import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
 import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
 
 /**
@@ -35,7 +36,7 @@ public class QueryRankingOptimization {
 	private static final int NUMBER_OF_FEATURES					= 5;
 	private static final Double STEP_SIZE						= 0.1;
 	private static final String LANGUAGE						= "en";
-	private static TBSL tbsl;
+	private static TBSL tbsl = TbslDbpedia.INSTANCE;
 	private static List<Question> questions;
 	private static SparqlEndpoint endpoint = SparqlEndpoint.getEndpointDBpedia();
 	private static ExtractionDBCache cache = new ExtractionDBCache("/opt/tbsl/cache");
@@ -106,21 +107,20 @@ public class QueryRankingOptimization {
 	 */
 	private static void init() {
 		
-		SparqlEndpoint endpoint		= SparqlEndpoint.getEndpointDBpedia();
-		// solr resources index
-		SOLRIndex resourcesIndex	= new SOLRIndex("http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_dbpedia_resources");
-		resourcesIndex.setPrimarySearchField("label");
+//		SparqlEndpoint endpoint		= SparqlEndpoint.getEndpointDBpedia();
+//		// solr resources index
+//		SOLRIndex resourcesIndex	= new SOLRIndex("http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_dbpedia_resources");
+//		resourcesIndex.setPrimarySearchField("label");
+//		
+//		// solr classes, properties and boa index
+//		Index classesIndex				= new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_classes");
+//		Index propertiesIndex			= new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_properties");
+//		SOLRIndex boa_propertiesIndex	= new SOLRIndex("http://139.18.2.173:8080/solr/boa_fact_detail");
+//		boa_propertiesIndex.setSortField("boa-score");
+//		propertiesIndex = new HierarchicalIndex(boa_propertiesIndex, propertiesIndex);
 		
-		// solr classes, properties and boa index
-		Index classesIndex				= new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_classes");
-		Index propertiesIndex			= new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_properties");
-		SOLRIndex boa_propertiesIndex	= new SOLRIndex("http://139.18.2.173:8080/solr/boa_fact_detail");
-		boa_propertiesIndex.setSortField("boa-score");
-		propertiesIndex = new HierarchicalIndex(boa_propertiesIndex, propertiesIndex);
-		
-		Knowledgebase kb = new RemoteKnowledgebase(endpoint, null, null, resourcesIndex, propertiesIndex, classesIndex, null);
-		tbsl = new TBSL(kb);
-		tbsl.init();
+//		Knowledgebase kb = new RemoteKnowledgebase(endpoint, null, null, resourcesIndex, propertiesIndex, classesIndex, null);
+//		tbsl = new TBSL(kb);
 		
 		questions = QaldLoader.loadAndSerializeQuestions(Arrays.asList("en","de"), 
 				"de_wac_175m_600.crf.ser.gz", "english.conll.4class.distsim.crf.ser.gz",

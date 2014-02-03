@@ -14,6 +14,9 @@ import java.util.Set;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
+import org.aksw.autosparql.tbsl.algorithm.learning.TBSL;
+import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
+import org.aksw.autosparql.tbsl.algorithm.learning.TbslOxford;
 import org.aksw.autosparql.tbsl.gui.vaadin.Manager;
 import org.aksw.autosparql.tbsl.gui.vaadin.TBSLManager;
 import org.aksw.autosparql.tbsl.gui.vaadin.UserSession;
@@ -80,7 +83,7 @@ import com.vaadin.ui.themes.BaseTheme;
 	private View currentView;
 	
 	private Embedded knowledgebaseLogo;
-	private NativeSelect knowledgebaseSelector;
+	private NativeSelect tbslSelector;
 	
 	private NativeButton executeButton;
 //	private TextField questionField;
@@ -143,14 +146,14 @@ import com.vaadin.ui.themes.BaseTheme;
 	public void initWithParams(String endpoint, String question){
 		System.out.println("init with params");
 		if(endpoint.equals("dbpedia")){
-			knowledgebaseSelector.select(UserSession.getManager().getKnowledgebases().get(1));
+			tbslSelector.select(TbslDbpedia.INSTANCE);
 		} else if(endpoint.equals("oxford")){
-			knowledgebaseSelector.select(UserSession.getManager().getKnowledgebases().get(0));
-		}
+			tbslSelector.select(TbslOxford.INSTANCE);
+//		}
 		questionBox.addItem(question);
 		questionBox.setValue(question);
 		onExecuteQuery();
-		
+		}
 	}
 	
 	private void createHeader(){
@@ -230,7 +233,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		HorizontalLayout l = new HorizontalLayout();
 		l.setSpacing(true);
 		
-		Component kbSelector = createKnowledgebaseComponent();
+		Component kbSelector = createSelectTBSLComponent();
 		kbSelector.setWidth("150px");
 		kbSelector.setHeight("100px");
 		l.addComponent(kbSelector);
@@ -421,7 +424,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		return otherSolutionsWindow;
 	}
 	
-	private Component createKnowledgebaseComponent(){
+	private Component createSelectTBSLComponent(){
 		l = new VerticalLayout();
 		l.setSpacing(true);
 		l.setSizeFull();
@@ -429,25 +432,26 @@ import com.vaadin.ui.themes.BaseTheme;
 		IndexedContainer ic = new IndexedContainer();
 		ic.addContainerProperty("label", String.class, null);
 		
-		for(ExtendedKnowledgebase ekb : UserSession.getManager().getKnowledgebases()){
-			ic.addItem(ekb).getItemProperty("label").setValue(ekb.getLabel());
+		for(TBSL tbsl: UserSession.getManager().tbsls){
+			ic.addItem(tbsl).getItemProperty("label").setValue(tbsl.getLabel());
 		}
+
         
-		knowledgebaseSelector = new NativeSelect();
-		knowledgebaseSelector.addStyleName("borderless");
-		knowledgebaseSelector.setWidth("100%");
-		knowledgebaseSelector.setHeight(null);
-		knowledgebaseSelector.setNullSelectionAllowed(false);
-		knowledgebaseSelector.setContainerDataSource(ic);
-		knowledgebaseSelector.setImmediate(true);
-		knowledgebaseSelector.addListener(new ValueChangeListener() {
+		tbslSelector = new NativeSelect();
+		tbslSelector.addStyleName("borderless");
+		tbslSelector.setWidth("100%");
+		tbslSelector.setHeight(null);
+		tbslSelector.setNullSelectionAllowed(false);
+		tbslSelector.setContainerDataSource(ic);
+		tbslSelector.setImmediate(true);
+		tbslSelector.addListener(new ValueChangeListener() {
 			
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				onChangeKnowledgebase();
 			}
 		});
-        l.addComponent(knowledgebaseSelector);
+        l.addComponent(tbslSelector);
         
 		knowledgebaseLogo = new Embedded("");
 		knowledgebaseLogo.setType(Embedded.TYPE_IMAGE);
@@ -461,18 +465,18 @@ import com.vaadin.ui.themes.BaseTheme;
 	
 	private void addExampleQuestions(){
 		questionBox.removeAllItems();
-		List<String> exampleQuestions = UserSession.getManager().getCurrentExtendedKnowledgebase().getExampleQuestions();
+		List<String> exampleQuestions = UserSession.getManager().activeTBSL. CurrentExtendedKnowledgebase().getExampleQuestions();
 		for(String question : exampleQuestions){
 			questionBox.addItem(question);
 		}
 	}
 	
 	public void reset(){
-		knowledgebaseSelector.setValue(UserSession.getManager().getCurrentExtendedKnowledgebase());
+		tbslSelector.setValue(UserSession.getManager().getCurrentExtendedKnowledgebase());
 	}
 	
 	private void onChangeKnowledgebase(){
-		ExtendedKnowledgebase ekb = (ExtendedKnowledgebase) knowledgebaseSelector.getValue();
+		ExtendedKnowledgebase ekb = (ExtendedKnowledgebase) tbslSelector.getValue();
 		if(ekb.getIcon() != null){
 			knowledgebaseLogo.setSource(ekb.getIcon());
 			knowledgebaseLogo.setDescription(ekb.getKnowledgebase().getDescription());
@@ -776,7 +780,7 @@ import com.vaadin.ui.themes.BaseTheme;
 	        header.addComponent(propertySelector);
 	        header.setSpacing(true);
 	        header.setComponentAlignment(propertySelector, Alignment.MIDDLE_LEFT);
-		} else if(UserSession.getManager().getKnowledgebases().indexOf(UserSession.getManager().getCurrentExtendedKnowledgebase()) == 0){
+		} else if(UserSession.getManager().activeTBSL == TbslDbpedia.INSTANCE){
 			Label l = new Label("Sort by ");
 			l.setHeight("100%");
 			l.addStyleName("white-font");
@@ -831,7 +835,7 @@ import com.vaadin.ui.themes.BaseTheme;
 	}
 	
 	private boolean canShowMap(List<String> existingProperties){
-		return 	UserSession.getManager().getKnowledgebases().indexOf(UserSession.getManager().getCurrentExtendedKnowledgebase()) == 0 
+		return 	UserSession.getManager().activeTBSL==TbslDbpedia.INSTANCE
 				||
 				(existingProperties.contains("http://www.w3.org/2003/01/geo/wgs84_pos#lat") && existingProperties.contains("http://www.w3.org/2003/01/geo/wgs84_pos#long"));
 	}

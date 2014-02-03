@@ -20,12 +20,13 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.aksw.autosparql.commons.sparql.SparqlQueriable;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.DBpediaKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.NoTemplateFoundException;
 import org.aksw.autosparql.tbsl.algorithm.learning.TBSL;
+import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
+import org.aksw.autosparql.tbsl.algorithm.learning.TbslOxford;
 import org.aksw.autosparql.tbsl.algorithm.sparql.WeightedQuery;
 import org.aksw.autosparql.tbsl.algorithm.util.PopularityMap;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.Answer;
@@ -37,7 +38,6 @@ import org.aksw.autosparql.tbsl.gui.vaadin.util.FallbackIndex;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.OxfordInfoLabel;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.TBSLProgressListener;
 import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.dllearner.algorithms.qtl.QTL;
 import org.dllearner.algorithms.qtl.exception.EmptyLGGException;
@@ -49,7 +49,6 @@ import org.dllearner.core.ComponentInitException;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
-import org.ini4j.Options;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Node;
@@ -77,18 +76,19 @@ import com.hp.hpl.jena.sparql.syntax.ElementGroup;
 import com.hp.hpl.jena.sparql.syntax.ElementOptional;
 import com.hp.hpl.jena.sparql.syntax.ElementPathBlock;
 
-/** todo: add javadoc: difference between TBSL and TBSLManager
-
-*/
+/** Manages TBSL and is called by the main view. */
 public class TBSLManager
 {
+//	public enum SELECTED_TBSL {DBPEDIA,OXFORD};
 	
 	private final Logger logger = Logger.getLogger(TBSLManager.class);
 	
 	private ExtractionDBCache cache;
 	private ExtendedKnowledgebase currentExtendedKnowledgebase;
 	
-	private TBSL tbsl;
+	public TBSL activeTBSL;
+	public final static TBSL[] tbsls = {TbslDbpedia.INSTANCE,TbslOxford.INSTANCE};
+	
 	private FallbackIndex fallback;
 	
 	private String learnedSPARQLQuery;
@@ -104,29 +104,28 @@ public class TBSLManager
 	private Map<String, Map<String, Set<Object>>> property2URI2Values;
 	private String currentQuestion;
 	
-	private List<ExtendedKnowledgebase> knowledgebases = new ArrayList<ExtendedKnowledgebase>();
-	
-	
+//	private List<ExtendedKnowledgebase> knowledgebases = new ArrayList<ExtendedKnowledgebase>();
+		
 	public TBSLManager() {
 		init();
 	}
 	
 	public void init() {
-//		try {
-			cache = new ExtractionDBCache(Manager.getInstance().getCacheDir());
-			cache.setMaxExecutionTimeInSeconds(100);
-
-			knowledgebases = Manager.getInstance().getKnowledgebases(cache);
-			currentExtendedKnowledgebase = knowledgebases.get(0);
-
-			tbsl = new TBSL(currentExtendedKnowledgebase.getKnowledgebase());
-//			tbsl = new TBSL(currentExtendedKnowledgebase.getKnowledgebase(), Manager.getInstance().getPosTagger(), Manager.getInstance().getWordNet(), new Options(), cache);
-			tbsl.init();				
-			
-
-			setKnowledgebase(currentExtendedKnowledgebase);
-//		} catch (ComponentInitException e) {
-//			e.printStackTrace();
+////		try {
+//			cache = new ExtractionDBCache(Manager.getInstance().getCacheDir());
+//			cache.setMaxExecutionTimeInSeconds(100);
+//
+//			knowledgebases = Manager.getInstance().getKnowledgebases(cache);
+//			currentExtendedKnowledgebase = knowledgebases.get(0);
+//
+//			tbsl = new TBSL(currentExtendedKnowledgebase.getKnowledgebase());
+////			tbsl = new TBSL(currentExtendedKnowledgebase.getKnowledgebase(), Manager.getInstance().getPosTagger(), Manager.getInstance().getWordNet(), new Options(), cache);
+//			tbsl.init();				
+//			
+//
+//			setKnowledgebase(currentExtendedKnowledgebase);
+////		} catch (ComponentInitException e) {
+////			e.printStackTrace();
 //		}
 	}
 	
@@ -154,6 +153,10 @@ public class TBSLManager
 	}
 	
 	
+	/** Used after getting answers from a query. 
+	 * @param posExamples
+	/** @param negExamples
+	/** @return */
 	public Refinement refine(List<String> posExamples, List<String> negExamples){
 		logger.info("Refining answer...");
 		logger.info("Positive examples: " + posExamples);
@@ -166,10 +169,10 @@ public class TBSLManager
 		} else {
 			qtl = new QTL(((LocalKnowledgebase) kb).getModel());
 		}
-		
-		
+				
 		qtl.setRestrictToNamespaces(currentExtendedKnowledgebase.getPropertyNamespaces());
-		Set<String> relevantKeywords = tbsl.getRelevantKeywords();
+		
+		Set<String> relevantKeywords = activeTBSL.getRelevantKeywords();
 		logger.info("Relevant filter keywords: " + relevantKeywords);
 		qtl.addStatementFilter(new QuestionBasedStatementFilter2(relevantKeywords));
 		try {
@@ -203,71 +206,73 @@ public class TBSLManager
 		return null;
 	}
 	
-	public List<ExtendedKnowledgebase> getKnowledgebases() {
-		return knowledgebases;
-	}
+//	public List<ExtendedKnowledgebase> getKnowledgebases() {
+//		return knowledgebases;
+//	}
 	
 	public void setKnowledgebase(ExtendedKnowledgebase ekb){
 		this.currentExtendedKnowledgebase = ekb;
-		tbsl.setKnowledgebase(ekb.getKnowledgebase());
-		if(ekb.getInfoBoxClass() == OxfordInfoLabel.class){
-			try {
-				tbsl.init();
-			} catch (ComponentInitException e) {
-				e.printStackTrace();
-			}
-			tbsl.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
-			tbsl.setUseDomainRangeRestriction(false);
-			tbsl.setPopularityMap(null);
-		} else {
-			tbsl.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex"});
-			PopularityMap map;
-			Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
-			if(kb instanceof RemoteKnowledgebase){
-				map = new PopularityMap(this.getClass().getClassLoader().getResource("dbpedia_popularity.map").getPath(),
-						 new SparqlQueriable(((RemoteKnowledgebase)kb).getEndpoint(), "cache"));
-			} else {
-				map = new PopularityMap(this.getClass().getClassLoader().getResource("dbpedia_popularity.map").getPath(),
-						new SparqlQueriable(((LocalKnowledgebase)kb).getModel()));
-			}			
-			tbsl.setUseDomainRangeRestriction(true);
-			tbsl.setPopularityMap(map);
-		}
-		Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
-		if(kb instanceof RemoteKnowledgebase){
-			nlg = new SimpleNLGwithPostprocessing(((RemoteKnowledgebase) kb).getEndpoint(), Manager.getInstance().getWordnetDir());
-		} else {
-			nlg = new SimpleNLGwithPostprocessing(((LocalKnowledgebase) kb).getModel(), Manager.getInstance().getWordnetDir());
-		}
-		//		tbsl.setCache(cache);
-		fallback = ekb.getFallbackIndex();
+//		
+//		activeTBSL.setKnowledgebase(ekb.getKnowledgebase());
+//		if(ekb.getInfoBoxClass() == OxfordInfoLabel.class){
+//			try {
+//				activeTBSL.init();
+//			} catch (ComponentInitException e) {
+//				e.printStackTrace();
+//			}
+//			activeTBSL.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
+//			activeTBSL.setUseDomainRangeRestriction(false);
+//			activeTBSL.setPopularityMap(null);
+//		} else {
+//			activeTBSL.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex"});
+//			PopularityMap map;
+//			Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
+//			if(kb instanceof RemoteKnowledgebase){
+//				map = new PopularityMap(this.getClass().getClassLoader().getResource("dbpedia_popularity.map").getPath(),
+//						 new SparqlQueriable(((RemoteKnowledgebase)kb).getEndpoint(), "cache"));
+//			} else {
+//				map = new PopularityMap(this.getClass().getClassLoader().getResource("dbpedia_popularity.map").getPath(),
+//						new SparqlQueriable(((LocalKnowledgebase)kb).getModel()));
+//			}			
+//			activeTBSL.setUseDomainRangeRestriction(true);
+//			activeTBSL.setPopularityMap(map);
+//		}
+//		Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
+//		if(kb instanceof RemoteKnowledgebase){
+//			nlg = new SimpleNLGwithPostprocessing(((RemoteKnowledgebase) kb).getEndpoint(), Manager.getInstance().getWordnetDir());
+//		} else {
+//			nlg = new SimpleNLGwithPostprocessing(((LocalKnowledgebase) kb).getModel(), Manager.getInstance().getWordnetDir());
+//		}
+//		//		tbsl.setCache(cache);
+//		fallback = ekb.getFallbackIndex();
 	}
 	
-	public ExtendedKnowledgebase getCurrentExtendedKnowledgebase() {
-		return currentExtendedKnowledgebase;
-	}
+//	public ExtendedKnowledgebase getCurrentExtendedKnowledgebase() {
+//		return currentExtendedKnowledgebase;
+//	}
 	
 	public List<Entry<String, String>> getMoreSolutions(){
 		return getMoreSolutions(1);
 	}
 	
 	public List<Entry<String, String>> getMoreSolutions(int offset){
-		Map<String, String> query2Translation = new LinkedHashMap<String, String>();
-		SortedSet<WeightedQuery> otherCandidates = tbsl.getGeneratedQueries();
-		List<WeightedQuery> subList = new ArrayList<WeightedQuery>(otherCandidates).subList(
-				offset, Math.min(otherCandidates.size(), offset + 10));
-		for(WeightedQuery wQ : subList){
-			String queryString = wQ.getQuery().toString();
-			String translation = getNLRepresentation(queryString);
-			query2Translation.put(queryString, translation);
-		}
+//		Map<String, String> query2Translation = new LinkedHashMap<String, String>();
+//		
+//		SortedSet<WeightedQuery> otherCandidates = activeTBSL.getGeneratedQueries();
+//		List<WeightedQuery> subList = new ArrayList<WeightedQuery>(otherCandidates).subList(
+//				offset, Math.min(otherCandidates.size(), offset + 10));
+//		for(WeightedQuery wQ : subList){
+//			String queryString = wQ.getQuery().toString();
+//			String translation = getNLRepresentation(queryString);
+//			query2Translation.put(queryString, translation);
+//		}
 		List<Entry<String, String>> otherSolutions = new ArrayList<Entry<String,String>>();
-		for(Entry<String, String> entry : query2Translation.entrySet()){
-			otherSolutions.add(entry);
-		}
+//		for(Entry<String, String> entry : query2Translation.entrySet()){
+//			otherSolutions.add(entry);
+//		}
 		return otherSolutions;
 	}
-	
+
 //	public List<BasicResultItem> answerQuestion(String question){
 //		learnedSPARQLQuery = null;
 //		List<BasicResultItem> result = new ArrayList<BasicResultItem>();
@@ -356,7 +361,7 @@ public class TBSLManager
 			learnedSPARQLQuery = null;
 //			tbsl.setQuestion(question);
 //			tbsl.learnSPARQLQueries();
-			learnedSPARQLQuery = tbsl.answerQuestion(question).getQuery();
+			learnedSPARQLQuery = activeTBSL.answerQuestion(question).getQuery();
 			
 			
 			if(learnedSPARQLQuery != null){
@@ -547,7 +552,7 @@ public class TBSLManager
 		try {
 //			tbsl.learnSPARQLQueries();
 //			learnedSPARQLQuery = tbsl.getBestSPARQLQuery();
-			learnedSPARQLQuery=tbsl.answerQuestion(question).getQuery();
+			learnedSPARQLQuery=activeTBSL.answerQuestion(question).getQuery();
 		} catch (NoTemplateFoundException e) {
 			e.printStackTrace();
 		}
@@ -559,7 +564,7 @@ public class TBSLManager
 		
 		List<BasicResultItem> result = fallback.getData(question, 100, 0);
 		//hack if OXford KB we add the price relation, because we need this for the price chart view
-		if(knowledgebases.indexOf(currentExtendedKnowledgebase) == 0){
+		if(activeTBSL==TbslOxford.INSTANCE){
 			Map<String, Set<Object>> uri2Values = new HashMap<String, Set<Object>>();
 			String uri;
 			Object price;

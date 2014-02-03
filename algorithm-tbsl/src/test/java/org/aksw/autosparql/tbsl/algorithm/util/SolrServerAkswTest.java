@@ -18,7 +18,7 @@ public class SolrServerAkswTest
 		}
 		{
 			List<String> objectProperties = SolrServerAksw.INSTANCE.objectPropertiesIndex.getResources("written");
-			assertNotNull(objectProperties);
+			assertNotNull(objectProperties);			
 			assertFalse("boa doesn't find author by 'written'",objectProperties.isEmpty());
 			assertTrue("boa doesn't find author by 'written'",objectProperties.contains("http://dbpedia.org/ontology/author"));
 		}

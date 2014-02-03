@@ -1,7 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.knowledgebase;
 
 import static org.junit.Assert.assertTrue;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.DBpediaKnowledgebase;
 import org.junit.Test;
 import com.hp.hpl.jena.query.QuerySolution;
 

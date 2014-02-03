@@ -18,7 +18,7 @@ public class Indices
 	public final Index classIndex;
 	public final Index objectPropertyIndex;
 	public final Index dataPropertyIndex;	
-	public MappingBasedIndex mappingIndex = null;
+	public final MappingBasedIndex mappingIndex;;
 	
 	public Index propertyIndex;
 
@@ -54,9 +54,19 @@ public class Indices
 	 {
 		 this(new LemmatizedIndex(new SPARQLIndex(endpoint)), new LemmatizedIndex(new SPARQLClassesIndex(endpoint)), new LemmatizedIndex(new SPARQLObjectPropertiesIndex(endpoint)), new LemmatizedIndex(new SPARQLDatatypePropertiesIndex(endpoint)));
 	 }
+	
+	public Indices(SparqlEndpoint endpoint,MappingBasedIndex mappingIndex)
+	 {
+		 this(new LemmatizedIndex(new SPARQLIndex(endpoint)), new LemmatizedIndex(new SPARQLClassesIndex(endpoint)), new LemmatizedIndex(new SPARQLObjectPropertiesIndex(endpoint)), new LemmatizedIndex(new SPARQLDatatypePropertiesIndex(endpoint)),mappingIndex);
+	 }
 
 	 public Indices(Model model)
 	 {
 		 this(new LemmatizedIndex(new SPARQLIndex(model)), new LemmatizedIndex(new SPARQLClassesIndex(model)), new LemmatizedIndex(new SPARQLObjectPropertiesIndex(model)), new LemmatizedIndex(new SPARQLDatatypePropertiesIndex(model)));
+	 }
+	 
+	 public Indices(Model model,MappingBasedIndex mappingIndex)
+	 {
+		 this(new LemmatizedIndex(new SPARQLIndex(model)), new LemmatizedIndex(new SPARQLClassesIndex(model)), new LemmatizedIndex(new SPARQLObjectPropertiesIndex(model)), new LemmatizedIndex(new SPARQLDatatypePropertiesIndex(model)),mappingIndex);
 	 }
 }

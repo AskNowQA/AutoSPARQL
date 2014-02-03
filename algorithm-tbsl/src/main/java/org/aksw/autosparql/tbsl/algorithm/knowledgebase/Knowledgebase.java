@@ -5,8 +5,8 @@ import com.hp.hpl.jena.query.ResultSet;
 
 public abstract class Knowledgebase {
 	
-	private String label;
-	private String description;
+	private final String label;
+	private final String description;
 	protected final Indices indices;
 	
 	public Indices getIndices() {return indices;}

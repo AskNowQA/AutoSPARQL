@@ -176,20 +176,20 @@ public class Manager {
 		//			Index classesIndex = new SPARQLClassesIndex(model);
 		//			Index propertiesIndex = new SPARQLPropertiesIndex(model);
 		//
-		MappingBasedIndex mappingIndex= new MappingBasedIndex(
-				this.getClass().getClassLoader().getResource("oxford_class_mappings.txt").getPath(), 
-				this.getClass().getClassLoader().getResource("oxford_resource_mappings.txt").getPath(),
-				this.getClass().getClassLoader().getResource("oxford_dataproperty_mappings.txt").getPath(),
-				this.getClass().getClassLoader().getResource("oxford_objectproperty_mappings.txt").getPath()
-				);
+//		MappingBasedIndex mappingIndex= new MappingBasedIndex(
+//				this.getClass().getClassLoader().getResource("oxford_class_mappings.txt").getPath(), 
+//				this.getClass().getClassLoader().getResource("oxford_resource_mappings.txt").getPath(),
+//				this.getClass().getClassLoader().getResource("oxford_dataproperty_mappings.txt").getPath(),
+//				this.getClass().getClassLoader().getResource("oxford_objectproperty_mappings.txt").getPath()
+//				);
 		//			
 		////			Knowledgebase kb = new LocalKnowledgebase(model, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
 		//			Knowledgebase kb = new RemoteKnowledgebase(endpoint, "Oxford - Real estate", "TODO",indices);
-		Model model = ModelFactory.createMemModelMaker().createDefaultModel();
-		model.read(this.getClass().getClassLoader().getResourceAsStream("oxford.ttl"),null,"TTL");
-		Indices indices = new Indices(model);
-		indices.mappingIndex = mappingIndex;
-		Knowledgebase kb = new LocalKnowledgebase(model, "oxford", "oxford", indices);
+//		Model model = ModelFactory.createMemModelMaker().createDefaultModel();
+//		model.read(this.getClass().getClassLoader().getResourceAsStream("oxford.ttl"),null,"TTL");
+//		Indices indices = new Indices(model);
+//		indices.mappingIndex = mappingIndex;
+//		Knowledgebase kb = new LocalKnowledgebase(model, "oxford", "oxford", indices);
 
 		String infoTemplateHtml = "<div><h3><b>label</b></h3></div>" +
 				"<div style='float: right; height: 100px; width: 200px'>" +

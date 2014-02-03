@@ -18,6 +18,9 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class StanfordPartOfSpeechTagger implements PartOfSpeechTagger{
 
+	/** if you only use it single threadedly just use the singleton to save initialization time */	
+	public static final StanfordPartOfSpeechTagger SINGLETON = new StanfordPartOfSpeechTagger();
+
 	private StanfordCoreNLP pipeline;
 	
 	public StanfordPartOfSpeechTagger(){

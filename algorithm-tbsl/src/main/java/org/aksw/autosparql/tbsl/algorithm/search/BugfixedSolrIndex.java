@@ -54,7 +54,7 @@ public class BugfixedSolrIndex extends Index
 	}
 
 	@Override
-	public List<String> getResources(String queryString, int limit, int offset) {
+	public List<String> getResources(String queryString, int limit, int offset) {		
 		List<String> resources = new ArrayList<String>();
 		QueryResponse response;
 		try {
