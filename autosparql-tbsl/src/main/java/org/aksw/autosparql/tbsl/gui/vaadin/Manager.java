@@ -19,7 +19,7 @@ import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
+import org.aksw.autosparql.tbsl.algorithm.knowledgebase.OxfordKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.ExtendedKnowledgebase;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.InfoTemplate;
@@ -37,8 +37,6 @@ import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.Ini;
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Profile.Section;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.vaadin.terminal.ThemeResource;
@@ -212,7 +210,7 @@ public class Manager {
 		List<String> exampleQuestions = loadQuestions(this.getClass().getClassLoader().getResourceAsStream("oxford_example_questions.txt"));
 
 		ExtendedKnowledgebase ekb = new ExtendedKnowledgebase(
-				kb, 
+				OxfordKnowledgebase.INSTANCE, 
 				"http://purl.org/goodrelations/v1#name", 
 				"http://purl.org/goodrelations/v1#description",
 				"http://xmlns.com/foaf/0.1/depiction", null, optionalProperties, OxfordInfoLabel.class, "x0", false, exampleQuestions);

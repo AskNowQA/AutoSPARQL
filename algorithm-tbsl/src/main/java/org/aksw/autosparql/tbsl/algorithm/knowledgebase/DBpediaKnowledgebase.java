@@ -11,13 +11,25 @@ public class DBpediaKnowledgebase extends RemoteKnowledgebase
 {
 	public static final DBpediaKnowledgebase INSTANCE = new DBpediaKnowledgebase();
 
-	static private SparqlEndpoint createEndpoint()
+	//	static SparqlEndpoint myendpoint;
+	//	static
+	//	{
+	//		try{myendpoint=new SparqlEndpoint(new URL("http://dbpedia.org/sparql"),Collections.<String>singletonList(""), Collections.<String>emptyList());}
+	//		catch (MalformedURLException e){throw new RuntimeException(e);}
+	//	}
+
+	static private SparqlEndpoint dbpediaEndpoint;
+
+	static SparqlEndpoint getDbpediaEndpoint()
 	{
-		try{return new SparqlEndpoint(new URL("http://dbpedia.org/sparql"),Collections.<String>singletonList(""), Collections.<String>emptyList());}
-		catch (MalformedURLException e){throw new RuntimeException(e);}
+		if(dbpediaEndpoint==null)
+		{
+			try{dbpediaEndpoint = new SparqlEndpoint(new URL("http://dbpedia.org/sparql"),Collections.<String>singletonList(""), Collections.<String>emptyList());}
+			catch (MalformedURLException e){throw new RuntimeException(e);}
+		}		
+		return dbpediaEndpoint;
 	}
-	static SparqlEndpoint endpoint = createEndpoint();
-	
+
 	private static MappingBasedIndex createMappingIndex()
 	{
 		return new MappingBasedIndex(
@@ -28,5 +40,5 @@ public class DBpediaKnowledgebase extends RemoteKnowledgebase
 				);
 	}	
 
-	private DBpediaKnowledgebase() {super(endpoint,"dbpedia","DBpedia",new Indices(endpoint,createMappingIndex()));}
+	private DBpediaKnowledgebase() {super(getDbpediaEndpoint(),"dbpedia","DBpedia",new Indices(getDbpediaEndpoint()));}
 }

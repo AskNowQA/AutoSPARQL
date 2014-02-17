@@ -9,7 +9,7 @@
 
 	<modules>
 		<module>autosparql</module>
-		<module>autosparql-lite</module>
+<!--		<module>autosparql-lite</module>-->
 		<module>autosparql-tbsl</module>
 		<module>algorithm-tbsl</module>
 		<module>commons</module>
@@ -73,6 +73,18 @@
 
 	<dependencyManagement>
 		<dependencies>
+		  <dependency>
+                        <groupId>net.sf.jgrapht</groupId>
+                        <artifactId>jgrapht-core</artifactId>
+                        <version>0.9.0</version>
+                </dependency>
+
+			 <dependency>
+                        	<groupId>edu.mit</groupId>
+	                        <artifactId>jwi</artifactId>
+	                        <version>2.3.3</version>
+        	        </dependency>
+
 			<dependency>
 				<groupId>org.apache.lucene</groupId>
 				<artifactId>lucene-core</artifactId>

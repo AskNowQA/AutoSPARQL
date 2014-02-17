@@ -465,7 +465,7 @@ import com.vaadin.ui.themes.BaseTheme;
 	
 	private void addExampleQuestions(){
 		questionBox.removeAllItems();
-		List<String> exampleQuestions = UserSession.getManager().activeTBSL. CurrentExtendedKnowledgebase().getExampleQuestions();
+		List<String> exampleQuestions = UserSession.getManager().getCurrentExtendedKnowledgebase().getExampleQuestions();
 		for(String question : exampleQuestions){
 			questionBox.addItem(question);
 		}

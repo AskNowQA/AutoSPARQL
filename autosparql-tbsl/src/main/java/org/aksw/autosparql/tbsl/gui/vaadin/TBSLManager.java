@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -19,7 +18,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.aksw.autosparql.commons.sparql.SparqlQueriable;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
@@ -27,8 +25,6 @@ import org.aksw.autosparql.tbsl.algorithm.learning.NoTemplateFoundException;
 import org.aksw.autosparql.tbsl.algorithm.learning.TBSL;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslOxford;
-import org.aksw.autosparql.tbsl.algorithm.sparql.WeightedQuery;
-import org.aksw.autosparql.tbsl.algorithm.util.PopularityMap;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.Answer;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.BasicResultItem;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.ExtendedKnowledgebase;
@@ -45,7 +41,6 @@ import org.dllearner.algorithms.qtl.exception.NegativeTreeCoverageExecption;
 import org.dllearner.algorithms.qtl.exception.TimeOutException;
 import org.dllearner.algorithms.qtl.filters.QuestionBasedStatementFilter2;
 import org.dllearner.algorithms.qtl.util.SPARQLEndpointEx;
-import org.dllearner.core.ComponentInitException;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
@@ -162,7 +157,7 @@ public class TBSLManager
 		logger.info("Positive examples: " + posExamples);
 		logger.info("Negative examples: " + negExamples);
 		QTL qtl;
-		Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
+		Knowledgebase kb = getCurrentExtendedKnowledgebase().getKnowledgebase();
 		if(kb instanceof RemoteKnowledgebase){
 			qtl = new QTL(new SPARQLEndpointEx(((RemoteKnowledgebase) kb).getEndpoint(), null, null, Collections.<String>emptySet()),
 					cache);
@@ -170,7 +165,7 @@ public class TBSLManager
 			qtl = new QTL(((LocalKnowledgebase) kb).getModel());
 		}
 				
-		qtl.setRestrictToNamespaces(currentExtendedKnowledgebase.getPropertyNamespaces());
+		qtl.setRestrictToNamespaces(getCurrentExtendedKnowledgebase().getPropertyNamespaces());
 		
 		Set<String> relevantKeywords = activeTBSL.getRelevantKeywords();
 		logger.info("Relevant filter keywords: " + relevantKeywords);
@@ -211,7 +206,7 @@ public class TBSLManager
 //	}
 	
 	public void setKnowledgebase(ExtendedKnowledgebase ekb){
-		this.currentExtendedKnowledgebase = ekb;
+		this.setCurrentExtendedKnowledgebase(ekb);
 //		
 //		activeTBSL.setKnowledgebase(ekb.getKnowledgebase());
 //		if(ekb.getInfoBoxClass() == OxfordInfoLabel.class){
@@ -439,7 +434,7 @@ public class TBSLManager
 		List<BasicResultItem> result = new ArrayList<BasicResultItem>();
 		ResultSet rs = executeSelect(extendedSPARQLQuery.toString());
 		QuerySolution qs;
-		String targetVar = currentExtendedKnowledgebase.getTargetVar();
+		String targetVar = getCurrentExtendedKnowledgebase().getTargetVar();
 		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 		while(rs.hasNext()){
 			qs = rs.next();
@@ -475,7 +470,7 @@ public class TBSLManager
 				}
 			}
 			Map<String, Object> data = new HashMap<String, Object>();
-			Map<String, String> optionalProperties = currentExtendedKnowledgebase.getOptionalProperties();
+			Map<String, String> optionalProperties = getCurrentExtendedKnowledgebase().getOptionalProperties();
 			if(optionalProperties != null){
 				for(Entry<String, String> entry : optionalProperties.entrySet()){
 					node = qs.get(entry.getKey());
@@ -506,7 +501,7 @@ public class TBSLManager
 			}
 			
 			//Oxford price relation
-			if(currentExtendedKnowledgebase.getInfoBoxClass() == OxfordInfoLabel.class){
+			if(getCurrentExtendedKnowledgebase().getInfoBoxClass() == OxfordInfoLabel.class){
 				Double price = null;
 				Literal priceLit = qs.getLiteral("price");
 				try {
@@ -530,7 +525,7 @@ public class TBSLManager
 			uri2Item.put(uri, item);
 			
 		}
-		if(currentExtendedKnowledgebase.getInfoBoxClass() == OxfordInfoLabel.class){
+		if(getCurrentExtendedKnowledgebase().getInfoBoxClass() == OxfordInfoLabel.class){
 			Map<String, Set<Object>> uri2Values = new HashMap<String, Set<Object>>();
 			for(BasicResultItem item : result){
 				String uri = item.getUri();
@@ -590,7 +585,7 @@ public class TBSLManager
 	
 	public Map<String, Integer> getAdditionalProperties(){
 		Map<String, Integer> properties = new HashMap<String, Integer>();
-		if(currentExtendedKnowledgebase.isAllowAdditionalProperties() && learnedSPARQLQuery !=null){
+		if(getCurrentExtendedKnowledgebase().isAllowAdditionalProperties() && learnedSPARQLQuery !=null){
 			logger.info("Loading additional,common properties...");
 			Query extendedSPARQLQuery = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
 			ElementGroup wherePart = (ElementGroup)extendedSPARQLQuery.getQueryPattern();
@@ -602,7 +597,7 @@ public class TBSLManager
 				}
 			}
 			
-			String targetVar = currentExtendedKnowledgebase.getTargetVar();
+			String targetVar = getCurrentExtendedKnowledgebase().getTargetVar();
 			targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 			
 			Query newQuery = QueryFactory.create();
@@ -626,7 +621,7 @@ public class TBSLManager
 				qs = rs.next();
 				String propertyURI = qs.getResource("prop").getURI();
 				int cnt = qs.getLiteral("cnt").getInt();
-				if(!currentExtendedKnowledgebase.getPropertyBlackList().contains(propertyURI)){
+				if(!getCurrentExtendedKnowledgebase().getPropertyBlackList().contains(propertyURI)){
 					properties.put(propertyURI, cnt);
 				}
 			}
@@ -646,7 +641,7 @@ public class TBSLManager
 				break;
 			}
 		}
-		String targetVar = currentExtendedKnowledgebase.getTargetVar();
+		String targetVar = getCurrentExtendedKnowledgebase().getTargetVar();
 		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 		
 		pb.addTriple(new Triple(Node.createVariable(targetVar), Node.createURI(propertyURI), Node.createVariable("value")));
@@ -712,7 +707,7 @@ public class TBSLManager
 				break;
 			}
 		}
-		String targetVar = currentExtendedKnowledgebase.getTargetVar();
+		String targetVar = getCurrentExtendedKnowledgebase().getTargetVar();
 		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 		List<String> vars = new ArrayList<String>();
 		int i = 0;
@@ -867,7 +862,7 @@ public class TBSLManager
 			}
 		}
 		
-		String targetVar = currentExtendedKnowledgebase.getTargetVar();
+		String targetVar = getCurrentExtendedKnowledgebase().getTargetVar();
 		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 		List<String> vars = new ArrayList<String>();
 		
@@ -880,9 +875,9 @@ public class TBSLManager
 //		}
 		//add label triples
 		boolean optional = true;
-		Triple triple = new Triple(Node.createVariable(targetVar), Node.createURI(currentExtendedKnowledgebase.getLabelPropertyURI()), Node.createVariable("label"));
+		Triple triple = new Triple(Node.createVariable(targetVar), Node.createURI(getCurrentExtendedKnowledgebase().getLabelPropertyURI()), Node.createVariable("label"));
 		ElementFilter filter = null;
-		String lang = currentExtendedKnowledgebase.getLabelPropertyLanguage();
+		String lang = getCurrentExtendedKnowledgebase().getLabelPropertyLanguage();
 		if(lang != null){
 			filter = new ElementFilter(new E_Equals(new E_Lang(new ExprVar("label")), new NodeValueString(lang)));
 		}
@@ -903,9 +898,9 @@ public class TBSLManager
 		}
 		vars.add("label");
 		//add description/comment triples
-		triple = new Triple(Node.createVariable(targetVar), Node.createURI(currentExtendedKnowledgebase.getDescriptionPropertyURI()), Node.createVariable("desc"));
+		triple = new Triple(Node.createVariable(targetVar), Node.createURI(getCurrentExtendedKnowledgebase().getDescriptionPropertyURI()), Node.createVariable("desc"));
 		filter = null;
-		lang = currentExtendedKnowledgebase.getLabelPropertyLanguage();
+		lang = getCurrentExtendedKnowledgebase().getLabelPropertyLanguage();
 		if(lang != null){
 			filter = new ElementFilter(new E_Equals(new E_Lang(new ExprVar("desc")), new NodeValueString(lang)));
 		}
@@ -926,8 +921,8 @@ public class TBSLManager
 		}
 		vars.add("desc");
 		//add image triples
-		if(currentExtendedKnowledgebase.getImagePropertyURI() != null){
-			Triple imgTriple = new Triple(Node.createVariable(targetVar), Node.createURI(currentExtendedKnowledgebase.getImagePropertyURI()), Node.createVariable("img"));
+		if(getCurrentExtendedKnowledgebase().getImagePropertyURI() != null){
+			Triple imgTriple = new Triple(Node.createVariable(targetVar), Node.createURI(getCurrentExtendedKnowledgebase().getImagePropertyURI()), Node.createVariable("img"));
 			if(optional){
 				ElementGroup eg = new ElementGroup();
 				eg.addTriplePattern(imgTriple);
@@ -940,7 +935,7 @@ public class TBSLManager
 			vars.add("img");
 		}
 		//hack to get price in Oxford data
-		if(currentExtendedKnowledgebase.getInfoBoxClass() == OxfordInfoLabel.class){
+		if(getCurrentExtendedKnowledgebase().getInfoBoxClass() == OxfordInfoLabel.class){
 			ElementGroup eg = new ElementGroup();
 			ElementOptional optionalEl = new ElementOptional(eg);
 			eg.addTriplePattern(new Triple(Node.createVariable("offer"), Node.createURI("http://purl.org/goodrelations/v1#includes"), Node.createVariable(targetVar)));
@@ -948,11 +943,11 @@ public class TBSLManager
 			vars.add("price");
 			wherePart.addElement(optionalEl);
 		}
-		Map<String, String> mandatoryProperties = currentExtendedKnowledgebase.getMandatoryProperties();
+		Map<String, String> mandatoryProperties = getCurrentExtendedKnowledgebase().getMandatoryProperties();
 		if(mandatoryProperties != null){
 			
 		}
-		Map<String, String> optionalProperties = currentExtendedKnowledgebase.getOptionalProperties();
+		Map<String, String> optionalProperties = getCurrentExtendedKnowledgebase().getOptionalProperties();
 		if(optionalProperties != null){
 			for(Entry<String, String> entry : optionalProperties.entrySet()){
 				ElementGroup eg = new ElementGroup();
@@ -970,7 +965,7 @@ public class TBSLManager
 		logger.info("Executing SPARQL query\n" + sparqlQuery);
 		ResultSet rs = null;
 		try {
-			Knowledgebase kb = currentExtendedKnowledgebase.getKnowledgebase();
+			Knowledgebase kb = getCurrentExtendedKnowledgebase().getKnowledgebase();
 			if(kb instanceof RemoteKnowledgebase){
 				SparqlEndpoint endpoint = ((RemoteKnowledgebase) kb).getEndpoint();
 				if (cache == null) {
@@ -1071,6 +1066,16 @@ public class TBSLManager
 		
 		
 		return query;
+	}
+
+	public ExtendedKnowledgebase getCurrentExtendedKnowledgebase()
+	{
+		return currentExtendedKnowledgebase;
+	}
+
+	public void setCurrentExtendedKnowledgebase(ExtendedKnowledgebase currentExtendedKnowledgebase)
+	{
+		this.currentExtendedKnowledgebase = currentExtendedKnowledgebase;
 	}
 	
 	
