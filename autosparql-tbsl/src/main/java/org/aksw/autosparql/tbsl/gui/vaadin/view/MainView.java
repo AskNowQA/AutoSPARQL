@@ -22,7 +22,7 @@ import org.aksw.autosparql.tbsl.gui.vaadin.TBSLManager;
 import org.aksw.autosparql.tbsl.gui.vaadin.UserSession;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.Answer;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.BasicResultItem;
-import org.aksw.autosparql.tbsl.gui.vaadin.model.ExtendedKnowledgebase;
+import org.aksw.autosparql.tbsl.gui.vaadin.model.ExtendedTBSL;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.Refinement;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.SelectAnswer;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.SortProperty;
@@ -432,7 +432,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		IndexedContainer ic = new IndexedContainer();
 		ic.addContainerProperty("label", String.class, null);
 		
-		for(TBSL tbsl: UserSession.getManager().tbsls){
+		for(ExtendedTBSL tbsl: UserSession.getManager().tbsls){
 			ic.addItem(tbsl).getItemProperty("label").setValue(tbsl.getLabel());
 		}
 
@@ -465,21 +465,21 @@ import com.vaadin.ui.themes.BaseTheme;
 	
 	private void addExampleQuestions(){
 		questionBox.removeAllItems();
-		List<String> exampleQuestions = UserSession.getManager().getCurrentExtendedKnowledgebase().getExampleQuestions();
+		List<String> exampleQuestions = UserSession.getManager().getActiveTBSL().getExampleQuestions();
 		for(String question : exampleQuestions){
 			questionBox.addItem(question);
 		}
 	}
 	
 	public void reset(){
-		tbslSelector.setValue(UserSession.getManager().getCurrentExtendedKnowledgebase());
+		tbslSelector.setValue(UserSession.getManager().getActiveTBSL());
 	}
 	
 	private void onChangeKnowledgebase(){
-		ExtendedKnowledgebase ekb = (ExtendedKnowledgebase) tbslSelector.getValue();
+		ExtendedTBSL ekb = (ExtendedTBSL) tbslSelector.getValue();
 		if(ekb.getIcon() != null){
 			knowledgebaseLogo.setSource(ekb.getIcon());
-			knowledgebaseLogo.setDescription(ekb.getKnowledgebase().getDescription());
+			knowledgebaseLogo.setDescription(ekb.getTBSL().getKnowledgebase().getDescription());
 		}
 		UserSession.getManager().setKnowledgebase(ekb);
 		addExampleQuestions();
@@ -651,8 +651,8 @@ import com.vaadin.ui.themes.BaseTheme;
 			@Override
 			public Component generateCell(Table source, final Object itemId, Object columnId) {
 				BasicResultItem item = (BasicResultItem) itemId;
-				ExtendedKnowledgebase ekb = UserSession.getManager()
-						.getCurrentExtendedKnowledgebase();
+				ExtendedTBSL ekb = UserSession.getManager()
+						.getActiveTBSL();
 				
 				HorizontalLayout c = null;
 				try {
@@ -780,7 +780,7 @@ import com.vaadin.ui.themes.BaseTheme;
 	        header.addComponent(propertySelector);
 	        header.setSpacing(true);
 	        header.setComponentAlignment(propertySelector, Alignment.MIDDLE_LEFT);
-		} else if(UserSession.getManager().activeTBSL == TbslDbpedia.INSTANCE){
+		} else if(UserSession.getManager().activeTBSL == ExtendedTBSL.DBPEDIA){
 			Label l = new Label("Sort by ");
 			l.setHeight("100%");
 			l.addStyleName("white-font");
@@ -835,7 +835,7 @@ import com.vaadin.ui.themes.BaseTheme;
 	}
 	
 	private boolean canShowMap(List<String> existingProperties){
-		return 	UserSession.getManager().activeTBSL==TbslDbpedia.INSTANCE
+		return 	UserSession.getManager().activeTBSL==ExtendedTBSL.DBPEDIA
 				||
 				(existingProperties.contains("http://www.w3.org/2003/01/geo/wgs84_pos#lat") && existingProperties.contains("http://www.w3.org/2003/01/geo/wgs84_pos#long"));
 	}
@@ -845,7 +845,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		Query query = QueryFactory.create(queryString, Syntax.syntaxARQ);
 		query = JENAUtils.writeOutPrefixes(query);
 		String targetVar = query.getProjectVars().get(0).getVarName();
-		Knowledgebase kb = UserSession.getManager().getCurrentExtendedKnowledgebase().getKnowledgebase();
+		Knowledgebase kb = UserSession.getManager().getActiveTBSL().getTBSL().getKnowledgebase();
 		if(kb instanceof LocalKnowledgebase){
 			return;
 		}

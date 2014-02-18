@@ -1,10 +1,7 @@
 package org.aksw.autosparql.tbsl.gui.vaadin;
 
-import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.aksw.autosparql.tbsl.gui.vaadin.Manager;
-import org.aksw.autosparql.tbsl.gui.vaadin.TBSLManager;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.SelectAnswer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -19,7 +16,6 @@ public class TBSLManagerTest
 		Manager.getInstance().init();
 		Logger.getLogger(QTL.class).setLevel(Level.DEBUG);
 		TBSLManager man = new TBSLManager();
-		man.init();
 		// man.setKnowledgebase(man.getKnowledgebases().get(0));
 		SelectAnswer a = (SelectAnswer) man.answerQuestion("houses at walking distance from a pharmacy");
 		List<String> p = new ArrayList<String>();
