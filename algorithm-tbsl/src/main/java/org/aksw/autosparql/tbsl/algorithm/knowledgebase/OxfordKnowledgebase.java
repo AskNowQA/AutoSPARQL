@@ -8,12 +8,16 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 public class OxfordKnowledgebase extends LocalKnowledgebase
 {
 	public static final OxfordKnowledgebase INSTANCE = new OxfordKnowledgebase();
- 
-	static Model model;
-	static
+ 	
+	static protected Model oxfordModel;	
+	static protected Model getOxfordModel()
 	{
-		model = ModelFactory.createMemModelMaker().createDefaultModel();
-		model.read(OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("oxford.ntriples"),null,"N-TRIPLE");		
+		if(oxfordModel==null)
+		{
+			oxfordModel = ModelFactory.createMemModelMaker().createDefaultModel();
+			oxfordModel.read(OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("oxford.ntriples"),null,"N-TRIPLE");
+		}
+		return oxfordModel;
 	}
 	
 	private static MappingBasedIndex createMappingIndex()
@@ -26,5 +30,5 @@ public class OxfordKnowledgebase extends LocalKnowledgebase
 				);
 	}	
 
-	private OxfordKnowledgebase() {	super(model,"oxford","Oxford Houses",new Indices(model,createMappingIndex()));}
+	private OxfordKnowledgebase() {	super(getOxfordModel(),"oxford","Oxford Houses",new Indices(getOxfordModel(),createMappingIndex()));}
 }

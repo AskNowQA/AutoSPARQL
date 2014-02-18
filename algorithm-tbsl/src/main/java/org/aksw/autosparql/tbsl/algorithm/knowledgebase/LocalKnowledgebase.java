@@ -9,7 +9,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 public class LocalKnowledgebase extends Knowledgebase{
 	
-	private Model model;
+	protected Model model;
 	
 	public LocalKnowledgebase(Model model, String label, String description,Indices indices)
 	{

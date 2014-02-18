@@ -3,13 +3,13 @@ package org.aksw.autosparql.tbsl.algorithm.knowledgebase;
 import org.aksw.autosparql.commons.index.Indices;
 import com.hp.hpl.jena.query.ResultSet;
 
-public abstract class Knowledgebase {
-	
+public abstract class Knowledgebase
+{	
 	private final String label;
 	private final String description;
 	protected final Indices indices;
 	
-	public Indices getIndices() {return indices;}
+	public abstract ResultSet querySelect(String query);
 
 	public Knowledgebase(String label, String description, Indices indices)
 	{
@@ -18,22 +18,8 @@ public abstract class Knowledgebase {
 		this.indices = indices;
 	}
 
-	public String getLabel() {
-		return label;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-	
-	public abstract ResultSet querySelect(String query);
-	
+	public String getLabel() {return label;}
+	public String getDescription() {return description;}
+	public Indices getIndices() {return indices;}	
 	@Override public String toString() {return label;}
-	
-//	@Deprecated public Index getResourceIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
-//	@Deprecated public Index getClassIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}	
-//	@Deprecated public Index getPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
-//	@Deprecated public Index getObjectPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
-//	@Deprecated public Index getDataPropertyIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
-//	@Deprecated public MappingBasedIndex getMappingIndex() {throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");}
 }
