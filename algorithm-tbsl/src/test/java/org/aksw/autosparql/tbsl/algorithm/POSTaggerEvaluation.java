@@ -6,7 +6,7 @@ public class POSTaggerEvaluation { /* extends StringParser<ObjectHandler<Tagging
 	
 	
 	private List<PartOfSpeechTagger> taggers = Arrays.asList(new PartOfSpeechTagger[]{
-			new ApachePartOfSpeechTagger(), new StanfordPartOfSpeechTagger(), new LingPipePartOfSpeechTagger()});
+			new ApachePartOfSpeechTagger(), StanfordPartOfSpeechTagger.INSTANCE, new LingPipePartOfSpeechTagger()});
 	
 	private OLiAManager m = new OLiAManager();
     private OLiAOntology brown;

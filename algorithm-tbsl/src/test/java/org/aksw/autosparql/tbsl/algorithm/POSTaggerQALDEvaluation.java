@@ -28,7 +28,7 @@ public class POSTaggerQALDEvaluation {
 		List<PartOfSpeechTagger> taggers = Arrays
 				.asList(new PartOfSpeechTagger[] {
 						new ApachePartOfSpeechTagger(),
-						new StanfordPartOfSpeechTagger(),
+						StanfordPartOfSpeechTagger.INSTANCE,
 //						new LingPipePartOfSpeechTagger(),
 						new TreeTagger()
 						});

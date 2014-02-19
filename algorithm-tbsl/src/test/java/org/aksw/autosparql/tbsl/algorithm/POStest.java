@@ -16,7 +16,7 @@ public class POStest {
 		
 		
 		//Stanford
-		PartOfSpeechTagger tagger = new StanfordPartOfSpeechTagger();
+		PartOfSpeechTagger tagger = StanfordPartOfSpeechTagger.INSTANCE;
 		long startTime = System.currentTimeMillis();
 		String tagged = tagger.tag(sentence);
 		System.out.format("Tagged sentence with Stanford tagger (%d ms):\n", System.currentTimeMillis()-startTime);

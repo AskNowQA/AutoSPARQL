@@ -74,12 +74,12 @@ public class TBSL
 	private static final String DEFAULT_WORDNET_PROPERTIES_FILE = "tbsl/wordnet_properties.xml";
 
 	public TBSL(Knowledgebase knowledgebase,String[] grammarFiles){
-		this(knowledgebase, StanfordPartOfSpeechTagger.SINGLETON, new WordNet(), new Options(),grammarFiles);
-		//this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(DEFAULT_WORDNET_PROPERTIES_FILE), new Options(), null);
+		this(knowledgebase, StanfordPartOfSpeechTagger.INSTANCE, new WordNet(), new Options(),grammarFiles);
+		//this(knowledgebase, StanfordPartOfSpeechTagger.INSTANCE, new WordNet(DEFAULT_WORDNET_PROPERTIES_FILE), new Options(), null);
 	}
 
 	public TBSL(Knowledgebase knowledgebase, WordNet wordNet,String[] grammarFiles){
-		this(knowledgebase, StanfordPartOfSpeechTagger.SINGLETON, wordNet, new Options(),grammarFiles);
+		this(knowledgebase, StanfordPartOfSpeechTagger.INSTANCE, wordNet, new Options(),grammarFiles);
 	}
 
 	public TBSL(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options/*, ExtractionDBCache cache*/,String[] grammarFiles){

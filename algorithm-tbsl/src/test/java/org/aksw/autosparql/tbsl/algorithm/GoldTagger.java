@@ -31,7 +31,7 @@ public class GoldTagger {
 	
 	public static void main(String[] args) {
 						
-		PartOfSpeechTagger tagger = new StanfordPartOfSpeechTagger();
+		PartOfSpeechTagger tagger = StanfordPartOfSpeechTagger.INSTANCE;
 		
 		System.out.print("\nStart tagging " + GOLD + "...");
 		try {			

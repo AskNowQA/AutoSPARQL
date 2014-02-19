@@ -47,12 +47,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
-import org.aksw.autosparql.commons.nlp.pos.SynchronizedStanfordPartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.learning.NoTemplateFoundException;
-import org.aksw.autosparql.tbsl.algorithm.learning.SPARQLTemplateBasedLearner3;
 import org.aksw.autosparql.tbsl.algorithm.ltag.parser.Parser;
 import org.aksw.autosparql.tbsl.algorithm.templator.Templator;
 import org.apache.log4j.FileAppender;
@@ -154,7 +151,7 @@ public class SPARQLTemplateBasedLearner3Test
 		Logger.getLogger(SPARQLTemplateBasedLearner3.class).setLevel(Level.DEBUG);
 		//		String question = "houses for less than 900000 pounds";
 		String question = "houses/NNS for/IN less/JJR than/IN 900000/CD pounds/NNS";
-		//question = new StanfordPartOfSpeechTagger().tag(question);
+		//question = StanfordPartOfSpeechTagger.INSTANCE.tag(question);
 
 		Model model = loadOxfordModel();
 		QueryTestData testData = new QueryTestData();
@@ -166,7 +163,7 @@ public class SPARQLTemplateBasedLearner3Test
 	{
 		boolean ADD_POS_TAGS = true;
 		PartOfSpeechTagger posTagger = null;
-		if(ADD_POS_TAGS) {posTagger=new StanfordPartOfSpeechTagger();}
+		if(ADD_POS_TAGS) {posTagger=StanfordPartOfSpeechTagger.INSTANCE;}
 		Model model = loadOxfordModel();
 		List<String> questions = new LinkedList<String>();
 		BufferedReader in = new BufferedReader((new InputStreamReader(getClass().getClassLoader().getResourceAsStream("tbsl/oxford_eval_queries.txt"))));
@@ -590,7 +587,7 @@ public class SPARQLTemplateBasedLearner3Test
 	{
 		QueryTestData testData = new QueryTestData();
 		// -- only create the learner parameters once to save time -- 
-		//		PartOfSpeechTagger posTagger = new StanfordPartOfSpeechTagger();		
+		//		PartOfSpeechTagger posTagger = StanfordPartOfSpeechTagger.INSTANCE;		
 		//		WordNet wordnet = new WordNet();
 		//		Options options = new Options();
 		// ----------------------------------------------------------
@@ -922,9 +919,6 @@ public class SPARQLTemplateBasedLearner3Test
 		private final int id;
 		private final QueryTestData testData;
 
-		static private class POSTaggerHolder
-		{static public final PartOfSpeechTagger posTagger = new SynchronizedStanfordPartOfSpeechTagger();}
-
 		static private final WordNet wordnet = new WordNet();
 		static private final Options options = new Options();	
 		private final SPARQLTemplateBasedLearner3 learner;
@@ -934,7 +928,7 @@ public class SPARQLTemplateBasedLearner3Test
 			this.question=question;
 			this.id=id;					
 			this.testData=testData;
-			learner = new SPARQLTemplateBasedLearner3(knowledgeBase,pretagged?null:POSTaggerHolder.posTagger,wordnet,options);
+			learner = new SPARQLTemplateBasedLearner3(knowledgeBase,pretagged?null:StanfordPartOfSpeechTagger.INSTANCE,wordnet,options);
 			try {learner.init();} catch (ComponentInitException e) {throw new RuntimeException(e);}
 			learner.setUseIdealTagger(pretagged);
 		}								

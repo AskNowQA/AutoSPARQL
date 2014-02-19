@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-
 import com.aliasi.tag.Tagging;
-
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
@@ -15,15 +13,22 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
+import edu.stanford.nlp.util.logging.JavaUtilLoggingAdaptor.RedwoodHandler;
+import edu.stanford.nlp.util.logging.Redwood.RedwoodChannels;
+import edu.stanford.nlp.util.logging.Redwood;
+import edu.stanford.nlp.util.logging.RedwoodConfiguration;
 
 public class StanfordPartOfSpeechTagger implements PartOfSpeechTagger{
 
 	/** if you only use it single threadedly just use the singleton to save initialization time */	
-	public static final StanfordPartOfSpeechTagger SINGLETON = new StanfordPartOfSpeechTagger();
+	public static final StanfordPartOfSpeechTagger INSTANCE = StanfordPartOfSpeechTagger.INSTANCE;
 
 	private StanfordCoreNLP pipeline;
 	
-	public StanfordPartOfSpeechTagger(){
+	protected StanfordPartOfSpeechTagger(){
+		RedwoodConfiguration.empty().apply();		
+		Redwood.log("test redwood");
+		
 		Properties props = new Properties();
 	    props.put("annotators", "tokenize, ssplit, pos");
 	    pipeline = new StanfordCoreNLP(props);

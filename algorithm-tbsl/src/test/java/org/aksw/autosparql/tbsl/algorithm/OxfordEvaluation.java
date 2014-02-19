@@ -23,7 +23,7 @@ public class OxfordEvaluation {
 //		
 ////		SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2(endpoint, resourcesIndex, classesIndex, propertiesIndex);
 //		SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2
-//				(new LocalKnowledgebase("","",SPARQLTemplateBasedLearner3Test.loadOxfordModel(),SPARQLTemplateBasedLearner3Test.getOxfordMappingIndex(), new StanfordPartOfSpeechTagger());
+//				(new LocalKnowledgebase("","",SPARQLTemplateBasedLearner3Test.loadOxfordModel(),SPARQLTemplateBasedLearner3Test.getOxfordMappingIndex(), StanfordPartOfSpeechTagger.INSTANCE);
 //		
 //		learner.setMappingIndex(mappingIndex);
 //		learner.init();

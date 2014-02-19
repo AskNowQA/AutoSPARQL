@@ -54,7 +54,7 @@ public class Manager {
 		logger.info("Initializing global settings...");
 		loadSettings();
 
-		posTagger = new StanfordPartOfSpeechTagger();
+		posTagger = StanfordPartOfSpeechTagger.INSTANCE;
 		//		wordNet = new WordNet(this.getClass().getClassLoader().getResourceAsStream("wordnet_properties.xml"));
 		wordNet = new WordNet();
 		logger.info("...done.");

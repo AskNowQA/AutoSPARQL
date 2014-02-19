@@ -156,7 +156,7 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 	private boolean useDomainRangeRestriction = true;
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex){
-		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, new StanfordPartOfSpeechTagger());
+		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, StanfordPartOfSpeechTagger.INSTANCE);
 	}
 	
 	public SPARQLTemplateBasedLearner3(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
@@ -197,12 +197,12 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 	}
 	
 	public SPARQLTemplateBasedLearner3(Knowledgebase knowledgebase){
-		this(knowledgebase, new StanfordPartOfSpeechTagger(), new WordNet(), new Options());
+		this(knowledgebase, StanfordPartOfSpeechTagger.INSTANCE, new WordNet(), new Options());
 		setMappingIndex(knowledgebase.getIndices().getMappingIndex());
 	}
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index index){
-		this(endpoint, index, new StanfordPartOfSpeechTagger());
+		this(endpoint, index, StanfordPartOfSpeechTagger.INSTANCE);
 	}
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger){
@@ -214,11 +214,11 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 	}
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, WordNet wordNet){
-		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, new StanfordPartOfSpeechTagger(), wordNet, new Options());
+		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, StanfordPartOfSpeechTagger.INSTANCE, wordNet, new Options());
 	}
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index index, WordNet wordNet){
-		this(endpoint, index, new StanfordPartOfSpeechTagger(), wordNet, new Options());
+		this(endpoint, index, StanfordPartOfSpeechTagger.INSTANCE, wordNet, new Options());
 	}
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet){
@@ -264,7 +264,7 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 	}
 	
 	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex){
-		this(model, resourcesIndex, classesIndex, propertiesIndex, new StanfordPartOfSpeechTagger());
+		this(model, resourcesIndex, classesIndex, propertiesIndex, StanfordPartOfSpeechTagger.INSTANCE);
 	}
 	
 	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger){
@@ -272,7 +272,7 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 	}
 	
 	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, WordNet wordNet){
-		this(model, resourcesIndex, classesIndex, propertiesIndex, new StanfordPartOfSpeechTagger(), wordNet, new Options());
+		this(model, resourcesIndex, classesIndex, propertiesIndex, StanfordPartOfSpeechTagger.INSTANCE, wordNet, new Options());
 	}
 	
 	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){

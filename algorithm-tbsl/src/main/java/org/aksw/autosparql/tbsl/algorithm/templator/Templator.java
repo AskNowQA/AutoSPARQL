@@ -61,7 +61,7 @@ public class Templator {
 	private Set<DRS> drses;
 	
 	public Templator() {
-		this(new StanfordPartOfSpeechTagger(), new WordNet());
+		this(StanfordPartOfSpeechTagger.INSTANCE, new WordNet());
 	}
 	
 	public Templator(final PartOfSpeechTagger tagger) {
@@ -110,7 +110,7 @@ public class Templator {
 }
 	
 	public Templator(boolean b) {
-            this.tagger = new StanfordPartOfSpeechTagger();
+            this.tagger = StanfordPartOfSpeechTagger.INSTANCE;
             this.USE_WORDNET = false;
             VERBOSE = b;
 		
