@@ -411,9 +411,6 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 		slot2URI = new HashMap<Slot, List<String>>();
 		relevantKeywords = new HashSet<String>();
 		currentlyExecutedQuery = null;
-		
-//		templateMon.reset();
-//		sparqlMon.reset();
 	}
 	
 	public void learnSPARQLQueries() throws NoTemplateFoundException{

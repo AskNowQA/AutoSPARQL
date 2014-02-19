@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNetUnpacker;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
@@ -22,6 +23,7 @@ import org.aksw.autosparql.tbsl.gui.vaadin.util.FallbackIndex;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.DBpediaInfoLabel;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.OxfordInfoLabel;
 import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.vaadin.terminal.Resource;
@@ -298,8 +300,10 @@ public class ExtendedTBSL {
 		optionalProperties.put("street", "http://www.w3.org/2006/vcard/ns#street-address");
 		optionalProperties.put("locality", "http://www.w3.org/2006/vcard/ns#locality");
 
-		List<String> exampleQuestions = loadQuestions(ExtendedTBSL.class.getClassLoader().getResourceAsStream("oxford_example_questions.txt"));		
-		SimpleNLGwithPostprocessing nlg = new SimpleNLGwithPostprocessing(((LocalKnowledgebase)TbslDbpedia.INSTANCE.getKnowledgebase()).getModel(),WordNetUnpacker.getUnpackedWordNetDir().toString());
+		List<String> exampleQuestions = loadQuestions(ExtendedTBSL.class.getClassLoader().getResourceAsStream("oxford_example_questions.txt"));
+		String wordnetDir = WordNetUnpacker.getUnpackedWordNetDir().toString();		
+		@Nonnull Model model = ((LocalKnowledgebase)TbslOxford.INSTANCE.getKnowledgebase()).getModel();
+		SimpleNLGwithPostprocessing nlg = new SimpleNLGwithPostprocessing(model,wordnetDir);
 		
 		Resource icon = new ThemeResource("images/oxford_logo.gif");
 		ExtendedTBSL ekb = new ExtendedTBSL(

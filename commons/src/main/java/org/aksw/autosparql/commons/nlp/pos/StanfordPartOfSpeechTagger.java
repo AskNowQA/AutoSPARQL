@@ -21,17 +21,18 @@ import edu.stanford.nlp.util.logging.RedwoodConfiguration;
 public class StanfordPartOfSpeechTagger implements PartOfSpeechTagger{
 
 	/** if you only use it single threadedly just use the singleton to save initialization time */	
-	public static final StanfordPartOfSpeechTagger INSTANCE = StanfordPartOfSpeechTagger.INSTANCE;
+	public static final StanfordPartOfSpeechTagger INSTANCE = new StanfordPartOfSpeechTagger();
 
 	private StanfordCoreNLP pipeline;
 	
-	protected StanfordPartOfSpeechTagger(){
-		RedwoodConfiguration.empty().apply();		
-		Redwood.log("test redwood");
-		
+	protected StanfordPartOfSpeechTagger(){		
+		// shut off the annoying intialization messages
+		RedwoodConfiguration.empty().captureStderr().apply();
 		Properties props = new Properties();
 	    props.put("annotators", "tokenize, ssplit, pos");
 	    pipeline = new StanfordCoreNLP(props);
+	    // enable stderr again
+	    RedwoodConfiguration.current().clear().apply();
 	}
 	
 	@Override

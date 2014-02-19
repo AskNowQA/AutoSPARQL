@@ -22,9 +22,7 @@ import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.NoTemplateFoundException;
-import org.aksw.autosparql.tbsl.algorithm.learning.TBSL;
-import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
-import org.aksw.autosparql.tbsl.algorithm.learning.TbslOxford;
+import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.Answer;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.BasicResultItem;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.ExtendedTBSL;
@@ -33,7 +31,6 @@ import org.aksw.autosparql.tbsl.gui.vaadin.model.SelectAnswer;
 import org.aksw.autosparql.tbsl.gui.vaadin.util.FallbackIndex;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.OxfordInfoLabel;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.TBSLProgressListener;
-import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
 import org.apache.log4j.Logger;
 import org.dllearner.algorithms.qtl.QTL;
 import org.dllearner.algorithms.qtl.exception.EmptyLGGException;
@@ -44,6 +41,7 @@ import org.dllearner.algorithms.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
+import org.eclipse.jetty.util.log.Log;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Node;
@@ -122,7 +120,7 @@ public class TBSLManager
 	}
 	
 	private String translateSPARQLQuery(Query sparqlQuery){
-		System.err.println(sparqlQuery);
+		logger.debug("Translating query: "+sparqlQuery);		
 		return activeTBSL.nlg.getNLR(sparqlQuery);
 	}
 	
@@ -146,9 +144,9 @@ public class TBSLManager
 				
 		qtl.setRestrictToNamespaces(getActiveTBSL().getPropertyNamespaces());
 		
-		Set<String> relevantKeywords = activeTBSL.getTBSL().getRelevantKeywords();
-		logger.info("Relevant filter keywords: " + relevantKeywords);
-		qtl.addStatementFilter(new QuestionBasedStatementFilter2(relevantKeywords));
+//		Set<String> relevantKeywords = activeTBSL.getTBSL().ggetRelevantKeywords();
+		logger.info("Relevant filter keywords: " + activeTBSL.getTBSL().getRelevantKeywords());
+		qtl.addStatementFilter(new QuestionBasedStatementFilter2(activeTBSL.getTBSL().getRelevantKeywords()));
 		try {
 			String example = qtl.getQuestion(posExamples, negExamples);
 			String refinedSPARQLQuery = qtl.getBestSPARQLQuery();
@@ -335,7 +333,8 @@ public class TBSLManager
 			learnedSPARQLQuery = null;
 //			tbsl.setQuestion(question);
 //			tbsl.learnSPARQLQueries();
-			learnedSPARQLQuery = activeTBSL.getTBSL().answerQuestion(question).getQuery();
+			TemplateInstantiation ti = activeTBSL.getTBSL().answerQuestion(question);
+			learnedSPARQLQuery = ti.getQuery();
 					
 			if(learnedSPARQLQuery != null){
 				logger.info("Found answer.");

@@ -1,9 +1,11 @@
+/*
 package org.aksw.autosparql.tbsl.gui.vaadin.util;
 
 import static org.junit.Assert.*;
 import org.aksw.autosparql.tbsl.gui.vaadin.util.LuceneIndex;
 import org.junit.Test;
 
+@Deprecated
 public class LuceneIndexTest
 {
 	@Test public void testGetData()
@@ -12,3 +14,4 @@ public class LuceneIndexTest
 		System.out.println(index.getData("houses in headington", 10, 0));
 	}
 }
+*/

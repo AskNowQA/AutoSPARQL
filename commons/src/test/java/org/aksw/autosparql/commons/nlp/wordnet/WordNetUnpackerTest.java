@@ -10,10 +10,10 @@ public class WordNetUnpackerTest
 {
 	@Test public void testGetUnpackedWordNetDir() throws IOException
 	{
-		System.out.println(WordNetUnpacker.getUnpackedWordNetDir());
+		assertTrue(WordNetUnpacker.getUnpackedWordNetDir().toString().endsWith("wordnet/dict"));
 	}
 
-	@Test public void testCopyResourcesToDirectory() throws IOException
+	/*@Test*/ public void testCopyResourcesToDirectory() throws IOException
 	{
 		File dir = new File("/tmp/test");
 		dir.mkdir();		

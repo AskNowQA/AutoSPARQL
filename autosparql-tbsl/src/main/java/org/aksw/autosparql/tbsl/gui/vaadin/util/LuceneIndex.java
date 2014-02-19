@@ -24,6 +24,8 @@ import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
+@Deprecated /** Is not used anymore except in OxfordDataExcetion main class (what is that class used for?)
+Is made absolete by SolrServerAksw?**/
 public class LuceneIndex implements FallbackIndex{
 	
 	private IndexSearcher searcher;

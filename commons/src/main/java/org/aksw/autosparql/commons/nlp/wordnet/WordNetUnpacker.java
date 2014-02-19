@@ -8,17 +8,19 @@ import java.net.URISyntaxException;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import org.apache.log4j.Logger;
 
 /** Allows WordNet to be run from within a jar file by unpacking it to a temporary directory.**/
 public class WordNetUnpacker
 {
+	private static final Logger logger = Logger.getLogger(WordNetUnpacker.class);
 	static final String ID = "178558556719"; // minimize the chance of interfering  with an existing directory	
 	static final String jarDir = "models/en/wordnet/dict";
 
 	/**If running from within a jar, unpack wordnet from the jar to a temp directory (if not already done) and return that.
 	 * If not running from a jar, just return the existing wordnet directory.
 	 * @see getUnpackedWordNetDir(Class)*/
-	static File getUnpackedWordNetDir() throws IOException
+	public static File getUnpackedWordNetDir()// throws IOException
 	{return getUnpackedWordNetDir(WordNetUnpacker.class);}
 
 	/**If running from within a jar, unpack wordnet from the jar to a temp directory (if not already done) and return that.
@@ -26,13 +28,15 @@ public class WordNetUnpacker
 	 * @param clazz the class in whose classloader the wordnet resources are found.
 	 * @see getUnpackedWordNetDir()**/
 
-	static File getUnpackedWordNetDir(Class clazz) throws IOException
+	static File getUnpackedWordNetDir(Class clazz)// throws IOException
 	{
+		try
+		{
 		String codeSource = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
-		System.out.println("getUnpackedWordNetDir: using code source "+codeSource);
+		logger.debug("WordNetUnpacker.getUnpackedWordNetDir: using code source "+codeSource);
 		if(!codeSource.endsWith(".jar"))
 		{
-			System.out.println("not running from jar, no unpacking necessary");
+//			logger.debug("not running from jar, no unpacking necessary");
 			try{return new File(WordNetUnpacker.class.getClassLoader().getResource(jarDir).toURI());}
 			catch (URISyntaxException e) {throw new IOException(e);}
 		}
@@ -45,10 +49,12 @@ public class WordNetUnpacker
 			if(!tempDir.isDirectory()) {throw new IOException("temporary directory is a file, not a directory ");}
 			File wordNetDir = new File(tempDirString+'/'+"wordnet"+ID);
 			wordNetDir.mkdir();
-			System.out.println("unpacking jarfile "+jarFile.getName());
+			logger.debug("unpacking jarfile "+jarFile.getName());
 			copyResourcesToDirectory(jarFile, jarDir, wordNetDir.getAbsolutePath());
 			return wordNetDir;
-		}		
+		}
+		}
+		catch(IOException e) {throw new RuntimeException(e);}
 	}
 	/** Copies a directory from a jar file to an external directory. Copied from <a href="http://stackoverflow.com/a/19859453/398963">Stack Overflow</a>. */
 	public static void copyResourcesToDirectory(JarFile fromJar, String jarDir, String destDir) throws IOException
@@ -88,6 +94,7 @@ public class WordNetUnpacker
 				}
 			}
 		}
-		if(copyCount==0) System.out.println("Warning: No files copied!");
+//		if(copyCount==0) logger.warn("WordNetUnpacker: No files copied!");
+		if(copyCount==0) throw new IOException("No files copied!");
 	}
 }

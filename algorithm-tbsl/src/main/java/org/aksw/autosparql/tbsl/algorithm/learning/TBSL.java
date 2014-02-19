@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.autosparql.commons.nlp.lemma.Lemmatizer;
@@ -18,8 +20,10 @@ import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.ranking.Ranking;
 import org.aksw.autosparql.tbsl.algorithm.learning.ranking.RankingComputation;
 import org.aksw.autosparql.tbsl.algorithm.learning.ranking.SimpleRankingComputation;
+import org.aksw.autosparql.tbsl.algorithm.sparql.Query;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
+import org.aksw.autosparql.tbsl.algorithm.sparql.WeightedQuery;
 import org.aksw.autosparql.tbsl.algorithm.templator.Templator;
 import org.apache.log4j.Logger;
 import org.ini4j.Options;
@@ -69,7 +73,7 @@ public class TBSL
 
 //	private String [] grammarFiles = new String[]{"tbsl/lexicon/english.lex"};
 
-	private Set<String> relevantKeywords;
+	public final Set<String> relevantKeywords = new HashSet<>(); 
 
 	private static final String DEFAULT_WORDNET_PROPERTIES_FILE = "tbsl/wordnet_properties.xml";
 
@@ -131,8 +135,9 @@ public class TBSL
 		System.setProperty("wordnet.database.dir", wordnetPath);
 	}
 
-	private void reset(){
-
+	private void reset()
+	{
+			relevantKeywords.clear();
 	}
 
 	public TemplateInstantiation answerQuestion(String question) throws NoTemplateFoundException
@@ -156,7 +161,9 @@ public class TBSL
 		}
 		//1.b filter out invalid templates
 		filterTemplates(templates);
-
+		
+		relevantKeywords.addAll(templateGenerator.getUnknownWords());
+		
 		//2. Entity URI Disambiguation
 		logger.debug("Running entity disambiguation...");
 		monitor.start();
