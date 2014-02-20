@@ -47,7 +47,7 @@ public class testClass_new {
     	btemplator.UNTAGGED_INPUT = false;
 		SQLiteIndex myindex = new SQLiteIndex();
 		
-		WordNet wordnet = new WordNet();
+		WordNet wordnet = WordNet.INSTANCE;
 		
 		TemplateBuilder testobject = new TemplateBuilder(btemplator, myindex);
 		

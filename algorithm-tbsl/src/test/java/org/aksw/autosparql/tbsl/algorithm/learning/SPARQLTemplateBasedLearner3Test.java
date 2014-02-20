@@ -588,7 +588,7 @@ public class SPARQLTemplateBasedLearner3Test
 		QueryTestData testData = new QueryTestData();
 		// -- only create the learner parameters once to save time -- 
 		//		PartOfSpeechTagger posTagger = StanfordPartOfSpeechTagger.INSTANCE;		
-		//		WordNet wordnet = new WordNet();
+		//		WordNet wordnet = WordNet.INSTANCE;
 		//		Options options = new Options();
 		// ----------------------------------------------------------
 		//		int successes = 0;
@@ -919,7 +919,7 @@ public class SPARQLTemplateBasedLearner3Test
 		private final int id;
 		private final QueryTestData testData;
 
-		static private final WordNet wordnet = new WordNet();
+		static private final WordNet wordnet = WordNet.INSTANCE;
 		static private final Options options = new Options();	
 		private final SPARQLTemplateBasedLearner3 learner;
 

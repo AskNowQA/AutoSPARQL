@@ -61,11 +61,11 @@ public class Templator {
 	private Set<DRS> drses;
 	
 	public Templator() {
-		this(StanfordPartOfSpeechTagger.INSTANCE, new WordNet());
+		this(StanfordPartOfSpeechTagger.INSTANCE, WordNet.INSTANCE);
 	}
 	
 	public Templator(final PartOfSpeechTagger tagger) {
-		this(tagger, new WordNet());
+		this(tagger, WordNet.INSTANCE);
 	}
 	
 	public Templator(final PartOfSpeechTagger tagger, WordNet wordnet) {

@@ -149,7 +149,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //	}
 //
 //	public SPARQLTemplateBasedLearner2(Knowledgebase knowledgebase){
-//		this(knowledgebase, StanfordPartOfSpeechTagger.INSTANCE, new WordNet(), new Options());
+//		this(knowledgebase, StanfordPartOfSpeechTagger.INSTANCE, WordNet.INSTANCE, new Options());
 //	}
 //
 //	public SPARQLTemplateBasedLearner2(Knowledgebase kb, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){

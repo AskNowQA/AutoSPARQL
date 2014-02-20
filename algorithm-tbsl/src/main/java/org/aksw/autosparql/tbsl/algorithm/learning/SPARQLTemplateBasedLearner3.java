@@ -197,7 +197,7 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 	}
 	
 	public SPARQLTemplateBasedLearner3(Knowledgebase knowledgebase){
-		this(knowledgebase, StanfordPartOfSpeechTagger.INSTANCE, new WordNet(), new Options());
+		this(knowledgebase, StanfordPartOfSpeechTagger.INSTANCE, WordNet.INSTANCE, new Options());
 		setMappingIndex(knowledgebase.getIndices().getMappingIndex());
 	}
 	
@@ -206,11 +206,11 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 	}
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger){
-		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, posTagger, new WordNet(), new Options());
+		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, posTagger, WordNet.INSTANCE, new Options());
 	}
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index index, PartOfSpeechTagger posTagger){
-		this(endpoint, index, posTagger, new WordNet(), new Options());
+		this(endpoint, index, posTagger, WordNet.INSTANCE, new Options());
 	}
 	
 	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, WordNet wordNet){
@@ -268,7 +268,7 @@ public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm
 	}
 	
 	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger){
-		this(model, resourcesIndex, classesIndex, propertiesIndex, posTagger, new WordNet(), new Options());
+		this(model, resourcesIndex, classesIndex, propertiesIndex, posTagger, WordNet.INSTANCE, new Options());
 	}
 	
 	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, WordNet wordNet){

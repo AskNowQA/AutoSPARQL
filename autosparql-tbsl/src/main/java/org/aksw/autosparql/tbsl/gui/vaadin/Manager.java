@@ -56,7 +56,7 @@ public class Manager {
 
 		posTagger = StanfordPartOfSpeechTagger.INSTANCE;
 		//		wordNet = new WordNet(this.getClass().getClassLoader().getResourceAsStream("wordnet_properties.xml"));
-		wordNet = new WordNet();
+		wordNet = WordNet.INSTANCE;
 		logger.info("...done.");
 	}
 

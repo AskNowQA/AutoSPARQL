@@ -52,7 +52,7 @@ public class exploration_main {
     	btemplator.UNTAGGED_INPUT = false;
 		
 		SQLiteIndex myindex = new SQLiteIndex();
-		WordNet wordnet = new WordNet();
+		WordNet wordnet = WordNet.INSTANCE;
 		StanfordLemmatizer lemmatiser = new StanfordLemmatizer();
 		
 

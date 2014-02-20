@@ -20,12 +20,14 @@ import edu.mit.jwi.item.POS;
 import edu.mit.jwi.item.Pointer;
 
 public class WordNet {
+	
+	public static final WordNet INSTANCE = WordNet.INSTANCE; 
 
 	private static final Logger logger = Logger.getLogger(WordNet.class);
 	
 	public IDictionary dict;	
 
-	public WordNet()
+	private WordNet()
 	{		
 		try
 		{
