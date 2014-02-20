@@ -21,11 +21,13 @@
             <param-name>application</param-name>
             <param-value>org.aksw.autosparql.tbsl.gui.vaadin.TBSLApplication</param-value>
         </init-param>
+ 
         <init-param>
 			<description>Application widgetset</description>
-			<param-name>widgetset</param-name>
-			<param-value>org.aksw.autosparql.tbsl.gui.vaadin.CustomWidgetset</param-value>
+			<param-name>org.aksw.autosparql.tbsl.gui.vaadin.CustomWidgetset</param-name>
+			<param-value>CustomWidgetset</param-value>
 		</init-param>
+
 		<load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>

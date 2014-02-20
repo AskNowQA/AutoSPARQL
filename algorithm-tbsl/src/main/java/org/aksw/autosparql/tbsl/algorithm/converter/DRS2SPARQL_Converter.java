@@ -1,6 +1,11 @@
 package org.aksw.autosparql.tbsl.algorithm.converter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.Complex_DRS_Condition;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS_Condition;
@@ -8,12 +13,28 @@ import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS_Quantifier;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.DiscourseReferent;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.Negated_DRS;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.Simple_DRS_Condition;
-import org.aksw.autosparql.tbsl.algorithm.sparql.*;
+import org.aksw.autosparql.tbsl.algorithm.sparql.Query;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Aggregate;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Filter;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Having;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_OrderBy;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Pair;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_PairType;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Prefix;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Property;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_QueryType;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Term;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Triple;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Union;
+import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
+import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
+import org.apache.log4j.Logger;
 
 
 public class DRS2SPARQL_Converter {
 
-    private boolean silent = true; // suppresses console output
+	private static final Logger logger = Logger.getLogger(DRS2SPARQL_Converter.class);
     private boolean oxford = true;
     private String inputstring = null;
     List<Slot> slots;
@@ -25,25 +46,12 @@ public class DRS2SPARQL_Converter {
     	usedInts = new ArrayList<Integer>();
     }
 
-    public DRS2SPARQL_Converter(boolean silent) {
-        setSilent(silent);
-        template = new Template(new Query());
-        usedInts = new ArrayList<Integer>();
-    }
-    
+   
     public void setInputString(String s) {
         inputstring = s;
     }
     public void setSlots(List<Slot> ls) {
     	slots = ls;
-    }
-
-    public boolean isSilent() {
-        return silent;
-    }
-
-    public void setSilent(boolean silent) {
-        this.silent = silent;
     }
 
     public List<SPARQL_Property> getProperties(Complex_DRS_Condition cond) {
@@ -58,9 +66,8 @@ public class DRS2SPARQL_Converter {
         prefixes.add(new SPARQL_Prefix("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
         prefixes.add(new SPARQL_Prefix("rdfs", "http://www.w3.org/2000/01/rdf-schema#"));
 
-        if (!isSilent()) {
-            System.out.print("Converting DRS{" + drs.toString() + "}...");
-        }
+            logger.trace("Converting DRS{" + drs.toString() + "}...");
+
         
         template = new Template(new Query());
         slots = ls;
@@ -71,9 +78,9 @@ public class DRS2SPARQL_Converter {
         
         template.setQuery(q);
         
-        if (!isSilent()) {
-            System.out.println("... done");
-        }
+
+            logger.trace("... done");
+
 
         usedInts = new ArrayList<Integer>();
         return template;
@@ -81,12 +88,12 @@ public class DRS2SPARQL_Converter {
 
     private Query convert(DRS drs, Query query, boolean negate) {
     	
-//        System.out.println("\n--- DRS (before): " + drs); // DEBUG   	
+//        logger.trace("\n--- DRS (before): " + drs); // DEBUG   	
         redundantEqualRenaming(drs); 
         if (!restructureEmpty(drs) || !replaceRegextoken(drs)) {
            return null;
         }
-//       System.out.println("--- DRS (after) : " + drs); // DEBUG
+//       logger.trace("--- DRS (after) : " + drs); // DEBUG
             
         for (DiscourseReferent referent : drs.collectDRs()) {
             if (referent.isMarked()) {
@@ -102,11 +109,11 @@ public class DRS2SPARQL_Converter {
             	query.addFilter(f);
             }
             
-//            System.out.println("--- referent: " + referent.toString()); // DEBUG
+//            logger.trace("--- referent: " + referent.toString()); // DEBUG
             for (Slot s : slots) {
-//           	System.out.println("--- slot: " + s.toString()); // DEBUG
+//           	logger.trace("--- slot: " + s.toString()); // DEBUG
                 if (s.getAnchor().equals(referent.getValue()) || s.getAnchor().equals(referent.toString())) {
-//        			System.out.println("    fits!"); // DEBUG
+//        			logger.trace("    fits!"); // DEBUG
                     template.addSlot(s);
                     break;
                 }
@@ -147,7 +154,7 @@ public class DRS2SPARQL_Converter {
             else out = query;
             
         if (condition.isComplexCondition()) {
-            if (!isSilent()) System.out.print("|complex:" + condition.toString());
+            logger.trace("|complex:" + condition.toString());
             
             Complex_DRS_Condition complex = (Complex_DRS_Condition) condition;
 
@@ -191,7 +198,7 @@ public class DRS2SPARQL_Converter {
                 DiscourseReferent ref = complex.getReferent();
                 String sref = ref.getValue();
                 String fresh;
-                if (!isSilent()) System.out.print("|quantor:" + quant);
+                logger.trace("|quantor:" + quant);
 
                 switch (quant) {
                     case HOWMANY:
@@ -229,18 +236,16 @@ public class DRS2SPARQL_Converter {
                 }
             }
         } else if (condition.isNegatedCondition()) {
-            if (!isSilent()) {
-                System.out.print("|negation:" + condition.toString());
+            {
+                logger.trace("|negation:" + condition.toString());
             }
             Negated_DRS neg = (Negated_DRS) condition;
             out = convert(neg.getDRS(), out, true);
 
         } else {
             Simple_DRS_Condition simple = (Simple_DRS_Condition) condition;
-
-            if (!isSilent()) {
-                System.out.print(isSilent() + "|simple:" + condition.toString());
-            }
+            logger.trace( "|simple:" + condition.toString());
+            
             
             int arity = simple.getArguments().size(); 
             String predicate = simple.getPredicate();

@@ -218,7 +218,7 @@
  			<dependency>
 				<groupId>org.dllearner</groupId>
 				<artifactId>components-core</artifactId>
-				<version>1.0-20140218.095254-530</version>
+				<version>1.0-20140220.145832-537</version>
 			</dependency>
 
 			<dependency>

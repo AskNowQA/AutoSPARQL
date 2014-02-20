@@ -1,0 +1,2 @@
+# Module org.aksw.autosparql.tbsl.gui.vaadin.CustomWidgetset.CustomWidgetset
+# RPC service class, partial path of RPC policy file

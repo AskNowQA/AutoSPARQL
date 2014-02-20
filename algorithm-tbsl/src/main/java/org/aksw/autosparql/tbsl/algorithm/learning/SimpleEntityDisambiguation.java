@@ -1,5 +1,8 @@
 package org.aksw.autosparql.tbsl.algorithm.learning;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,6 +69,9 @@ public class SimpleEntityDisambiguation {
 			Index index = getIndexForSlot(slot);
 			List<String> words = slot.getWords();
 			for(String word : words){
+				
+				// disable system.out
+				System.setOut(new PrintStream(new OutputStream() {@Override public void write(int arg0) throws IOException {}}));
 				IndexResultSet rs = index.getResourcesWithScores(word, 10);
 				for(IndexResultItem item : rs.getItems()){
 					String uri = item.getUri();

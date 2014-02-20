@@ -30,8 +30,8 @@ public class TBSLTest extends TestCase
 		TemplateInstantiation ti = TbslDbpedia.INSTANCE.answerQuestion(question);
 		ResultSet rs = DBpediaKnowledgebase.INSTANCE.querySelect(ti.getQuery());
 		//		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
-		System.out.println(ti.getQuery());
-		System.out.println(rs.nextSolution());
+//		System.out.println(ti.getQuery());
+//		System.out.println(rs.nextSolution());
 	}
 
 	@Test

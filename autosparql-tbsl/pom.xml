@@ -14,7 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<vaadin.version>6.8.0</vaadin.version>
 		<gwt.version>2.3.0</gwt.version>
-		<gwt.plugin.version>2.2.0</gwt.plugin.version>
+		<gwt.plugin.version>2.3.0</gwt.plugin.version>
 	</properties>
 
 	<build>
@@ -93,10 +93,12 @@
 		<dependency>
 			<groupId>org.aksw.autosparql</groupId>
 			<artifactId>algorithm-tbsl</artifactId>
+			<excludes><exclude>**/log4j.properties</exclude></excludes>
 		</dependency>
 		<dependency>
 			<groupId>org.aksw.autosparql</groupId>
 			<artifactId>commons</artifactId>
+			<excludes><exclude>**/log4j.properties</exclude></excludes>
 		</dependency>
 		<dependency>
 			<groupId>javax</groupId>
@@ -231,7 +233,7 @@
 						<version>${gwt.plugin.version}</version>
 						<configuration>
 							<webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
-							<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+							<extraJvmArgs>-Xmx2000M -Xss1024k</extraJvmArgs>
 							<runTarget>autosparql-tbsl</runTarget>
 							<hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
 							<noServer>true</noServer>
