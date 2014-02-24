@@ -60,7 +60,7 @@
 		<dependency>		
 			<groupId>org.aksw.autosparql</groupId>
 			<artifactId>commons</artifactId>
-			<excludes><exclude>**/log4j.properties</exclude></excludes>
+<!-- 			<excludes><exclude>**/log4j.properties</exclude></excludes> -->
 		</dependency>
 		<dependency>
 			<groupId>com.jamonapi</groupId>

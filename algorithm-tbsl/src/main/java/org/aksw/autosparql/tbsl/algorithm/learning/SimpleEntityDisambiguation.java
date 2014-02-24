@@ -71,8 +71,11 @@ public class SimpleEntityDisambiguation {
 			for(String word : words){
 				
 				// disable system.out
+				PrintStream out = System.out;
 				System.setOut(new PrintStream(new OutputStream() {@Override public void write(int arg0) throws IOException {}}));
 				IndexResultSet rs = index.getResourcesWithScores(word, 10);
+				// enable again
+				System.setOut(out);
 				for(IndexResultItem item : rs.getItems()){
 					String uri = item.getUri();
 					String label = item.getLabel();

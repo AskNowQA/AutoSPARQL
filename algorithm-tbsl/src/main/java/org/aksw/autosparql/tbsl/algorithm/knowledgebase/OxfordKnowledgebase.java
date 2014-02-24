@@ -1,5 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.knowledgebase;
 
+import java.io.IOException;
 import org.aksw.autosparql.commons.index.Indices;
 import org.dllearner.common.index.MappingBasedIndex;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -22,12 +23,16 @@ public class OxfordKnowledgebase extends LocalKnowledgebase
 	
 	private static MappingBasedIndex createMappingIndex()
 	{
-		return new MappingBasedIndex(
-				OxfordKnowledgebase.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
-				OxfordKnowledgebase.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
-				OxfordKnowledgebase.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
-				OxfordKnowledgebase.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
-				);
+		try
+		{
+			return new MappingBasedIndex(
+					OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/oxford_class_mappings.txt"), 
+					OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/oxford_resource_mappings.txt"),
+					OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/oxford_dataproperty_mappings.txt"),
+					OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/oxford_objectproperty_mappings.txt")
+					);
+		}
+		catch (IOException e) {throw new RuntimeException(e);}
 	}	
 
 	private OxfordKnowledgebase() {	super(getOxfordModel(),"oxford","Oxford Houses",new Indices(getOxfordModel(),createMappingIndex()));}

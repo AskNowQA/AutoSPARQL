@@ -1,5 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.knowledgebase;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -25,12 +26,16 @@ public class DBpediaKnowledgebase extends RemoteKnowledgebase
 
 	private static MappingBasedIndex createMappingIndex()
 	{
-		return new MappingBasedIndex(
-				DBpediaKnowledgebase.class.getClassLoader().getResource("tbsl/dbpedia_class_mappings.txt").getPath(), 
-				DBpediaKnowledgebase.class.getClassLoader().getResource("tbsl/dbpedia_resource_mappings.txt").getPath(),
-				DBpediaKnowledgebase.class.getClassLoader().getResource("tbsl/dbpedia_dataproperty_mappings.txt").getPath(),
-				DBpediaKnowledgebase.class.getClassLoader().getResource("tbsl/dbpedia_objectproperty_mappings.txt").getPath()
-				);
+		try
+		{
+			return new MappingBasedIndex(
+					DBpediaKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/dbpedia_class_mappings.txt"), 
+					DBpediaKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/dbpedia_resource_mappings.txt"),
+					DBpediaKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/dbpedia_dataproperty_mappings.txt"),
+					DBpediaKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/dbpedia_objectproperty_mappings.txt")
+					);
+		}
+		catch (IOException e) {throw new RuntimeException(e);}
 	}	
 
 	private DBpediaKnowledgebase() {super(getDbpediaEndpoint(),"dbpedia","DBpedia",SolrServerAksw.INSTANCE.dbpediaIndices);}
