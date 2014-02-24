@@ -20,6 +20,7 @@ import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
 import org.aksw.autosparql.tbsl.algorithm.util.Prominences;
+import org.aksw.autosparql.tbsl.algorithm.util.StringDisplay;
 import org.apache.log4j.Logger;
 import org.dllearner.core.owl.DatatypeProperty;
 import org.dllearner.core.owl.Individual;
@@ -106,7 +107,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 //		}
 		//print top n 
 		for(TemplateInstantiation t : ranking.getTopN(5)){
-			logger.debug(t.asQuery() + "(Score: " + ranking.getScore(t) + ")");
+			logger.debug(StringDisplay.shortenSparqlQuery(t.asQuery().toString()) + " (Score: " + ranking.getScore(t) + ")");
 		}
 		return ranking;
 	}

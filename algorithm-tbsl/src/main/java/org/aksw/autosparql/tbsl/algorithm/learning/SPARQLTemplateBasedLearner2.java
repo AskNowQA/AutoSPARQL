@@ -312,7 +312,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //			templates = templateGenerator.buildTemplates(question);
 //		}
 //		templateMon.stop();
-//		logger.debug("Done in " + templateMon.getLastValue() + "ms.");
+//		logger.trace("Done in " + templateMon.getLastValue() + "ms.");
 //		relevantKeywords.addAll(templateGenerator.getUnknownWords());
 //		if(templates.isEmpty()){
 //			throw new NoTemplateFoundException();
@@ -964,7 +964,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //		}
 //
 //		sparqlMon.stop();
-//		logger.debug("Done in " + sparqlMon.getLastValue() + "ms.");
+//		logger.trace("Done in " + sparqlMon.getLastValue() + "ms.");
 //	}
 //
 //	private boolean executeAskQuery(String query)

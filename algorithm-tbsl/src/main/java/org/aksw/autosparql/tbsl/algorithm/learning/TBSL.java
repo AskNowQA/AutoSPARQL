@@ -151,7 +151,7 @@ public class TBSL
 		monitor.start();
 		templates = templateGenerator.buildTemplates(question);
 		monitor.stop();
-		logger.debug("Done in " + monitor.getLastValue() + "ms.");
+		logger.trace("Done in " + monitor.getLastValue() + "ms.");
 		if(templates.isEmpty()){
 			throw new NoTemplateFoundException();
 		}
@@ -170,14 +170,14 @@ public class TBSL
 		SimpleEntityDisambiguation entityDisambiguation = new SimpleEntityDisambiguation(knowledgebase);
 		Map<Template, Map<Slot, Collection<Entity>>> template2Allocations = entityDisambiguation.performEntityDisambiguation(templates);
 		monitor.stop();
-		logger.debug("Done in " + monitor.getLastValue() + "ms.");
+		logger.trace("Done in " + monitor.getLastValue() + "ms.");
 
 		//3. Generate possible instantiations of the templates, i.e. find entities for the slots
 		logger.debug("Running template instantiation...");
 		monitor.start();
 		Map<Template, List<TemplateInstantiation>> template2Instantiations = instantiateTemplates(template2Allocations);
 		monitor.stop();
-		logger.debug("Done in " + monitor.getLastValue() + "ms.");
+		logger.trace("Done in " + monitor.getLastValue() + "ms.");
 
 		//4. Rank the template instantiations
 		logger.debug("Running ranking...");
@@ -185,7 +185,7 @@ public class TBSL
 		SimpleRankingComputation rankingComputation = new SimpleRankingComputation(knowledgebase);
 		Ranking ranking = rankingComputation.computeRanking(template2Instantiations, template2Allocations, parameters);
 		monitor.stop();
-		logger.debug("Done in " + monitor.getLastValue() + "ms.");
+		logger.trace("Done in " + monitor.getLastValue() + "ms.");
 
 		return ranking.getBest();
 	}

@@ -54,7 +54,7 @@ public class SimpleEntityDisambiguation {
 	/** get sorted list of entities
 	 */
 	private Collection<Entity> getCandidateEntities(Slot slot){
-		logger.debug("Generating entity candidates for slot " + slot + "...");
+		logger.trace("Generating entity candidates for slot " + slot + "...");
 		Set<Entity> candidateEntities = new HashSet<Entity>();
 //		if(slot.getSlotType() == SlotType.RESOURCE){
 //			List<String> words = slot.getWords();
@@ -86,8 +86,7 @@ public class SimpleEntityDisambiguation {
 				}
 			}
 //		}
-		logger.debug("Found " + candidateEntities.size() + " entities.");
-		logger.debug(candidateEntities);
+		logger.debug("Found " + candidateEntities.size() + " entities for slot "+slot+": "+candidateEntities);
 		return candidateEntities;
 	}
 

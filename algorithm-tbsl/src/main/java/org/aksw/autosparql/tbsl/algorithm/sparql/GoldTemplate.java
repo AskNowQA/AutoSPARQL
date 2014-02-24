@@ -3,6 +3,7 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.aksw.autosparql.tbsl.algorithm.util.StringDisplay;
 
 public class GoldTemplate implements Serializable, Comparable<GoldTemplate> {
 
@@ -29,8 +30,7 @@ public class GoldTemplate implements Serializable, Comparable<GoldTemplate> {
 	}
 
 	public String toString() {
-
-		String out = ">> QUERY:\n\n" + query.toString() + "\n>> SLOTS:\n";
+		String out = ">> QUERY:" + StringDisplay.shortenSparqlQuery(query.toString())+ " SLOTS: ";
 		for (Slot s : slots) {
 			out += s.toString() + "\n";
 		}

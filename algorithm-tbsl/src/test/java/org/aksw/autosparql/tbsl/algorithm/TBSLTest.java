@@ -25,11 +25,12 @@ public class TBSLTest extends TestCase
 	@Test
 	public void testDBpedia() throws Exception
 	{
-//		String question = "Give me all books written by Dan Brown.";
-		String question = "Give me all movies starred by Brad Pitt.";
+		String question = "Give me all books written by Dan Brown.";
+//		String question = "Give me all movies starred by Brad Pitt.";
 		TemplateInstantiation ti = TbslDbpedia.INSTANCE.answerQuestion(question);
 		ResultSet rs = DBpediaKnowledgebase.INSTANCE.querySelect(ti.getQuery());
-		//		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
+		System.out.println(rs.nextSolution().toString());		
+		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
 //		System.out.println(ti.getQuery());
 //		System.out.println(rs.nextSolution());
 	}
