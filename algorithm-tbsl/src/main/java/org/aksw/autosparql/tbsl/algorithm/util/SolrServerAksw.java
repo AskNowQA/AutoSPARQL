@@ -2,6 +2,8 @@ package org.aksw.autosparql.tbsl.algorithm.util;
 
 import org.aksw.autosparql.commons.index.Indices;
 import org.aksw.autosparql.tbsl.algorithm.search.BugfixedSolrIndex;
+import org.aksw.autosparql.tbsl.algorithm.search.DbpediaFilter;
+import org.aksw.autosparql.tbsl.algorithm.search.FilteredIndex;
 import org.dllearner.common.index.HierarchicalIndex;
 import org.dllearner.common.index.Index;
 
@@ -15,10 +17,8 @@ public enum SolrServerAksw
 	static final String	SOLR_SERVER_URI_EN	= "http://solr.aksw.org/en_";
 //	static final String	SOLR_SERVER_URI_EN	= "http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_";
 	
-	public final BugfixedSolrIndex resourcesIndex;		
-	public final BugfixedSolrIndex classesIndex;
-//	public final BugfixedSolrIndex dataPropertiesIndex;
-//	public final BugfixedSolrIndex objectPropertiesIndex;
+	public final Index resourcesIndex;		
+	public final Index classesIndex;
 	public final Index dataPropertiesIndex;
 	public final Index objectPropertiesIndex;
 
@@ -39,18 +39,22 @@ public enum SolrServerAksw
 // separate boa index
 	private SolrServerAksw()
 	{
-		resourcesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
-		classesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
-		BugfixedSolrIndex noBoaDataPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
-		BugfixedSolrIndex noBoaObjectPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
-		for(BugfixedSolrIndex index: new BugfixedSolrIndex[] {resourcesIndex,classesIndex,noBoaObjectPropertiesIndex,noBoaDataPropertiesIndex})
+		BugfixedSolrIndex resourcesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");
+		BugfixedSolrIndex classesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
+		BugfixedSolrIndex dataPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+		BugfixedSolrIndex objectPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+		for(BugfixedSolrIndex index: new BugfixedSolrIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
 		{index.setPrimarySearchField("label");}
 		BugfixedSolrIndex boaIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"boa","nlr-no-var");
 		boaIndex.setSortField("boa-score");
 		boaIndex.getResources("test");
 		
-		dataPropertiesIndex = new HierarchicalIndex(noBoaDataPropertiesIndex,boaIndex);
-		objectPropertiesIndex = new HierarchicalIndex(noBoaObjectPropertiesIndex,boaIndex);
+		this.resourcesIndex = new FilteredIndex(resourcesIndex, DbpediaFilter.INSTANCE);
+		this.classesIndex = new FilteredIndex(classesIndex, DbpediaFilter.INSTANCE);
+		this.dataPropertiesIndex= new FilteredIndex(new HierarchicalIndex(dataPropertiesIndex,boaIndex),DbpediaFilter.INSTANCE);
+		this.objectPropertiesIndex = new FilteredIndex(new HierarchicalIndex(objectPropertiesIndex,boaIndex),DbpediaFilter.INSTANCE);
+
 		dbpediaIndices = new Indices(resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex);
-	}	
+	}
+	
 }

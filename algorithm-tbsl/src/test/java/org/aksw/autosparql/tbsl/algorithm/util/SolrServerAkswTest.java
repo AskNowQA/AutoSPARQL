@@ -11,6 +11,10 @@ public class SolrServerAkswTest
 	@Test public void testDBpediaIndices()
 	{
 		{
+			List<String> resources = SolrServerAksw.INSTANCE.resourcesIndex.getResources("Premier League");
+			System.out.println(resources);
+		}
+		{
 			List<String> objectProperties = SolrServerAksw.INSTANCE.objectPropertiesIndex.getResources("author");
 			assertNotNull(objectProperties);
 			assertFalse(objectProperties.isEmpty());

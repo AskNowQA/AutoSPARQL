@@ -4,14 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Collections;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.learning.NoTemplateFoundException;
-import org.dllearner.common.index.Index;
-import org.dllearner.common.index.SOLRIndex;
-import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.ini4j.InvalidFileFormatException;
 
 public class CLI {
