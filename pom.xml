@@ -9,7 +9,6 @@
 
 	<modules>
 		<module>autosparql</module>
-<!--		<module>autosparql-lite</module>-->
 		<module>autosparql-tbsl</module>
 		<module>algorithm-tbsl</module>
 		<module>commons</module>
