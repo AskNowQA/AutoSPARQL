@@ -136,8 +136,10 @@ public class TBSLManager
 		QTL qtl;
 		Knowledgebase kb = getActiveTBSL().getTBSL().getKnowledgebase();
 		if(kb instanceof RemoteKnowledgebase){
-			qtl = new QTL(new SPARQLEndpointEx(((RemoteKnowledgebase) kb).getEndpoint(), null, null, Collections.<String>emptySet()),
-					cache);
+			
+			SPARQLEndpointEx endpoint = new SPARQLEndpointEx(((RemoteKnowledgebase) kb).getEndpoint(), null, null, Collections.<String>emptySet());
+//			qtl = new QTL(endpoint,cache);
+			qtl = new QTL(endpoint,cache.getCacheDirectory());
 		} else {
 			qtl = new QTL(((LocalKnowledgebase) kb).getModel());
 		}

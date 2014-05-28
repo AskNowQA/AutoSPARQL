@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
-import org.aksw.autosparql.tbsl.algorithm.util.SolrServerAksw;
+import org.aksw.autosparql.tbsl.algorithm.util.SolrServer;
 import org.dllearner.common.index.MappingBasedIndex;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 
@@ -38,5 +38,5 @@ public class DBpediaKnowledgebase extends RemoteKnowledgebase
 		catch (IOException e) {throw new RuntimeException(e);}
 	}	
 
-	private DBpediaKnowledgebase() {super(getDbpediaEndpoint(),"dbpedia","DBpedia",SolrServerAksw.INSTANCE.dbpediaIndices);}
+	private DBpediaKnowledgebase() {super(getDbpediaEndpoint(),"dbpedia","DBpedia",SolrServer.INSTANCE.getIndices());}
 }

@@ -13,6 +13,8 @@ autosparql/construct-cache
 autosparql/log
 autosparql/logs
 algorithm-tbsl/logs/
+algorithm-tbsl/input/
+algorithm-tbsl/output/
 autosparql-tbsl/cache/
 autosparql-tbsl/logs/
 algorithm-tbsl/dbpedia/

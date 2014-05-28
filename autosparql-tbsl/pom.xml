@@ -187,14 +187,6 @@
 		<dependency>
 			<groupId>org.aksw.sparql2nl</groupId>
 			<artifactId>sparql2nl</artifactId>
-			<version>0.0.1-20140219.141341-349</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.tomcat</groupId>
-					<artifactId>tomcat-catalina</artifactId>
-					<!-- <version>7.0.42</version> -->
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>

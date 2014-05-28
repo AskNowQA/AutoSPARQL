@@ -18,63 +18,25 @@
 			<artifactId>solr-solrj</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.memetix</groupId>
 			<artifactId>microsoft-translator-java-api</artifactId>
 			<version>0.6.2</version>
 			<type>jar</type>
 		</dependency>
-		<dependency>
-			<groupId>org.dllearner</groupId>
-			<artifactId>components-core</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jena</artifactId>
-					<groupId>com.hp.hpl.jena</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>pellet</artifactId>
-					<groupId>com.owldl</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
 
 		<dependency>
-			<groupId>org.dllearner</groupId>
-			<artifactId>components-ext</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>postagger</artifactId>
-					<groupId>edu.stanford</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>		
 			<groupId>org.aksw.autosparql</groupId>
 			<artifactId>commons</artifactId>
-<!-- 			<excludes><exclude>**/log4j.properties</exclude></excludes> -->
+			<!-- <excludes><exclude>**/log4j.properties</exclude></excludes> -->
 		</dependency>
 		<dependency>
 			<groupId>com.jamonapi</groupId>
 			<artifactId>jamon</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-core</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-jdk14</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>

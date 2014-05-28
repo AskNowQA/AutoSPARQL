@@ -8,7 +8,7 @@ public class WordNetTest
 {
 
 	@Test public void testGetBestSynonyms()
-	{
+	{		
 		assertTrue(WordNet.INSTANCE.getBestSynonyms(POS.VERB, "learn").contains("acquire"));
 	}
 

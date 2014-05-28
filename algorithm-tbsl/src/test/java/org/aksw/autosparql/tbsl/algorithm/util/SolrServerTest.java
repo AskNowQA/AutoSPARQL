@@ -6,28 +6,29 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import org.junit.Test;
 
-public class SolrServerAkswTest
+public class SolrServerTest
 {
+		
 	@Test public void testDBpediaIndices()
 	{
 		{
-			List<String> resources = SolrServerAksw.INSTANCE.resourcesIndex.getResources("Premier League");
+			List<String> resources = SolrServer.INSTANCE.resourcesIndex.getResources("Premier League");
 			System.out.println(resources);
 		}
 		{
-			List<String> objectProperties = SolrServerAksw.INSTANCE.objectPropertiesIndex.getResources("author");
+			List<String> objectProperties = SolrServer.INSTANCE.objectPropertiesIndex.getResources("author");
 			assertNotNull(objectProperties);
 			assertFalse(objectProperties.isEmpty());
 			assertTrue(objectProperties.contains("http://dbpedia.org/ontology/author"));
 		}
 		{
-			List<String> objectProperties = SolrServerAksw.INSTANCE.objectPropertiesIndex.getResources("written");
+			List<String> objectProperties = SolrServer.INSTANCE.objectPropertiesIndex.getResources("written");
 			assertNotNull(objectProperties);			
 			assertFalse("boa doesn't find author by 'written'",objectProperties.isEmpty());
 			assertTrue("boa doesn't find author by 'written'",objectProperties.contains("http://dbpedia.org/ontology/author"));
 		}
 		{
-			List<String> resources = SolrServerAksw.INSTANCE.resourcesIndex.getResources("Leipzig");
+			List<String> resources = SolrServer.INSTANCE.resourcesIndex.getResources("Leipzig");
 			assertNotNull(resources);
 			assertFalse(resources.isEmpty());
 			assertTrue(resources.contains("http://dbpedia.org/resource/Leipzig"));

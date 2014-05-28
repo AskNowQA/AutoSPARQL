@@ -39,8 +39,10 @@ public class UriDisambiguation {
 	
 	static protected class SolrServerHolder
 	{
-		static SolrServer enSolrServer = new HttpSolrServer("http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_dbpedia_resources");
-		static SolrServer deSolrServer = new HttpSolrServer("http://[2001:638:902:2010:0:168:35:138]:8080/solr/de_dbpedia_resources");
+//		static SolrServer enSolrServer = new HttpSolrServer("http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_dbpedia_resources");
+		static SolrServer enSolrServer = new HttpSolrServer("http://linkedspending.aksw.org/solr/en_dbpedia_resources");
+//		static SolrServer deSolrServer = new HttpSolrServer("http://[2001:638:902:2010:0:168:35:138]:8080/solr/de_dbpedia_resources");
+		static SolrServer deSolrServer = null;
 	}
 	
 	private static Map<String,List<Resource>> labelToResources = new HashMap<String, List<Resource>>();

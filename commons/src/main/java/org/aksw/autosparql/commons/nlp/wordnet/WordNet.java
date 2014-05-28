@@ -19,18 +19,18 @@ import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 import edu.mit.jwi.item.Pointer;
 
-public class WordNet {
-	
-	public static final WordNet INSTANCE = WordNet.INSTANCE; 
-
+public class WordNet
+{
 	private static final Logger logger = Logger.getLogger(WordNet.class);
+	
+	public static final WordNet INSTANCE = new WordNet(); 
 	
 	public IDictionary dict;	
 
 	private WordNet()
 	{		
 		try
-		{
+		{			
 			File dictDirectory = WordNetUnpacker.getUnpackedWordNetDir();
 			logger.debug("loading wordnet from "+dictDirectory);
 			dict = new RAMDictionary(dictDirectory, ILoadPolicy.NO_LOAD);

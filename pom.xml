@@ -26,7 +26,7 @@
 		<!--Define the AKSW dependency version -->
 		<aksw.version>0.7.2</aksw.version>
 		<!-- from qa -->
-		<solr.version>4.6.0</solr.version>
+		<solr.version>4.8.0</solr.version>
 		<autosparql.version>1.0-SNAPSHOT</autosparql.version>
 	</properties>
 
@@ -73,6 +73,19 @@
 
 	<dependencyManagement>
 		<dependencies>
+		 <dependency>
+                        <groupId>org.aksw.sparql2nl</groupId>
+                        <artifactId>sparql2nl</artifactId>
+                        <version>0.0.1-20140526.110838-1</version>
+                        <exclusions>
+                                <exclusion>
+                                        <groupId>org.apache.tomcat</groupId>
+                                        <artifactId>tomcat-catalina</artifactId>
+                                        <!-- <version>7.0.42</version> -->
+                                </exclusion>
+                        </exclusions>
+                </dependency>
+
 		  <dependency>
                         <groupId>net.sf.jgrapht</groupId>
                         <artifactId>jgrapht-core</artifactId>
@@ -90,7 +103,11 @@
 				<artifactId>lucene-core</artifactId>
 				<version>${solr.version}</version>
 			</dependency>
-
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>${solr.version}</version>
+		</dependency>
 			<dependency>
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-arq</artifactId>
@@ -518,4 +535,64 @@
 <!-- 			</exclusions> -->
 <!-- 		</dependency> -->
 <!-- 	</dependencies> -->
+	<dependencies>
+		<dependency>
+			<groupId>org.dllearner</groupId>
+			<artifactId>components-ext</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>postagger</artifactId>
+					<groupId>edu.stanford</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-analyzers</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-analyzers-common</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.dllearner</groupId>
+			<artifactId>components-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena</artifactId>
+					<groupId>com.hp.hpl.jena</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>pellet</artifactId>
+					<groupId>com.owldl</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-analyzers-common</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-jdk14</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-analyzers-common</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
 </project>
