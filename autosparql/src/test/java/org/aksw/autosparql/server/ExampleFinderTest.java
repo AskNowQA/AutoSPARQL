@@ -2,15 +2,15 @@ package org.aksw.autosparql.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.aksw.autosparql.server.ExampleFinder;
+
 import org.aksw.autosparql.server.search.QuestionProcessor;
 import org.aksw.autosparql.server.search.Search;
 import org.aksw.autosparql.server.search.SolrSearch;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.dllearner.algorithm.qtl.QTL;
-import org.dllearner.algorithm.qtl.operations.NBR;
-import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
+import org.dllearner.algorithms.qtl.QTL;
+import org.dllearner.algorithms.qtl.operations.NBR;
+import org.dllearner.algorithms.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.junit.Test;
 

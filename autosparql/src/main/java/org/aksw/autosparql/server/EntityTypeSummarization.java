@@ -5,12 +5,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.aksw.commons.sparql.core.ResultSetRenderer;
-import org.aksw.commons.sparql.core.SparqlEndpoint;
-import org.aksw.commons.sparql.core.impl.HttpSparqlEndpoint;
+import org.dllearner.kb.sparql.QueryExecutionFactoryHttp;
+import org.dllearner.kb.sparql.SparqlEndpoint;
+
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.ResultSet;
 
 public class EntityTypeSummarization {
 	
@@ -54,7 +57,13 @@ public class EntityTypeSummarization {
 	
 	private Set<String> getTypesOfResource(String resource){
 		String query = "SELECT ?type WHERE {<" + resource + "> a ?type} LIMIT 100";
-		Set<String> types = ResultSetRenderer.asStringSet(endpoint.executeSelect(query));
+		QueryExecutionFactoryHttp qef = new QueryExecutionFactoryHttp(endpoint.getURL().toString(), endpoint.getDefaultGraphURIs());
+		QueryExecution qe = qef.createQueryExecution(query);
+		ResultSet rs = qe.execSelect();
+		Set<String> types = new HashSet<String>();
+		while(rs.hasNext()){
+			types.add(rs.next().getResource("type").getURI());
+		}
 		return types;
 	}
 	
@@ -75,12 +84,18 @@ public class EntityTypeSummarization {
 	
 	private Set<String> getResources(String type){
 		String query = "SELECT ?uri WHERE {?uri a <" + type + ">} LIMIT 10";
-		Set<String> resources = ResultSetRenderer.asStringSet(endpoint.executeSelect(query));
+		QueryExecutionFactoryHttp qef = new QueryExecutionFactoryHttp(endpoint.getURL().toString(), endpoint.getDefaultGraphURIs());
+		QueryExecution qe = qef.createQueryExecution(query);
+		ResultSet rs = qe.execSelect();
+		Set<String> resources = new HashSet<String>();
+		while(rs.hasNext()){
+			resources.add(rs.next().getResource("uri").getURI());
+		}
 		return resources;
 	}
 
 	public static void main(String[] args) throws IOException {
-		SparqlEndpoint endpoint = new HttpSparqlEndpoint("http://dbpedia.org/sparql", "http://dbpedia.org");
+		SparqlEndpoint endpoint = SparqlEndpoint.getEndpointDBpedia();
 		EntityTypeSummarization sum = new EntityTypeSummarization(endpoint);
 		sum.getSummarizedTypes("http://dbpedia.org/resource/Angela_Merkel");
 		

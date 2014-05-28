@@ -9,21 +9,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.aksw.autosparql.server.search.QuestionProcessor;
-import org.dllearner.algorithm.qtl.QueryTreeFactory;
-import org.dllearner.algorithm.qtl.datastructures.QueryTree;
-import org.dllearner.algorithm.qtl.filters.QuestionBasedQueryTreeFilterAggressive;
-import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
-import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementSelector;
-import org.dllearner.algorithm.qtl.impl.QueryTreeFactoryImpl;
-import org.dllearner.algorithm.qtl.util.TreeHelper;
+import org.dllearner.algorithms.qtl.QueryTreeFactory;
+import org.dllearner.algorithms.qtl.datastructures.QueryTree;
+import org.dllearner.algorithms.qtl.filters.QuestionBasedQueryTreeFilterAggressive;
+import org.dllearner.algorithms.qtl.filters.QuestionBasedStatementFilter;
+import org.dllearner.algorithms.qtl.filters.QuestionBasedStatementSelector;
+import org.dllearner.algorithms.qtl.impl.QueryTreeFactoryImpl;
+import org.dllearner.algorithms.qtl.util.TreeHelper;
 import org.dllearner.kb.sparql.ConciseBoundedDescriptionGenerator;
 import org.dllearner.kb.sparql.ConciseBoundedDescriptionGeneratorImpl;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
+
 import com.hp.hpl.jena.rdf.model.Model;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+
 import de.simba.ner.WordnetQuery;
 import edu.smu.tspell.wordnet.NounSynset;
 import edu.smu.tspell.wordnet.Synset;

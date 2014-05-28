@@ -1,7 +1,7 @@
 package org.aksw.autosparql.server;
 
 import org.aksw.autosparql.server.search.Search;
-import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
+import org.dllearner.algorithms.qtl.util.SPARQLEndpointEx;
 
 public class Dataset {
 	

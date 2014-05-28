@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 import org.aksw.autosparql.client.exception.AutoSPARQLException;
 import org.aksw.autosparql.client.exception.SPARQLQueryException;
 import org.aksw.autosparql.client.model.Example;
@@ -19,12 +20,13 @@ import org.aksw.autosparql.server.search.Search;
 import org.aksw.autosparql.server.search.SolrSearch;
 import org.aksw.autosparql.server.store.Store;
 import org.apache.log4j.Logger;
-import org.dllearner.algorithm.qtl.exception.EmptyLGGException;
-import org.dllearner.algorithm.qtl.exception.NegativeTreeCoverageExecption;
-import org.dllearner.algorithm.qtl.exception.TimeOutException;
-import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
+import org.dllearner.algorithms.qtl.exception.EmptyLGGException;
+import org.dllearner.algorithms.qtl.exception.NegativeTreeCoverageExecption;
+import org.dllearner.algorithms.qtl.exception.TimeOutException;
+import org.dllearner.algorithms.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlQuery;
+
 import com.extjs.gxt.ui.client.data.BasePagingLoadResult;
 import com.extjs.gxt.ui.client.data.PagingLoadConfig;
 import com.extjs.gxt.ui.client.data.PagingLoadResult;

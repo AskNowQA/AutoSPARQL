@@ -73,9 +73,23 @@
 			<url>http://opennlp.sourceforge.net/maven2</url>
 		</repository>
 		<repository>
-			<id>Sesame</id>
-			<url>http://repo.aduna-software.org/maven2/releases/</url>
+			<id>maven.aksw.internal</id>
+			<name>University Leipzig, AKSW Maven2 Repository</name>
+			<url>http://maven.aksw.org/archiva/repository/internal</url>
+            <releases/>
 		</repository>
+		<repository>
+			<id>maven.aksw.snapshots</id>
+			<name>University Leipzig, AKSW Maven2 Repository</name>
+			<url>http://maven.aksw.org/archiva/repository/snapshots</url>
+            <snapshots/>
+		</repository>
+		 <repository>
+          <id>central</id>
+          <url>http://repo1.maven.org/maven2</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
 		<repository>
 			<id>info-bliki-repository</id>
 			<url>http://gwtwiki.googlecode.com/svn/maven-repository/</url>
@@ -265,28 +279,6 @@
 				<exclusion>
 					<artifactId>pellet</artifactId>
 					<groupId>com.owldl</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>collections</artifactId>
-					<groupId>org.aksw.commons</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jena-core</artifactId>
-					<groupId>org.apache.jena</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.aksw.commons</groupId>
-			<artifactId>sparql-scala</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
 				</exclusion>
 				<exclusion>
 					<artifactId>collections</artifactId>

@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
+
 import org.aksw.autosparql.client.SPARQLService;
 import org.aksw.autosparql.client.exception.AutoSPARQLException;
 import org.aksw.autosparql.client.exception.SPARQLQueryException;
@@ -19,6 +21,7 @@ import org.aksw.autosparql.server.store.SimpleFileStore;
 import org.aksw.autosparql.server.store.Store;
 import org.apache.log4j.Logger;
 import org.ini4j.Ini;
+
 import com.extjs.gxt.ui.client.data.PagingLoadConfig;
 import com.extjs.gxt.ui.client.data.PagingLoadResult;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;

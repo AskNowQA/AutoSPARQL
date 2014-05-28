@@ -7,21 +7,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import org.aksw.autosparql.client.model.Example;
 import org.aksw.autosparql.server.search.QuestionProcessor;
 import org.aksw.autosparql.server.search.Search;
-import org.aksw.autosparql.server.search.SolrSearch;
 import org.apache.log4j.Logger;
-import org.dllearner.algorithm.qtl.QTL;
-import org.dllearner.algorithm.qtl.exception.EmptyLGGException;
-import org.dllearner.algorithm.qtl.exception.NegativeTreeCoverageExecption;
-import org.dllearner.algorithm.qtl.exception.TimeOutException;
-import org.dllearner.algorithm.qtl.filters.QuestionBasedQueryTreeFilterAggressive;
-import org.dllearner.algorithm.qtl.filters.QuestionBasedStatementFilter;
-import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
+import org.dllearner.algorithms.qtl.QTL;
+import org.dllearner.algorithms.qtl.exception.EmptyLGGException;
+import org.dllearner.algorithms.qtl.exception.NegativeTreeCoverageExecption;
+import org.dllearner.algorithms.qtl.exception.TimeOutException;
+import org.dllearner.algorithms.qtl.filters.QuestionBasedQueryTreeFilterAggressive;
+import org.dllearner.algorithms.qtl.filters.QuestionBasedStatementFilter;
+import org.dllearner.algorithms.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.openrdf.vocabulary.RDFS;
+
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetRewindable;
@@ -53,7 +54,7 @@ public class ExampleFinder {
 		this.search = search;
 		this.questionPreprocessor = questionPreprocessor;
 		
-		qtl = new QTL(endpoint, selectCache);
+		qtl = new QTL(endpoint, selectCache.getCacheDirectory());
 		qtl.setMaxExecutionTimeInSeconds(1000);
 		
 		examplesCache = new HashMap<String, Example>();
