@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.aksw.autosparql.server.search.Search;
 import org.aksw.autosparql.server.search.SolrSearch;
 import org.aksw.autosparql.server.search.VirtuosoSearch;
@@ -15,7 +16,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.log4j.Logger;
-import org.dllearner.algorithm.qtl.util.SPARQLEndpointEx;
+import org.dllearner.algorithms.qtl.util.SPARQLEndpointEx;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 
 public class DatasetLoader {
@@ -28,8 +29,8 @@ public class DatasetLoader {
 		try {
 			XMLConfiguration config = new XMLConfiguration(new File(path));
 			
-			List datasetConfigurations = config.configurationsAt("dataset");
-			for(Iterator iter = datasetConfigurations.iterator();iter.hasNext();){
+			List<HierarchicalConfiguration> datasetConfigurations = config.configurationsAt("dataset");
+			for(Iterator<HierarchicalConfiguration> iter = datasetConfigurations.iterator();iter.hasNext();){
 				HierarchicalConfiguration datasetConf = (HierarchicalConfiguration) iter.next();
 				datasets.add(createDataset(datasetConf));
 			}
@@ -59,8 +60,14 @@ public class DatasetLoader {
 				prefix = label.replaceAll("@", "").replaceAll(" ", "");
 			}
 			String defaultGraphURI = conf.getString("defaultGraphURI");
-			List<String> namedGraphURIs = conf.getList("namedGraphURI");
-			List<String> predicateFilters = conf.getList("predicateFilters.predicate");
+			List<String> namedGraphURIs = new ArrayList<String>();
+			for (Object o : conf.getList("namedGraphURI")) {
+				namedGraphURIs.add(o.toString());
+			}
+			List<String> predicateFilters = new ArrayList<String>();
+			for (Object o : conf.getList("predicateFilters.predicate")) {
+				predicateFilters.add(o.toString());
+			}
 			
 			return new SPARQLEndpointEx(url, Collections.singletonList(defaultGraphURI), namedGraphURIs, label, prefix, new HashSet<String>(predicateFilters));
 		} catch (MalformedURLException e) {

@@ -4,14 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.aksw.autosparql.client.model.Example;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -30,15 +31,16 @@ public class LuceneSearch implements Search{
 	
 	private int hitsPerPage = 10;
 
+	private DirectoryReader ireader;
+
 	public LuceneSearch(String indexDirectory){
 		try {
-			Directory dir = FSDirectory.open(new File(indexDirectory));//RAMDirectory();
-			searcher = new IndexSearcher(dir, true);
-			Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_29);
-			queryParser = new QueryParser(Version.LUCENE_29, "comment", analyzer);
+			Directory directory = FSDirectory.open(new File(indexDirectory));//RAMDirectory();
+			ireader = DirectoryReader.open(directory);
+			searcher = new IndexSearcher(ireader);
+			Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
+			queryParser = new QueryParser(Version.LUCENE_46, "comment", analyzer);
 			collector = TopScoreDocCollector.create(hitsPerPage, true);
-		} catch (CorruptIndexException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -53,18 +55,16 @@ public class LuceneSearch implements Search{
 		try {
 			Query query = queryParser.parse(queryString);
 			searcher.search(query, collector);
-//			System.out.println(searcher.search(query, null, 10, new Sort(new SortField("pagerank", SortField.INT))));
+//		System.out.println(searcher.search(query, null, 10, new Sort(new SortField("pagerank", SortField.INT))));
 			ScoreDoc[] hits = collector.topDocs(offset).scoreDocs;
 			
 			for(ScoreDoc doc : hits) {
 			    Document d = searcher.doc(doc.doc);
 			    resources.add(d.get("uri"));
 			}
-		} catch (ParseException e) {
-			logger.error("Error while parsing query.", e);
+		} catch (org.apache.lucene.queryparser.classic.ParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			logger.error("Error while running search.", e);
 			e.printStackTrace();
 		}
 		return resources;
@@ -90,10 +90,8 @@ public class LuceneSearch implements Search{
 			    examples.add(new Example(uri, label, imageURL, comment));
 			}
 		} catch (ParseException e) {
-			logger.error("Error while parsing query.", e);
 			e.printStackTrace();
 		} catch (IOException e) {
-			logger.error("Error while running search.", e);
 			e.printStackTrace();
 		}
 		return examples;
@@ -121,17 +119,8 @@ public class LuceneSearch implements Search{
 		this.hitsPerPage = hitsPerPage;
 	}
 	
-	public void close(){
-		try {
-			searcher.close();
-		} catch (IOException e) {
-			logger.error("Error while closing IndexSearcher.", e);
-			e.printStackTrace();
-		}
-	}
-	
 	public int getIndexSize(){
-		return searcher.maxDoc();
+		return ireader.numDocs();
 	}
 	
 	@Override

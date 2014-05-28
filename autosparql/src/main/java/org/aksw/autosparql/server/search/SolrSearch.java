@@ -1,15 +1,15 @@
 package org.aksw.autosparql.server.search;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.aksw.autosparql.client.model.Example;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.BinaryRequestWriter;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -17,7 +17,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 
 public class SolrSearch implements Search{
 	
-	private CommonsHttpSolrServer server;
+	private HttpSolrServer server;
 	
 	private int hitsPerPage = 10;
 	private int lastTotalHits = 0;
@@ -25,22 +25,12 @@ public class SolrSearch implements Search{
 	private QuestionProcessor preprocessor;
 	
 	public SolrSearch(String solrServerURL){
-		try {
-			server = new CommonsHttpSolrServer(solrServerURL);
-			server.setRequestWriter(new BinaryRequestWriter());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		preprocessor = new QuestionProcessor();
+		this(solrServerURL, new QuestionProcessor());
 	}
 	
 	public SolrSearch(String solrServerURL, QuestionProcessor preprocessor){
-		try {
-			server = new CommonsHttpSolrServer(solrServerURL);
-			server.setRequestWriter(new BinaryRequestWriter());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		server = new HttpSolrServer(solrServerURL);
+		server.setRequestWriter(new BinaryRequestWriter());
 		this.preprocessor = preprocessor;
 	}
 

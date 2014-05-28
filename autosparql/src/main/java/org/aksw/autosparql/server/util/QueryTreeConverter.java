@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.dllearner.algorithm.qtl.datastructures.QueryTree;
+import org.dllearner.algorithms.qtl.datastructures.QueryTree;
 
 public class QueryTreeConverter {
 	
 	private static int cnt;
 	
-	public static String getSPARQLQuery(QueryTree tree, String baseURI, Map<String, String> prefixes){
+	public static String getSPARQLQuery(QueryTree<String> tree, String baseURI, Map<String, String> prefixes){
 		if(tree.getChildCount() == 0){
     		return "SELECT ?x0 WHERE {?x0 ?y ?z.}";
     	}
@@ -24,7 +24,7 @@ public class QueryTreeConverter {
 		return sb.toString();
 	}
 	
-	private static void buildSPARQLQueryString(QueryTree tree, StringBuilder sb, 
+	private static void buildSPARQLQueryString(QueryTree<String> tree, StringBuilder sb, 
 			Map<String, String> prefixes, Map<String, String> usedPrefixes){
 		String subject = (String) tree.getUserObject();
     	if(tree.getUserObject().equals("?")){
