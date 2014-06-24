@@ -145,6 +145,7 @@ public class TBSLManager
 		}
 				
 		qtl.setRestrictToNamespaces(getActiveTBSL().getPropertyNamespaces());
+		qtl.init();
 		
 //		Set<String> relevantKeywords = activeTBSL.getTBSL().ggetRelevantKeywords();
 		logger.info("Relevant filter keywords: " + activeTBSL.getTBSL().getRelevantKeywords());

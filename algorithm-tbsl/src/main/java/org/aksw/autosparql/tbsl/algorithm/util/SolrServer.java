@@ -19,7 +19,7 @@ public enum SolrServer
 	static public final String	SOLR_SERVER_URI_EN	= "http://linkedspending.aksw.org/solr/en_";
 	static public final String SOLR_SERVER_URI_EN_DBPEDIA_RESOURCES = SOLR_SERVER_URI_EN+"dbpedia_resources";
 	static public final String SOLR_SERVER_URI_EN_DBPEDIA_CLASSES = SOLR_SERVER_URI_EN+"dbpedia_classes";
-	static public final String SOLR_SERVER_URI_EN_DBPEDIA_DATATYPE_PROPERTIES = SOLR_SERVER_URI_EN+"dbpedia_datatype_properties";
+	static public final String SOLR_SERVER_URI_EN_DBPEDIA_DATA_PROPERTIES = SOLR_SERVER_URI_EN+"dbpedia_data_properties";
 	static public final String SOLR_SERVER_URI_EN_DBPEDIA_OBJECT_PROPERTIES = SOLR_SERVER_URI_EN+"dbpedia_object_properties";
 //	static final String	BOA_SERVER_URI_EN	= "http://[2001:638:902:2010:0:168:35:138]:8080/solr/boa";
 	
@@ -46,7 +46,7 @@ public enum SolrServer
 	{
 		BugfixedSolrIndex resourcesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN_DBPEDIA_RESOURCES);
 		BugfixedSolrIndex classesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN_DBPEDIA_CLASSES);
-		BugfixedSolrIndex dataPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN_DBPEDIA_DATATYPE_PROPERTIES);
+		BugfixedSolrIndex dataPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN_DBPEDIA_DATA_PROPERTIES);
 		BugfixedSolrIndex objectPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN_DBPEDIA_OBJECT_PROPERTIES);
 		for(BugfixedSolrIndex index: new BugfixedSolrIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
 		{index.setPrimarySearchField("label");}

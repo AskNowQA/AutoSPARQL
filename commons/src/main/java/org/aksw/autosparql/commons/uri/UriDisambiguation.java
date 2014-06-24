@@ -3,7 +3,6 @@
  */
 package org.aksw.autosparql.commons.uri;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,16 +19,10 @@ import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.params.ModifiableSolrParams;
+import org.apache.solr.common.SolrException;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.DiceSimilarity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.EuclideanDistance;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.JaccardSimilarity;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
 
 /**
  * @author gerb
@@ -194,7 +187,8 @@ public class UriDisambiguation {
 				
 				Resource res = new Resource();
 				res.uri = (String) doc.getFieldValue("uri");
-				res.uri = doc.getFieldValue("dbpediaUri") != null ? (String) doc.getFieldValue("dbpediaUri") : res.uri;
+				String dbpediaUri = (String)doc.getFieldValue("dbpediaUri");				
+				res.uri = (dbpediaUri != null&&!dbpediaUri.trim().isEmpty())? dbpediaUri : res.uri;
 				res.label = (String) doc.getFieldValue("label");
 				res.goldLabel = label;
 				res.aprioriScore = (Double) doc.getFieldValue("disambiguationScore");
@@ -216,11 +210,9 @@ public class UriDisambiguation {
 				if ( !res.uri.trim().isEmpty() ) resources.add(res);
 			}
 		}
-		catch (SolrServerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		catch (SolrServerException|SolrException e ) {
+			throw new RuntimeException("exception with query:\n"+query, e);
+		}				
 		return resources;
 	}
 	

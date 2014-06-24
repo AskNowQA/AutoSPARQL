@@ -16,6 +16,13 @@ public class SolrServerTest
 			System.out.println(resources);
 		}
 		{
+			List<String> datatypeProperties = SolrServer.INSTANCE.dataPropertiesIndex.getResources("old name");
+			assertNotNull(datatypeProperties);
+			assertFalse(datatypeProperties.isEmpty());			
+			assertTrue(datatypeProperties.contains("http://dbpedia.org/ontology/oldName"));
+			assertTrue(datatypeProperties.contains("http://dbpedia.org/ontology/formerName"));
+		}
+		{
 			List<String> objectProperties = SolrServer.INSTANCE.objectPropertiesIndex.getResources("author");
 			assertNotNull(objectProperties);
 			assertFalse(objectProperties.isEmpty());
