@@ -29,7 +29,7 @@ public class SolrServerTest
 			assertTrue(objectProperties.contains("http://dbpedia.org/ontology/author"));
 		}
 		{
-			List<String> objectProperties = SolrServer.INSTANCE.objectPropertiesIndex.getResources("written");
+			List<String> objectProperties = SolrServer.INSTANCE.dbpediaIndices.getObjectPropertyIndex().getResources("written");
 			assertNotNull(objectProperties);			
 			assertFalse("boa doesn't find author by 'written'",objectProperties.isEmpty());
 			assertTrue("boa doesn't find author by 'written'",objectProperties.contains("http://dbpedia.org/ontology/author"));

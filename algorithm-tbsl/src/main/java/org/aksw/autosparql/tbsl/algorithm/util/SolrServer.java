@@ -59,7 +59,7 @@ public enum SolrServer
 		this.dataPropertiesIndex= new FilteredIndex(new HierarchicalIndex(dataPropertiesIndex,boaIndex),DbpediaFilter.INSTANCE);
 		this.objectPropertiesIndex = new FilteredIndex(new HierarchicalIndex(objectPropertiesIndex,boaIndex),DbpediaFilter.INSTANCE);
 
-		dbpediaIndices = new Indices(resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex);
+		dbpediaIndices = new Indices(this.resourcesIndex,this.classesIndex,this.objectPropertiesIndex,this.dataPropertiesIndex);
 	}
 	
 }

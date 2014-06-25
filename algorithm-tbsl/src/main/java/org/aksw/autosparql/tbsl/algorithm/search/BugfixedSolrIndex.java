@@ -126,15 +126,16 @@ public class BugfixedSolrIndex extends Index
 				}
 				rs.addItem(new IndexResultItem((String) d.get("uri"), (String) d.get("label"), score));
 			}
-		} catch (SolrServerException e) {
-			e.printStackTrace();
 		}
+		catch(/*RemoteSolr*/Exception e)
+		{
+			throw new RuntimeException("Exception on query <"+queryString+"> at SOLR server URL "+server.getBaseURL(),e);
+		}
+		//		catch (SolrServerException e) {
+		//			e.printStackTrace();
+		//		}
 		return rs;
-		//		}
-		//		catch(RemoteSolrException e)
-		//		{
-		//			throw new RuntimeException();
-		//		}
+
 	}
 
 	public void setSortField(String sortField){

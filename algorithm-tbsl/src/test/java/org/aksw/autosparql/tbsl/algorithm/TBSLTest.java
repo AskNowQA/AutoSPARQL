@@ -25,8 +25,8 @@ public class TBSLTest extends TestCase
 	@Test
 	public void testDBpedia() throws Exception
 	{
-		String question = "Give me soccer clubs in Premier League.";
-//		String question = "Give me all movies starred by Brad Pitt.";
+//		String question = "Give me soccer clubs in Premier League.";
+		String question = "Give me all books written by Dan Browns.";
 		TemplateInstantiation ti = TbslDbpedia.INSTANCE.answerQuestion(question);
 		ResultSet rs = DBpediaKnowledgebase.INSTANCE.querySelect(ti.getQuery());
 		System.out.println(rs.nextSolution().toString());		
