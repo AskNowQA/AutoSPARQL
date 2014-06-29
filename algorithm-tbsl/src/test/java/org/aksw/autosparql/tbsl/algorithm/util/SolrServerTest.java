@@ -16,13 +16,20 @@ public class SolrServerTest
 			System.out.println(resources);
 		}
 		{
+			List<String> datatypeProperties = SolrServer.INSTANCE.dataPropertiesIndex.getResources("old name");
+			assertNotNull(datatypeProperties);
+			assertFalse(datatypeProperties.isEmpty());			
+			assertTrue(datatypeProperties.contains("http://dbpedia.org/ontology/oldName"));
+			assertTrue(datatypeProperties.contains("http://dbpedia.org/ontology/formerName"));
+		}
+		{
 			List<String> objectProperties = SolrServer.INSTANCE.objectPropertiesIndex.getResources("author");
 			assertNotNull(objectProperties);
 			assertFalse(objectProperties.isEmpty());
 			assertTrue(objectProperties.contains("http://dbpedia.org/ontology/author"));
 		}
 		{
-			List<String> objectProperties = SolrServer.INSTANCE.objectPropertiesIndex.getResources("written");
+			List<String> objectProperties = SolrServer.INSTANCE.dbpediaIndices.getObjectPropertyIndex().getResources("written");
 			assertNotNull(objectProperties);			
 			assertFalse("boa doesn't find author by 'written'",objectProperties.isEmpty());
 			assertTrue("boa doesn't find author by 'written'",objectProperties.contains("http://dbpedia.org/ontology/author"));

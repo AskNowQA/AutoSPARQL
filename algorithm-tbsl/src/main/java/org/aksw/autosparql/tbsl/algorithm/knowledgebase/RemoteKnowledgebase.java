@@ -29,7 +29,15 @@ public class RemoteKnowledgebase extends Knowledgebase {
 			throw new UnsupportedOperationException("knowledgebase was changed. refactor your code to use the new knowledgebase code");
 	}
 	public SparqlEndpoint getEndpoint() {return endpoint;}
-		
+
+	public ResultSet querySelectNoCache(String query)
+	{		
+			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), query);
+			qe.setDefaultGraphURIs(endpoint.getDefaultGraphURIs());
+			return qe.execSelect();
+	}
+	
+	
 	@Override public ResultSet querySelect(String query)
 	{
 		if (cache == null) {

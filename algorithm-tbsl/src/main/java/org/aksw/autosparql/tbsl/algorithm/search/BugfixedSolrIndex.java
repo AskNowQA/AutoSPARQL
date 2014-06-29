@@ -7,6 +7,7 @@ import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.BinaryRequestWriter;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrServer.RemoteSolrException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -111,6 +112,8 @@ public class BugfixedSolrIndex extends Index
 				query.addSortField(sortField, ORDER.desc);
 			}
 			query.addField("score");
+			//			try
+			//			{
 			response = server.query(query);
 			SolrDocumentList docList = response.getResults();
 
@@ -123,10 +126,16 @@ public class BugfixedSolrIndex extends Index
 				}
 				rs.addItem(new IndexResultItem((String) d.get("uri"), (String) d.get("label"), score));
 			}
-		} catch (SolrServerException e) {
-			e.printStackTrace();
 		}
+		catch(/*RemoteSolr*/Exception e)
+		{
+			throw new RuntimeException("Exception on query <"+queryString+"> at SOLR server URL "+server.getBaseURL(),e);
+		}
+		//		catch (SolrServerException e) {
+		//			e.printStackTrace();
+		//		}
 		return rs;
+
 	}
 
 	public void setSortField(String sortField){
