@@ -4,12 +4,22 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SPARQL_Filter implements Serializable
+public class SPARQL_Filter implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -6243542586884540703L;
 	
 	private Set<SPARQL_Pair> terms = new HashSet<SPARQL_Pair>();
 	private boolean and = true;
+	
+	@Override public SPARQL_Filter clone()
+	{
+		SPARQL_Filter f = new SPARQL_Filter();
+		Set<SPARQL_Pair> terms = new HashSet<>();
+		for(SPARQL_Pair pair:this.terms) terms.add(pair.clone());
+		f.terms=terms;
+		f.and=and;
+		return f;
+	}
 	
 	//uses && if set true, otherwise ||
 	public void setAnd(boolean and)
@@ -22,7 +32,7 @@ public class SPARQL_Filter implements Serializable
 		super();
 		this.terms.add(pair);
 	}
-
+	
 	public SPARQL_Filter()
 	{
 	}

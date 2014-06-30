@@ -13,7 +13,15 @@ public class Template implements Serializable, Comparable<Template>{
 
 	Query query;
 	List<Slot> slots;
-
+	
+	/**
+	 * Copy constructor. As Slot is mutable it may not work as intended.
+	 */
+	public Template(Template t)
+	{
+		this(new Query(t.query), new ArrayList<>(t.slots));
+	}
+	
 	public Template(Query q) {
 		query = q;
 		slots = new ArrayList<Slot>();
@@ -99,7 +107,8 @@ public class Template implements Serializable, Comparable<Template>{
 				}
 			}
 			// refine property if possible
-			if (slot.type.equals(SlotType.PROPERTY) || slot.type.equals(SlotType.SYMPROPERTY)) {
+			if (slot.type.equals(SlotType.PROPERTY)/*|| slot.type.equals(SlotType.SYMPROPERTY)*/)
+			{
 				Set<String> args = new HashSet<String>();
 				for (SPARQL_Triple triple : query.conditions) {
 					if (triple.property.toString().equals("?"+slot.anchor))
@@ -112,7 +121,7 @@ public class Template implements Serializable, Comparable<Template>{
 							else if (s.type.equals(SlotType.RESOURCE)) slot.type = SlotType.OBJECTPROPERTY;
 						}
 					}
-					if (slot.type.equals(SlotType.PROPERTY) || slot.type.equals(SlotType.SYMPROPERTY)) { // still
+					if (slot.type.equals(SlotType.PROPERTY)/* || slot.type.equals(SlotType.SYMPROPERTY)*/) { // still
 						Set<String> values = new HashSet<String>();
 						for (SPARQL_Triple triple : query.conditions) {
 							if (triple.property.toString().equals("?"+slot.anchor)) values.add(triple.value.toString());

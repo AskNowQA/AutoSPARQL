@@ -9,6 +9,5 @@ USAGE
 You need to clone the git repository and have Maven and Java installed on your machine. Then you need to do "mvn install -N" in the
 folders in that order: autosparql, commons, algorithm-tbsl. Then go into autosparql-tbsl and run "mvn jetty:run".
 
-KNOWN BUGS
-Properties may not be handled as symmetric, thus queries such as "movies starred by Brad Pitt" may search only in properties of movies or Brad Pitt and thus miss the correct one, resulting in an empty result. 
-The SOLR index is being reworked, in the process there are some NER problems in DBpedia.
+REMARKS
+Symmetric properties now properly work again.

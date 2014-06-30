@@ -1,11 +1,14 @@
 package org.aksw.autosparql.tbsl.algorithm.learning;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.aksw.autosparql.tbsl.algorithm.learning.feature.Feature;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
+
 import com.hp.hpl.jena.query.ParameterizedSparqlString;
 import com.hp.hpl.jena.query.Query;
 
@@ -19,6 +22,15 @@ public class TemplateInstantiation {
 	public TemplateInstantiation(Template template, Map<Slot, Entity> allocations) {
 		this.template = template;
 		this.allocations = allocations;
+	}
+	
+	/**
+	 * Copy constructor. As slot and entity are mutable this may not fully work as intended.
+	 * TODO when enough time: make all data classes immutable.
+	 * @autor Konrad Höffner**/
+	public TemplateInstantiation(TemplateInstantiation t)
+	{
+		this(new Template(t.template),new HashMap<>(t.allocations));
 	}
 	
 	public Map<Feature, Double> getFeaturesWithScore() {

@@ -1,13 +1,15 @@
 package org.aksw.autosparql.tbsl.algorithm.sparql;
 
 import java.io.Serializable;
+
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Aggregate;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_OrderBy;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Term;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Value;
 
-public class SPARQL_Term extends SPARQL_Value{
-	
+public class SPARQL_Term extends SPARQL_Value implements Cloneable
+{
+	@Override public SPARQL_Term clone() {return new SPARQL_Term(name,isURI,isVariable());}
 	
 	SPARQL_OrderBy orderBy = SPARQL_OrderBy.NONE;
 	SPARQL_Aggregate aggregate = SPARQL_Aggregate.NONE;

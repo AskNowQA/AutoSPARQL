@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.aksw.autosparql.commons.nlp.lemma.Lemmatizer;
 import org.aksw.autosparql.commons.nlp.lemma.LingPipeLemmatizer;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
@@ -21,12 +22,17 @@ import org.aksw.autosparql.tbsl.algorithm.learning.ranking.Ranking;
 import org.aksw.autosparql.tbsl.algorithm.learning.ranking.RankingComputation;
 import org.aksw.autosparql.tbsl.algorithm.learning.ranking.SimpleRankingComputation;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Query;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Term;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Triple;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Value;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
 import org.aksw.autosparql.tbsl.algorithm.sparql.WeightedQuery;
 import org.aksw.autosparql.tbsl.algorithm.templator.Templator;
 import org.apache.log4j.Logger;
 import org.ini4j.Options;
+
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.Syntax;
 import com.jamonapi.Monitor;
@@ -279,7 +285,45 @@ public class TBSL
 				logger.warn("Invalid SPARQL:\n" + templateInstantiation.getQuery(), e);
 			}
 		}
-		return instantiations;
+		return symmetricHullTemplateInstantiations(instantiations);
+	}
+	
+	/** Reverses triples for symmetric properties if occurring and returns those instantiations along with the original ones. Only one symmetric property per template is supported.
+	 * May not adhere to all expectations of real hulls (e.g. if called several times may increasingly grow the result as the equals method of class TemplateInstantiation may not be sufficient)
+	 * @param instantiations
+	 * @return the original instantiations along with duplicates with reversed triples for symmetric properties if occurring 
+	 */
+	static public List<TemplateInstantiation> symmetricHullTemplateInstantiations(List<TemplateInstantiation> instantiations)
+	{		
+		Set<TemplateInstantiation> hull = new HashSet<>(instantiations);
+		for(TemplateInstantiation instantiation: instantiations)
+		{
+			for(Slot slot: instantiation.getAllocations().keySet())
+			{				
+				if(slot.getSlotType()==SlotType.SYMPROPERTY)
+				{
+					String anchor = slot.getAnchor();
+					TemplateInstantiation evilTwin = new TemplateInstantiation(instantiation);
+					Query query = evilTwin.getTemplate().getQuery();
+//					System.out.println(query);
+					for(SPARQL_Triple triple: query.getConditions())
+					{
+						if(anchor.equals(triple.getProperty().getName()))
+						{						
+							SPARQL_Term newSubject = (SPARQL_Term)triple.getValue();
+							SPARQL_Value newObject = (SPARQL_Value)triple.getVariable();
+							triple.setVariable(newSubject);
+							triple.setValue(newObject);
+//						System.out.println(triple.getValue());
+//						System.out.println(triple.getVariable());
+						}
+					}
+					hull.add(evilTwin);
+					break; // only one symproperty per template instantiation supported
+				}
+			}
+		}
+		return new ArrayList<>(hull);
 	}
 
 	public Set<Template> getTemplates() {

@@ -1,8 +1,10 @@
 package org.aksw.autosparql.tbsl.algorithm.sparql;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-public class SPARQL_Pair implements Serializable
+public class SPARQL_Pair implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -1255754209857823420L;
 	
@@ -11,6 +13,12 @@ public class SPARQL_Pair implements Serializable
 
 	public SPARQL_PairType type;
 
+	/** * can't clone Object b so it keeps the reference **/
+	@Override public SPARQL_Pair clone()
+	{
+		return new SPARQL_Pair(a.clone(),b,type);
+	}
+	
 	public SPARQL_Pair(SPARQL_Value a, Object b, SPARQL_PairType type)
 	{
 		super();

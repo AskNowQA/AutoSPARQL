@@ -23,7 +23,7 @@ import com.hp.hpl.jena.query.ResultSet;
 public class TBSLTest extends TestCase
 {
 	@Test
-	public void testDBpedia() throws Exception
+	public void testDBpediaDanBrown() throws Exception
 	{
 //		String question = "Give me soccer clubs in Premier League.";
 		String question = "Give me all books written by Dan Browns.";
