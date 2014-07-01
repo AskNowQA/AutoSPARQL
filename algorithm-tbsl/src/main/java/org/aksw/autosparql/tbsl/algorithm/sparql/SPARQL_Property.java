@@ -1,9 +1,16 @@
 package org.aksw.autosparql.tbsl.algorithm.sparql;
 
-public class SPARQL_Property extends SPARQL_Value {
+public class SPARQL_Property extends SPARQL_Value implements Cloneable{
 	
 	private SPARQL_Prefix prefix = null;
 
+	@Override public SPARQL_Property clone()
+	{
+		SPARQL_Property p = new SPARQL_Property(name, prefix);
+		p.setIsVariable(isVariable());
+		return p;
+	}
+	
 	public SPARQL_Property(String name) {
 		super();
 		this.prefix = null;

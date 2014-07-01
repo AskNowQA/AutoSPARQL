@@ -2,13 +2,20 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 
 import java.io.Serializable;
 
-public class SPARQL_Value implements Serializable{
+public class SPARQL_Value implements Serializable,Cloneable{
 	
 	private static final long serialVersionUID = -3733491240975566183L;
 	
 	protected String name;
 	private boolean isVariable = false;
 
+	@Override public SPARQL_Value clone()
+	{
+		SPARQL_Value value = new SPARQL_Value(name);
+		value.setIsVariable(isVariable());
+		return value;
+	}
+	
 	public String getName() {
 		return name;
 	}

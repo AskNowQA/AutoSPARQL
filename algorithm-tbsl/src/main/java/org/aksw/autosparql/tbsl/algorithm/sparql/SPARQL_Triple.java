@@ -2,7 +2,7 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 
 import java.io.Serializable;
 
-public class SPARQL_Triple implements Serializable{
+public class SPARQL_Triple implements Serializable, Cloneable{
 	
 	private static final long serialVersionUID = -1681019680404287955L;
 	
@@ -10,6 +10,12 @@ public class SPARQL_Triple implements Serializable{
 	SPARQL_Property property = new SPARQL_Property("");
 	SPARQL_Value value = new SPARQL_Value();
 	boolean optional;
+	
+	@Override public SPARQL_Triple clone()
+	{
+		return new SPARQL_Triple(variable.clone(),property.clone(),value.clone(),optional);
+	}
+	
 	
 	public boolean isOptional() {
 		return optional;
