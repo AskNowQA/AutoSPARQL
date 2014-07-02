@@ -6,8 +6,10 @@ aligned to the unterlying algorithms and 2.) a simple UI which should be
 easy to use for anyone.
 
 USAGE
-You need to clone the git repository and have Maven and Java installed on your machine. Then you need to do "mvn install -N" in the
-folders in that order: autosparql, commons, algorithm-tbsl. Then go into autosparql-tbsl and run "mvn jetty:run".
+You need to clone the git repository and have Maven 3 or higher and Java 7 or higher installed on your machine. Then you need to run "./compile" and then "./run" on Linux or "compile.bat" and then "run.bat" on Windows (not tested on Windows, please create an issue if the Windows batch needs rework).
+Manually: Do "mvn install -N" in the folders in that order: autosparql, commons, algorithm-tbsl. Then go into autosparql-tbsl and run "mvn jetty:run".
+
+Then, go into your browser and access "http://localhost:8080/autosparql-lite".
 
 REMARKS
 Symmetric properties now properly work again.

@@ -18,6 +18,7 @@ import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.util.Prominences;
 import org.junit.Test;
+
 import com.hp.hpl.jena.query.ResultSet;
 
 public class TBSLTest extends TestCase

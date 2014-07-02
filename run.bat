@@ -1,6 +1,3 @@
-cd commons
-mvn install -N -DskipTests=true
-cd ..\algorithm-tbsl
-mvn install -N -DskipTests=true
-cd ..\autosparql-tbsl
+cd autosparql-tbsl
 mvn jetty:run
+cd ..
