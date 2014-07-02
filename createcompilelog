@@ -1,0 +1,16 @@
+echo "AutoSPARQL TBSL compile log for error reporting\n<><><> module autosparql <><><>" > compilelog
+mvn install -N | tee -a compilelog 
+cd commons
+echo "<><><> module commons <><><>" >> ../compilelog
+mvn install -N | tee -a ../compilelog 
+cd ../algorithm-tbsl
+echo "<><><> module algorithm-tbsl <><><>" >> ../compilelog
+mvn install -N | tee -a ../compilelog 
+cd ../autosparql-tbsl
+echo "<><><> module autosparql-tbsl <><><> compile" >> ../compilelog
+mvn compile | tee -a ../compilelog 
+echo "<><><> module autosparql-tbsl <><><> gwt:compile" >> ../compilelog
+mvn gwt:compile | tee -a ../compilelog 
+echo "<><><> module autosparql-tbsl <><><> jetty:run" >> ../compilelog
+mvn jetty:run | tee -a ../compilelog
+cd ..
