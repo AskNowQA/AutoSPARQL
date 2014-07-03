@@ -72,41 +72,41 @@
 
 	<dependencyManagement>
 		<dependencies>
-		 <dependency>
-                        <groupId>org.aksw.sparql2nl</groupId>
-                        <artifactId>sparql2nl</artifactId>
-                        <version>0.0.1-20140526.110838-1</version>
-                        <exclusions>
-                                <exclusion>
-                                        <groupId>org.apache.tomcat</groupId>
-                                        <artifactId>tomcat-catalina</artifactId>
-                                        <!-- <version>7.0.42</version> -->
-                                </exclusion>
-                        </exclusions>
-                </dependency>
+			<dependency>
+				<groupId>org.aksw.sparql2nl</groupId>
+				<artifactId>sparql2nl</artifactId>
+				<version>0.0.1-20140703.124428-374</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.tomcat</groupId>
+						<artifactId>tomcat-catalina</artifactId>
+						<!-- <version>7.0.42</version> -->
+					</exclusion>
+				</exclusions>
+			</dependency>
 
-		  <dependency>
-                        <groupId>net.sf.jgrapht</groupId>
-                        <artifactId>jgrapht-core</artifactId>
-                        <version>0.9.0</version>
-                </dependency>
+			<dependency>
+				<groupId>net.sf.jgrapht</groupId>
+				<artifactId>jgrapht-core</artifactId>
+				<version>0.9.0</version>
+			</dependency>
 
-			 <dependency>
-                        	<groupId>edu.mit</groupId>
-	                        <artifactId>jwi</artifactId>
-	                        <version>2.3.3</version>
-        	        </dependency>
+			<dependency>
+				<groupId>edu.mit</groupId>
+				<artifactId>jwi</artifactId>
+				<version>2.3.3</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.apache.lucene</groupId>
 				<artifactId>lucene-core</artifactId>
 				<version>${solr.version}</version>
 			</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-analyzers-common</artifactId>
-			<version>${solr.version}</version>
-		</dependency>
+			<dependency>
+				<groupId>org.apache.lucene</groupId>
+				<artifactId>lucene-analyzers-common</artifactId>
+				<version>${solr.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-arq</artifactId>
@@ -213,29 +213,16 @@
 			</dependency>
 
 			<!-- dl learner -->
-<!-- 			<dependency>
-			<groupId>org.dllearner</groupId>
-			<artifactId>dllearner-parent</artifactId>
-			<version>1.0-20140130.084757-498</version>			
-			</dependency>
-
+			<!-- <dependency> <groupId>org.dllearner</groupId> <artifactId>dllearner-parent</artifactId> 
+				<version>1.0-20140130.084757-498</version> </dependency> <dependency> <groupId>org.dllearner</groupId> 
+				<artifactId>components-core</artifactId> <version>1.0-20140130.084529-501</version> 
+				</dependency> <dependency> <groupId>org.dllearner</groupId> <artifactId>components-ext</artifactId> 
+				<version>1.0-20140130.084749-500</version> </dependency> -->
 			<dependency>
-				<groupId>org.dllearner</groupId>
-				<artifactId>components-core</artifactId>
-				<version>1.0-20140130.084529-501</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.dllearner</groupId>
-				<artifactId>components-ext</artifactId>
-				<version>1.0-20140130.084749-500</version>
-			</dependency>
- -->
- 			<dependency>
 				<groupId>org.dllearner</groupId>
 				<artifactId>components-core</artifactId>
 				<version>1.0-SNAPSHOT</version>
-				<!--  <version>1.0-20140220.145832-537</version>-->
+				<!-- <version>1.0-20140220.145832-537</version> -->
 			</dependency>
 
 			<dependency>
@@ -244,7 +231,7 @@
 				<version>1.0-SNAPSHOT</version>
 				<!-- <version>0.9</version> -->
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.aksw.commons</groupId>
 				<artifactId>sparql</artifactId>
@@ -314,7 +301,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>12.0</version>
+				<version>17.0</version>
 			</dependency>
 
 			<!--used in the webservice in interfaces -->
@@ -479,62 +466,68 @@
 			<releases> <enabled>true</enabled> </releases> </repository> -->
 	</repositories>
 
-<!-- 	<dependencies> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.solr</groupId> -->
-<!-- 			<artifactId>solr-solrj</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.jena</groupId> -->
-<!-- 			<artifactId>jena-arq</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.dllearner</groupId> -->
-<!-- 			<artifactId>components-core</artifactId> -->
-<!-- 			<exclusions> -->
-<!-- 				<exclusion> -->
-<!-- 					<artifactId>slf4j-log4j12</artifactId> -->
-<!-- 					<groupId>org.slf4j</groupId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<artifactId>jena</artifactId> -->
-<!-- 					<groupId>com.hp.hpl.jena</groupId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<artifactId>any23-core</artifactId> -->
-<!-- 					<groupId>org.deri.any23</groupId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<artifactId>nif</artifactId> -->
-<!-- 					<groupId>org.nlp2rdf</groupId> -->
-<!-- 				</exclusion> -->
-<!-- 			</exclusions> -->
-<!-- 		</dependency> -->
+	<!-- <dependencies> -->
+	<!-- <dependency> -->
+	<!-- <groupId>org.apache.solr</groupId> -->
+	<!-- <artifactId>solr-solrj</artifactId> -->
+	<!-- </dependency> -->
+	<!-- <dependency> -->
+	<!-- <groupId>org.apache.jena</groupId> -->
+	<!-- <artifactId>jena-arq</artifactId> -->
+	<!-- </dependency> -->
+	<!-- <dependency> -->
+	<!-- <groupId>org.dllearner</groupId> -->
+	<!-- <artifactId>components-core</artifactId> -->
+	<!-- <exclusions> -->
+	<!-- <exclusion> -->
+	<!-- <artifactId>slf4j-log4j12</artifactId> -->
+	<!-- <groupId>org.slf4j</groupId> -->
+	<!-- </exclusion> -->
+	<!-- <exclusion> -->
+	<!-- <artifactId>jena</artifactId> -->
+	<!-- <groupId>com.hp.hpl.jena</groupId> -->
+	<!-- </exclusion> -->
+	<!-- <exclusion> -->
+	<!-- <artifactId>any23-core</artifactId> -->
+	<!-- <groupId>org.deri.any23</groupId> -->
+	<!-- </exclusion> -->
+	<!-- <exclusion> -->
+	<!-- <artifactId>nif</artifactId> -->
+	<!-- <groupId>org.nlp2rdf</groupId> -->
+	<!-- </exclusion> -->
+	<!-- </exclusions> -->
+	<!-- </dependency> -->
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.dllearner</groupId> -->
-<!-- 			<artifactId>components-ext</artifactId> -->
-<!-- 			<exclusions> -->
-<!-- 				<exclusion> -->
-<!-- 					<artifactId>slf4j-log4j12</artifactId> -->
-<!-- 					<groupId>org.slf4j</groupId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<artifactId>jena</artifactId> -->
-<!-- 					<groupId>com.hp.hpl.jena</groupId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<artifactId>any23-core</artifactId> -->
-<!-- 					<groupId>org.deri.any23</groupId> -->
-<!-- 				</exclusion> -->
-<!-- 				<exclusion> -->
-<!-- 					<artifactId>nif</artifactId> -->
-<!-- 					<groupId>org.nlp2rdf</groupId> -->
-<!-- 				</exclusion> -->
-<!-- 			</exclusions> -->
-<!-- 		</dependency> -->
-<!-- 	</dependencies> -->
+	<!-- <dependency> -->
+	<!-- <groupId>org.dllearner</groupId> -->
+	<!-- <artifactId>components-ext</artifactId> -->
+	<!-- <exclusions> -->
+	<!-- <exclusion> -->
+	<!-- <artifactId>slf4j-log4j12</artifactId> -->
+	<!-- <groupId>org.slf4j</groupId> -->
+	<!-- </exclusion> -->
+	<!-- <exclusion> -->
+	<!-- <artifactId>jena</artifactId> -->
+	<!-- <groupId>com.hp.hpl.jena</groupId> -->
+	<!-- </exclusion> -->
+	<!-- <exclusion> -->
+	<!-- <artifactId>any23-core</artifactId> -->
+	<!-- <groupId>org.deri.any23</groupId> -->
+	<!-- </exclusion> -->
+	<!-- <exclusion> -->
+	<!-- <artifactId>nif</artifactId> -->
+	<!-- <groupId>org.nlp2rdf</groupId> -->
+	<!-- </exclusion> -->
+	<!-- </exclusions> -->
+	<!-- </dependency> -->
+	<!-- </dependencies> -->
 	<dependencies>
+		<!-- <dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
+			<version>1.0</version>
+		</dependency> -->
+
 		<dependency>
 			<groupId>org.dllearner</groupId>
 			<artifactId>components-ext</artifactId>

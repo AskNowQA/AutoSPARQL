@@ -2,7 +2,7 @@ package org.aksw.autosparql.tbsl.algorithm.search;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nonnull;
+/*import javax.annotation.Nonnull;*/
 import org.dllearner.algorithms.qtl.filters.Filter;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.IndexResultItem;
@@ -10,10 +10,10 @@ import org.dllearner.common.index.IndexResultSet;
 
 public class FilteredIndex extends Index
 {
-	@Nonnull final Index index;
-	@Nonnull final Filter filter; 
+	/*@Nonnull*/ final Index index;
+	/*@Nonnull*/ final Filter filter; 
 	
-	public FilteredIndex(@Nonnull Index index,@Nonnull  Filter filter) {this.index=index;this.filter=filter;}
+	public FilteredIndex(/*@Nonnull*/ Index index,/*@Nonnull*/  Filter filter) {this.index=index;this.filter=filter;}
 		
 	@Override public List<String> getResources(String queryString, int limit, int offset)
 	{

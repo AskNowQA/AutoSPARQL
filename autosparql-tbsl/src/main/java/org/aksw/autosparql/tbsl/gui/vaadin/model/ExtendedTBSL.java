@@ -12,17 +12,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Nonnull;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNetUnpacker;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.TBSL;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslOxford;
+import org.aksw.autosparql.tbsl.gui.vaadin.Manager;
 import org.aksw.autosparql.tbsl.gui.vaadin.util.FallbackIndex;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.DBpediaInfoLabel;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.OxfordInfoLabel;
 import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
+
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -262,7 +263,7 @@ public class ExtendedTBSL {
 		InfoTemplate infoTemplate = new InfoTemplate(infoTemplateHtml, null);
 
 		List<String> exampleQuestions = loadQuestions(ExtendedTBSL.class.getClassLoader().getResourceAsStream("dbpedia_example_questions.txt"));
-		SimpleNLGwithPostprocessing nlg = new SimpleNLGwithPostprocessing(((RemoteKnowledgebase)TbslDbpedia.INSTANCE.getKnowledgebase()).getEndpoint());
+		SimpleNLGwithPostprocessing nlg = new SimpleNLGwithPostprocessing(((RemoteKnowledgebase)TbslDbpedia.INSTANCE.getKnowledgebase()).getEndpoint(),Manager.getInstance().getCacheDir(),WordNetUnpacker.getUnpackedWordNetDir().getAbsolutePath());
 		
 		ExtendedTBSL eTBSL = new ExtendedTBSL(
 				TbslDbpedia.INSTANCE, 
@@ -301,8 +302,8 @@ public class ExtendedTBSL {
 		optionalProperties.put("locality", "http://www.w3.org/2006/vcard/ns#locality");
 
 		List<String> exampleQuestions = loadQuestions(ExtendedTBSL.class.getClassLoader().getResourceAsStream("oxford_example_questions.txt"));
-		String wordnetDir = WordNetUnpacker.getUnpackedWordNetDir().toString();		
-		@Nonnull Model model = ((LocalKnowledgebase)TbslOxford.INSTANCE.getKnowledgebase()).getModel();
+		String wordnetDir = WordNetUnpacker.getUnpackedWordNetDir().getAbsolutePath();		
+		/*@Nonnull */Model model = ((LocalKnowledgebase)TbslOxford.INSTANCE.getKnowledgebase()).getModel();
 		SimpleNLGwithPostprocessing nlg = new SimpleNLGwithPostprocessing(model,wordnetDir);
 		
 		Resource icon = new ThemeResource("images/oxford_logo.gif");
