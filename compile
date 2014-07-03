@@ -1,9 +1,9 @@
-mvn install -N | tee errorlog
+mvn install -N -Dmaven.test.skip=true | tee errorlog
 cd commons
-mvn install -N | tee -a errorlog
+mvn install -N -Dmaven.test.skip=true | tee ../errorlog
 cd ../algorithm-tbsl
-mvn install -N | tee -a errorlog
+mvn install -N -Dmaven.test.skip=true | tee ../errorlog
 cd ../autosparql-tbsl
-mvn compile | tee -a errorlog
+mvn install -N -Dmaven.test.skip=true | tee ../errorlog
 mvn gwt:compile | tee -a errorlog
 cd ..

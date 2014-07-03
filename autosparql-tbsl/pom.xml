@@ -36,6 +36,7 @@
                                                         <port>9090</port>
                                                         <compileReport>false</compileReport>
                                                 </configuration>
+                                                <!-- 
                                                 <executions>
                                                         <execution>
                                                                 <goals>
@@ -43,7 +44,7 @@
                                                                         <goal>compile</goal>
                                                                 </goals>
                                                         </execution>
-                                                </executions>
+                                                </executions> -->
                                                 <dependencies>
                                                         <dependency>
                                                                 <groupId>com.google.gwt</groupId>
