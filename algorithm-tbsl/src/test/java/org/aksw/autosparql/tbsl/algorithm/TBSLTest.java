@@ -30,7 +30,7 @@ public class TBSLTest extends TestCase
 		String question = "Give me all books written by Dan Browns.";
 		TemplateInstantiation ti = TbslDbpedia.INSTANCE.answerQuestion(question);
 		ResultSet rs = DBpediaKnowledgebase.INSTANCE.querySelect(ti.getQuery());
-//		System.out.println(rs.nextSolution().toString());		
+		System.out.println(rs.nextSolution().toString());		
 //		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
 //		System.out.println(ti.getQuery());
 //		System.out.println(rs.nextSolution());
