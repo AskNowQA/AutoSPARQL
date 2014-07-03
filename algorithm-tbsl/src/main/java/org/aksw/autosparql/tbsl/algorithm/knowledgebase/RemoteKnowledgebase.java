@@ -18,7 +18,9 @@ public class RemoteKnowledgebase extends Knowledgebase {
 	{
 		super(label, description, indices);
 		this.endpoint = endpoint;
-		cache = new ExtractionDBCache(System.getProperty("java.io.tmpdir"));
+		String cacheDir = System.getProperty("java.io.tmpdir");
+		cache = new ExtractionDBCache(cacheDir);
+		System.out.println("Using cache directory "+cacheDir);
 		cache.setMaxExecutionTimeInSeconds(60);
 	}
 	
