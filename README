@@ -23,7 +23,7 @@ It needs several days of work in addition to the time needed to familiarize your
 You need to:
 
 - fork AutoSPARQL TBSL
-- add your own domain dependent lexicon as an LTAG grammar at algorithm-tbsl/src/main/resources/tbsl/lexicon (see the existing files in that folder)
+- add your own domain dependent lexicon as an LTAG grammar at algorithm-tbsl/src/main/resources/tbsl/lexicon (see http://pub.uni-bielefeld.de/publication/2002961 and http://pub.uni-bielefeld.de/publication/2278529 as well as the existing files in that folder)
 - add your knowledge base:
  1. as a local model to algorithm-tbsl/src/main/resources/models/yourmodel (preferred for small knowledge bases as it is much faster and more reliable)
  2. as a SPARQL (version 1.0 is enough) endpoint along with a SOLR server instance
