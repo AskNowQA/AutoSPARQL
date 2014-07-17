@@ -15,3 +15,25 @@ Then, go into your browser and access "http://localhost:8080/autosparql-lite".
 
 REMARKS
 Symmetric properties now properly work again.
+
+HOW TO ADD YOUR OWN DATASET
+Using your own datasource instead of DBpedia or Oxford is nontrivial.
+It needs several days of work in addition to the time needed to familiarize yourself with the code base.
+
+You need to:
+
+- fork AutoSPARQL TBSL
+- add your own domain dependent lexicon as an LTAG grammar at algorithm-tbsl/src/main/resources/tbsl/lexicon (see http://pub.uni-bielefeld.de/publication/2002961 and http://pub.uni-bielefeld.de/publication/2278529 as well as the existing files in that folder)
+- add your knowledge base:
+ 1. as a local model to algorithm-tbsl/src/main/resources/models/yourmodel (preferred for small knowledge bases as it is much faster and more reliable)
+ 2. as a SPARQL (version 1.0 is enough) endpoint along with a SOLR server instance
+- create a singleton for your knowledge base (see package org.aksw.autosparql.tbsl.algorithm.knowledgebase)
+- extend org.aksw.autosparql.tbsl.algorithm.learning.TBSL with TbslYourKnowledgeBase
+- finally, in case the dataset isn't a private model, please do a pull request so that it can be integrated in the main project
+
+-------------------------------------------------------
+Package                                   Maven Module
+org.aksw.autosparql.tbsl.algorithm        algorithm-tbsl
+org.aksw.autosparql.commons               commons
+org.aksw.autosparql.tbsl.gui.vaadin       autosparql-tbsl
+-------------------------------------------------------
