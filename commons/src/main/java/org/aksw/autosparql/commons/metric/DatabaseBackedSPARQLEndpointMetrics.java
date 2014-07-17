@@ -678,7 +678,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		String dbPort = "3306";
 		String database = "dbpedia_metrics";
 		String dbUser = "root";
-		String dbPassword = "pw";
+		String dbPassword = args[1];
 		Connection conn = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":"
 		          + dbPort + "/" + database + "?" + "user=" + dbUser + "&"
 		          + "password=" + dbPassword);

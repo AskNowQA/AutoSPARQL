@@ -12,8 +12,10 @@ import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
 import com.hp.hpl.jena.query.ParameterizedSparqlString;
 import com.hp.hpl.jena.query.Query;
 
-public class TemplateInstantiation {
-	
+public class TemplateInstantiation implements Comparable<TemplateInstantiation>
+{	
+	public TemplateInstantiation twin = null;
+	public double score = 0;
 	private Template template;
 	private Map<Slot, Entity> allocations;
 	
@@ -76,6 +78,12 @@ public class TemplateInstantiation {
 	
 	public void addFeature(Feature feature, double score){
 		feature2Score.put(feature, score);
+	}
+
+	/** sorted ascending by score (bigger score is better) */
+	@Override public int compareTo(TemplateInstantiation ti)
+	{
+			return Double.compare(this.score, ti.score);
 	}
 
 //	@Override

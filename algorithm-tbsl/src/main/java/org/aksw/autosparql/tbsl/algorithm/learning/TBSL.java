@@ -8,9 +8,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.aksw.autosparql.commons.nlp.lemma.Lemmatizer;
 import org.aksw.autosparql.commons.nlp.lemma.LingPipeLemmatizer;
@@ -28,7 +29,6 @@ import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Value;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
-import org.aksw.autosparql.tbsl.algorithm.sparql.WeightedQuery;
 import org.aksw.autosparql.tbsl.algorithm.templator.Templator;
 import org.apache.log4j.Logger;
 import org.ini4j.Options;
@@ -43,8 +43,8 @@ public class TBSL
 {
 	final String label;
 	public String getLabel() {return label;}
-//	public static final TBSL DBPEDIA = new TBSL(DBpediaKnowledgebase.INSTANCE,new String[]{"tbsl/lexicon/english.lex"});  
-//	public static final TBSL OXFORD = new TBSL(OxfordKnowledgebase.INSTANCE,new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
+	//	public static final TBSL DBPEDIA = new TBSL(DBpediaKnowledgebase.INSTANCE,new String[]{"tbsl/lexicon/english.lex"});  
+	//	public static final TBSL OXFORD = new TBSL(OxfordKnowledgebase.INSTANCE,new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
 
 	enum Mode{
 		BEST_QUERY, BEST_NON_EMPTY_QUERY
@@ -65,7 +65,7 @@ public class TBSL
 	//	private SparqlEndpoint endpoint;
 	//	private Model model;
 	protected final Knowledgebase knowledgebase;
-	 
+
 	public Knowledgebase getKnowledgebase() {return knowledgebase;}
 
 	private Templator templateGenerator;
@@ -77,7 +77,7 @@ public class TBSL
 
 	//	private SPARQLReasoner reasoner;
 
-//	private String [] grammarFiles = new String[]{"tbsl/lexicon/english.lex"};
+	//	private String [] grammarFiles = new String[]{"tbsl/lexicon/english.lex"};
 
 	public final Set<String> relevantKeywords = new HashSet<>(); 
 
@@ -143,9 +143,14 @@ public class TBSL
 
 	private void reset()
 	{
-			relevantKeywords.clear();
+		relevantKeywords.clear();
 	}
 
+	/**
+	 * @param question A natural language factual question (who/what ...) or "give me ...". 
+	 * @return template instantiations sorted by score (last is highest is best)
+	 * @throws NoTemplateFoundException
+	 */
 	public TemplateInstantiation answerQuestion(String question) throws NoTemplateFoundException
 	{return answerQuestion(question,Collections.<Double>emptyList());}
 
@@ -167,9 +172,9 @@ public class TBSL
 		}
 		//1.b filter out invalid templates
 		filterTemplates(templates);
-		
+
 		relevantKeywords.addAll(templateGenerator.getUnknownWords());
-		
+
 		//2. Entity URI Disambiguation
 		logger.debug("Running entity disambiguation...");
 		monitor.start();
@@ -192,7 +197,12 @@ public class TBSL
 		Ranking ranking = rankingComputation.computeRanking(template2Instantiations, template2Allocations, parameters);
 		monitor.stop();
 		logger.trace("Done in " + monitor.getLastValue() + "ms.");
-
+//		for(TemplateInstantiation ti : ranking.templateInstantiation2Score.keySet())
+//		{
+//			ti.score=ranking.templateInstantiation2Score.get(ti);
+//			instantiations.add(ti);
+//		}
+//		return instantiations;
 		return ranking.getBest();
 	}
 
@@ -208,7 +218,10 @@ public class TBSL
 		}
 	}
 
-	public TemplateInstantiation answerQuestion(Template template, List<Double> parameters) {
+	//	public SortedSet<TemplateInstantiation> answerQuestion(Template template, List<Double> parameters)
+	public TemplateInstantiation answerQuestion(Template template, List<Double> parameters)
+	{
+		SortedSet<TemplateInstantiation> instantiations = new TreeSet<>();
 		reset();
 
 		//1. set the SPARQL query templates
@@ -236,7 +249,12 @@ public class TBSL
 		Ranking ranking = rankingComputation.computeRanking(template2Instantiations, template2Allocations, parameters);
 		monitor.stop();
 		logger.info("Done in " + monitor.getLastValue() + "ms.");
-
+		//		for(TemplateInstantiation ti : ranking.templateInstantiation2Score.keySet())
+		//		{
+		//			ti.score=ranking.templateInstantiation2Score.get(ti);
+		//			instantiations.add(ti);
+		//		}
+		//		return instantiations;
 		return ranking.getBest();
 	}
 
@@ -287,7 +305,7 @@ public class TBSL
 		}
 		return symmetricHullTemplateInstantiations(instantiations);
 	}
-	
+
 	/** Reverses triples for symmetric properties if occurring and returns those instantiations along with the original ones. Only one symmetric property per template is supported.
 	 * May not adhere to all expectations of real hulls (e.g. if called several times may increasingly grow the result as the equals method of class TemplateInstantiation may not be sufficient)
 	 * @param instantiations
@@ -305,7 +323,7 @@ public class TBSL
 					String anchor = slot.getAnchor();
 					TemplateInstantiation evilTwin = new TemplateInstantiation(instantiation);
 					Query query = evilTwin.getTemplate().getQuery();
-//					System.out.println(query);
+					//					System.out.println(query);
 					for(SPARQL_Triple triple: query.getConditions())
 					{
 						if(anchor.equals(triple.getProperty().getName()))
@@ -314,11 +332,13 @@ public class TBSL
 							SPARQL_Value newObject = (SPARQL_Value)triple.getVariable();
 							triple.setVariable(newSubject);
 							triple.setValue(newObject);
-//						System.out.println(triple.getValue());
-//						System.out.println(triple.getVariable());
+							//						System.out.println(triple.getValue());
+							//						System.out.println(triple.getVariable());
 						}
 					}
 					hull.add(evilTwin);
+					instantiation.twin=evilTwin;
+					evilTwin.twin=instantiation;
 					break; // only one symproperty per template instantiation supported
 				}
 			}

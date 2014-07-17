@@ -10,7 +10,7 @@ import org.dllearner.utilities.MapUtils;
 
 public class Ranking {
 
-	private Map<TemplateInstantiation, Double> templateInstantiation2Score = new HashMap<TemplateInstantiation, Double>();
+	public final Map<TemplateInstantiation, Double> templateInstantiation2Score = new HashMap<TemplateInstantiation, Double>();
 	
 	public Ranking() {
 	}

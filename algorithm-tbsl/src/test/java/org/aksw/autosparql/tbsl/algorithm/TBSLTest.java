@@ -5,7 +5,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
+
 import junit.framework.TestCase;
+
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.DBpediaKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.OxfordKnowledgebase;
@@ -23,17 +26,17 @@ import com.hp.hpl.jena.query.ResultSet;
 
 public class TBSLTest extends TestCase
 {
-//	@Test
+	//	@Test
 	public void testDBpediaDanBrown() throws Exception
 	{
-//		String question = "Give me soccer clubs in Premier League.";
+		//		String question = "Give me soccer clubs in Premier League.";
 		String question = "Give me all books written by Dan Browns.";
 		TemplateInstantiation ti = TbslDbpedia.INSTANCE.answerQuestion(question);
 		ResultSet rs = DBpediaKnowledgebase.INSTANCE.querySelect(ti.getQuery());
 		System.out.println(rs.nextSolution().toString());		
-//		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
-//		System.out.println(ti.getQuery());
-//		System.out.println(rs.nextSolution());
+		//		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
+		//		System.out.println(ti.getQuery());
+		//		System.out.println(rs.nextSolution());
 	}
 
 	@Test
