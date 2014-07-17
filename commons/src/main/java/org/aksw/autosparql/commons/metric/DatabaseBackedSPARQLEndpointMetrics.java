@@ -28,15 +28,15 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 
 public class DatabaseBackedSPARQLEndpointMetrics {
-	
+
 	private static final Logger log = Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class.getSimpleName());
-	
+
 	private SparqlEndpoint endpoint;
 	private SPARQLReasoner reasoner;
 	private Connection connection;
 	private ExtractionDBCache cache;
 	private Statement stmt;
-	
+
 	private PreparedStatement subjectClassPredicateSelectPreparedStatement;
 	private PreparedStatement subjectClassPredicateInsertPreparedStatement;
 	private PreparedStatement predicateObjectClassSelectPreparedStatement;
@@ -53,78 +53,79 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 	private PreparedStatement propertyPopularityInsertPreparedStatement;
 	private PreparedStatement connectingPropertiesSelectPreparedStatement;
 	private PreparedStatement connectingPropertiesInsertPreparedStatement;
-	
+
 	public DatabaseBackedSPARQLEndpointMetrics(SparqlEndpoint endpoint, ExtractionDBCache cache, Connection connection) {
 		this.endpoint = endpoint;
 		this.connection = connection;
 		this.cache = cache;
 		this.reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint));
-		
-		createDatabaseTables();
-		
+
+		try {if(!connection.isReadOnly()) {createDatabaseTables();}
+		} catch (SQLException e1) {	e1.printStackTrace();}
+
 		try {
 			subjectClassPredicateSelectPreparedStatement = connection.prepareStatement("SELECT OCCURRENCES FROM SUBJECTCLASS_PREDICATE_OCCURRENCES WHERE SUBJECTCLASS=? && PREDICATE=?");
 			subjectClassPredicateInsertPreparedStatement = connection.prepareStatement("INSERT INTO SUBJECTCLASS_PREDICATE_OCCURRENCES (SUBJECTCLASS, PREDICATE, OCCURRENCES) VALUES(?, ?, ?)");
-			
+
 			predicateObjectClassSelectPreparedStatement = connection.prepareStatement("SELECT OCCURRENCES FROM PREDICATE_OBJECTCLASS_OCCURRENCES WHERE OBJECTCLASS=? && PREDICATE=?");
 			predicateObjectClassInsertPreparedStatement = connection.prepareStatement("INSERT INTO PREDICATE_OBJECTCLASS_OCCURRENCES (OBJECTCLASS, PREDICATE, OCCURRENCES) VALUES(?, ?, ?)");
-			
+
 			subjectClassObjectClassSelectPreparedStatement= connection.prepareStatement("SELECT OCCURRENCES FROM SUBJECTCLASS_OBJECTCLASS_OCCURRENCES WHERE SUBJECTCLASS=? && OBJECTCLASS=?");
 			subjectClassObjectClassInsertPreparedStatement = connection.prepareStatement("INSERT INTO SUBJECTCLASS_OBJECTCLASS_OCCURRENCES (SUBJECTCLASS, OBJECTCLASS, OCCURRENCES) VALUES(?, ?, ?)");
-			
+
 			subjectClassSelectPreparedStatement= connection.prepareStatement("SELECT OCCURRENCES FROM SUBJECTCLASS_OCCURRENCES WHERE SUBJECTCLASS=?");
 			subjectClassInsertPreparedStatement = connection.prepareStatement("INSERT INTO SUBJECTCLASS_OCCURRENCES (SUBJECTCLASS, OCCURRENCES) VALUES(?, ?)");
-		
+
 			objectClassSelectPreparedStatement= connection.prepareStatement("SELECT OCCURRENCES FROM OBJECTCLASS_OCCURRENCES WHERE OBJECTCLASS=?");
 			objectClassInsertPreparedStatement = connection.prepareStatement("INSERT INTO OBJECTCLASS_OCCURRENCES (OBJECTCLASS, OCCURRENCES) VALUES(?, ?)");
-		
+
 			classPopularitySelectPreparedStatement= connection.prepareStatement("SELECT POPULARITY FROM CLASS_POPULARITY WHERE CLASS=?");
 			classPopularityInsertPreparedStatement = connection.prepareStatement("INSERT INTO CLASS_POPULARITY (CLASS, POPULARITY) VALUES(?, ?)");
-		
+
 			propertyPopularitySelectPreparedStatement= connection.prepareStatement("SELECT POPULARITY FROM PROPERTY_POPULARITY WHERE PROPERTY=?");
 			propertyPopularityInsertPreparedStatement = connection.prepareStatement("INSERT INTO PROPERTY_POPULARITY (PROPERTY, POPULARITY) VALUES(?, ?)");
-		
+
 			connectingPropertiesSelectPreparedStatement= connection.prepareStatement("SELECT PROPERTY, OCCURRENCES FROM CLASS_CONNECTING_PROPERTIES WHERE SUBJECTCLASS=? && OBJECTCLASS=?");
 			connectingPropertiesInsertPreparedStatement = connection.prepareStatement("INSERT INTO CLASS_CONNECTING_PROPERTIES (SUBJECTCLASS, OBJECTCLASS, PROPERTY, OCCURRENCES) VALUES(?, ?, ?, ?)");
-		
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void createDatabaseTables(){
 		try {
 			stmt = connection.createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS SUBJECTCLASS_PREDICATE_OCCURRENCES(SUBJECTCLASS VARCHAR(100), PREDICATE VARCHAR(100), OCCURRENCES INTEGER, PRIMARY KEY(SUBJECTCLASS, PREDICATE))");
-		
+
 			stmt = connection.createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS PREDICATE_OBJECTCLASS_OCCURRENCES(PREDICATE VARCHAR(100), OBJECTCLASS VARCHAR(100), OCCURRENCES INTEGER, PRIMARY KEY(OBJECTCLASS, PREDICATE))");
-		
+
 			stmt = connection.createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS SUBJECTCLASS_OBJECTCLASS_OCCURRENCES(SUBJECTCLASS VARCHAR(100), OBJECTCLASS VARCHAR(100), OCCURRENCES INTEGER, PRIMARY KEY(SUBJECTCLASS, OBJECTCLASS))");
-			
+
 			stmt = connection.createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS SUBJECTCLASS_OCCURRENCES(SUBJECTCLASS VARCHAR(100), OCCURRENCES INTEGER, PRIMARY KEY(SUBJECTCLASS))");
-		
+
 			stmt = connection.createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS OBJECTCLASS_OCCURRENCES(OBJECTCLASS VARCHAR(100), OCCURRENCES INTEGER, PRIMARY KEY(OBJECTCLASS))");
-			
+
 			stmt = connection.createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS PROPERTY_POPULARITY(PROPERTY VARCHAR(100), POPULARITY INTEGER, PRIMARY KEY(PROPERTY))");
-			
+
 			stmt = connection.createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS CLASS_POPULARITY(CLASS VARCHAR(100), POPULARITY INTEGER, PRIMARY KEY(CLASS))");
-			
+
 			stmt = connection.createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS CLASS_CONNECTING_PROPERTIES(SUBJECTCLASS VARCHAR(100), OBJECTCLASS VARCHAR(100), PROPERTY VARCHAR(100), OCCURRENCES INTEGER)");//, PRIMARY KEY(SUBJECTCLASS, OBJECTCLASS, PROPERTY))");
-		
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
-	
+
 	}
-	
+
 	/**
 	 * Computes the directed Pointwise Mutual Information(PMI) measure. Formula: log( (f(prop, cls) * N) / (f(cls) * f(prop) ) )
 	 * @param cls
@@ -133,12 +134,12 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 	 */
 	public double getDirectedPMI(ObjectProperty prop, NamedClass cls){
 		log.debug(String.format("Computing PMI(%s, %s)", prop, cls));
-		
+
 		double classOccurenceCnt = getOccurencesInObjectPosition(cls);
 		double propertyOccurenceCnt = getOccurences(prop);
 		double coOccurenceCnt = getOccurencesPredicateObject(prop, cls);
 		double total = getTotalTripleCount();
-		
+
 		double pmi = 0;
 		if(coOccurenceCnt > 0 && classOccurenceCnt > 0 && propertyOccurenceCnt > 0){
 			pmi = Math.log( (coOccurenceCnt * total) / (classOccurenceCnt * propertyOccurenceCnt) );
@@ -146,7 +147,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		log.debug(String.format("PMI(%s, %s) = %f", prop, cls, pmi));
 		return pmi;
 	}
-	
+
 	/**
 	 * Computes the directed Pointwise Mutual Information(PMI) measure. Formula: log( (f(cls,prop) * N) / (f(cls) * f(prop) ) )
 	 * @param cls
@@ -155,12 +156,12 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 	 */
 	public double getDirectedPMI(NamedClass cls, Property prop){
 		log.debug(String.format("Computing PMI(%s, %s)...", cls, prop));
-		
+
 		double classOccurenceCnt = getOccurencesInSubjectPosition(cls);
 		double propertyOccurenceCnt = getOccurences(prop);
 		double coOccurenceCnt = getOccurencesSubjectPredicate(cls, prop);
 		double total = getTotalTripleCount();
-		
+
 		double pmi = 0;
 		if(coOccurenceCnt > 0 && classOccurenceCnt > 0 && propertyOccurenceCnt > 0){
 			pmi = Math.log( (coOccurenceCnt * total) / (classOccurenceCnt * propertyOccurenceCnt) );
@@ -168,7 +169,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		log.debug(String.format("PMI(%s, %s) = %f", cls, prop, pmi));
 		return pmi;
 	}
-	
+
 	/**
 	 * Computes the directed Pointwise Mutual Information(PMI) measure. Formula: log( (f(cls,prop) * N) / (f(cls) * f(prop) ) )
 	 * @param cls
@@ -177,12 +178,12 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 	 */
 	public double getPMI(NamedClass subject, NamedClass object){
 		log.debug(String.format("Computing PMI(%s, %s)", subject, object));
-		
+
 		double coOccurenceCnt = getOccurencesSubjectObject(subject, object);
 		double subjectOccurenceCnt = getOccurencesInSubjectPosition(subject);
 		double objectOccurenceCnt = getOccurencesInObjectPosition(object);
 		double total = getTotalTripleCount();
-		
+
 		double pmi = 0;
 		if(coOccurenceCnt > 0 && subjectOccurenceCnt > 0 && objectOccurenceCnt > 0){
 			pmi = Math.log( (coOccurenceCnt * total) / (subjectOccurenceCnt * objectOccurenceCnt) );
@@ -190,7 +191,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		log.debug(String.format("PMI(%s, %s) = %f", subject, object, pmi));
 		return pmi;
 	}
-	
+
 	/**
 	 * Returns the direction of the given triple, computed by calculating the PMI values of each combination.
 	 * @param subject
@@ -204,12 +205,12 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		double pmi_pred_subj = getDirectedPMI(predicate, subject);
 		double pmi_subj_pred = getDirectedPMI(subject, predicate);
 		double pmi_pred_obj = getDirectedPMI(predicate, object);
-		
+
 		double threshold = 2.0;
-		
+
 		double value = ((pmi_obj_pred + pmi_pred_subj) - (pmi_subj_pred + pmi_pred_obj));
 		log.info("(PMI(OBJECT, PREDICATE) + PMI(PREDICATE, SUBJECT)) - (PMI(SUBJECT, PREDICATE) + PMI(PREDICATE, OBJECT)) = " + value);
-		
+
 		if( value > threshold){
 			log.info(object + "---" + predicate + "--->" + subject);
 			return -1;
@@ -218,7 +219,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			return 1;
 		}
 	}
-	
+
 	public Map<ObjectProperty, Integer> getMostFrequentProperties(NamedClass subjectClass, NamedClass objectClass){
 		Map<ObjectProperty, Integer> property2Frequency= new HashMap<ObjectProperty, Integer>();
 		try {
@@ -244,20 +245,23 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 					ObjectProperty p = new ObjectProperty(qs.getResource("p").getURI());
 					int cnt = qs.getLiteral("cnt").getInt();
 					property2Frequency.put(p, cnt);
-					connectingPropertiesInsertPreparedStatement.setString(1, subjectClass.getName());
-					connectingPropertiesInsertPreparedStatement.setString(2, objectClass.getName());
-					connectingPropertiesInsertPreparedStatement.setString(3, p.getName());
-					connectingPropertiesInsertPreparedStatement.setInt(4, cnt);
-					connectingPropertiesInsertPreparedStatement.executeUpdate();
+					if(!connection.isReadOnly())
+					{
+						connectingPropertiesInsertPreparedStatement.setString(1, subjectClass.getName());
+						connectingPropertiesInsertPreparedStatement.setString(2, objectClass.getName());
+						connectingPropertiesInsertPreparedStatement.setString(3, p.getName());
+						connectingPropertiesInsertPreparedStatement.setInt(4, cnt);
+						connectingPropertiesInsertPreparedStatement.executeUpdate();
+					}
 				}
-				
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return property2Frequency;
 	}
-	
+
 	/**
 	 * Returns the number of triples with the given property as predicate and where the subject belongs to the given class.
 	 * @param cls
@@ -276,10 +280,13 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 				String query  = String.format("SELECT (COUNT(*) AS ?cnt) WHERE {?s a <%s>. ?s <%s> ?o}", cls.getName(), prop.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
-				subjectClassPredicateInsertPreparedStatement.setString(1, cls.getName());
-				subjectClassPredicateInsertPreparedStatement.setString(2, prop.getName());
-				subjectClassPredicateInsertPreparedStatement.setInt(3, cnt);
-				subjectClassPredicateInsertPreparedStatement.executeUpdate();
+				if (!connection.isReadOnly())
+				{
+					subjectClassPredicateInsertPreparedStatement.setString(1, cls.getName());
+					subjectClassPredicateInsertPreparedStatement.setString(2, prop.getName());
+					subjectClassPredicateInsertPreparedStatement.setInt(3, cnt);
+					subjectClassPredicateInsertPreparedStatement.executeUpdate();				
+				}
 				return cnt;
 			}
 		} catch (SQLException e) {
@@ -287,8 +294,8 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		}
 		return -1;
 	}
-	
-	
+
+
 	/**
 	 * Returns the number of triples with the given property as predicate and where the object belongs to the given class.
 	 * @param cls
@@ -307,10 +314,13 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 				String query  = String.format("SELECT (COUNT(*) AS ?cnt) WHERE {?o a <%s>. ?s <%s> ?o}", cls.getName(), prop.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
-				predicateObjectClassInsertPreparedStatement.setString(1, cls.getName());
-				predicateObjectClassInsertPreparedStatement.setString(2, prop.getName());
-				predicateObjectClassInsertPreparedStatement.setInt(3, cnt);
-				predicateObjectClassInsertPreparedStatement.executeUpdate();
+				if (!connection.isReadOnly())
+				{
+					predicateObjectClassInsertPreparedStatement.setString(1, cls.getName());
+					predicateObjectClassInsertPreparedStatement.setString(2, prop.getName());
+					predicateObjectClassInsertPreparedStatement.setInt(3, cnt);
+					predicateObjectClassInsertPreparedStatement.executeUpdate();
+				}
 				return cnt;
 			}
 		} catch (SQLException e) {
@@ -318,7 +328,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Returns the number of triples with the first given class as subject and the second given class as object.
 	 * @param cls
@@ -337,10 +347,13 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 				String query  = String.format("SELECT (COUNT(*) AS ?cnt) WHERE {?s a <%s>. ?s ?p ?o. ?o a <%s>}", subject.getName(), object.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
-				subjectClassObjectClassInsertPreparedStatement.setString(1, subject.getName());
-				subjectClassObjectClassInsertPreparedStatement.setString(2, object.getName());
-				subjectClassObjectClassInsertPreparedStatement.setInt(3, cnt);
-				subjectClassObjectClassInsertPreparedStatement.executeUpdate();
+				if (!connection.isReadOnly())
+				{
+					subjectClassObjectClassInsertPreparedStatement.setString(1, subject.getName());
+					subjectClassObjectClassInsertPreparedStatement.setString(2, object.getName());
+					subjectClassObjectClassInsertPreparedStatement.setInt(3, cnt);
+					subjectClassObjectClassInsertPreparedStatement.executeUpdate();
+				}
 				return cnt;
 			}
 		} catch (SQLException e) {
@@ -348,7 +361,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Returns the number of triples where the subject belongs to the given class.
 	 * @param cls
@@ -366,9 +379,12 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 				String query  = String.format("SELECT (COUNT(?s) AS ?cnt) WHERE {?s a <%s>. ?s ?p ?o.}", cls.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
-				subjectClassInsertPreparedStatement.setString(1, cls.getName());
-				subjectClassInsertPreparedStatement.setInt(2, cnt);
-				subjectClassInsertPreparedStatement.executeUpdate();
+				if (!connection.isReadOnly())
+				{
+					subjectClassInsertPreparedStatement.setString(1, cls.getName());
+					subjectClassInsertPreparedStatement.setInt(2, cnt);
+					subjectClassInsertPreparedStatement.executeUpdate();
+				}
 				return cnt;
 			}
 		} catch (SQLException e) {
@@ -376,7 +392,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Returns the number of triples where the object belongs to the given class.
 	 * @param cls
@@ -394,9 +410,12 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 				String query  = String.format("SELECT (COUNT(?s) AS ?cnt) WHERE {?o a <%s>. ?s ?p ?o.}", cls.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
-				objectClassInsertPreparedStatement.setString(1, cls.getName());
-				objectClassInsertPreparedStatement.setInt(2, cnt);
-				objectClassInsertPreparedStatement.executeUpdate();
+				if (!connection.isReadOnly())
+				{
+					objectClassInsertPreparedStatement.setString(1, cls.getName());
+					objectClassInsertPreparedStatement.setInt(2, cnt);
+					objectClassInsertPreparedStatement.executeUpdate();
+				}
 				return cnt;
 			}
 		} catch (SQLException e) {
@@ -404,7 +423,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Returns the number triples with the given property as predicate.
 	 * @param prop
@@ -422,9 +441,12 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 				String query  = String.format("SELECT (COUNT(*) AS ?cnt) WHERE {?s <%s> ?o}", prop.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
-				propertyPopularityInsertPreparedStatement.setString(1, prop.getName());
-				propertyPopularityInsertPreparedStatement.setInt(2, cnt);
-				propertyPopularityInsertPreparedStatement.executeUpdate();
+				if (!connection.isReadOnly())
+				{
+					propertyPopularityInsertPreparedStatement.setString(1, prop.getName());
+					propertyPopularityInsertPreparedStatement.setInt(2, cnt);
+					propertyPopularityInsertPreparedStatement.executeUpdate();
+				}
 				return cnt;
 			}
 		} catch (SQLException e) {
@@ -432,7 +454,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Returns the number of triples where the subject or object belongs to the given class.
 	 * (This is not the same as computing the number of instances of the given class {@link DatabaseBackedSPARQLEndpointMetrics#getPopularity(NamedClass)})
@@ -451,9 +473,12 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 				String query  = String.format("SELECT (COUNT(?s) AS ?cnt) WHERE {?s a <%s>.}", cls.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
-				classPopularityInsertPreparedStatement.setString(1, cls.getName());
-				classPopularityInsertPreparedStatement.setInt(2, cnt);
-				classPopularityInsertPreparedStatement.executeUpdate();
+				if (!connection.isReadOnly())
+				{
+					classPopularityInsertPreparedStatement.setString(1, cls.getName());
+					classPopularityInsertPreparedStatement.setInt(2, cnt);
+					classPopularityInsertPreparedStatement.executeUpdate();
+				}
 				return cnt;
 			}
 		} catch (SQLException e) {
@@ -461,7 +486,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Returns the total number of triples in the endpoint. For now we return a fixed number 275494030(got from DBpedia Live 18. July 14:00).
 	 * @return
@@ -473,23 +498,23 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		int cnt = rs.next().getLiteral("cnt").getInt();
 		return cnt;*/
 	}
-	
+
 	public double getGoodness(NamedClass subject, ObjectProperty predicate, NamedClass object){
 		log.info(String.format("Computing goodness of [%s, %s, %s]", subject.getName(), predicate.getName(), object.getName()));
 		double pmi_subject_predicate = getDirectedPMI(subject, predicate);
 		double pmi_preciate_object = getDirectedPMI(predicate, object);
 		double pmi_subject_object = getPMI(subject, object);
-		
+
 		double goodness = pmi_subject_predicate + pmi_preciate_object + 2*pmi_subject_object;
 		log.info(String.format("Goodness of [%s, %s, %s]=%f", subject.getName(), predicate.getName(), object.getName(), Double.valueOf(goodness)));
 		return goodness;
 	}
-	
+
 	public double getGoodness(Individual subject, ObjectProperty predicate, NamedClass object){
 		log.info(String.format("Computing goodness of [%s, %s, %s]", subject.getName(), predicate.getName(), object.getName()));
 		//this is independent of the subject types
 		double pmi_preciate_object = getDirectedPMI(predicate, object);
-		
+
 		double goodness = Double.MIN_VALUE;
 		//get all asserted classes of subject and get the highest value
 		//TODO inference
@@ -506,12 +531,12 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		log.info(String.format("Goodness of [%s, %s, %s]=%f", subject.getName(), predicate.getName(), object.getName(), Double.valueOf(goodness)));
 		return goodness;
 	}
-	
+
 	public double getGoodness(NamedClass subject, ObjectProperty predicate, Individual object){
 		log.info(String.format("Computing goodness of [%s, %s, %s]", subject.getName(), predicate.getName(), object.getName()));
 		//this is independent of the object types
 		double pmi_subject_predicate = getDirectedPMI(subject, predicate);
-		
+
 		double goodness = Double.MIN_VALUE;
 		//get all asserted classes of subject and get the highest value
 		//TODO inference
@@ -528,25 +553,25 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		log.info(String.format("Goodness of [%s, %s, %s]=%f", subject.getName(), predicate.getName(), object.getName(), Double.valueOf(goodness)));
 		return goodness;
 	}
-	
+
 	public double getGoodnessConsideringSimilarity(NamedClass subject, ObjectProperty predicate, NamedClass object, 
 			double subjectSim, double predicateSim, double objectSim){
-		
+
 		double pmi_subject_predicate = getDirectedPMI(subject, predicate);
 		double pmi_preciate_object = getDirectedPMI(predicate, object);
 		double pmi_subject_object = getPMI(subject, object);
-		
+
 		double goodness = pmi_subject_predicate * subjectSim * predicateSim
 				+ pmi_preciate_object * objectSim * predicateSim
 				+ 2 * pmi_subject_object * subjectSim * objectSim;
-		
+
 		return goodness;
 	}
-	
+
 	public void precompute(){
 		precompute(Collections.<String>emptySet());
 	}
-	
+
 	public void precompute(Collection<String> namespaces){
 		log.info("Precomputing...");
 		long startTime = System.currentTimeMillis();
@@ -562,7 +587,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			qs = rs.next();
 			classes.add(new NamedClass(qs.getResource("class").getURI()));
 		}
-		
+
 		SortedSet<ObjectProperty> objectProperties = new TreeSet<ObjectProperty>();
 		query = "SELECT DISTINCT ?prop WHERE {?prop a owl:ObjectProperty. ";
 		for(String namespace : namespaces){
@@ -574,7 +599,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			qs = rs.next();
 			objectProperties.add(new ObjectProperty(qs.getResource("prop").getURI()));
 		}
-		
+
 		for(NamedClass cls : classes){
 			for(ObjectProperty prop : objectProperties){
 				log.info("Processing class " + cls + " and property " + prop);
@@ -600,10 +625,10 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 						}
 					}
 				}
-				
+
 			}
 		}
-		
+
 		for(NamedClass cls1 : classes){
 			for(NamedClass cls2 : classes){
 				if(!cls1.equals(cls2)){
@@ -633,7 +658,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 				}
 			}
 		}
-		
+
 		for(NamedClass cls1 : classes){
 			for(NamedClass cls2 : classes){
 				if(!cls1.equals(cls2)){
@@ -654,7 +679,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 							try {
 								Thread.sleep(5000);
 							} catch (InterruptedException e1) {
-								
+
 							}
 						}
 					}
@@ -663,14 +688,14 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		}
 		log.info("Done in " + ((System.currentTimeMillis() - startTime)/1000d) + "s");
 	}
-	
+
 	private ResultSet executeSelect(String query){
 		return SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(endpoint, query));
-//		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), query);
-//		qe.setDefaultGraphURIs(endpoint.getDefaultGraphURIs());
-//		return qe.execSelect();
+		//		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), query);
+		//		qe.setDefaultGraphURIs(endpoint.getDefaultGraphURIs());
+		//		return qe.execSelect();
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		//create database connection
 		Class.forName("com.mysql.jdbc.Driver");
@@ -680,15 +705,15 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		String dbUser = "root";
 		String dbPassword = args[0];
 		Connection conn = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":"
-		          + dbPort + "/" + database + "?" + "user=" + dbUser + "&"
-		          + "password=" + dbPassword);
-		
-		
+				+ dbPort + "/" + database + "?" + "user=" + dbUser + "&"
+				+ "password=" + dbPassword);
+
+
 		Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class).setLevel(Level.TRACE);
 		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://linkedspending.aksw.org/sparql"), "http://dbpedia.org");
 		ExtractionDBCache cache = new ExtractionDBCache("/tmp");
 		String NS = "http://dbpedia.org/ontology/";		
-		new DatabaseBackedSPARQLEndpointMetrics(endpoint, cache, conn).precompute(Collections.singleton(NS));
+//		new DatabaseBackedSPARQLEndpointMetrics(endpoint, cache, conn).precompute(Collections.singleton(NS));
 	}
 
 }
