@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
@@ -16,6 +17,7 @@ import org.aksw.autosparql.tbsl.algorithm.learning.feature.EntityProminenceFeatu
 import org.aksw.autosparql.tbsl.algorithm.learning.feature.EntityStringSimilarityFeatureExtractor;
 import org.aksw.autosparql.tbsl.algorithm.learning.feature.Feature;
 import org.aksw.autosparql.tbsl.algorithm.learning.feature.FeatureExtractor;
+import org.aksw.autosparql.tbsl.algorithm.learning.feature.TripleProbabilityFeatureExtractor;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;

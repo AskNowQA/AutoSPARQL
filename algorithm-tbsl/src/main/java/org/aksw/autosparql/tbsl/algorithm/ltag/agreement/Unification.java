@@ -1,6 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.ltag.agreement;
 
-import javax.annotation.Nonnull;
+/*import javax.annotation.Nonnull;*/
 
 /**
  * implements the unification of two Feature objects. This is used by
@@ -18,7 +18,7 @@ public class Unification {
 	 * @param b
 	 *            Feature from the RootNode of the Tree candidate
 	 */
-	public static boolean isUnifiable(@Nonnull Feature a,@Nonnull Feature b) {
+	public static boolean isUnifiable(/*@Nonnull*/ Feature a,/*@Nonnull*/ Feature b) {
 
 		if (a == null && b == null) {
 			return true;

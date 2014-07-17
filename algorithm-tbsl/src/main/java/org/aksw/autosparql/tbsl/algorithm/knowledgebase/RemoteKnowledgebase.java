@@ -6,6 +6,7 @@ import org.dllearner.common.index.MappingBasedIndex;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
+
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
@@ -17,7 +18,9 @@ public class RemoteKnowledgebase extends Knowledgebase {
 	{
 		super(label, description, indices);
 		this.endpoint = endpoint;
-		cache = new ExtractionDBCache(label);
+		String cacheDir = System.getProperty("java.io.tmpdir");
+		cache = new ExtractionDBCache(cacheDir);
+		System.out.println("Using cache directory "+cacheDir);
 		cache.setMaxExecutionTimeInSeconds(60);
 	}
 	

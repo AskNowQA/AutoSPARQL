@@ -479,9 +479,10 @@ public class SPARQLEndpointMetrics {
 	
 	public static void main(String[] args) throws Exception {
 		Logger.getLogger(SPARQLEndpointMetrics.class).setLevel(Level.DEBUG);
-		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://[2001:638:902:2010:0:168:35:138]/sparql"), "http://boa.dbpedia.org");
-		endpoint = SparqlEndpoint.getEndpointDBpedia();
-		ExtractionDBCache cache = new ExtractionDBCache("/opt/tbsl/dbpedia_pmi_cache_v2");
+//		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://[2001:638:902:2010:0:168:35:138]/sparql"), "http://boa.dbpedia.org");
+		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://linkedspending.aksw.org/sparql"), "http://dbpedia.org");
+//		endpoint = SparqlEndpoint.getEndpointDBpedia();
+		ExtractionDBCache cache = new ExtractionDBCache("cache");
 		String NS = "http://dbpedia.org/ontology/";
 		String NS_Res = "http://dbpedia.org/resource/";
 		

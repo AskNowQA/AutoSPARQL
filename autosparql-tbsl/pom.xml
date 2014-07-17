@@ -20,10 +20,51 @@
 	<build>
 		<finalName>autosparql-lite</finalName>
 		<plugins>
+<!-- Duplicate of gwt-maven-plugin from the profiles. Only putting it here properly applies the extraJvmArgs and thus provides sufficient RAM for successful compilation. -->
+ <plugin>
+                                                <groupId>org.codehaus.mojo</groupId>
+                                                <artifactId>gwt-maven-plugin</artifactId>
+                                                <version>${gwt.plugin.version}</version>
+                                                <configuration>
+                                                        <localWorkers>1</localWorkers>
+                                                        <fork>false</fork>
+                                                        <webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
+                                                        <extraJvmArgs>-Xmx2000M -Xss1024k -XX:+UseConcMarkSweepGC</extraJvmArgs>
+                                                        <runTarget>autosparql-tbsl</runTarget>
+                                                        <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
+                                                        <noServer>true</noServer>
+                                                        <port>9090</port>
+                                                        <compileReport>false</compileReport>
+                                                </configuration>
+                                                <!-- 
+                                                <executions>
+                                                        <execution>
+                                                                <goals>
+                                                                        <goal>resources</goal>
+                                                                        <goal>compile</goal>
+                                                                </goals>
+                                                        </execution>
+                                                </executions> -->
+                                                <dependencies>
+                                                        <dependency>
+                                                                <groupId>com.google.gwt</groupId>
+                                                                <artifactId>gwt-dev</artifactId>
+                                                                <version>${gwt.version}</version>
+                                                        </dependency>
+                                                        <dependency>
+                                                                <groupId>com.google.gwt</groupId>
+                                                                <artifactId>gwt-user</artifactId>
+                                                                <version>${gwt.version}</version>
+                                                        </dependency>
+                                                </dependencies>
+                                        </plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
+<!--				<fork>false</fork>
+				<maxmem>2023m</maxmem>-->
 					<source>1.7</source>
 					<target>1.7</target>
 					<encoding>UTF-8</encoding>
@@ -224,8 +265,10 @@
 						<artifactId>gwt-maven-plugin</artifactId>
 						<version>${gwt.plugin.version}</version>
 						<configuration>
+							<localWorkers>1</localWorkers>
+							<fork>false</fork>
 							<webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
-							<extraJvmArgs>-Xmx2000M -Xss1024k</extraJvmArgs>
+							<extraJvmArgs>-Xmx2000M -Xss1024k -XX:+UseConcMarkSweepGC</extraJvmArgs>
 							<runTarget>autosparql-tbsl</runTarget>
 							<hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
 							<noServer>true</noServer>
