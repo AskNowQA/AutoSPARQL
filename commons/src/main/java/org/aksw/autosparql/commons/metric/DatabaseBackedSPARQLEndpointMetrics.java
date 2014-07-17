@@ -235,21 +235,21 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 					property2Frequency.put(p, frequency);
 				}
 			} else {
-//				log.trace(String.format("Computing properties + frequency connecting subject of type %s and object of type %s", subjectClass.getName(), objectClass.getName()));
-//				String query = String.format("SELECT ?p (COUNT(*) AS ?cnt) WHERE {?x1 a <%s>. ?x2 a <%s>. ?x1 ?p ?x2} GROUP BY ?p", subjectClass, objectClass);
-//				ResultSet rs = executeSelect(query);
-//				QuerySolution qs;
-//				while(rs.hasNext()){
-//					qs = rs.next();
-//					ObjectProperty p = new ObjectProperty(qs.getResource("p").getURI());
-//					int cnt = qs.getLiteral("cnt").getInt();
-//					property2Frequency.put(p, cnt);
-//					connectingPropertiesInsertPreparedStatement.setString(1, subjectClass.getName());
-//					connectingPropertiesInsertPreparedStatement.setString(2, objectClass.getName());
-//					connectingPropertiesInsertPreparedStatement.setString(3, p.getName());
-//					connectingPropertiesInsertPreparedStatement.setInt(4, cnt);
-//					connectingPropertiesInsertPreparedStatement.executeUpdate();
-//				}
+				log.trace(String.format("Computing properties + frequency connecting subject of type %s and object of type %s", subjectClass.getName(), objectClass.getName()));
+				String query = String.format("SELECT ?p (COUNT(*) AS ?cnt) WHERE {?x1 a <%s>. ?x2 a <%s>. ?x1 ?p ?x2} GROUP BY ?p", subjectClass, objectClass);
+				ResultSet rs = executeSelect(query);
+				QuerySolution qs;
+				while(rs.hasNext()){
+					qs = rs.next();
+					ObjectProperty p = new ObjectProperty(qs.getResource("p").getURI());
+					int cnt = qs.getLiteral("cnt").getInt();
+					property2Frequency.put(p, cnt);
+					connectingPropertiesInsertPreparedStatement.setString(1, subjectClass.getName());
+					connectingPropertiesInsertPreparedStatement.setString(2, objectClass.getName());
+					connectingPropertiesInsertPreparedStatement.setString(3, p.getName());
+					connectingPropertiesInsertPreparedStatement.setInt(4, cnt);
+					connectingPropertiesInsertPreparedStatement.executeUpdate();
+				}
 				
 			}
 		} catch (SQLException e) {
@@ -575,64 +575,64 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			objectProperties.add(new ObjectProperty(qs.getResource("prop").getURI()));
 		}
 		
-//		for(NamedClass cls : classes){
-//			for(ObjectProperty prop : objectProperties){
-//				log.info("Processing class " + cls + " and property " + prop);
-//				try {
-//					getDirectedPMI(cls, prop);
-//					getDirectedPMI(prop, cls);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//					try {
-//						Thread.sleep(5000);
-//					} catch (InterruptedException e1) {
-//						e1.printStackTrace();
-//					}
-//					try {
-//						getDirectedPMI(cls, prop);
-//						getDirectedPMI(prop, cls);
-//					} catch (Exception e2) {
-//						e2.printStackTrace();
-//						try {
-//							Thread.sleep(5000);
-//						} catch (InterruptedException e1) {
-//							e1.printStackTrace();
-//						}
-//					}
-//				}
-//				
-//			}
-//		}
-//		
-//		for(NamedClass cls1 : classes){
-//			for(NamedClass cls2 : classes){
-//				if(!cls1.equals(cls2)){
-//					log.info("Processing class " + cls1 + " and class " + cls2);
-//					try {
-//						getPMI(cls1, cls2);
-//						getPMI(cls2, cls1);
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//						try {
-//							Thread.sleep(5000);
-//						} catch (InterruptedException e1) {
-//							e1.printStackTrace();
-//						}
-//						try {
-//							getPMI(cls1, cls2);
-//							getPMI(cls2, cls1);
-//						} catch (Exception e2) {
-//							e2.printStackTrace();
-//							try {
-//								Thread.sleep(5000);
-//							} catch (InterruptedException e1) {
-//								e1.printStackTrace();
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
+		for(NamedClass cls : classes){
+			for(ObjectProperty prop : objectProperties){
+				log.info("Processing class " + cls + " and property " + prop);
+				try {
+					getDirectedPMI(cls, prop);
+					getDirectedPMI(prop, cls);
+				} catch (Exception e) {
+					e.printStackTrace();
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+					try {
+						getDirectedPMI(cls, prop);
+						getDirectedPMI(prop, cls);
+					} catch (Exception e2) {
+						e2.printStackTrace();
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+				
+			}
+		}
+		
+		for(NamedClass cls1 : classes){
+			for(NamedClass cls2 : classes){
+				if(!cls1.equals(cls2)){
+					log.info("Processing class " + cls1 + " and class " + cls2);
+					try {
+						getPMI(cls1, cls2);
+						getPMI(cls2, cls1);
+					} catch (Exception e) {
+						e.printStackTrace();
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+						try {
+							getPMI(cls1, cls2);
+							getPMI(cls2, cls1);
+						} catch (Exception e2) {
+							e2.printStackTrace();
+							try {
+								Thread.sleep(5000);
+							} catch (InterruptedException e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		}
 		
 		for(NamedClass cls1 : classes){
 			for(NamedClass cls2 : classes){
@@ -684,7 +684,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		          + "password=" + dbPassword);
 		
 		
-		Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class).setLevel(Level.DEBUG);
+		Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class).setLevel(Level.TRACE);
 		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://linkedspending.aksw.org/sparql"), "http://dbpedia.org");
 		ExtractionDBCache cache = new ExtractionDBCache("/tmp");
 		String NS = "http://dbpedia.org/ontology/";		
