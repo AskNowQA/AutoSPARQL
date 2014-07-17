@@ -1,5 +1,7 @@
 package org.aksw.autosparql.commons.metric;
 
+import static org.junit.Assert.*;
+
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,23 +13,27 @@ import org.dllearner.core.owl.NamedClass;
 import org.dllearner.core.owl.ObjectProperty;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
+import org.junit.Test;
 
 public class DatabaseBackedSPARQLEndpointMetricsTest {
 
-//	@Test
-	public static void testPmiMetric() throws Exception
+	@Test
+	public void testPmiMetric() throws Exception
 	{
 		//create database connection
 		Class.forName("com.mysql.jdbc.Driver");
-		String dbHost = "localhost";
+//		String dbHost = "linkedspending.aksw.org/sql";
+		String dbHost = "[2001:638:902:2010:0:168:35:119]";		
 		String dbPort = "3306";
+
 		String database = "dbpedia_metrics";
-		String dbUser = "root";
-		String dbPassword = "";
-		Connection conn = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":"
-		          + dbPort + "/" + database + "?" + "user=" + dbUser + "&"
+		String dbUser = "tbsl";
+		String dbPassword = "tbsl";
+		System.out.println("jdbc:mysql://" + dbHost + ":"+ dbPort + "/" + database + "?" + "user=" + dbUser + "&"
 		          + "password=" + dbPassword);
-		
+		Connection conn = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":"+ dbPort + "/" + database + "?" + "user=" + dbUser + "&"
+		          + "password=" + dbPassword);
+		assertTrue(conn.isReadOnly());
 		
 		Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class).setLevel(Level.DEBUG);
 		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://lod.openlinksw.com/sparql"), "http://dbpedia.org");
