@@ -641,20 +641,20 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 					try {
 						getMostFrequentProperties(cls1, cls2);
 					} catch (Exception e) {
-						e.printStackTrace();
+						log.error(e);
 						try {
 							Thread.sleep(5000);
 						} catch (InterruptedException e1) {
-							e1.printStackTrace();
+							log.error(e1);
 						}
 						try {
 							getMostFrequentProperties(cls1, cls2);
 						} catch (Exception e2) {
-							e2.printStackTrace();
+							log.error(e2);
 							try {
 								Thread.sleep(5000);
 							} catch (InterruptedException e1) {
-								e1.printStackTrace();
+								
 							}
 						}
 					}
