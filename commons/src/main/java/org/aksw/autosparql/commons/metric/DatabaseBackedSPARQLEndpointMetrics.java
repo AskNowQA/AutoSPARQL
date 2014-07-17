@@ -685,81 +685,10 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		
 		
 		Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class).setLevel(Level.DEBUG);
-		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://lod.openlinksw.com/sparql"), "http://dbpedia.org");
-		endpoint = SparqlEndpoint.getEndpointDBpedia();
-		ExtractionDBCache cache = new ExtractionDBCache("/opt/tbsl/dbpedia_pmi_cache_v2");
-		String NS = "http://dbpedia.org/ontology/";
-		String NS_Res = "http://dbpedia.org/resource/";
-		
-		NamedClass person = new NamedClass(NS + "Person");
-		NamedClass writer = new NamedClass(NS + "Writer");
-		NamedClass book = new NamedClass(NS + "Book");
-		NamedClass film = new NamedClass(NS + "Film");
-		NamedClass actor = new NamedClass(NS + "Actor");
-		ObjectProperty pAuthor = new ObjectProperty(NS + "author");
-		ObjectProperty pWriter = new ObjectProperty(NS + "writer");
-		ObjectProperty pStarring = new ObjectProperty(NS + "starring");
-		Individual bradPitt = new Individual(NS_Res + "Brad_Pitt");
-		Individual bradPittBoxer = new Individual(NS_Res + "Brad_Pitt_%28boxer%29");
-		Individual danBrown = new Individual(NS_Res + "Dan_Brown");
-		Individual danBrowne = new Individual(NS_Res + "Dan_Browne");
-		
-		DatabaseBackedSPARQLEndpointMetrics pmiGen = new DatabaseBackedSPARQLEndpointMetrics(endpoint, cache, conn);
-//		pmiGen.precompute(Arrays.asList(new String[]{"http://dbpedia.org/ontology/"}));
-		
-		System.out.println(pmiGen.getPMI(new NamedClass(NS + "River"), new NamedClass(NS + "Film")));
-		
-		System.out.println(pmiGen.getDirectedPMI(pAuthor, person));
-		
-		System.out.println("#########################################");
-		
-		System.out.println(pmiGen.getDirectedPMI(pAuthor, writer));
-		
-		System.out.println("#########################################");
-		
-		System.out.println(pmiGen.getDirectedPMI(book, pAuthor));
-		
-		System.out.println("#########################################");
-		
-		System.out.println(pmiGen.getDirection(writer, pAuthor, book));
-		
-		System.out.println("#########################################");
-		
-		System.out.println(pmiGen.getDirection(person, pStarring, film));
-		
-		System.out.println("#########################################");
-		
-		System.out.println(pmiGen.getMostFrequentProperties(person, film));
-		
-		System.out.println("#########################################");
-		
-		System.out.println(pmiGen.getMostFrequentProperties(film, actor));
-		
-		System.out.println("#########################################");
-		
-		System.out.println(pmiGen.getMostFrequentProperties(film, person));
-		
-		System.out.println("#########################################");
-		
-		System.out.println(pmiGen.getOccurences(book));
-		System.out.println(pmiGen.getOccurencesInObjectPosition(book));
-		System.out.println(pmiGen.getOccurencesInSubjectPosition(book));
-		
-		System.out.println("#########################################");
-		
-		System.out.println("Goodness: " + pmiGen.getGoodness(film, pStarring, person));
-		System.out.println("Goodness: " + pmiGen.getGoodness(person, pAuthor, book));
-		System.out.println("Goodness: " + pmiGen.getGoodness(person, pWriter, book));
-		System.out.println("Goodness: " + pmiGen.getGoodness(book, pAuthor, person));
-		System.out.println("Goodness: " + pmiGen.getGoodness(book, pWriter, person));
-		
-		System.out.println("Goodness: " + pmiGen.getGoodness(film, pStarring, bradPitt));
-		System.out.println("Goodness: " + pmiGen.getGoodness(film, pStarring, bradPittBoxer));
-		System.out.println("Goodness: " + pmiGen.getGoodness(book, pAuthor, danBrown));
-		System.out.println("Goodness: " + pmiGen.getGoodness(book, pAuthor, danBrowne));
-		
-		
-		
+		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://linkedspending.aksw.org/sparql"), "http://dbpedia.org");
+		ExtractionDBCache cache = new ExtractionDBCache("/tmp");
+		String NS = "http://dbpedia.org/ontology/";		
+		new DatabaseBackedSPARQLEndpointMetrics(endpoint, cache, conn).precompute(Collections.singleton(NS));
 	}
 
 }
