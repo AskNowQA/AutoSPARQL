@@ -1,0 +1,4 @@
+cd commons
+echo -n "Enter database password > "
+read -s password
+mvn exec:java -Dexec.mainClass="org.aksw.autosparql.commons.metric.DatabaseBackedSPARQLEndpointMetrics" -Dexec.args="$password"
