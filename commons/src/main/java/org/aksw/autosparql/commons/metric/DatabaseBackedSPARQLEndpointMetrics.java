@@ -1,7 +1,5 @@
 package org.aksw.autosparql.commons.metric;
 
-import jargs.gnu.CmdLineParser.OptionException;
-
 import java.net.URI;
 import java.net.URL;
 import java.sql.Connection;
@@ -17,10 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-
 import org.apache.log4j.Level;
 import org.dllearner.core.owl.Individual;
 import org.dllearner.core.owl.NamedClass;
@@ -33,7 +29,6 @@ import org.dllearner.kb.sparql.SparqlQuery;
 import org.dllearner.reasoning.SPARQLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.Lists;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
