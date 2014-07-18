@@ -29,16 +29,20 @@ public class DatabaseBackedSPARQLEndpointMetricsTest {
 		String database = "dbpedia_metrics";
 		String dbUser = "tbsl";
 		String dbPassword = "tbsl";
-		System.out.println("jdbc:mysql://" + dbHost + ":"+ dbPort + "/" + database + "?" + "user=" + dbUser + "&"
-		          + "password=" + dbPassword);
-		Connection conn = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":"+ dbPort + "/" + database + "?" + "user=" + dbUser + "&"
-		          + "password=" + dbPassword);
-		assertTrue(conn.isReadOnly());
+		//IPV6
+				String protocol = "tcp";
+				String connStr = "jdbc:mysql://address="
+						+ "(protocol=" + protocol + ")"
+								+ "(host=" + dbHost + ")"
+										+ "(port=" + dbPort + ")"
+												+ "/" + database;
+		Connection conn = DriverManager.getConnection(connStr, dbUser, dbPassword);
+		conn.setReadOnly(true);
 		
+		Logger.getRootLogger().setLevel(Level.INFO);
 		Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class).setLevel(Level.DEBUG);
-		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://lod.openlinksw.com/sparql"), "http://dbpedia.org");
-		endpoint = SparqlEndpoint.getEndpointDBpedia();
-		ExtractionDBCache cache = new ExtractionDBCache("/opt/tbsl/dbpedia_pmi_cache_v2");
+		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://linkedspending.aksw.org/sparql"), "http://dbpedia.org");
+		ExtractionDBCache cache = new ExtractionDBCache("cache");
 		String NS = "http://dbpedia.org/ontology/";
 		String NS_Res = "http://dbpedia.org/resource/";
 		
@@ -56,45 +60,43 @@ public class DatabaseBackedSPARQLEndpointMetricsTest {
 		Individual danBrowne = new Individual(NS_Res + "Dan_Browne");
 		
 		DatabaseBackedSPARQLEndpointMetrics pmiGen = new DatabaseBackedSPARQLEndpointMetrics(endpoint, cache, conn);
-//		pmiGen.precompute(Arrays.asList(new String[]{"http://dbpedia.org/ontology/"}));
 		
-		System.out.println(pmiGen.getPMI(new NamedClass(NS + "River"), new NamedClass(NS + "Film")));
-		
-		System.out.println(pmiGen.getDirectedPMI(pAuthor, person));
+		pmiGen.getPMI(new NamedClass(NS + "River"), new NamedClass(NS + "Film"));	
+		pmiGen.getDirectedPMI(pAuthor, person);
 		
 		System.out.println("#########################################");
 		
-		System.out.println(pmiGen.getDirectedPMI(pAuthor, writer));
+		pmiGen.getDirectedPMI(pAuthor, writer);
 		
 		System.out.println("#########################################");
 		
-		System.out.println(pmiGen.getDirectedPMI(book, pAuthor));
+		pmiGen.getDirectedPMI(book, pAuthor);
 		
 		System.out.println("#########################################");
 		
-		System.out.println(pmiGen.getDirection(writer, pAuthor, book));
+		pmiGen.getDirection(writer, pAuthor, book);
 		
 		System.out.println("#########################################");
 		
-		System.out.println(pmiGen.getDirection(person, pStarring, film));
+		pmiGen.getDirection(person, pStarring, film);
 		
 		System.out.println("#########################################");
 		
-		System.out.println(pmiGen.getMostFrequentProperties(person, film));
+		pmiGen.getMostFrequentProperties(person, film);
 		
 		System.out.println("#########################################");
 		
-		System.out.println(pmiGen.getMostFrequentProperties(film, actor));
+		pmiGen.getMostFrequentProperties(film, actor);
 		
 		System.out.println("#########################################");
 		
-		System.out.println(pmiGen.getMostFrequentProperties(film, person));
+		pmiGen.getMostFrequentProperties(film, person);
 		
 		System.out.println("#########################################");
 		
-		System.out.println(pmiGen.getOccurences(book));
-		System.out.println(pmiGen.getOccurencesInObjectPosition(book));
-		System.out.println(pmiGen.getOccurencesInSubjectPosition(book));
+		pmiGen.getOccurences(book);
+		pmiGen.getOccurencesInObjectPosition(book);
+		pmiGen.getOccurencesInSubjectPosition(book);
 		
 		System.out.println("#########################################");
 		

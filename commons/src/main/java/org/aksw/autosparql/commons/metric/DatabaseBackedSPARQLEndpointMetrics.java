@@ -1,5 +1,8 @@
 package org.aksw.autosparql.commons.metric;
 
+import jargs.gnu.CmdLineParser.OptionException;
+
+import java.net.URI;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,12 +12,16 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.dllearner.core.owl.Individual;
 import org.dllearner.core.owl.NamedClass;
 import org.dllearner.core.owl.ObjectProperty;
@@ -24,12 +31,16 @@ import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.dllearner.reasoning.SPARQLReasoner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 
 public class DatabaseBackedSPARQLEndpointMetrics {
 
-	private static final Logger log = Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class.getSimpleName());
+	private static final Logger log = LoggerFactory.getLogger(DatabaseBackedSPARQLEndpointMetrics.class);
 
 	private SparqlEndpoint endpoint;
 	private SPARQLReasoner reasoner;
@@ -200,7 +211,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 	 * @return -1 if the given triple should by reversed, else 1.
 	 */
 	public int getDirection(NamedClass subject, ObjectProperty predicate, NamedClass object){
-		log.info(String.format("Computing direction between [%s, %s, %s]", subject, predicate, object));
+		log.debug(String.format("Computing direction between [%s, %s, %s]", subject, predicate, object));
 		double pmi_obj_pred = getDirectedPMI(object, predicate);
 		double pmi_pred_subj = getDirectedPMI(predicate, subject);
 		double pmi_subj_pred = getDirectedPMI(subject, predicate);
@@ -209,13 +220,13 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 		double threshold = 2.0;
 
 		double value = ((pmi_obj_pred + pmi_pred_subj) - (pmi_subj_pred + pmi_pred_obj));
-		log.info("(PMI(OBJECT, PREDICATE) + PMI(PREDICATE, SUBJECT)) - (PMI(SUBJECT, PREDICATE) + PMI(PREDICATE, OBJECT)) = " + value);
+		log.debug("(PMI(OBJECT, PREDICATE) + PMI(PREDICATE, SUBJECT)) - (PMI(SUBJECT, PREDICATE) + PMI(PREDICATE, OBJECT)) = " + value);
 
 		if( value > threshold){
-			log.info(object + "---" + predicate + "--->" + subject);
+			log.debug(object + "---" + predicate + "--->" + subject);
 			return -1;
 		} else {
-			log.info(subject + "---" + predicate + "--->" + object);
+			log.debug(subject + "---" + predicate + "--->" + object);
 			return 1;
 		}
 	}
@@ -236,7 +247,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 					property2Frequency.put(p, frequency);
 				}
 			} else {
-				log.trace(String.format("Computing properties + frequency connecting subject of type %s and object of type %s", subjectClass.getName(), objectClass.getName()));
+				log.debug(String.format("Computing properties + frequency connecting subject of type %s and object of type %s", subjectClass.getName(), objectClass.getName()));
 				String query = String.format("SELECT ?p (COUNT(*) AS ?cnt) WHERE {?x1 a <%s>. ?x2 a <%s>. ?x1 ?p ?x2} GROUP BY ?p", subjectClass, objectClass);
 				ResultSet rs = executeSelect(query);
 				QuerySolution qs;
@@ -276,7 +287,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			if(sqlResultset.next()){
 				return sqlResultset.getInt(1);
 			} else {
-				log.trace(String.format("Computing number of occurrences as subject and predicate for [%s, %s]", cls.getName(), prop.getName()));
+				log.debug(String.format("Computing number of occurrences as subject and predicate for [%s, %s]", cls.getName(), prop.getName()));
 				String query  = String.format("SELECT (COUNT(*) AS ?cnt) WHERE {?s a <%s>. ?s <%s> ?o}", cls.getName(), prop.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
@@ -310,7 +321,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			if(sqlResultset.next()){
 				return sqlResultset.getInt(1);
 			} else {
-				log.trace(String.format("Computing number of occurences as predicate and object for [%s, %s]", prop.getName(), cls.getName()));
+				log.debug(String.format("Computing number of occurences as predicate and object for [%s, %s]", prop.getName(), cls.getName()));
 				String query  = String.format("SELECT (COUNT(*) AS ?cnt) WHERE {?o a <%s>. ?s <%s> ?o}", cls.getName(), prop.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
@@ -343,7 +354,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			if(sqlResultset.next()){
 				return sqlResultset.getInt(1);
 			} else {
-				log.trace(String.format("Computing number of occurences as subject and object for [%s, %s]", subject.getName(), object.getName()));
+				log.debug(String.format("Computing number of occurences as subject and object for [%s, %s]", subject.getName(), object.getName()));
 				String query  = String.format("SELECT (COUNT(*) AS ?cnt) WHERE {?s a <%s>. ?s ?p ?o. ?o a <%s>}", subject.getName(), object.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
@@ -375,7 +386,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			if(sqlResultset.next()){
 				return sqlResultset.getInt(1);
 			} else {
-				log.trace(String.format("Computing number of triples where subject is of type %s", cls.getName()));
+				log.debug(String.format("Computing number of triples where subject is of type %s", cls.getName()));
 				String query  = String.format("SELECT (COUNT(?s) AS ?cnt) WHERE {?s a <%s>. ?s ?p ?o.}", cls.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
@@ -406,7 +417,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			if(sqlResultset.next()){
 				return sqlResultset.getInt(1);
 			} else {
-				log.trace(String.format("Computing number of triples where object is of type %s", cls.getName()));
+				log.debug(String.format("Computing number of triples where object is of type %s", cls.getName()));
 				String query  = String.format("SELECT (COUNT(?s) AS ?cnt) WHERE {?o a <%s>. ?s ?p ?o.}", cls.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
@@ -437,7 +448,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			if(sqlResultset.next()){
 				return sqlResultset.getInt(1);
 			} else {
-				log.trace(String.format("Computing number of occurences as predicate for %s", prop.getName()));
+				log.debug(String.format("Computing number of occurences as predicate for %s", prop.getName()));
 				String query  = String.format("SELECT (COUNT(*) AS ?cnt) WHERE {?s <%s> ?o}", prop.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
@@ -469,7 +480,7 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 			if(sqlResultset.next()){
 				return sqlResultset.getInt(1);
 			} else {
-				log.trace(String.format("Computing number of instances of class %s", cls.getName()));
+				log.debug(String.format("Computing number of instances of class %s", cls.getName()));
 				String query  = String.format("SELECT (COUNT(?s) AS ?cnt) WHERE {?s a <%s>.}", cls.getName());
 				ResultSet rs = executeSelect(query);
 				int cnt = rs.next().getLiteral("cnt").getInt();
@@ -666,16 +677,16 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 					try {
 						getMostFrequentProperties(cls1, cls2);
 					} catch (Exception e) {
-						log.error(e);
+						log.error(e.getMessage(), e);
 						try {
 							Thread.sleep(5000);
 						} catch (InterruptedException e1) {
-							log.error(e1);
+							
 						}
 						try {
 							getMostFrequentProperties(cls1, cls2);
 						} catch (Exception e2) {
-							log.error(e2);
+							log.error(e.getMessage(), e2);
 							try {
 								Thread.sleep(5000);
 							} catch (InterruptedException e1) {
@@ -697,23 +708,56 @@ public class DatabaseBackedSPARQLEndpointMetrics {
 	}
 
 	public static void main(String[] args) throws Exception {
+		OptionParser parser = new OptionParser();
+		parser.acceptsAll(Lists.newArrayList("e", "endpoint"), "SPARQL endpoint URL to be used.").withRequiredArg().ofType(URL.class).required();
+		parser.acceptsAll(Lists.newArrayList("g", "graph"), "URI of default graph for queries on SPARQL endpoint.").withRequiredArg().ofType(URI.class).required();
+		parser.acceptsAll(Lists.newArrayList("cacheDir"), "Path to cache directory.").withRequiredArg().required();
+		parser.acceptsAll(Lists.newArrayList("dbHost"), "DB host address").withRequiredArg().required();
+		parser.acceptsAll(Lists.newArrayList("dbPort"), "DB port").withRequiredArg().required();
+		parser.acceptsAll(Lists.newArrayList("dbName"), "DB name").withRequiredArg().required();
+		parser.acceptsAll(Lists.newArrayList("dbUser"), "DB user").withRequiredArg().required();
+		parser.acceptsAll(Lists.newArrayList("dbPassword"), "DB password").withRequiredArg().required();
+		parser.accepts("ns", "Allowed namespaces of the processed entities.").withRequiredArg().withValuesSeparatedBy(',');
+		
+		// parse options and display a message for the user in case of problems
+		OptionSet options = null;
+		try {
+			options = parser.parse(args);
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage() + ". Use -? to get help.");
+			System.exit(0);
+		}
+		
+		// print help screen
+		if (options.has("?")) {
+			parser.printHelpOn(System.out);
+		} else {
+
+		}
+		URL endpointURL = (URL) options.valueOf("endpoint");
+		URI defaultGraphURI = (URI) options.valueOf("graph");
+		
+		String cacheDir = (String) options.valueOf("cacheDir");
+		
+		List<String> namespaces = (List<String>) options.valuesOf("ns");
+		
 		//create database connection
 		Class.forName("com.mysql.jdbc.Driver");
-		String dbHost = "localhost";
-		String dbPort = "3306";
-		String database = "dbpedia_metrics";
-		String dbUser = "root";
-		String dbPassword = args[0];
-		Connection conn = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":"
-				+ dbPort + "/" + database + "?" + "user=" + dbUser + "&"
-				+ "password=" + dbPassword);
+		String dbHost = (String) options.valueOf("dbHost");
+		String dbPort = (String) options.valueOf("dbPort");
+		String dbName = (String) options.valueOf("dbName");
+		String dbUser = (String) options.valueOf("dbUser");
+		String dbPassword = (String) options.valueOf("dbPassword");
+		
+		String connStr = "jdbc:mysql://address=" + "(protocol=tcp)" + "(host=" + dbHost + ")" + "(port=" + dbPort + ")"
+				+ "/" + dbName;
+		Connection conn = DriverManager.getConnection(connStr, dbUser, dbPassword);
 
 
-		Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class).setLevel(Level.TRACE);
-		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://linkedspending.aksw.org/sparql"), "http://dbpedia.org");
-		ExtractionDBCache cache = new ExtractionDBCache("/tmp");
-		String NS = "http://dbpedia.org/ontology/";		
-//		new DatabaseBackedSPARQLEndpointMetrics(endpoint, cache, conn).precompute(Collections.singleton(NS));
+		org.apache.log4j.Logger.getLogger(DatabaseBackedSPARQLEndpointMetrics.class).setLevel(Level.TRACE);
+		SparqlEndpoint endpoint = new SparqlEndpoint(endpointURL, defaultGraphURI.toString());
+		ExtractionDBCache cache = new ExtractionDBCache(cacheDir);
+		new DatabaseBackedSPARQLEndpointMetrics(endpoint, cache, conn).precompute(namespaces);
 	}
 
 }

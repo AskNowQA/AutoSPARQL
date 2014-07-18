@@ -110,7 +110,7 @@
 			<dependency>
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-arq</artifactId>
-				<version>2.11.0</version>
+				<version>2.11.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -176,11 +176,9 @@
 			<dependency>
 				<groupId>net.sf.jopt-simple</groupId>
 				<artifactId>jopt-simple</artifactId>
-				<version>3.3</version>
-				<!--This version is the one released with DL-Learner 2048 -->
+				<version>4.4</version>
 			</dependency>
 
-			<!--Lucene is in Central -->
 
 			<dependency>
 				<groupId>org.ini4j</groupId>
