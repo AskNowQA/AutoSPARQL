@@ -16,9 +16,11 @@ public class Preprocessor {
 
 	static final String[] genericReplacements = { "[!?.,;]", "" };
 	static final String[] englishReplacements = { "don't", "do not", "doesn't", "does not" };
-        static final String[] hackReplacements = { " 1 "," one "," 2 "," two "," 3 "," three "," 4 "," four "," 5 "," five "," 6 "," six "," 7 "," seven ",
+    static final String[] hackReplacements = { " 1 "," one "," 2 "," two "," 3 "," three "," 4 "," four "," 5 "," five "," 6 "," six "," 7 "," seven ",
         " 8 "," eight "," 9 "," nine "," 10 "," ten "," 11 "," eleven "," 12 "," twelve "," 13 "," thirteen "," 14 "," fourteen "," 15 "," fifteen ",
         " 16 "," sixteen "," 17 "," seventeen "," 18 "," eighteen "," 19 "," nineteen "," 20 "," twenty "};
+    static final String[] germanReplacements = {};//{"ä","a","Ä","a","ö","o","Ö","o","ü","u","Ü","ü","ß","ss"};
+    static final String[] frenchReplacements = {};//{"À","A","à","a","Â","A","â","a","Æ","Ae","æ","ae","Ç","c","ç","c","È","E","è","e","É","E","é","e","Ê","E","ê","e","Ë","E","ë","e","Î","I","î","i","Ï","I","ï","i","Ô","O","ô","O","Œ","Oe","œ","oe","Ù","U","ù","u","Û","U","û","u","Ÿ","Y","ÿ","y"}; 
 	static boolean USE_NER;
 	static boolean VERBOSE;
 	static NER ner;
@@ -42,7 +44,7 @@ public class Preprocessor {
 
 	public String normalize(String s, String... repl) {
 
-		if (repl.length % 2 != 0 || genericReplacements.length % 2 != 0 || englishReplacements.length % 2 != 0) {
+		if (repl.length % 2 != 0 || genericReplacements.length % 2 != 0 || englishReplacements.length % 2 != 0||germanReplacements.length % 2 != 0||frenchReplacements.length % 2 != 0) {
 			throw new IllegalArgumentException();
 		}
 
@@ -50,7 +52,9 @@ public class Preprocessor {
 		replacements.addAll(Arrays.asList(repl));
 		replacements.addAll(Arrays.asList(englishReplacements));
 		replacements.addAll(Arrays.asList(genericReplacements));
-                replacements.addAll(Arrays.asList(hackReplacements));
+        replacements.addAll(Arrays.asList(hackReplacements));
+        replacements.addAll(Arrays.asList(germanReplacements));
+        replacements.addAll(Arrays.asList(frenchReplacements));
 
                 s = s.replaceAll(",\\s"," and ").replaceAll(" and but "," but ");
 		for (int i = 0; i < replacements.size(); i += 2) {
