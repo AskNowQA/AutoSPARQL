@@ -16,12 +16,10 @@ public class Preprocessor {
 	private static final Logger logger = Logger.getLogger(Preprocessor.class);
 
 	static final String[] genericReplacements = { "[!?.,;]", "" };
-	static final String[] englishReplacements = { "don't", "do not", "doesn't", "does not" };
-    static final String[] hackReplacements = { " 1 "," one "," 2 "," two "," 3 "," three "," 4 "," four "," 5 "," five "," 6 "," six "," 7 "," seven ",
+	static final String[] englishReplacements = { "don't", "do not", "doesn't", "does not", ",\\s"," and ", " and but "," but " };
+        static final String[] hackReplacements = { " 1 "," one "," 2 "," two "," 3 "," three "," 4 "," four "," 5 "," five "," 6 "," six "," 7 "," seven ",
         " 8 "," eight "," 9 "," nine "," 10 "," ten "," 11 "," eleven "," 12 "," twelve "," 13 "," thirteen "," 14 "," fourteen "," 15 "," fifteen ",
         " 16 "," sixteen "," 17 "," seventeen "," 18 "," eighteen "," 19 "," nineteen "," 20 "," twenty "};
-    static final String[] germanReplacements = {"ä","a","Ä","a","ö","o","Ö","o","ü","u","Ü","ü","ß","ss"};
-    static final String[] frenchReplacements = {"À","A","à","a","Â","A","â","a","Æ","Ae","æ","ae","Ç","c","ç","c","È","E","è","e","É","E","é","e","Ê","E","ê","e","Ë","E","ë","e","Î","I","î","i","Ï","I","ï","i","Ô","O","ô","O","Œ","Oe","œ","oe","Ù","U","ù","u","Û","U","û","u","Ÿ","Y","ÿ","y"}; 
 	static boolean USE_NER;
 	static boolean VERBOSE;
 	static NER ner;
@@ -39,35 +37,43 @@ public class Preprocessor {
 		VERBOSE = b;
 	}
 	
-	public String normalize(String s) {
-		return normalize(s, new String[0]);
+	public String normalize(String s) {           
+		return replacements(ascii(s), new String[0]);
 	}
 
-	public String normalize(String s, String... repl) {
+        public String ascii(String s) {    
+                s = Normalizer.normalize(s,Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
+                s = s.replaceAll("ß","ss");
+                return s;
+        }
+        
+	public String replacements(String s, String... repl) {
 
-		if (repl.length % 2 != 0 || genericReplacements.length % 2 != 0 || englishReplacements.length % 2 != 0||germanReplacements.length % 2 != 0||frenchReplacements.length % 2 != 0) {
+		if (repl.length % 2 != 0 || genericReplacements.length % 2 != 0 
+                                         || englishReplacements.length % 2 != 0) {
 			throw new IllegalArgumentException();
 		}
-               
-                // reduce string to ASCII
-                s = Normalizer.normalize(s,Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
 
-                // execute all replacements
 		List<String> replacements = new ArrayList<String>();
 		replacements.addAll(Arrays.asList(repl));
 		replacements.addAll(Arrays.asList(englishReplacements));
 		replacements.addAll(Arrays.asList(genericReplacements));
-        replacements.addAll(Arrays.asList(hackReplacements));
-        replacements.addAll(Arrays.asList(germanReplacements));
-        replacements.addAll(Arrays.asList(frenchReplacements));
+                replacements.addAll(Arrays.asList(hackReplacements));
 
-                s = s.replaceAll(",\\s"," and ").replaceAll(" and but "," but ");
 		for (int i = 0; i < replacements.size(); i += 2) {
 			s = s.replaceAll(replacements.get(i), replacements.get(i + 1));
 		}
 
 		return s;
 	}
+        
+        public String lowercase(String s, String original_s) {
+               
+               for (String w : replacements(original_s).split(" ")) {
+                   s = s.replace(w,w.toLowerCase());
+               }
+               return s;
+        }
 	
 	public String condense(String taggedstring) {
 		
@@ -290,7 +296,7 @@ public class Preprocessor {
 	public String findNEs(String tagged,String untagged) {
 		
 		String out = tagged;
-		
+                               	
 		String[] postags = {"NN","NNS","NNP","NNPS","NPREP","JJ","JJR","JJS","JJH",
 				"VB","VBD","VBG","VBN","VBP","VBZ","PASSIVE","PASSPART","VPASS","VPASSIN",
 				"GERUNDIN","VPREP","WHEN","WHERE","IN","TO","DT"};
@@ -320,7 +326,6 @@ public class Preprocessor {
 		
 		// replace POS tags accordingly
 		for (String ne : usefulnamedentities) {
-                        ne = normalize(ne);
 			String[] neparts = ne.split(" ");
 			Pattern p; Matcher m;
 			for (String nep : neparts) {
@@ -331,7 +336,7 @@ public class Preprocessor {
 				}
 			}
 		}
-		
+                		
 		return out;
 	}
 	

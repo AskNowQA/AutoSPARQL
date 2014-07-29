@@ -15,7 +15,7 @@ public class TestFrontend {
     static boolean BASIC_MODE = false; // true for BASIC mode, false for LEIPZIG mode
     
     public static void main(String[] args) {
-
+        
     	TemplatorHandler handler = new TemplatorHandler(GRAMMAR_FILES);
         handler.setVerbose(true);
   
@@ -69,7 +69,7 @@ public class TestFrontend {
         try {
         	System.out.println("\n===========================================\n");
             System.out.print(msg);
-            str = new BufferedReader(new InputStreamReader(System.in)).readLine();
+            str = new BufferedReader(new InputStreamReader(System.in,"UTF-8")).readLine();
         } catch (IOException e) {
         }
         return str;

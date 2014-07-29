@@ -53,7 +53,7 @@ public class Templator {
 	
 	boolean ONE_SCOPE_ONLY = true;
 	boolean UNTAGGED_INPUT = true;
-	boolean USE_NER = false;
+	boolean USE_NER = true;
 	boolean USE_WORDNET = false;
 	boolean VERBOSE = true;
 	
@@ -155,14 +155,12 @@ public class Templator {
 	public Set<Template> buildTemplates(String s) {
 		
             d2s.setInputString(s);
-            
+                        
 		boolean clearAgain = true;
         
-                String original_s = s;
 		String tagged;
-		if (UNTAGGED_INPUT) {		
-			s = pp.normalize(s);
-			tagged = tagger.tag(s);
+		if (UNTAGGED_INPUT) {	
+			tagged = tagger.tag(pp.replacements(s));
 			logger.debug("Tagged input: " + tagged);
 		}
 		else {
@@ -170,13 +168,15 @@ public class Templator {
 			s = extractSentence(tagged);
 		}
 		taggedInput = tagged;
-		String newtagged;
-		if (USE_NER) {
-			newtagged = pp.condenseNominals(pp.findNEs(tagged,original_s));
+                
+                if (USE_NER) {
+			tagged = pp.findNEs(tagged,s);
 		} 
-		else newtagged = pp.condenseNominals(tagged);
+                tagged = pp.lowercase(tagged,s);
+                tagged = pp.ascii(tagged);
 		
-		newtagged = pp.condense(newtagged);
+                String newtagged = pp.condense(pp.condenseNominals(tagged));
+		
 		logger.debug("Preprocessed: " + newtagged); 
         
         parser.parse(newtagged,g);

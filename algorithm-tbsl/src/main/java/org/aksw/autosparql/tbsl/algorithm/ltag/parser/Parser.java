@@ -24,7 +24,7 @@ public class Parser {
 	public boolean SHOW_GRAMMAR = false;
 	public boolean SHOW_LEXICAL_COVERAGE = false;
 	public boolean VERBOSE = true;
-	public String MODE = "BASIC"; // MODE ::= BASIC | LEIPZIG (set by Templator and BasicTemplator)
+	public String  MODE = "LEIPZIG"; // MODE ::= BASIC | LEIPZIG (set by Templator and BasicTemplator)
 
 	private String[] input;
 	private List<DerivationTree> derivationTrees = new ArrayList<DerivationTree>();

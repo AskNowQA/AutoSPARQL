@@ -17,7 +17,7 @@ public class TestFrontend {
 	static String MODE = "LEIPZIG";  
 
     public static void main(String[] args) {
-
+        
         System.out.println("======= SPARQL Templator =================");
         System.out.println("Running in " + MODE + " mode.");
         System.out.println("\nType ':q' to quit.");
@@ -50,9 +50,9 @@ public class TestFrontend {
     public static String getStringFromUser(String msg) {
         String str = "";
         try {
-        	System.out.println("\n===========================================\n");
-            System.out.print(msg);
-            str = new BufferedReader(new InputStreamReader(System.in,"UTF-8")).readLine();
+                System.out.println("\n===========================================\n");
+                System.out.print(msg);
+                str = new BufferedReader(new InputStreamReader(System.in,"UTF-8")).readLine();
         } catch (IOException e) {
         }
         return str;
