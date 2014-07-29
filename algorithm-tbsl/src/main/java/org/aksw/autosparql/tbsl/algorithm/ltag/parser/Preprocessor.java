@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.text.Normalizer;
 
 import org.aksw.autosparql.commons.nlp.ner.DBpediaSpotlightNER;
 import org.aksw.autosparql.commons.nlp.ner.NER;
@@ -47,7 +48,11 @@ public class Preprocessor {
 		if (repl.length % 2 != 0 || genericReplacements.length % 2 != 0 || englishReplacements.length % 2 != 0||germanReplacements.length % 2 != 0||frenchReplacements.length % 2 != 0) {
 			throw new IllegalArgumentException();
 		}
+               
+                // reduce string to ASCII
+                s = Normalizer.normalize(s,Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
 
+                // execute all replacements
 		List<String> replacements = new ArrayList<String>();
 		replacements.addAll(Arrays.asList(repl));
 		replacements.addAll(Arrays.asList(englishReplacements));
@@ -315,6 +320,7 @@ public class Preprocessor {
 		
 		// replace POS tags accordingly
 		for (String ne : usefulnamedentities) {
+                        ne = normalize(ne);
 			String[] neparts = ne.split(" ");
 			Pattern p; Matcher m;
 			for (String nep : neparts) {

@@ -1,5 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.learning.ranking;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,7 +47,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 			,Feature.TRIPLE_PROBABILITY
 			);
 	
-	public SimpleRankingComputation(Knowledgebase knowledgebase)
+	public SimpleRankingComputation(Knowledgebase knowledgebase) throws MalformedURLException
 	{
 		super(knowledgebase);
 		if(knowledgebase instanceof RemoteKnowledgebase)

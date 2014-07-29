@@ -14,7 +14,7 @@ import org.aksw.autosparql.tbsl.algorithm.templator.Templator;
 public class TestFrontend {
 	
 	// MODE ::= BASIC | LEIPZIG
-	static String MODE = "BASIC";  
+	static String MODE = "LEIPZIG";  
 
     public static void main(String[] args) {
 
@@ -52,7 +52,7 @@ public class TestFrontend {
         try {
         	System.out.println("\n===========================================\n");
             System.out.print(msg);
-            str = new BufferedReader(new InputStreamReader(System.in)).readLine();
+            str = new BufferedReader(new InputStreamReader(System.in,"UTF-8")).readLine();
         } catch (IOException e) {
         }
         return str;

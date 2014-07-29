@@ -158,6 +158,7 @@ public class Templator {
             
 		boolean clearAgain = true;
         
+                String original_s = s;
 		String tagged;
 		if (UNTAGGED_INPUT) {		
 			s = pp.normalize(s);
@@ -171,7 +172,7 @@ public class Templator {
 		taggedInput = tagged;
 		String newtagged;
 		if (USE_NER) {
-			newtagged = pp.condenseNominals(pp.findNEs(tagged,s));
+			newtagged = pp.condenseNominals(pp.findNEs(tagged,original_s));
 		} 
 		else newtagged = pp.condenseNominals(tagged);
 		
