@@ -37,6 +37,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.Syntax;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+import java.net.MalformedURLException;
 
 // TODO: reasoner.setCache(cache) somewhere else 
 public class TBSL
@@ -151,10 +152,10 @@ public class TBSL
 	 * @return template instantiations sorted by score (last is highest is best)
 	 * @throws NoTemplateFoundException
 	 */
-	public TemplateInstantiation answerQuestion(String question) throws NoTemplateFoundException
+	public TemplateInstantiation answerQuestion(String question) throws NoTemplateFoundException, MalformedURLException
 	{return answerQuestion(question,Collections.<Double>emptyList());}
 
-	public TemplateInstantiation answerQuestion(String question, List<Double> parameters) throws NoTemplateFoundException{
+	public TemplateInstantiation answerQuestion(String question, List<Double> parameters) throws NoTemplateFoundException, MalformedURLException{
 		reset();
 
 		//1. Generate SPARQL query templates
@@ -219,7 +220,7 @@ public class TBSL
 	}
 
 	//	public SortedSet<TemplateInstantiation> answerQuestion(Template template, List<Double> parameters)
-	public TemplateInstantiation answerQuestion(Template template, List<Double> parameters)
+	public TemplateInstantiation answerQuestion(Template template, List<Double> parameters) throws MalformedURLException
 	{
 		SortedSet<TemplateInstantiation> instantiations = new TreeSet<>();
 		reset();

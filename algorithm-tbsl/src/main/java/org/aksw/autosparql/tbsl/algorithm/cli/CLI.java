@@ -57,7 +57,7 @@ public class CLI {
 	        try {
 	        	System.out.println("\n===========================================\n");
 	            System.out.print(msg);
-	            str = new BufferedReader(new InputStreamReader(System.in)).readLine();
+	            str = new BufferedReader(new InputStreamReader(System.in,"UTF-8")).readLine();
 	        } catch (IOException e) {
 	        }
 	        return str;
