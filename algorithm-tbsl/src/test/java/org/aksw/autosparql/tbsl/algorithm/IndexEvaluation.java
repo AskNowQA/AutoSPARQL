@@ -18,12 +18,14 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.aksw.autosparql.tbsl.algorithm.search.HierarchicalSolrSearch;
-import org.aksw.autosparql.tbsl.algorithm.search.SolrSearch;
-import org.aksw.autosparql.tbsl.algorithm.search.ThresholdSlidingSolrSearch;
+
+import org.aksw.autosparql.commons.search.HierarchicalSolrSearch;
+import org.aksw.autosparql.commons.search.SolrSearch;
+import org.aksw.autosparql.commons.search.ThresholdSlidingSolrSearch;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;

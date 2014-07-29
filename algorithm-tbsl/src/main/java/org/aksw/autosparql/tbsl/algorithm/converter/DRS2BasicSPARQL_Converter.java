@@ -1,6 +1,11 @@
 package org.aksw.autosparql.tbsl.algorithm.converter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.Complex_DRS_Condition;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS_Condition;
@@ -16,11 +21,9 @@ import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Having;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_OrderBy;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Pair;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_PairType;
-import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Prefix;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Property;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_QueryType;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Term;
-import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Triple;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 

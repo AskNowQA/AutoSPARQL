@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.util.StringDisplay;
 
 public class Template implements Serializable, Comparable<Template>{

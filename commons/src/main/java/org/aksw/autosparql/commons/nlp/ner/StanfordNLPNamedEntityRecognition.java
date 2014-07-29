@@ -3,13 +3,13 @@
  */
 package org.aksw.autosparql.commons.nlp.ner;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.aksw.autosparql.commons.nlp.sbd.StanfordNLPSentenceBoundaryDisambiguation;
 import org.apache.commons.lang3.StringUtils;
+
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.ling.CoreAnnotations.AnswerAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;

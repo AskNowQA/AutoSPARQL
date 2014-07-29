@@ -1,9 +1,11 @@
 package org.aksw.autosparql.tbsl.algorithm.learning.feature;
 
 import java.util.Set;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
+
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
 import org.aksw.autosparql.tbsl.algorithm.util.TriplePatternExtractor;
+
 import com.hp.hpl.jena.graph.Triple;
 
 public class NumberOfTriplePatternFeatureExtractor extends AbstractFeatureExtractor{

@@ -1,6 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.ltag.data;
 
 import java.io.StringReader;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.reader.LTAGTreeParser;
 import org.aksw.autosparql.tbsl.algorithm.ltag.reader.ParseException;
 

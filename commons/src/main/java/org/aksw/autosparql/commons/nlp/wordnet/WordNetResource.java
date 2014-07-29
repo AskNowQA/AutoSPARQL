@@ -2,6 +2,7 @@ package org.aksw.autosparql.commons.nlp.wordnet;
 
 import java.io.IOException;
 import java.util.Iterator;
+
 import edu.mit.jwi.data.IContentType;
 import edu.mit.jwi.data.ILoadableDataSource;
 import edu.mit.jwi.item.IVersion;

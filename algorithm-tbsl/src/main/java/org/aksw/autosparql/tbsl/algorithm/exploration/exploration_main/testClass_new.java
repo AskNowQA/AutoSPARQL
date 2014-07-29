@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Index.SQLiteIndex;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Sparql.Hypothesis;

@@ -18,9 +18,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
+
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.NoTemplateFoundException;
 import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.Answer;
@@ -42,6 +43,7 @@ import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.eclipse.jetty.util.log.Log;
+
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Node;

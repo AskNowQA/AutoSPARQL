@@ -13,7 +13,9 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.didion.jwnl.JWNLException;
+
 import org.aksw.autosparql.commons.nlp.lemma.StanfordLemmatizer;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Index.SQLiteIndex;

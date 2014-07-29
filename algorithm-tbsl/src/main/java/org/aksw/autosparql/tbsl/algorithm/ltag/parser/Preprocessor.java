@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-
 import org.aksw.autosparql.commons.nlp.ner.DBpediaSpotlightNER;
 import org.aksw.autosparql.commons.nlp.ner.NER;
+import org.apache.log4j.Logger;
 
 public class Preprocessor {
 	

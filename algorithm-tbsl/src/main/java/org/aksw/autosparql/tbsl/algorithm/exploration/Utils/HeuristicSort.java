@@ -1,8 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.exploration.Utils;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 import org.aksw.autosparql.tbsl.algorithm.exploration.exploration_main.Setting;
 
 public class HeuristicSort {

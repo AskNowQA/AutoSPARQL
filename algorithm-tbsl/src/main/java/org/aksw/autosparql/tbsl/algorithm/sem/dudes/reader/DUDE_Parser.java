@@ -5,9 +5,24 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.aksw.autosparql.tbsl.algorithm.sem.drs.*;
-import org.aksw.autosparql.tbsl.algorithm.sem.dudes.data.*;
-import org.aksw.autosparql.tbsl.algorithm.sem.util.*;
+
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.Complex_DRS_Condition;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS_Condition;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS_Quantifier;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.DiscourseReferent;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.Negated_DRS;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.Simple_DRS_Condition;
+import org.aksw.autosparql.tbsl.algorithm.sem.dudes.data.Argument;
+import org.aksw.autosparql.tbsl.algorithm.sem.dudes.data.Dude;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.CompositeType;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.DomType;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.DominanceConstraint;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.ElemType;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.ElementaryType;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.Label;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.Position;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.Type;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 

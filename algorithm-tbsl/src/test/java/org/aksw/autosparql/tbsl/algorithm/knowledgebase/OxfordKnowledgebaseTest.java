@@ -1,7 +1,8 @@
 package org.aksw.autosparql.tbsl.algorithm.knowledgebase;
 
 import static org.junit.Assert.assertTrue;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.OxfordKnowledgebase;
+
+import org.aksw.autosparql.commons.knowledgebase.OxfordKnowledgebase;
 import org.junit.Test;
 
 public class OxfordKnowledgebaseTest

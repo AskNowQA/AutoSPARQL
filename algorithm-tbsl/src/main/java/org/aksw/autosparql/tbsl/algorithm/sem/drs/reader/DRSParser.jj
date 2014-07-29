@@ -21,15 +21,15 @@ options {
 
 PARSER_BEGIN(DRSParser)
 
-package org.dllearner.algorithm.tbsl.sem.drs.reader;
+package org.aksw.autosparql.tbsl.algorithm.sem.drs.reader;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.dllearner.algorithm.tbsl.sem.drs.*;
-import org.dllearner.algorithm.tbsl.sem.util.Label;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.*;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.Label;
 
 public class DRSParser {
 

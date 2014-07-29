@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;
 import org.aksw.autosparql.tbsl.algorithm.sem.dudes.data.Dude;
 import org.aksw.autosparql.tbsl.algorithm.sem.dudes.reader.ParseException;
 import org.aksw.autosparql.tbsl.algorithm.sem.util.Pair;
 import org.apache.log4j.Logger;
+
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 

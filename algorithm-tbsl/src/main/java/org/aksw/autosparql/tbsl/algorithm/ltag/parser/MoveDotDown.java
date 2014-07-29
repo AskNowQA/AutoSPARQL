@@ -2,6 +2,7 @@ package org.aksw.autosparql.tbsl.algorithm.ltag.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;
 
 /**

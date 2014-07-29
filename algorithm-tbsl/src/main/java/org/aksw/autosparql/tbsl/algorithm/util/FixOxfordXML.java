@@ -3,6 +3,7 @@ package org.aksw.autosparql.tbsl.algorithm.util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
 import org.apache.commons.lang.StringEscapeUtils;
 
 //

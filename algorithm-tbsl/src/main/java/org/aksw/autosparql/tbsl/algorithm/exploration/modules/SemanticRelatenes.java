@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
 import org.aksw.autosparql.tbsl.algorithm.exploration.Sparql.Hypothesis;
 
 

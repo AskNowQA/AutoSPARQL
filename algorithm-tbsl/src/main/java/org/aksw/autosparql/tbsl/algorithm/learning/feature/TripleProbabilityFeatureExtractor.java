@@ -5,16 +5,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
+import org.aksw.autosparql.commons.metric.SPARQLEndpointMetrics;
+import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
 import org.dllearner.core.owl.Individual;
 import org.dllearner.core.owl.NamedClass;
 import org.dllearner.core.owl.ObjectProperty;
-import org.aksw.autosparql.commons.metric.SPARQLEndpointMetrics;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
+
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.sparql.core.TriplePath;
 import com.hp.hpl.jena.sparql.syntax.Element;
 import com.hp.hpl.jena.sparql.syntax.ElementGroup;
@@ -76,7 +77,7 @@ public class TripleProbabilityFeatureExtractor extends AbstractFeatureExtractor{
 						t.getPredicate(), 
 						object);
 				subjectClassTriples.add(newTriple);
-			} else if(object.isURI()){
+			} else if(object.isVariable()){
 				Node objectClassNode = variableToClass.get(object);
 				Triple newTriple = Triple.create( 
 						subject, 

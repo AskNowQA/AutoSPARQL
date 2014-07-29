@@ -1,6 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.templator;
 
 import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.sparql.BasicQueryTemplate;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
 

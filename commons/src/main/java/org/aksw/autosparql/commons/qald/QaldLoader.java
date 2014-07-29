@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.aksw.autosparql.commons.Constants;
 import org.aksw.autosparql.commons.nlp.ner.StanfordNLPNamedEntityRecognition;
-import org.aksw.autosparql.commons.nlp.pling.PlingStemmer;
 import org.aksw.autosparql.commons.nlp.pos.StanfordNLPPartOfSpeechTagger;
 import org.aksw.autosparql.commons.qald.uri.Entity;
 import org.aksw.autosparql.commons.qald.uri.GoldEntity;

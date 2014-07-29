@@ -1,14 +1,11 @@
 package org.aksw.autosparql.tbsl.algorithm.exploration.modules;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
 import org.aksw.autosparql.tbsl.algorithm.exploration.Sparql.Hypothesis;
-import org.aksw.autosparql.tbsl.algorithm.exploration.Utils.DebugMode;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Utils.Levenshtein;
 import org.aksw.autosparql.tbsl.algorithm.exploration.exploration_main.Setting;
 

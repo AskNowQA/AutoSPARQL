@@ -1,10 +1,12 @@
 package org.aksw.autosparql.tbsl.algorithm.sem.dudes.data;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS;
-import org.aksw.autosparql.tbsl.algorithm.sem.drs.DiscourseReferent;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.Simple_DRS_Condition;
 import org.aksw.autosparql.tbsl.algorithm.sem.util.DomType;
 import org.aksw.autosparql.tbsl.algorithm.sem.util.DominanceConstraint;
@@ -13,7 +15,6 @@ import org.aksw.autosparql.tbsl.algorithm.sem.util.SemanticRepresentation;
 import org.aksw.autosparql.tbsl.algorithm.sem.util.Type;
 import org.aksw.autosparql.tbsl.algorithm.sparql.BasicSlot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
-import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 
 public class Dude implements SemanticRepresentation{
 

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,6 +22,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.aksw.autosparql.commons.qald.QaldLoader;
+import org.aksw.autosparql.commons.qald.Question;
+import org.aksw.autosparql.tbsl.algorithm.sparql.GoldTemplate;
+import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
+import org.aksw.autosparql.tbsl.algorithm.util.TriplePatternExtractor;
 import org.dllearner.kb.SparqlEndpointKS;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.reasoning.SPARQLReasoner;
@@ -29,12 +37,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.aksw.autosparql.commons.qald.QaldLoader;
-import org.aksw.autosparql.commons.qald.Question;
-import org.aksw.autosparql.tbsl.algorithm.sparql.GoldTemplate;
-import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
-import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
-import org.aksw.autosparql.tbsl.algorithm.util.TriplePatternExtractor;
+
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;

@@ -2,6 +2,7 @@ package org.aksw.autosparql.tbsl.algorithm.sem.dudes.data;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.sem.util.Label;
 import org.aksw.autosparql.tbsl.algorithm.sem.util.Type;
 

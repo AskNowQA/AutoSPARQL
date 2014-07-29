@@ -1,7 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.exploration.Sparql;
 
 import java.util.HashMap;
-import org.aksw.autosparql.tbsl.algorithm.exploration.Utils.QueryPair;
 
 
 /**

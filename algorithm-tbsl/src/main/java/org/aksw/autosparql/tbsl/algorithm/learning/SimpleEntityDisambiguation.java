@@ -9,7 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
+
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;

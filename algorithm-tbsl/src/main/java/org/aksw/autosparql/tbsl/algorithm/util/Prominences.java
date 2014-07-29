@@ -1,6 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.util;
 
 import java.util.HashMap;
+
 import org.aksw.autosparql.tbsl.algorithm.learning.Entity;
 
 public class Prominences extends HashMap<Entity, Double>{

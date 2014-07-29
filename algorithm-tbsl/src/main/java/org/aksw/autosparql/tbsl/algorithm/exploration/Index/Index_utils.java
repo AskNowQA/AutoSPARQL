@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+
 import org.aksw.autosparql.tbsl.algorithm.exploration.Utils.DebugMode;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Utils.ElementStorage;
 import org.aksw.autosparql.tbsl.algorithm.exploration.exploration_main.Setting;

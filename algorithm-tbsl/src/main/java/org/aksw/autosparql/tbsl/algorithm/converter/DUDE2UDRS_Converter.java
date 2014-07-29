@@ -3,6 +3,7 @@ package org.aksw.autosparql.tbsl.algorithm.converter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.UDRS;
 import org.aksw.autosparql.tbsl.algorithm.sem.dudes.data.Dude;

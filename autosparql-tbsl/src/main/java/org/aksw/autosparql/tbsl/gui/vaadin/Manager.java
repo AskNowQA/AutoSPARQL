@@ -12,11 +12,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.OxfordKnowledgebase;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.DBpediaKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.OxfordKnowledgebase;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.ExtendedTBSL;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.InfoTemplate;
 import org.aksw.autosparql.tbsl.gui.vaadin.util.FallbackIndex;
@@ -28,6 +29,7 @@ import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.ini4j.Ini;
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Profile.Section;
+
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.vaadin.terminal.ThemeResource;

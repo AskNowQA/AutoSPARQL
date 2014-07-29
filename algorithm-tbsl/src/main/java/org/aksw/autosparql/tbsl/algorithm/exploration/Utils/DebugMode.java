@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
 import org.aksw.autosparql.tbsl.algorithm.exploration.Sparql.Hypothesis;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Sparql.Template;
 

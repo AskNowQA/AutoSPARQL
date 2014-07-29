@@ -5,6 +5,7 @@ package org.aksw.autosparql.commons.uri;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.aksw.autosparql.commons.Constants;
 
 /**

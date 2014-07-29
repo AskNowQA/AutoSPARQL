@@ -21,18 +21,18 @@ options {
 
 PARSER_BEGIN(DUDE_Parser)
 
-package org.dllearner.algorithm.tbsl.sem.dudes.reader;
+package org.aksw.autosparql.tbsl.algorithm.sem.dudes.reader;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.dllearner.algorithm.tbsl.sem.drs.*;
-import org.dllearner.algorithm.tbsl.sem.dudes.data.*;
-import org.dllearner.algorithm.tbsl.sem.util.*;
-import org.dllearner.algorithm.tbsl.sparql.Slot;
-import org.dllearner.algorithm.tbsl.sparql.SlotType;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.*;
+import org.aksw.autosparql.tbsl.algorithm.sem.dudes.data.*;
+import org.aksw.autosparql.tbsl.algorithm.sem.util.*;
+import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
+import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 
 public class DUDE_Parser {
 

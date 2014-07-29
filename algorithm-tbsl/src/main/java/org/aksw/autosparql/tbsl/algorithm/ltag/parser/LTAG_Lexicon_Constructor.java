@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.LTAG_Tree_Constructor;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;
 import org.aksw.autosparql.tbsl.algorithm.ltag.reader.ParseException;

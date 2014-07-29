@@ -2,6 +2,7 @@ package org.aksw.autosparql.commons.index;
 
 import java.util.Arrays;
 import java.util.Collection;
+
 import org.dllearner.common.index.HierarchicalIndex;
 import org.dllearner.common.index.Index;
 import org.dllearner.common.index.MappingBasedIndex;
@@ -10,6 +11,7 @@ import org.dllearner.common.index.SPARQLDatatypePropertiesIndex;
 import org.dllearner.common.index.SPARQLIndex;
 import org.dllearner.common.index.SPARQLObjectPropertiesIndex;
 import org.dllearner.kb.sparql.SparqlEndpoint;
+
 import com.hp.hpl.jena.rdf.model.Model;
 
 public class Indices

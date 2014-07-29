@@ -2,6 +2,7 @@ package org.aksw.autosparql.tbsl.algorithm.ltag.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.agreement.Unification;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.SubstNode;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;

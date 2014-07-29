@@ -3,6 +3,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import org.aksw.autosparql.tbsl.algorithm.sparql.BasicQueryTemplate;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
 import org.aksw.autosparql.tbsl.algorithm.templator.TemplatorHandler;

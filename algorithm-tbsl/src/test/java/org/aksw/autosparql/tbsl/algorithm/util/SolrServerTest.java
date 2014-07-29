@@ -3,7 +3,10 @@ package org.aksw.autosparql.tbsl.algorithm.util;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import java.util.List;
+
+import org.aksw.autosparql.commons.index.SolrServer;
 import org.junit.Test;
 
 public class SolrServerTest

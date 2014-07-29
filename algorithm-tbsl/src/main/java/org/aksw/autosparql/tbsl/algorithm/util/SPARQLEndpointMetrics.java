@@ -1,8 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.util;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,8 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
+
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.RemoteKnowledgebase;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.dllearner.core.owl.Individual;
@@ -23,6 +22,7 @@ import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.dllearner.reasoning.SPARQLReasoner;
+
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 

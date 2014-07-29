@@ -6,13 +6,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
 import net.didion.jwnl.JWNLException;
+
 import org.aksw.autosparql.commons.nlp.lemma.StanfordLemmatizer;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Index.SQLiteIndex;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Sparql.Hypothesis;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Utils.Levenshtein;
 import org.aksw.autosparql.tbsl.algorithm.exploration.exploration_main.Setting;
+
 import edu.mit.jwi.item.POS;
 
 public class WordnetModule {

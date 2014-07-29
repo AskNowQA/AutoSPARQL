@@ -6,6 +6,7 @@ package org.aksw.autosparql.commons.qald.uri;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.aksw.autosparql.commons.uri.Resource;
 
 /**

@@ -3,6 +3,7 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.aksw.autosparql.tbsl.algorithm.util.StringDisplay;
 
 public class GoldTemplate implements Serializable, Comparable<GoldTemplate> {

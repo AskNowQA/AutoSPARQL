@@ -1,6 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.exploration.Utils;
 
 import java.util.ArrayList;
+
 import org.aksw.autosparql.tbsl.algorithm.exploration.exploration_main.Setting;
 
 public class LinearSort {

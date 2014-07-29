@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.log4j.Logger;
+
 import net.didion.jwnl.JWNLException;
 import net.didion.jwnl.data.Synset;
+
+import org.apache.log4j.Logger;
+
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.RAMDictionary;
 import edu.mit.jwi.data.ILoadPolicy;

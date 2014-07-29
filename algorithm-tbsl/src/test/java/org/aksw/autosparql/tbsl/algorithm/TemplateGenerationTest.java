@@ -9,9 +9,11 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
 import org.aksw.autosparql.tbsl.algorithm.templator.Templator;
 import org.w3c.dom.DOMException;

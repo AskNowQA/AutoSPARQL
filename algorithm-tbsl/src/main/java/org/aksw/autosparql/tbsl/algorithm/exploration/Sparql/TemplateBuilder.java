@@ -3,9 +3,6 @@ package org.aksw.autosparql.tbsl.algorithm.exploration.Sparql;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.exploration.Index.Index_utils;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Index.SQLiteIndex;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Utils.DebugMode;

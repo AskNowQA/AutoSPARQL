@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Hashtable;
 import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
 import org.aksw.autosparql.tbsl.algorithm.templator.Templator;
 

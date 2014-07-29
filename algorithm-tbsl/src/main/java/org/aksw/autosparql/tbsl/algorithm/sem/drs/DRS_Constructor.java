@@ -1,7 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.sem.drs;
 
 import java.io.StringReader;
-import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS;
+
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.reader.DRSParser;
 import org.aksw.autosparql.tbsl.algorithm.sem.drs.reader.ParseException;
 

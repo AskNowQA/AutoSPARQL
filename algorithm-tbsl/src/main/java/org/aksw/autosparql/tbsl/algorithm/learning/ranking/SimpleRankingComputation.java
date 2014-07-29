@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.RemoteKnowledgebase;
+import org.aksw.autosparql.commons.metric.SPARQLEndpointMetrics;
 import org.aksw.autosparql.tbsl.algorithm.learning.Entity;
 import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
 import org.aksw.autosparql.tbsl.algorithm.learning.feature.EntityProminenceFeatureExtractor;
@@ -42,7 +43,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 	private List<Feature> features = Arrays.asList(
 			Feature.PROMINENCE_AVERAGE
 			,Feature.STRING_SIMILARITY_AVERAGE
-//			,Feature.TRIPLE_PROBABILITY
+			,Feature.TRIPLE_PROBABILITY
 			);
 	
 	public SimpleRankingComputation(Knowledgebase knowledgebase)
@@ -108,7 +109,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 //			break;
 //		}
 		//print top n 
-		for(TemplateInstantiation t : ranking.getTopN(5)){
+		for(TemplateInstantiation t : ranking.getTopN(10)){
 			logger.debug(StringDisplay.shortenSparqlQuery(t.asQuery().toString()) + " (Score: " + ranking.getScore(t) + ")");
 		}
 		return ranking;
@@ -125,10 +126,10 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 				featureExtractor = new EntityStringSimilarityFeatureExtractor(knowledgebase);
 				featureExtractors.add(featureExtractor);
 			}
-//				else if(feature == Feature.TRIPLE_PROBABILITY){
-//				featureExtractor = new TripleProbabilityFeatureExtractor(knowledgebase, metrics);
-//				featureExtractors.add(featureExtractor);
-//			}
+				else if(feature == Feature.TRIPLE_PROBABILITY){
+				featureExtractor = new TripleProbabilityFeatureExtractor(knowledgebase, SPARQLEndpointMetrics.getDbpediaMetrics());
+				featureExtractors.add(featureExtractor);
+			}
 		}
 		return featureExtractors;
 	}

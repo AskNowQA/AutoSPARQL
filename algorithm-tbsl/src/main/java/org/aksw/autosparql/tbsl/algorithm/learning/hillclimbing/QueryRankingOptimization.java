@@ -7,21 +7,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import org.apache.log4j.Logger;
-import org.dllearner.common.index.HierarchicalIndex;
-import org.dllearner.common.index.Index;
-import org.dllearner.common.index.SOLRIndex;
-import org.dllearner.kb.sparql.ExtractionDBCache;
-import org.dllearner.kb.sparql.SparqlEndpoint;
+
 import org.aksw.autosparql.commons.qald.EvaluationUtils;
 import org.aksw.autosparql.commons.qald.QaldLoader;
 import org.aksw.autosparql.commons.qald.Question;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.NoTemplateFoundException;
 import org.aksw.autosparql.tbsl.algorithm.learning.TBSL;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
 import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
+import org.apache.log4j.Logger;
+import org.dllearner.kb.sparql.ExtractionDBCache;
+import org.dllearner.kb.sparql.SparqlEndpoint;
 
 /**
  * @author gerb

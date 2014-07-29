@@ -3,7 +3,8 @@ package org.aksw.autosparql.tbsl.algorithm.util;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import org.aksw.autosparql.tbsl.algorithm.search.SolrQueryResultItem;
+
+import org.aksw.autosparql.commons.search.SolrQueryResultItem;
 
 public class SolrQueryResultStringSimilarityComparator implements Comparator<SolrQueryResultItem>{
 	private String s;

@@ -10,14 +10,13 @@ import java.util.TreeMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import org.aksw.autosparql.commons.nlp.pos.ApachePartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.TreeTagger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class POSTaggerQALDEvaluation {
 

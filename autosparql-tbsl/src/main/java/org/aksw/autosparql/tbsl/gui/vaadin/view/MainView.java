@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
+
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.TBSL;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslOxford;
@@ -37,6 +38,7 @@ import org.aksw.autosparql.tbsl.gui.vaadin.widget.TBSLProgressListener;
 import org.vaadin.appfoundation.view.View;
 import org.vaadin.appfoundation.view.ViewContainer;
 import org.vaadin.sasha.portallayout.PortalLayout;
+
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;

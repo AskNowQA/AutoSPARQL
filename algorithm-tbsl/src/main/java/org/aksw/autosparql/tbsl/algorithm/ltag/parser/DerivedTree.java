@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.SubstNode;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.Tree;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;

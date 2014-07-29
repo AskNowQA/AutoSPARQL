@@ -1,6 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.learning;
 
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.DBpediaKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
 
 public class TbslDbpedia extends TBSL 
 {

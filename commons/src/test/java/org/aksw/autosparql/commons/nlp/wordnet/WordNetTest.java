@@ -1,7 +1,9 @@
 package org.aksw.autosparql.commons.nlp.wordnet;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
+
 import edu.mit.jwi.item.POS;
 
 public class WordNetTest

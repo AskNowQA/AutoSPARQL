@@ -13,12 +13,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.commons.nlp.lemma.Lemmatizer;
 import org.aksw.autosparql.commons.nlp.lemma.LingPipeLemmatizer;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.StanfordPartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.ranking.Ranking;
 import org.aksw.autosparql.tbsl.algorithm.learning.ranking.RankingComputation;
 import org.aksw.autosparql.tbsl.algorithm.learning.ranking.SimpleRankingComputation;

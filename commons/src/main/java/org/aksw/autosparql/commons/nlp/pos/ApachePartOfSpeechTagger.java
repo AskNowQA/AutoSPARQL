@@ -5,11 +5,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.aksw.autosparql.commons.nlp.token.ApacheTokenizer;
-import org.aksw.autosparql.commons.nlp.token.Tokenizer;
+
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.util.Sequence;
+
+import org.aksw.autosparql.commons.nlp.token.ApacheTokenizer;
+import org.aksw.autosparql.commons.nlp.token.Tokenizer;
+
 import com.aliasi.tag.Tagging;
 
 public class ApachePartOfSpeechTagger implements PartOfSpeechTagger{

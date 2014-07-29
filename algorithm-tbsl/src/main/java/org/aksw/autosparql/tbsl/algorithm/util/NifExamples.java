@@ -1,11 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.util;
 
-import com.hp.hpl.jena.ontology.OntClass;
-import com.hp.hpl.jena.ontology.OntModel;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import org.apache.log4j.Logger;
-
-import java.util.Set;
 
 /**
  */

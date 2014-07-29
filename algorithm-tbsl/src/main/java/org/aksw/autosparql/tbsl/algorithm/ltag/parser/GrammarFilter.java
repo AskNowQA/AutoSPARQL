@@ -1,6 +1,12 @@
 package org.aksw.autosparql.tbsl.algorithm.ltag.parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.Category;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.LTAG_Tree_Constructor;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import net.didion.jwnl.JWNLException;
+
 import org.aksw.autosparql.commons.nlp.lemma.StanfordLemmatizer;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNet;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Index.SQLiteIndex;

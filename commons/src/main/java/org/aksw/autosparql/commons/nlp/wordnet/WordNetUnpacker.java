@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
 import org.apache.log4j.Logger;
 
 /** Allows WordNet to be run from within a jar file by unpacking it to a temporary directory.**/

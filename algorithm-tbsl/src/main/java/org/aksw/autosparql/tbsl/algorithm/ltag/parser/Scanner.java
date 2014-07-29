@@ -1,6 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.ltag.parser;
 
 import java.util.ArrayList;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TerminalNode;
 
 /**

@@ -2,7 +2,8 @@ package org.aksw.autosparql.tbsl.algorithm.learning.feature;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
+
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.Entity;
 import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;

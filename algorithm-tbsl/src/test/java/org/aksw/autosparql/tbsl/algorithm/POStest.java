@@ -2,6 +2,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 
 import java.io.IOException;
 import java.util.List;
+
 import org.aksw.autosparql.commons.nlp.pos.ApachePartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.LingPipePartOfSpeechTagger;
 import org.aksw.autosparql.commons.nlp.pos.PartOfSpeechTagger;

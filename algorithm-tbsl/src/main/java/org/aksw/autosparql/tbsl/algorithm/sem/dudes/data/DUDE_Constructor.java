@@ -1,6 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.sem.dudes.data;
 
 import java.io.StringReader;
+
 import org.aksw.autosparql.tbsl.algorithm.sem.dudes.reader.DUDE_Parser;
 import org.aksw.autosparql.tbsl.algorithm.sem.dudes.reader.ParseException;
 

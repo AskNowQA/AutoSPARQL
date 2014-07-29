@@ -1,7 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.exploration.Utils;
 
 
-import java.lang.Math;
 
 public class Levenshtein {
 

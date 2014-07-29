@@ -1,6 +1,7 @@
 package org.aksw.autosparql.commons.nlp.pos;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 public class StanfordPartOfSpeechTaggerTest

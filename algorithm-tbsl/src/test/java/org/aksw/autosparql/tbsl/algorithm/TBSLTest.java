@@ -5,13 +5,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
 
 import junit.framework.TestCase;
 
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.DBpediaKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.OxfordKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.OxfordKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.Entity;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslOxford;
@@ -26,7 +25,18 @@ import com.hp.hpl.jena.query.ResultSet;
 
 public class TBSLTest extends TestCase
 {
-	//	@Test
+	
+	@Test
+	public void testDBpediaLorenzBuehmann() throws Exception
+	{
+		//		String question = "Give me soccer clubs in Premier League.";
+		String question = "Give me all books written by Lorenz Bühmann.";
+		TemplateInstantiation ti = TbslDbpedia.INSTANCE.answerQuestion(question);
+		ResultSet rs = DBpediaKnowledgebase.INSTANCE.querySelect(ti.getQuery());
+		assertTrue(!rs.hasNext());		
+	}
+	
+	@Test
 	public void testDBpediaDanBrown() throws Exception
 	{
 		//		String question = "Give me soccer clubs in Premier League.";

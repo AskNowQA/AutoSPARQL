@@ -3,6 +3,7 @@ package org.aksw.autosparql.tbsl.algorithm.ltag.parser;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.FootNode;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.SubstNode;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TerminalNode;

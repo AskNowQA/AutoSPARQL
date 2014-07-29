@@ -4,10 +4,11 @@
  */
 package org.aksw.autosparql.tbsl.algorithm.paraphrase;
 
-import com.memetix.mst.language.Language;
-import com.memetix.mst.translate.Translate;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.memetix.mst.language.Language;
+import com.memetix.mst.translate.Translate;
 
 /**
  *

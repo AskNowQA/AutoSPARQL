@@ -1,6 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.learning.feature;
 
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.Knowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
 
 public abstract class AbstractFeatureExtractor implements FeatureExtractor{
 	

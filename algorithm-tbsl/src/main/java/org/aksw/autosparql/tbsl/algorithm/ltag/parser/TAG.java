@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;
 import org.aksw.autosparql.tbsl.algorithm.sem.util.Pair;
 

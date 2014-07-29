@@ -5,8 +5,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.aksw.autosparql.tbsl.algorithm.sem.drs.*;
-import org.aksw.autosparql.tbsl.algorithm.sem.util.Label;
+
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.Complex_DRS_Condition;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS_Condition;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.DRS_Quantifier;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.DiscourseReferent;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.Negated_DRS;
+import org.aksw.autosparql.tbsl.algorithm.sem.drs.Simple_DRS_Condition;
 
 public class DRSParser implements DRSParserConstants {
 

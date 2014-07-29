@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import org.aksw.autosparql.commons.nlp.lemma.StanfordLemmatizer;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Utils.DebugMode;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Utils.Levenshtein;

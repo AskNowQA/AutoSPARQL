@@ -6,16 +6,10 @@ package org.aksw.autosparql.commons.uri;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.aksw.autosparql.commons.qald.QaldLoader;
 import org.aksw.autosparql.commons.qald.Question;
-import org.aksw.autosparql.commons.qald.uri.Entity;
 import org.aksw.autosparql.commons.qald.uri.GoldEntity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.DiceSimilarity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.EuclideanDistance;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.JaccardSimilarity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
 
 /**
  * @author gerb

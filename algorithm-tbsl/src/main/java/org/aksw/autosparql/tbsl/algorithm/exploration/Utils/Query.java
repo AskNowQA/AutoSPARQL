@@ -1,7 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.exploration.Utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
+
 import org.aksw.autosparql.tbsl.algorithm.exploration.Sparql.Hypothesis;
 import org.aksw.autosparql.tbsl.algorithm.exploration.Sparql.Template;
 

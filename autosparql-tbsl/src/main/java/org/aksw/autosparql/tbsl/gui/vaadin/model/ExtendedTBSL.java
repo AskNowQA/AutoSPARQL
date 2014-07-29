@@ -12,9 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
+import org.aksw.autosparql.commons.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNetUnpacker;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.LocalKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.learning.TBSL;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
 import org.aksw.autosparql.tbsl.algorithm.learning.TbslOxford;

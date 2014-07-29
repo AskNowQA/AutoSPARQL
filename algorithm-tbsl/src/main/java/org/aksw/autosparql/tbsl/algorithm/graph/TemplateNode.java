@@ -2,6 +2,7 @@ package org.aksw.autosparql.tbsl.algorithm.graph;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 
 public class TemplateNode {

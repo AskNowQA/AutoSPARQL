@@ -1,6 +1,7 @@
 package org.aksw.autosparql.commons.index;
 
 import java.util.List;
+
 import org.aksw.autosparql.commons.nlp.lemma.StanfordLemmatizer;
 import org.aksw.autosparql.commons.nlp.pling.PlingStemmer;
 import org.dllearner.common.index.Index;

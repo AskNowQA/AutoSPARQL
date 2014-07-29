@@ -21,13 +21,13 @@ options {
 
 PARSER_BEGIN(LTAGTreeParser)
 
-package org.dllearner.algorithm.tbsl.ltag.reader;
+package org.aksw.autosparql.tbsl.algorithm.ltag.reader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.dllearner.algorithm.tbsl.ltag.data.*;
-import org.dllearner.algorithm.tbsl.ltag.agreement.*;
+import org.aksw.autosparql.tbsl.algorithm.ltag.data.*;
+import org.aksw.autosparql.tbsl.algorithm.ltag.agreement.*;
 
 public class LTAGTreeParser {
 
@@ -193,14 +193,16 @@ Feature Feat() :
 {
   Token raw;
 }
-{
+{
+
 	raw=<WORD>
-	{	  
+	{
+	  
    	return Feature.construct(raw.toString());
    }
 }
 
-TOKEN: {<WORD: (["a"-"z"]|["0"-"9"]|["?"]|["-"]|["_"]|["!"]|[","]|[";"]|["."]|[":"]|["/"])+>}
+TOKEN: {<WORD: (["a"-"z"]|["ä"]|["ö"]|["ü"]|["ß"]|["Ä"]|["Ö"]|["Ü"]|["À"]|["à"]|["Â"]|["â"]|["Æ"]|["æ"]|["Ç"]|["ç"]|["È"]|["è"]|["É"]|["é"]|["Ê"]|["ê"]|["Ë"]|["ë"]|["Î"]|["î"]|["Ï"]|["ï"]|["Ô"]|["ô"]|["Œ"]|["œ"]|["Ù"]|["ù"]|["Û"]|["û"]|["Ÿ"]|["ÿ"]|["0"-"9"]|["?"]|["-"]|["_"]|["!"]|[","]|[";"]|["."]|[":"]|["/"])+>} 
 
 TOKEN: {<CATEGORY: (["A"-"Z"])+>}
 

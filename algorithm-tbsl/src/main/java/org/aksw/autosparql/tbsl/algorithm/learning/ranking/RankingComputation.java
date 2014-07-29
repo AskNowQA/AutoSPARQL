@@ -3,6 +3,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning.ranking;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import org.aksw.autosparql.tbsl.algorithm.learning.Entity;
 import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;

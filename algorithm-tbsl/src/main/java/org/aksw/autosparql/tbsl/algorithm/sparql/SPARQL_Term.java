@@ -1,11 +1,5 @@
 package org.aksw.autosparql.tbsl.algorithm.sparql;
 
-import java.io.Serializable;
-
-import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Aggregate;
-import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_OrderBy;
-import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Term;
-import org.aksw.autosparql.tbsl.algorithm.sparql.SPARQL_Value;
 
 public class SPARQL_Term extends SPARQL_Value implements Cloneable
 {

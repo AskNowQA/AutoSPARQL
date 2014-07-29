@@ -2,6 +2,7 @@ package org.aksw.autosparql.tbsl.algorithm.sem.drs;
 
 import java.util.List;
 import java.util.Set;
+
 import org.aksw.autosparql.tbsl.algorithm.sem.util.Label;
 
 public interface DRS_Condition {
