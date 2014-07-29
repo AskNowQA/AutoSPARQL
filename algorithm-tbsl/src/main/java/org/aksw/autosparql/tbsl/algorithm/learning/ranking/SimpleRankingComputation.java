@@ -47,7 +47,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 			,Feature.TRIPLE_PROBABILITY
 			);
 	
-	public SimpleRankingComputation(Knowledgebase knowledgebase) throws MalformedURLException
+	public SimpleRankingComputation(Knowledgebase knowledgebase)
 	{
 		super(knowledgebase);
 		if(knowledgebase instanceof RemoteKnowledgebase)

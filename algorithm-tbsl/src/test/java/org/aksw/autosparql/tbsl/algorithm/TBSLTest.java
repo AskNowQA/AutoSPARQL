@@ -30,7 +30,7 @@ public class TBSLTest extends TestCase
 	public void testDBpediaLorenzBuehmann() throws Exception
 	{
 		//		String question = "Give me soccer clubs in Premier League.";
-		String question = "Give me all books written by Lorenz Bühmann.";
+		String question = "Give me all Persons born in München.";
 		TemplateInstantiation ti = TbslDbpedia.INSTANCE.answerQuestion(question);
 		ResultSet rs = DBpediaKnowledgebase.INSTANCE.querySelect(ti.getQuery());
 //		assertTrue(!rs.hasNext());		

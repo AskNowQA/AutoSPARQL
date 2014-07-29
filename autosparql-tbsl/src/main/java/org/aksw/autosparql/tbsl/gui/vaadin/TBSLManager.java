@@ -1,5 +1,6 @@
 package org.aksw.autosparql.tbsl.gui.vaadin;
 
+import java.net.MalformedURLException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.commons.knowledgebase.RemoteKnowledgebase;
@@ -43,7 +43,6 @@ import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
 import org.eclipse.jetty.util.log.Log;
-
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Node;
@@ -327,7 +326,7 @@ public class TBSLManager
 		}
 	}
 	
-	public Answer answerQuestion(String question){
+	public Answer answerQuestion(String question) {
 		logger.info("Question: " + question);
 		this.currentQuestion = question;
 		Answer answer = null;

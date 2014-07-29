@@ -152,10 +152,10 @@ public class TBSL
 	 * @return template instantiations sorted by score (last is highest is best)
 	 * @throws NoTemplateFoundException
 	 */
-	public TemplateInstantiation answerQuestion(String question) throws NoTemplateFoundException, MalformedURLException
+	public TemplateInstantiation answerQuestion(String question) throws NoTemplateFoundException
 	{return answerQuestion(question,Collections.<Double>emptyList());}
 
-	public TemplateInstantiation answerQuestion(String question, List<Double> parameters) throws NoTemplateFoundException, MalformedURLException{
+	public TemplateInstantiation answerQuestion(String question, List<Double> parameters) throws NoTemplateFoundException{
 		reset();
 
 		//1. Generate SPARQL query templates
