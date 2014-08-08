@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 import junit.framework.TestCase;
-
 import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
 import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.commons.knowledgebase.OxfordKnowledgebase;
@@ -20,7 +18,6 @@ import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.util.Prominences;
 import org.junit.Test;
-
 import com.hp.hpl.jena.query.ResultSet;
 
 public class TBSLTest extends TestCase
@@ -30,7 +27,7 @@ public class TBSLTest extends TestCase
 	public void testDBpediaLorenzBuehmann() throws Exception
 	{
 		//		String question = "Give me soccer clubs in Premier League.";
-		String question = "Give me all Persons born in München.";
+		String question = "Give me all Persons born in Berlin.";
 		TemplateInstantiation ti = TbslDbpedia.INSTANCE.answerQuestion(question);
 		ResultSet rs = DBpediaKnowledgebase.INSTANCE.querySelect(ti.getQuery());
 //		assertTrue(!rs.hasNext());		
@@ -70,4 +67,14 @@ public class TBSLTest extends TestCase
 		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
 	}
 
+	@Test
+	public void testOxfordMoreThanTwoBedrooms() throws Exception
+	{
+		assertFalse(((LocalKnowledgebase)TbslOxford.INSTANCE.getKnowledgebase()).getModel().isEmpty());
+		String question = "houses with more than 2 bedrooms.";
+		TemplateInstantiation ti = TbslOxford.INSTANCE.answerQuestion(question);
+		ResultSet rs = OxfordKnowledgebase.INSTANCE.querySelect(ti.getQuery());
+		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
+	}
+	
 }
