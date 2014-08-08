@@ -48,10 +48,11 @@ public class TripleProbabilityFeatureExtractor extends AbstractFeatureExtractor{
 		com.hp.hpl.jena.query.Query query = QueryFactory.create(instantiation.asQuery());
 		ElementGroup eg = (ElementGroup) query.getQueryPattern();
 		for(Element e : eg.getElements()){
-			for(Iterator<TriplePath> iter = ((ElementPathBlock) e).patternElts(); iter.hasNext();){
+			if(e instanceof ElementPathBlock)
+			{for(Iterator<TriplePath> iter = ((ElementPathBlock) e).patternElts(); iter.hasNext();){
 				Triple t = iter.next().asTriple();
 				triples.add(t);
-			}
+			}}
 		}
 		//extract types of variables if exist
 		Map<Node, Node> variableToClass = new HashMap<Node, Node>();
