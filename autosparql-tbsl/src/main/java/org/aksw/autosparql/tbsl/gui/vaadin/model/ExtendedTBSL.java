@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.commons.knowledgebase.RemoteKnowledgebase;
 import org.aksw.autosparql.commons.nlp.wordnet.WordNetUnpacker;
@@ -24,7 +23,7 @@ import org.aksw.autosparql.tbsl.gui.vaadin.util.FallbackIndex;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.DBpediaInfoLabel;
 import org.aksw.autosparql.tbsl.gui.vaadin.widget.OxfordInfoLabel;
 import org.aksw.sparql2nl.naturallanguagegeneration.SimpleNLGwithPostprocessing;
-
+import org.dllearner.kb.sparql.SparqlEndpoint;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -264,7 +263,9 @@ public class ExtendedTBSL {
 		InfoTemplate infoTemplate = new InfoTemplate(infoTemplateHtml, null);
 
 		List<String> exampleQuestions = loadQuestions(ExtendedTBSL.class.getClassLoader().getResourceAsStream("dbpedia_example_questions.txt"));
-		SimpleNLGwithPostprocessing nlg = new SimpleNLGwithPostprocessing(((RemoteKnowledgebase)TbslDbpedia.INSTANCE.getKnowledgebase()).getEndpoint(),Manager.getInstance().getCacheDir(),WordNetUnpacker.getUnpackedWordNetDir().getAbsolutePath());
+		SparqlEndpoint endpoint = ((RemoteKnowledgebase)TbslDbpedia.INSTANCE.getKnowledgebase()).getEndpoint();
+		String cacheDir = Manager.getInstance().getCacheDir();
+		SimpleNLGwithPostprocessing nlg = new SimpleNLGwithPostprocessing(endpoint,cacheDir,WordNetUnpacker.getUnpackedWordNetDir().getAbsolutePath());
 		
 		ExtendedTBSL eTBSL = new ExtendedTBSL(
 				TbslDbpedia.INSTANCE, 
