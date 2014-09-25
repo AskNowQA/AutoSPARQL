@@ -1,12 +1,11 @@
 package org.aksw.autosparql.commons.knowledgebase;
 
-import org.aksw.autosparql.commons.index.Indices;
-import org.dllearner.common.index.Index;
-import org.dllearner.common.index.MappingBasedIndex;
+import org.aksw.rdfindex.Index;
+import org.aksw.rdfindex.Indices;
+import org.aksw.rdfindex.MappingBasedIndex;
 import org.dllearner.kb.sparql.ExtractionDBCache;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 import org.dllearner.kb.sparql.SparqlQuery;
-
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 

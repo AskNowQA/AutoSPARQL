@@ -9,15 +9,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.SortedSet;
 import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
 import org.apache.log4j.Logger;
-import org.dllearner.common.index.Index;
-import org.dllearner.common.index.IndexResultItem;
-import org.dllearner.common.index.IndexResultSet;
+import org.dllearner.index.Index;
+import org.dllearner.index.IndexItem;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
 
@@ -74,10 +73,10 @@ public class SimpleEntityDisambiguation {
 				// disable system.out
 				PrintStream out = System.out;
 				System.setOut(new PrintStream(new OutputStream() {@Override public void write(int arg0) throws IOException {}}));
-				IndexResultSet rs = index.getResourcesWithScores(word, 10);
+				SortedSet<IndexItem> items = index.getResourcesWithScores(word, 10);
 				// enable again
 				System.setOut(out);
-				for(IndexResultItem item : rs.getItems()){
+				for(IndexItem item : items){
 					String uri = item.getUri();
 					String label = item.getLabel();
 					if(label == null){

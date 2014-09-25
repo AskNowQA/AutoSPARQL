@@ -21,3 +21,6 @@ algorithm-tbsl/dbpedia/
 autosparql-tbsl/DBpedia Live/
 autosparql-tbsl/dbpedia/
 autosparql-tbsl/src/main/webapp/VAADIN/
+*~
+cache
+errorlog

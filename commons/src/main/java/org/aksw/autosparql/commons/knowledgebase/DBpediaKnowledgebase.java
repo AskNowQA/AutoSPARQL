@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
-
 import org.aksw.autosparql.commons.index.SolrServer;
-import org.dllearner.common.index.MappingBasedIndex;
+import org.aksw.rdfindex.MappingBasedIndex;
 import org.dllearner.kb.sparql.SparqlEndpoint;
 
 public class DBpediaKnowledgebase extends RemoteKnowledgebase

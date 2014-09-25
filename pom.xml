@@ -73,16 +73,15 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.aksw.sparql2nl</groupId>
+				<groupId>org.aksw.semweb2nl</groupId>
 				<artifactId>sparql2nl</artifactId>
-				<version>0.0.1-20140703.124428-374</version>
-				<exclusions>
+				<version>0.0.1-SNAPSHOT</version>
+<!-- 				<exclusions>
 					<exclusion>
 						<groupId>org.apache.tomcat</groupId>
 						<artifactId>tomcat-catalina</artifactId>
-						<!-- <version>7.0.42</version> -->
 					</exclusion>
-				</exclusions>
+				</exclusions> -->
 			</dependency>
 
 			<dependency>
@@ -222,7 +221,11 @@
 				<version>1.0-SNAPSHOT</version>
 				<!-- <version>1.0-20140220.145832-537</version> -->
 			</dependency>
-
+		<dependency>
+			<groupId>org.dllearner</groupId>
+			<artifactId>index</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 			<dependency>
 				<groupId>org.dllearner</groupId>
 				<artifactId>components-ext</artifactId>

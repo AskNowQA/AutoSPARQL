@@ -265,7 +265,7 @@ public class ExtendedTBSL {
 		List<String> exampleQuestions = loadQuestions(ExtendedTBSL.class.getClassLoader().getResourceAsStream("dbpedia_example_questions.txt"));
 		SparqlEndpoint endpoint = ((RemoteKnowledgebase)TbslDbpedia.INSTANCE.getKnowledgebase()).getEndpoint();
 		String cacheDir = Manager.getInstance().getCacheDir();
-		SimpleNLGwithPostprocessing nlg = new SimpleNLGwithPostprocessing(endpoint,cacheDir,WordNetUnpacker.getUnpackedWordNetDir().getAbsolutePath());
+		SimpleNLGwithPostprocessing nlg = new SimpleNLGwithPostprocessing(endpoint,WordNetUnpacker.getUnpackedWordNetDir().getAbsolutePath());
 		
 		ExtendedTBSL eTBSL = new ExtendedTBSL(
 				TbslDbpedia.INSTANCE, 

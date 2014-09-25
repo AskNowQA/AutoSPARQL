@@ -1,7 +1,6 @@
 package org.aksw.autosparql.commons.knowledgebase;
 
-import org.aksw.autosparql.commons.index.Indices;
-
+import org.aksw.rdfindex.Indices;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;

@@ -63,22 +63,13 @@ public class SolrSearch implements Search{
 		return getResources(queryString, hitsPerPage);
 	}
 	
-	@Override
-	public List<String> getResources(String queryString, int limit) {
-		return getResources(queryString, limit, 0);
-	}
-
-	@Override
-	public List<String> getResources(String queryString, int limit, int offset) {
-		return findResources(queryString, limit, offset);
-	}
 	
-	protected List<String> findResources(String queryString, int limit, int offset){
+	public List<String> getResources(String queryString, int limit){
 		List<String> resources = new ArrayList<String>();
 		QueryResponse response;
 		try {
 		SolrQuery q = new SolrQuery((searchField != null) ? searchField  + ":" + queryString : queryString);
-		q.setStart(offset);
+//		q.setStart(offset);
 		q.setRows(limit);
 		response = server.query(q);
 //			ModifiableSolrParams params = new ModifiableSolrParams();

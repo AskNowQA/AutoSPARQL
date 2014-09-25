@@ -2,12 +2,13 @@ package org.aksw.autosparql.commons.index;
 
 import org.aksw.autosparql.commons.search.DbpediaFilter;
 import org.aksw.autosparql.commons.search.FilteredIndex;
-import org.dllearner.common.index.HierarchicalIndex;
-import org.dllearner.common.index.Index;
+import org.aksw.rdfindex.HierarchicalIndex;
+import org.aksw.rdfindex.Index;
+import org.aksw.rdfindex.Indices;
+import org.aksw.rdfindex.SOLRIndex;
 
-/** @author konrad
- * Capsules the necessary settings for the AKSW solr server settings
-*/
+/** Capsules the necessary settings for the AKSW SOLR server settings
+ *   @author konrad */
 public enum SolrServer
 {
 	INSTANCE;
@@ -30,11 +31,11 @@ public enum SolrServer
 //	// boa index already integrated
 //	private SolrServerAksw()
 //	{
-//		resourcesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
-//		classesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
-//		dataPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
-//		objectPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_object_properties");
-//		for(BugfixedSolrIndex index: new BugfixedSolrIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
+//		resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
+//		classesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
+//		dataPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
+//		objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_object_properties");
+//		for(SOLRIndex index: new SOLRIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
 //		{index.setPrimarySearchField("label");}
 //		dbpediaIndices = new Indices(resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex);
 //	}
@@ -42,13 +43,13 @@ public enum SolrServer
 // separate boa index
 	private SolrServer()
 	{
-		BugfixedSolrIndex resourcesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN_DBPEDIA_RESOURCES);
-		BugfixedSolrIndex classesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN_DBPEDIA_CLASSES);
-		BugfixedSolrIndex dataPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN_DBPEDIA_DATA_PROPERTIES);
-		BugfixedSolrIndex objectPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN_DBPEDIA_OBJECT_PROPERTIES);
-		for(BugfixedSolrIndex index: new BugfixedSolrIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
+		SOLRIndex resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN_DBPEDIA_RESOURCES);
+		SOLRIndex classesIndex = new SOLRIndex(SOLR_SERVER_URI_EN_DBPEDIA_CLASSES);
+		SOLRIndex dataPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN_DBPEDIA_DATA_PROPERTIES);
+		SOLRIndex objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN_DBPEDIA_OBJECT_PROPERTIES);
+		for(SOLRIndex index: new SOLRIndex[] {resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex})
 		{index.setPrimarySearchField("label");}
-		BugfixedSolrIndex boaIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"boa","nlr-no-var");
+		SOLRIndex boaIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"boa","nlr-no-var");
 		boaIndex.setSortField("boa-score");
 //		boaIndex.getResources("test");
 		

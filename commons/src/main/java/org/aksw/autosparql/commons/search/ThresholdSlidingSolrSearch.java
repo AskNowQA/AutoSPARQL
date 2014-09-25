@@ -36,7 +36,7 @@ public class ThresholdSlidingSolrSearch extends SolrSearch {
 	
 	
 	@Override
-	public List<String> getResources(String queryString, int limit, int offset) {
+	public List<String> getResources(String queryString, int limit) {
 		List<String> resources = new ArrayList<String>();
 		
 		
@@ -48,7 +48,7 @@ public class ThresholdSlidingSolrSearch extends SolrSearch {
 				queryWithThreshold = queryString + "~" + format.format(threshold);
 			}
 			
-			resources.addAll(findResources(queryWithThreshold, limit - resources.size(), 0));
+			resources.addAll(getResources(queryWithThreshold, limit - resources.size()));
 			threshold -= step;
 		}
 		

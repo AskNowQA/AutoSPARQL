@@ -15,13 +15,11 @@ public class SparqlQueriable
 {
 	protected QueryExecutionFactory qef;
 
-	public SparqlQueriable(SparqlEndpoint endpoint, String cacheDirectory)
+	public SparqlQueriable(SparqlEndpoint endpoint,String cacheName)
 	{			
 		qef = new QueryExecutionFactoryHttp(endpoint.getURL().toString(), endpoint.getDefaultGraphURIs());
-		if(cacheDirectory != null){
-				CacheFrontend frontend = CacheUtilsH2.createCacheFrontend("sparqlquerieable", false, TimeUnit.DAYS.toMillis(7));
-				qef = new QueryExecutionFactoryCacheEx(qef, frontend);
-		}
+		CacheFrontend frontend = CacheUtilsH2.createCacheFrontend(cacheName, false, TimeUnit.DAYS.toMillis(7));
+		qef = new QueryExecutionFactoryCacheEx(qef, frontend);
 	}
 
 	public SparqlQueriable(Model model)
