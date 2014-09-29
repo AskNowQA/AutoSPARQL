@@ -14,9 +14,9 @@ import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Template;
+import org.aksw.rdfindex.Index;
+import org.aksw.rdfindex.IndexItem;
 import org.apache.log4j.Logger;
-import org.dllearner.index.Index;
-import org.dllearner.index.IndexItem;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
 
