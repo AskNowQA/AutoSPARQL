@@ -177,7 +177,7 @@ public class UDRS implements SemanticRepresentation {
 				
 				Label winnerLabel = null;
 				Label loserLabel = null;
-								
+
 				if (!drs1.m_Label.equals(dc.getSub())) {
 					winnerLabel = drs2.m_Label;
 					loserLabel = dc.getSub();

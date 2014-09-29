@@ -28,7 +28,7 @@ public class WordnetModule {
 
 		 ArrayList<String> semantics=new ArrayList<String>();
 		 ArrayList<String> tmp_semantics=new ArrayList<String>();
-		 ArrayList<String> result_SemanticsMatchProperties=new ArrayList<String>();
+//		 ArrayList<String> result_SemanticsMatchProperties=new ArrayList<String>();
 		 if(property_to_compare_with.contains("_")){
 			 String[] fix = property_to_compare_with.split("_");
 			 //here add also lemmatiser

@@ -223,7 +223,7 @@ public class Dude implements SemanticRepresentation{
 		List<Argument> args = new ArrayList<Argument>();
 		List<DominanceConstraint> dcs = new ArrayList<DominanceConstraint>();
 		List<Slot> ls = new ArrayList<Slot>();
-		List<BasicSlot> lbs = new ArrayList<BasicSlot>();
+//		List<BasicSlot> lbs = new ArrayList<BasicSlot>();
 		
 		for (DRS component : components) {
 			cs.add(component.clone());

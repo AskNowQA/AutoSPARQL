@@ -44,7 +44,7 @@ public class queryInformation {
 		String result ="NONE";
 		try{
 			result=this.hashMap.get(key);
-			if(result.isEmpty()||result==null) result="NONE";
+			if(result==null||result.isEmpty()) result="NONE";
 		}
 		catch (Exception e){
 			return "NONE";

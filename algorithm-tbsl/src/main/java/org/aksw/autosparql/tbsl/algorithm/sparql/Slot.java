@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Slot implements Serializable{
+public class Slot implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = 8672756914248710435L;
 	
@@ -164,10 +164,10 @@ public class Slot implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Slot other = (Slot) obj;
-		if(other.type == type && other.token == token){
-			return true;
-		}
-		return false;
+		
+		if(other.type != type) {return false;}
+		if(other.token==null) return token==null;
+		return other.token.equals(token);
 	}
 	
 	@Override
@@ -178,6 +178,5 @@ public class Slot implements Serializable{
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-	
-	
+		
 }

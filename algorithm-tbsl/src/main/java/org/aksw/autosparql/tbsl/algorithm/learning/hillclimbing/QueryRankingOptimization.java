@@ -203,7 +203,7 @@ public class QueryRankingOptimization {
 				logger.error("No template generated for " + q.languageToQuestion.get(LANGUAGE), e);
 			} catch (com.hp.hpl.jena.query.QueryParseException e) {
 				logger.warn(
-						"Invalid SPARQL query\n" + templateInstance.getQuery() + " for "
+						"Invalid SPARQL query\n" + templateInstance==null?null:templateInstance.getQuery() + " for "
 								+ q.languageToQuestion.get(LANGUAGE), e);
 			}
 			catch (Exception e) {

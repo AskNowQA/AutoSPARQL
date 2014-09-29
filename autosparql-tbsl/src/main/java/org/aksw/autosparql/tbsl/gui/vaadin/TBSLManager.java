@@ -624,7 +624,7 @@ public class TBSLManager
 		}
 		String targetVar = getActiveTBSL().getTargetVar();
 		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
-		
+		// TODO: can pb be null?
 		pb.addTriple(new Triple(Node.createVariable(targetVar), Node.createURI(propertyURI), Node.createVariable("value")));
 		List<String> vars = new ArrayList<String>();
 		vars.add("value");

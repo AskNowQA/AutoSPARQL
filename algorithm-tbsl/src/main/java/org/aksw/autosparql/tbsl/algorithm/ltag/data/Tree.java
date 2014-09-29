@@ -6,7 +6,7 @@ import java.util.List;
 import org.aksw.autosparql.tbsl.algorithm.ltag.agreement.Feature;
 
 
-public class Tree implements TreeNode {
+public class Tree implements TreeNode, Cloneable {
 
 	Category category;
 	List<TreeNode> children;

@@ -70,7 +70,7 @@ public class testClass_new {
 		long start_template = System.currentTimeMillis();
 		//temp_list_result=testobject.createTemplates(question);
 		
-		Map<QueryPair,String> tm = new HashMap<QueryPair, String>();
+//		Map<QueryPair,String> tm = new HashMap<QueryPair, String>();
 		
 		/*
 		 * Generate Templates

@@ -1,6 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.sem.util;
 
-public class SortalRestriction {
+public class SortalRestriction implements Cloneable {
 
 	String m_Referent;
 	String m_Sort;

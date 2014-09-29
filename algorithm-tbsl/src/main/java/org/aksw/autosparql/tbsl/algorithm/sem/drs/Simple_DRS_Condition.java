@@ -6,11 +6,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.aksw.autosparql.tbsl.algorithm.sem.util.Label;
 
-public class Simple_DRS_Condition implements DRS_Condition{
-
+public class Simple_DRS_Condition implements DRS_Condition, Cloneable{
 
 	// A simple DRS condition consists of a predicate
 	String m_Predicate;

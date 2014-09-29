@@ -70,7 +70,7 @@ public class Index_utils {
 	
 
 public static ArrayList<String> searchIndexForResource(String string, SQLiteIndex myindex) throws SQLException{
-	HashMap<String,Float> hm = new HashMap<String,Float>();
+//	HashMap<String,Float> hm = new HashMap<String,Float>();
 string=string.replace("_", " ");
 		string=string.replace("-", " ");
 		string=string.replace(".", " ");

@@ -5,13 +5,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.aksw.autosparql.tbsl.algorithm.sem.util.Label;
 import org.aksw.autosparql.tbsl.algorithm.sem.util.SemanticRepresentation;
 
 
 
-public class DRS implements SemanticRepresentation {
+public class DRS implements SemanticRepresentation, Cloneable {
 
 	// A DRS has a set(!) of discourse referents
 	Set<DiscourseReferent> m_DiscourseReferents;

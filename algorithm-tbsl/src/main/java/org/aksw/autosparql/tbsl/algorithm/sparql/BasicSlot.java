@@ -1,7 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.sparql;
 
 
-public class BasicSlot {
+public class BasicSlot implements Cloneable {
 
 	String anchor;
 	String token;

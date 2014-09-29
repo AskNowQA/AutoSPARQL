@@ -1,7 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.sem.util;
 
 
-public class DominanceConstraint {
+public class DominanceConstraint implements Cloneable {
 
 	Label m_Super;
 	Label m_Sub;

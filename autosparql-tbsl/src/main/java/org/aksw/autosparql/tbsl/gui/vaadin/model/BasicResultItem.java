@@ -21,7 +21,7 @@ public class BasicResultItem implements ResultItem{
 	
 	public BasicResultItem(String uri, String label, String description, String imageURL, Map<String, Object> data) {
 		// workaround for faulty dbpedia urls
-		if(imageURL!=null) {imageURL.replace("http://upload.wikimedia.org/wikipedia/commons/","http://upload.wikimedia.org/wikipedia/en/");}
+		if(imageURL!=null) {imageURL=imageURL.replace("http://upload.wikimedia.org/wikipedia/commons/","http://upload.wikimedia.org/wikipedia/en/");}
 		this.uri = uri;
 		this.label = label;
 		this.description = description;

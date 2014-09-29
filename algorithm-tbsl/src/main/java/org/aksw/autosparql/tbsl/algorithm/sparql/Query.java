@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 public class Query implements Serializable {
 	
@@ -473,7 +474,7 @@ public class Query implements Serializable {
 		List<SPARQL_Triple> triples = new ArrayList<SPARQL_Triple>();
 		
 		for(SPARQL_Triple triple : conditions){
-			if(triple.getProperty().equals("rdf:type")){
+			if(triple.getProperty().toString().equals("rdf:type")||triple.getProperty().toString().equals(RDF.type.getURI())){
 				triples.add(triple);
 			}
 		}

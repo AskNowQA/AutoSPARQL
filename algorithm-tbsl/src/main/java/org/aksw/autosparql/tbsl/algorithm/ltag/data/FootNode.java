@@ -11,7 +11,7 @@ import org.aksw.autosparql.tbsl.algorithm.ltag.agreement.Feature;
  * category as the root node. No adjunction is allowed at a FootNode.
  **/
 
-public class FootNode implements TreeNode {
+public class FootNode implements TreeNode, Cloneable {
 
 	Category category;
 	Tree parent;

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.aksw.autosparql.commons.qald.uri;
 
@@ -15,10 +15,6 @@ import org.aksw.autosparql.commons.uri.Resource;
  */
 public class Entity implements Serializable {
 
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -27,9 +23,6 @@ public class Entity implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -47,28 +40,24 @@ public class Entity implements Serializable {
 		return true;
 	}
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7859357081713774767L;
-	
+
 	public String label = "";
 	public String type = "";
 	public List<Resource> uris = new ArrayList<Resource>();
 
 	/**
-	 * 
 	 * @param label
 	 * @param type
 	 */
 	public Entity(String label, String type) {
-		
+
 		this.label = label;
 		this.type = type;
 	}
-	
+
 	public String toString(){
-		
+
 		return label + "("+type+")";
 	}
 

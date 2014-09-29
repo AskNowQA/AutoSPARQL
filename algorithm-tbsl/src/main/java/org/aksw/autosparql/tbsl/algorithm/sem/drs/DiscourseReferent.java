@@ -1,6 +1,6 @@
 package org.aksw.autosparql.tbsl.algorithm.sem.drs;
 
-public class DiscourseReferent {
+public class DiscourseReferent implements Cloneable {
 
 	String m_Referent;
 	boolean marked;

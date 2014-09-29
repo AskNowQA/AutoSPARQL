@@ -269,7 +269,7 @@ public class ServerUtil {
 	      finally
 	      {
 	          //close the connection, set all objects to null
-	          connection.disconnect();
+	          if(connection!=null) {connection.disconnect();}
 	          rd = null;
 	          sb = null;
 	          wr = null;

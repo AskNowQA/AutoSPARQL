@@ -32,7 +32,7 @@ public class Label {
 	public boolean occursAsSubIn(Set<DominanceConstraint> constraints,DominanceConstraint constraint) {
 		
 		for (DominanceConstraint c : constraints) {
-			if ( !c.equals(constraint) & c.getSub().equals(this) ) { return true; }
+			if ( !c.equals(constraint) && c.getSub().equals(this) ) { return true; }
 		}
 		return false;
 	}

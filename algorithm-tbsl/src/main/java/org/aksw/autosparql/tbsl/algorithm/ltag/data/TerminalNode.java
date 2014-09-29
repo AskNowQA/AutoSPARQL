@@ -11,7 +11,7 @@ import org.aksw.autosparql.tbsl.algorithm.ltag.agreement.Feature;
  * category of lowest projection (N,V,etc.) and contains the terminal string.
  **/
 
-public class TerminalNode implements TreeNode {
+public class TerminalNode implements TreeNode, Cloneable {
 
 	private String terminal;
 	Category category;

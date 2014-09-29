@@ -10,6 +10,7 @@ public class InfoTemplate {
 	
 	public InfoTemplate(String htmlString, Map<String, String> propertyMap) {
 		this.htmlString = htmlString;
+		this.propertyMap=propertyMap;
 	}
 	
 	public String getHtmlString() {

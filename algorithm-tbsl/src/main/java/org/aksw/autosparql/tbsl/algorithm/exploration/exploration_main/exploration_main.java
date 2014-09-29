@@ -555,7 +555,7 @@ public class exploration_main {
 	    }
 	    for(queryInformation s : querylist){
 	    	System.out.println("");
-	    	if(s.getId()==""||s.getId()==null)System.out.println("NO");
+	    	if(s.getId()==null||s.getId().isEmpty())System.out.println("NO");
 			System.out.println("ID: "+s.getId());
 			System.out.println("Query: "+s.getQuery());
 			System.out.println("Type: "+s.getType());
@@ -604,7 +604,7 @@ private static ArrayList<queryInformation> generateStructTextfile(String filenam
 	    
 	    for(queryInformation s : querylist){
 	    	System.out.println("");
-	    	if(s.getId()==""||s.getId()==null)System.out.println("NO");
+	    	if(s.getId()==null||s.getId().isEmpty())System.out.println("NO");
 			System.out.println("ID: "+s.getId());
 			System.out.println("Query: "+s.getQuery());
 			System.out.println("Type: "+s.getType());

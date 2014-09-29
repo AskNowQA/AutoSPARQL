@@ -435,7 +435,7 @@ public class MainInterface {
 				}
 			}
 
-			else if(q.getRank()>Setting.getThresholdAsk()&go_on &q.getQuery().contains("ASK")){
+			else if(q.getRank()>Setting.getThresholdAsk()&&go_on &&q.getQuery().contains("ASK")){
 				ArrayList<String> answer_tmp = new ArrayList<String>();
 				answer_tmp=ServerUtil.requestAnswerFromServer(q.getQuery());
 				System.out.println("Sending Query to Server: "+q.getQuery());

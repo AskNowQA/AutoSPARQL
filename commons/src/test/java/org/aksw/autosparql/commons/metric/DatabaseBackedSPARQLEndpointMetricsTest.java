@@ -12,10 +12,10 @@ public class DatabaseBackedSPARQLEndpointMetricsTest {
 	@Test
 	public void testPmiMetric() throws Exception
 	{
-	
+
 		String NS = "http://dbpedia.org/ontology/";
 		String NS_Res = "http://dbpedia.org/resource/";
-		
+
 		NamedClass person = new NamedClass(NS + "Person");
 		NamedClass writer = new NamedClass(NS + "Writer");
 		NamedClass book = new NamedClass(NS + "Book");
@@ -28,48 +28,48 @@ public class DatabaseBackedSPARQLEndpointMetricsTest {
 		Individual bradPittBoxer = new Individual(NS_Res + "Brad_Pitt_%28boxer%29");
 		Individual danBrown = new Individual(NS_Res + "Dan_Brown");
 		Individual danBrowne = new Individual(NS_Res + "Dan_Browne");
-		
+
 		SPARQLEndpointMetrics pmiGen = SPARQLEndpointMetrics.getDbpediaMetrics();
-		
-		pmiGen.getPMI(new NamedClass(NS + "River"), new NamedClass(NS + "Film"));	
+
+		pmiGen.getPMI(new NamedClass(NS + "River"), new NamedClass(NS + "Film"));
 		pmiGen.getDirectedPMI(pAuthor, person);
-		
+
 		System.out.println("#########################################");
-		
+
 		pmiGen.getDirectedPMI(pAuthor, writer);
-		
+
 		System.out.println("#########################################");
-		
+
 		pmiGen.getDirectedPMI(book, pAuthor);
-		
+
 		System.out.println("#########################################");
-		
+
 		pmiGen.getDirection(writer, pAuthor, book);
-		
+
 		System.out.println("#########################################");
-		
+
 //		pmiGen.getDirection(person, pStarring, film);
-//		
+//
 //		System.out.println("#########################################");
-//		
+//
 //		pmiGen.getMostFrequentProperties(person, film);
-//		
+//
 //		System.out.println("#########################################");
-//		
+//
 //		pmiGen.getMostFrequentProperties(film, actor);
-//		
+//
 //		System.out.println("#########################################");
-//		
+//
 //		pmiGen.getMostFrequentProperties(film, person);
-//		
+//
 //		System.out.println("#########################################");
-		
+
 		pmiGen.getOccurences(book);
 		pmiGen.getOccurencesInObjectPosition(book);
 		pmiGen.getOccurencesInSubjectPosition(book);
-		
+
 		System.out.println("#########################################");
-		
+
 //		System.out.println("Goodness: " + pmiGen.getGoodness(film, pStarring, person));
 		{
 		double g1,g2,g3,g4;

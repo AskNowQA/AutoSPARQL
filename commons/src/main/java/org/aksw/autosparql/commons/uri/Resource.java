@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.aksw.autosparql.commons.uri;
 
@@ -24,10 +24,10 @@ public class Resource {
 	public String goldLabel = "";
 	public String questionId = "";
 	public List<String> types = new ArrayList<String>();
-	public String dbpediaUri; 
-	
+	public String dbpediaUri;
+
 	public Resource(Integer id, String label) {
-		
+
 		this.questionId = id + "";
 		this.goldLabel =  label;
 	}
@@ -35,7 +35,7 @@ public class Resource {
 	public Resource() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Resource(String uri) {this.uri=uri;}
 
 	/* (non-Javadoc)
@@ -43,12 +43,14 @@ public class Resource {
 	 */
 	@Override
 	public String toString() {
-		return uri + " ("+questionId +", "+goldLabel+")"; 
+		return uri + " ("+questionId +", "+goldLabel+")";
 	}
-	
+
 	@Override public boolean equals(Object o)
 	{
 		if(!(o instanceof Resource)) return false;
 		return this.uri.equals(((Resource)o).uri);
 	}
+
+	@Override public int hashCode() {return uri.hashCode();}
 }

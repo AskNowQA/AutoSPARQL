@@ -222,7 +222,7 @@ public class TBSL
 	//	public SortedSet<TemplateInstantiation> answerQuestion(Template template, List<Double> parameters)
 	public TemplateInstantiation answerQuestion(Template template, List<Double> parameters) throws MalformedURLException
 	{
-		SortedSet<TemplateInstantiation> instantiations = new TreeSet<>();
+//		SortedSet<TemplateInstantiation> instantiations = new TreeSet<>();
 		reset();
 
 		//1. set the SPARQL query templates

@@ -12,7 +12,7 @@ import org.aksw.autosparql.tbsl.algorithm.ltag.agreement.Feature;
  * this substitution node
  **/
 
-public class SubstNode implements TreeNode {
+public class SubstNode implements TreeNode, Cloneable {
 
 	Category category;
 	String index;

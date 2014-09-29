@@ -87,4 +87,5 @@ public class SPARQL_Filter implements Serializable, Cloneable
 		return retVal;
 	}
 
+	@Override public int hashCode() {return terms.hashCode()|(and?1:0);}
 }

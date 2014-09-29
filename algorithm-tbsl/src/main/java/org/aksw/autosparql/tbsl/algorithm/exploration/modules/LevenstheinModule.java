@@ -24,7 +24,7 @@ public class LevenstheinModule {
 		 */
 		
 		String dateiname="/home/swalter/workspace/MostPropertyCombinations";
-		HashMap<String, String> loaded_properties = new HashMap<String, String>();
+//		HashMap<String, String> loaded_properties = new HashMap<String, String>();
 		
 		boolean found_property_in_loaded_property=false;
 		boolean found_property_in_created_property=false;
