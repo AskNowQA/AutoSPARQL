@@ -210,10 +210,10 @@
 			</dependency>
 
 			<!-- dl learner -->
-			<!-- <dependency> <groupId>org.dllearner</groupId> <artifactId>dllearner-parent</artifactId> 
-				<version>1.0-20140130.084757-498</version> </dependency> <dependency> <groupId>org.dllearner</groupId> 
-				<artifactId>components-core</artifactId> <version>1.0-20140130.084529-501</version> 
-				</dependency> <dependency> <groupId>org.dllearner</groupId> <artifactId>components-ext</artifactId> 
+			<!-- <dependency> <groupId>org.dllearner</groupId> <artifactId>dllearner-parent</artifactId>
+				<version>1.0-20140130.084757-498</version> </dependency> <dependency> <groupId>org.dllearner</groupId>
+				<artifactId>components-core</artifactId> <version>1.0-20140130.084529-501</version>
+				</dependency> <dependency> <groupId>org.dllearner</groupId> <artifactId>components-ext</artifactId>
 				<version>1.0-20140130.084749-500</version> </dependency> -->
 			<dependency>
 				<groupId>org.dllearner</groupId>
@@ -330,7 +330,7 @@
 				<artifactId>bliki-core</artifactId>
 				<version>3.0.16</version>
 			</dependency>
-			<!-- <dependency> <groupId>opennlp</groupId> <artifactId>tools</artifactId> 
+			<!-- <dependency> <groupId>opennlp</groupId> <artifactId>tools</artifactId>
 				<version>1.5.0</version> </dependency> -->
 
 
@@ -463,7 +463,18 @@
 			<name>University Leipzig, AKSW Maven2 Repository</name>
 			<url>http://maven.aksw.org/archiva/repository/snapshots</url>
 		</repository>
-		<!-- <repository> <id>apache-repo-releases</id> <url>https://repository.apache.org/content/repositories/releases/</url> 
+		<!--  temporarily. todo: move all dependencies to aksw maven repo -->
+		<repository>
+			<id>central</id>
+			<url>http://uk.maven.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<!-- <repository> <id>apache-repo-releases</id> <url>https://repository.apache.org/content/repositories/releases/</url>
 			<releases> <enabled>true</enabled> </releases> </repository> -->
 	</repositories>
 
