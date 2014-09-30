@@ -28,7 +28,6 @@
 			<type>jar</type>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.aksw.autosparql</groupId>
 			<artifactId>commons</artifactId>

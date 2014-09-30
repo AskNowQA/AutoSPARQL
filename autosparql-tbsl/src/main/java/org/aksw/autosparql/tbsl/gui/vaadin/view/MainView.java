@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.aksw.autosparql.commons.knowledgebase.Knowledgebase;
 import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
 import org.aksw.autosparql.commons.knowledgebase.RemoteKnowledgebase;
@@ -38,7 +37,6 @@ import org.aksw.autosparql.tbsl.gui.vaadin.widget.TBSLProgressListener;
 import org.vaadin.appfoundation.view.View;
 import org.vaadin.appfoundation.view.ViewContainer;
 import org.vaadin.sasha.portallayout.PortalLayout;
-
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -78,50 +76,50 @@ import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.themes.BaseTheme;
 
 @SuppressWarnings("serial") public class MainView extends VerticalLayout implements ViewContainer, TBSLProgressListener{
-	
+
 	private static final int REFRESH_INTERVAL = 1000;
-	
+
 	private VerticalLayout mainPanel;
 	private View currentView;
-	
+
 	private Embedded knowledgebaseLogo;
 	private NativeSelect tbslSelector;
-	
+
 	private NativeButton executeButton;
 //	private TextField questionField;
 	private ComboBox questionBox;
-	
+
 	private VerticalLayout resultHolderPanel;
 	private Table resultTable;
 	private ComboBox propertySelector;
-	
+
 	private HorizontalLayout feedbackPanel;
 	private Label feedbackLabel;
 	private NativeButton wrongSolutionButton;
-	
-	
+
+
 	private boolean executing = false;
 	private Answer answer;
-	
+
 	private Refresher refresher;
-	
+
 	private Button refineButton;
-	
+
 	private List<Object> positiveMarkedRows;
 	private List<Object> negativeMarkedRows;
-	
+
 	VerticalLayout l;
-	
+
 	public MainView() {
 		setSizeFull();
-		
+
 //		createHeader();
 		createMainPanel();
 //		createFooter();
-		
+
 		reset();
 		UserSession.getManager().setProgressListener(this);
-		
+
 		refresher = new Refresher();
 		refresher.setRefreshInterval(REFRESH_INTERVAL);
 		refresher.setEnabled(false);
@@ -134,17 +132,17 @@ import com.vaadin.ui.themes.BaseTheme;
 			        executeButton.setEnabled(true);
 			        showAnswer(answer);
 			      }
-				
+
 			}
 		});
 	   addComponent(refresher);
 	}
-	
+
 	@Override
 	public void attach() {
 		createFooter();
 	}
-	
+
 	public void initWithParams(String endpoint, String question){
 		System.out.println("init with params");
 		if(endpoint.equals("dbpedia")){
@@ -157,14 +155,14 @@ import com.vaadin.ui.themes.BaseTheme;
 		onExecuteQuery();
 		}
 	}
-	
+
 	private void createHeader(){
 		HorizontalLayout header = new HorizontalLayout();
 		header.addStyleName("header");
 		header.setWidth("100%");
 		header.setHeight(null);
 		addComponent(header);
-		
+
 		Resource res = new ThemeResource("images/sparql2nl_logo.gif");
 	    Label pad = new Label();
 		pad.setWidth("100%");
@@ -173,7 +171,7 @@ import com.vaadin.ui.themes.BaseTheme;
 //		header.addComponent(pad);
 //		header.setExpandRatio(pad, 1f);
 	}
-	
+
 	private void createFooter(){
 		try {
 			CustomLayout footer = new CustomLayout(this.getClass().getClassLoader().getResourceAsStream("footer.html"));
@@ -186,14 +184,14 @@ import com.vaadin.ui.themes.BaseTheme;
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void createMainPanel(){
 		mainPanel = new VerticalLayout();
 		mainPanel.setSpacing(true);
 		mainPanel.setSizeFull();
 		addComponent(mainPanel);
 		setExpandRatio(mainPanel, 1f);
-		
+
 		//top part
 		Component inputForm = createInputComponent();
 		inputForm.setWidth("60%");
@@ -206,7 +204,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		inputFormHolder.setComponentAlignment(inputForm, Alignment.MIDDLE_CENTER);
 		mainPanel.addComponent(inputFormHolder);
 		mainPanel.setComponentAlignment(inputFormHolder, Alignment.MIDDLE_CENTER);
-		
+
 		//middle part
 		resultHolderPanel = new VerticalLayout();
 		resultHolderPanel.setWidth("80%");
@@ -214,12 +212,12 @@ import com.vaadin.ui.themes.BaseTheme;
 		mainPanel.addComponent(resultHolderPanel);
 		mainPanel.setComponentAlignment(resultHolderPanel, Alignment.MIDDLE_CENTER);
 		mainPanel.setExpandRatio(resultHolderPanel, 0.8f);
-		
+
 		//refine button, only visible if constraints running QTL algorithm are satisfied
 		refineButton = new Button("Refine");
 		refineButton.setVisible(false);
 		refineButton.addListener(new Button.ClickListener() {
-			
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				onRefineResult();
@@ -227,19 +225,19 @@ import com.vaadin.ui.themes.BaseTheme;
 		});
 		mainPanel.addComponent(refineButton);
 		mainPanel.setComponentAlignment(refineButton, Alignment.MIDDLE_CENTER);
-		
-		
+
+
 	}
-	
+
 	private Component createInputComponent(){
 		HorizontalLayout l = new HorizontalLayout();
 		l.setSpacing(true);
-		
+
 		Component kbSelector = createSelectTBSLComponent();
 		kbSelector.setWidth("150px");
 		kbSelector.setHeight("100px");
 		l.addComponent(kbSelector);
-		
+
 		VerticalLayout right = new VerticalLayout();
 		right.setSizeFull();
 		right.setHeight("100px");
@@ -258,7 +256,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		questionBox.setNewItemsAllowed(true);
 		questionBox.setInputPrompt("Enter your question.");
 		questionBox.addListener(new Property.ValueChangeListener() {
-			
+
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				onExecuteQuery();
@@ -272,28 +270,28 @@ import com.vaadin.ui.themes.BaseTheme;
 		});
 		rightTop.addComponent(questionBox);
 		rightTop.setExpandRatio(questionBox, 1f);
-		
+
 		addExampleQuestions();
-		
+
 		executeButton = new NativeButton("Run");
 		executeButton.addListener(new Button.ClickListener() {
-			
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				onExecuteQuery();
 			}
 		});
 		rightTop.addComponent(executeButton);
-		
+
 		Component feedbackComponent = createFeedbackComponent();
 		right.addComponent(feedbackComponent);
 		right.setExpandRatio(feedbackComponent, 1f);
 		right.setComponentAlignment(feedbackComponent, Alignment.MIDDLE_CENTER);
-		
-		
+
+
 		return l;
 	}
-	
+
 	private Component createFeedbackComponent(){
 		feedbackPanel = new HorizontalLayout();
 		feedbackPanel.setSpacing(true);
@@ -303,7 +301,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		feedbackPanel.setWidth("95%");
 		feedbackPanel.setHeight("80%");
 		feedbackPanel.setVisible(false);
-		
+
 		feedbackLabel = new Label("&nbsp;", Label.CONTENT_XHTML);
 		feedbackLabel.setContentMode(Label.CONTENT_XHTML);
 		feedbackLabel.addStyleName("status-label");
@@ -311,11 +309,11 @@ import com.vaadin.ui.themes.BaseTheme;
 		feedbackPanel.addComponent(feedbackLabel);
 		feedbackPanel.setExpandRatio(feedbackLabel, 1f);
 		feedbackPanel.setComponentAlignment(feedbackLabel, Alignment.MIDDLE_CENTER);
-		
+
 		wrongSolutionButton = new NativeButton("Wrong!");
 		wrongSolutionButton.setWidth("60px");
 		wrongSolutionButton.addListener(new Button.ClickListener() {
-			
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Window otherSolutionsWindow = createOtherSolutionsWindow();
@@ -326,10 +324,10 @@ import com.vaadin.ui.themes.BaseTheme;
 //		wrongSolutionButton.setVisible(false);
 //		feedbackPanel.addComponent(wrongSolutionButton);
 //		feedbackPanel.setComponentAlignment(wrongSolutionButton, Alignment.MIDDLE_CENTER);
-		
+
 		return feedbackPanel;
 	}
-	
+
 	private Window createOtherSolutionsWindow(){
 		final Window otherSolutionsWindow = new Window();
 		otherSolutionsWindow.setWidth("700px");
@@ -341,7 +339,7 @@ import com.vaadin.ui.themes.BaseTheme;
 				MainView.this.getApplication().getMainWindow().removeWindow(otherSolutionsWindow);
 			}
 		});
-		
+
 		VerticalLayout content = new VerticalLayout();
 		content.setSizeFull();
 		content.setSpacing(true);
@@ -351,7 +349,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		label.setHeight(null);
 		label.addStyleName("did-you-mean-header");
 		content.addComponent(label);
-		
+
 		final List<Entry<String, String>> otherSolutions = UserSession.getManager().getMoreSolutions();
 		final Table table = new Table();
 		table.setSizeFull();
@@ -360,7 +358,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
 		content.addComponent(table);
 		content.setExpandRatio(table, 1f);
-		
+
 		Item item;
 		for(Entry<String, String> sol : otherSolutions){
 			item = table.addItem(sol);
@@ -370,12 +368,12 @@ import com.vaadin.ui.themes.BaseTheme;
 			@Override
 			public Component generateCell(Table source, final Object itemId, Object columnId) {
 				final Entry<String, String> entry = (Entry<String, String>) itemId;
-				
+
 				HorizontalLayout c = new HorizontalLayout();
 				c.setHeight("30px");
 				c.setWidth(null);
 				c.addStyleName("tweet");
-				
+
 				VerticalLayout buttons = new VerticalLayout();
 				buttons.setHeight("100%");
 				buttons.addStyleName("buttons");
@@ -384,7 +382,7 @@ import com.vaadin.ui.themes.BaseTheme;
 				posExampleButton.addStyleName(BaseTheme.BUTTON_LINK);
 				posExampleButton.setDescription("Click if this is what you intended.");
 				posExampleButton.addListener(new Button.ClickListener() {
-					
+
 					@Override
 					public void buttonClick(ClickEvent event) {
 						MainView.this.getApplication().getMainWindow().removeWindow(otherSolutionsWindow);
@@ -401,12 +399,12 @@ import com.vaadin.ui.themes.BaseTheme;
 				return c;
 			}
 		});
-		
+
 		//more button
 		final Button moreButton = new Button("More");
 		moreButton.setHeight(null);
 		moreButton.addListener(new Button.ClickListener() {
-			
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				List<Entry<String, String>> moreOtherSolutions = UserSession.getManager().getMoreSolutions(otherSolutions.size()+1);
@@ -425,20 +423,20 @@ import com.vaadin.ui.themes.BaseTheme;
 		content.setComponentAlignment(moreButton, Alignment.MIDDLE_CENTER);
 		return otherSolutionsWindow;
 	}
-	
+
 	private Component createSelectTBSLComponent(){
 		l = new VerticalLayout();
 		l.setSpacing(true);
 		l.setSizeFull();
-		
+
 		IndexedContainer ic = new IndexedContainer();
 		ic.addContainerProperty("label", String.class, null);
-		
+
 		for(ExtendedTBSL tbsl: UserSession.getManager().tbsls){
 			ic.addItem(tbsl).getItemProperty("label").setValue(tbsl.getLabel());
 		}
 
-        
+
 		tbslSelector = new NativeSelect();
 		tbslSelector.addStyleName("borderless");
 		tbslSelector.setWidth("100%");
@@ -447,24 +445,24 @@ import com.vaadin.ui.themes.BaseTheme;
 		tbslSelector.setContainerDataSource(ic);
 		tbslSelector.setImmediate(true);
 		tbslSelector.addListener(new ValueChangeListener() {
-			
+
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				onChangeKnowledgebase();
 			}
 		});
         l.addComponent(tbslSelector);
-        
+
 		knowledgebaseLogo = new Embedded("");
 		knowledgebaseLogo.setType(Embedded.TYPE_IMAGE);
 		knowledgebaseLogo.setHeight("50px");
 		l.addComponent(knowledgebaseLogo);
 		l.setComponentAlignment(knowledgebaseLogo, Alignment.MIDDLE_CENTER);
 		l.setExpandRatio(knowledgebaseLogo, 1f);
-		
+
         return l;
 	}
-	
+
 	private void addExampleQuestions(){
 		questionBox.removeAllItems();
 		List<String> exampleQuestions = UserSession.getManager().getActiveTBSL().getExampleQuestions();
@@ -472,11 +470,11 @@ import com.vaadin.ui.themes.BaseTheme;
 			questionBox.addItem(question);
 		}
 	}
-	
+
 	public void reset(){
 		tbslSelector.setValue(UserSession.getManager().getActiveTBSL());
 	}
-	
+
 	private void onChangeKnowledgebase(){
 		ExtendedTBSL ekb = (ExtendedTBSL) tbslSelector.getValue();
 		if(ekb.getIcon() != null){
@@ -486,9 +484,9 @@ import com.vaadin.ui.themes.BaseTheme;
 		UserSession.getManager().setKnowledgebase(ekb);
 		addExampleQuestions();
 	}
-	
-	
-	
+
+
+
 	private void onExecuteQuery(){
 		resultHolderPanel.removeAllComponents();
 		final String question = (String) questionBox.getValue();
@@ -500,7 +498,7 @@ import com.vaadin.ui.themes.BaseTheme;
 			executing = true;
 			refresher.setEnabled(true);
 			new Thread(new Runnable() {
-				
+
 				@Override
 				public void run() {
 					answer = man.answerQuestion(question);
@@ -510,7 +508,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		}
 //		showAnswer(answer);
 	}
-	
+
 	private void onAddTableColumn(final String propertyURI){
 //		UserSession.getManager().fillItems(propertyURI);
 		Object[] visibleColumnsArray = resultTable.getVisibleColumns();
@@ -533,7 +531,7 @@ import com.vaadin.ui.themes.BaseTheme;
 	            	String html = "";
 	                BasicResultItem item = (BasicResultItem)itemId;
 	                Set<Object> dataValues = (Set<Object>) item.getData().get(propertyURI);
-	                
+
 	                if(dataValues != null){
 	                	for(Object value : dataValues){
 	                		if(isDataProperty){
@@ -549,25 +547,25 @@ import com.vaadin.ui.themes.BaseTheme;
 	                	return content;
 	                }
 	                return null;
-	                
-	                
+
+
 	            }
 
 	        });
 			resultTable.setColumnWidth(propertyURI, -1);
 //		}
-		
+
 		resultTable.setColumnHeader(propertyURI, Labels.getLabel(propertyURI) + (isDataProperty  ? " \u2599" : ""));
 		visibleColumns.add(propertyURI);
-		
+
 		resultTable.setVisibleColumns(visibleColumns.toArray());
 		if(propertySelector != null){
 			propertySelector.removeItem(propertyURI);
 			propertySelector.setValue(null);
 		}
-		
+
 	}
-	
+
 	@Override
 	public void activate(View view) {
 		mainPanel.replaceComponent((Component) currentView, (Component) view);
@@ -578,7 +576,7 @@ import com.vaadin.ui.themes.BaseTheme;
 	@Override
 	public void deactivate(View view) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -591,7 +589,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		this.answer = answer;
 		executing = false;
 	}
-	
+
 	private void showTable(List<BasicResultItem> result, List<String> prominentProperties, Map<String, Integer> additionalProperties){
 		resultTable = new Table();
 		resultTable.setSizeFull();
@@ -603,7 +601,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		resultTable.addContainerProperty("label", String.class, null);
 		resultTable.addContainerProperty("description", String.class, null);
 		resultTable.addContainerProperty("image", String.class, null);
-		
+
 		Item tabItem;
 		for (BasicResultItem item : result) {
 //			resultTable.addItem(
@@ -626,23 +624,23 @@ import com.vaadin.ui.themes.BaseTheme;
 		if(additionalProperties.isEmpty()){
 			resultTable.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
 		}
-		
+
 		positiveMarkedRows = new ArrayList<Object>();
 		negativeMarkedRows = new ArrayList<Object>();
-		
-		
+
+
 		final CellStyleGenerator styleGen = new Table.CellStyleGenerator(){
 			public String getStyle(Object itemId, Object propertyId) {
 
                 for (Object row : positiveMarkedRows) {
                     if (row.equals(itemId)) {
                         return "green";
-                    }    
+                    }
                 }
                 for (Object row : negativeMarkedRows) {
                     if (row.equals(itemId)) {
                         return "red";
-                    }    
+                    }
                 }
                 return null;
             }
@@ -655,13 +653,13 @@ import com.vaadin.ui.themes.BaseTheme;
 				BasicResultItem item = (BasicResultItem) itemId;
 				ExtendedTBSL ekb = UserSession.getManager()
 						.getActiveTBSL();
-				
+
 				HorizontalLayout c = null;
 				try {
 					c = (HorizontalLayout) ekb.getInfoBoxClass().getConstructor(BasicResultItem.class)
 							.newInstance(item);
 					((InfoLabel)c).addFeedBackListener(new FeedBackListener() {
-						
+
 						@Override
 						public void positiveExampleSelected(BasicResultItem item) {
 							if(positiveMarkedRows.contains(item)){
@@ -672,10 +670,10 @@ import com.vaadin.ui.themes.BaseTheme;
 							}
 							resultTable.setCellStyleGenerator(styleGen);
 							enableRefinement(positiveMarkedRows.size() >= 3);
-							
-							
+
+
 						}
-						
+
 						@Override
 						public void negativeExampleSelected(BasicResultItem item) {
 							if(negativeMarkedRows.contains(item)){
@@ -687,7 +685,7 @@ import com.vaadin.ui.themes.BaseTheme;
 							resultTable.setCellStyleGenerator(styleGen);
 						}
 					});
-					
+
 					c.setHeight("180px");
 					c.setWidth(null);
 				} catch (InstantiationException e) {
@@ -706,30 +704,30 @@ import com.vaadin.ui.themes.BaseTheme;
 				return c;
 			}
 		});
-		
+
 		List<Object> visibleColumns = new ArrayList<Object>();
 		visibleColumns.add("object");
-//		
+//
 		resultTable.setColumnHeader("object", "");
 		resultTable.setVisibleColumns(visibleColumns.toArray());
-		
+
 		resultTable.setColumnWidth("object", -1);
-		
+
 		for(String prominentProperty : prominentProperties){
 			onAddTableColumn(prominentProperty);
 		}
-		
+
 		PortalLayout pl = new PortalLayout();
 		pl.addComponent(resultTable);
 		pl.setClosable(resultTable, false);
 		pl.setCollapsible(resultTable, false);
 		pl.setSizeFull();
-		
+
 		HorizontalLayout header = new HorizontalLayout();
 		header.setSizeUndefined();
         header.setSpacing(true);
         pl.setHeaderComponent(resultTable, header);
-		
+
         List<String> existingProperties = new ArrayList<String>(prominentProperties);
         existingProperties.addAll(additionalProperties.keySet());
         if(canShowMap(existingProperties)){
@@ -741,7 +739,7 @@ import com.vaadin.ui.themes.BaseTheme;
     		showMapButton.setDescription("Show in map.");
     		showMapButton.setHeight("100%");
     		showMapButton.addListener(new Button.ClickListener() {
-    			
+
     			@Override
     			public void buttonClick(ClickEvent event) {
     				onShowMap();
@@ -749,7 +747,7 @@ import com.vaadin.ui.themes.BaseTheme;
     		});
     		header.addComponent(showMapButton);
         }
-		
+
 		if(!additionalProperties.isEmpty()){
 			Label l = new Label("Show also ");
 			l.setHeight("100%");
@@ -767,7 +765,7 @@ import com.vaadin.ui.themes.BaseTheme;
 			propertySelector.setFilteringMode(Filtering.FILTERINGMODE_STARTSWITH);
 			propertySelector.setImmediate(true);
 			propertySelector.addListener(new Property.ValueChangeListener() {
-				
+
 				@Override
 				public void valueChange(ValueChangeEvent event) {
 					String propertyURI = event.getProperty().toString();
@@ -786,7 +784,7 @@ import com.vaadin.ui.themes.BaseTheme;
 			Label l = new Label("Sort by ");
 			l.setHeight("100%");
 			l.addStyleName("white-font");
-			
+
 			NativeSelect sortSelector = new NativeSelect();
 			sortSelector.setImmediate(true);
 			sortSelector.addContainerProperty("label", String.class, null);
@@ -795,14 +793,14 @@ import com.vaadin.ui.themes.BaseTheme;
 				sortSelector.addItem(sort).getItemProperty("label").setValue(sort.getLabel());
 			}
 			sortSelector.addListener(new Property.ValueChangeListener() {
-				
+
 				@Override
 				public void valueChange(ValueChangeEvent event) {
 					SortProperty sortProp = (SortProperty) event.getProperty().getValue();
 					resultTable.sort(new Object[]{sortProp.getId()}, new boolean[]{sortProp.isAscending()});
 				}
 			});
-			
+
 			NativeButton showDiagramButton = new NativeButton();
 			showDiagramButton.addStyleName("borderless");
 			showDiagramButton.setHeight("100%");
@@ -810,7 +808,7 @@ import com.vaadin.ui.themes.BaseTheme;
 //			showDiagramButton.setIcon(new ThemeResource("images/diagram.png"));
 			showDiagramButton.setDescription("Visualize price.");
 			showDiagramButton.addListener(new Button.ClickListener() {
-				
+
 				@Override
 				public void buttonClick(ClickEvent event) {
 					onShowChart("http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice");
@@ -823,7 +821,7 @@ import com.vaadin.ui.themes.BaseTheme;
 	        header.setSpacing(true);
 	        header.setComponentAlignment(sortSelector, Alignment.MIDDLE_LEFT);
 		}
-		
+
 		resultTable.addListener(new Table.HeaderClickListener() {
             private static final long serialVersionUID = 2927158541717666732L;
 
@@ -832,16 +830,16 @@ import com.vaadin.ui.themes.BaseTheme;
                 onShowChart(column);
             }
         });
-		
+
 		resultHolderPanel.addComponent(pl);
 	}
-	
+
 	private boolean canShowMap(List<String> existingProperties){
 		return 	UserSession.getManager().activeTBSL==ExtendedTBSL.DBPEDIA
 				||
 				(existingProperties.contains("http://www.w3.org/2003/01/geo/wgs84_pos#lat") && existingProperties.contains("http://www.w3.org/2003/01/geo/wgs84_pos#long"));
 	}
-	
+
 	private void onShowMap(){
 		String queryString = UserSession.getManager().getLearnedSPARQLQuery();
 		Query query = QueryFactory.create(queryString, Syntax.syntaxARQ);
@@ -854,7 +852,7 @@ import com.vaadin.ui.themes.BaseTheme;
 		String serviceURI = ((RemoteKnowledgebase) kb).getEndpoint().getURL().toString();
 		String url = "";
 		try {
-			url = Manager.getInstance().getSemMapURL() 
+			url = Manager.getInstance().getSemMapURL()
 					+ "?query=" + URLEncoder.encode(query.toString().replaceAll("[\n\r]", " "), "UTF-8")
 					+ "&var=" + targetVar
 					+ "&service-uri=" + EscapeUtils.encodeURIComponent(serviceURI);
@@ -867,7 +865,7 @@ import com.vaadin.ui.themes.BaseTheme;
         e.setAlternateText("Linked Geo Data View");
         e.setType(Embedded.TYPE_BROWSER);
         e.setSizeFull();
-        
+
         final Window w = new Window("Linked Geo Data View");
         VerticalLayout mainLayout = new VerticalLayout();
         mainLayout.setSizeFull();
@@ -884,9 +882,9 @@ import com.vaadin.ui.themes.BaseTheme;
 			}
 		});
 		getApplication().getMainWindow().addWindow(w);
-        
+
 	}
-	
+
 	private void onShowChart(String propertyURI) {
 		Map<String, Set<Object>> data = UserSession.getManager().getDataForProperty(propertyURI);
 		XSDDatatype datatype = UserSession.getManager().getDatatype(propertyURI);
@@ -902,7 +900,7 @@ import com.vaadin.ui.themes.BaseTheme;
 			w = Charts.getChart(UserSession.getManager().getCurrentQuestion(),
 					propertyURI, datatype, uri2Label, data);
 		}
-		
+
 		if(w != null){
 			w.addListener(new Window.CloseListener() {
 
@@ -913,10 +911,10 @@ import com.vaadin.ui.themes.BaseTheme;
 			});
 			getApplication().getMainWindow().addWindow(w);
 		}
-	
+
 
 	}
-	
+
 	private void showAnswer(Answer answer){
 		if (!answer.isBoolean()) {
 			SelectAnswer sAnswer = (SelectAnswer) answer;
@@ -925,16 +923,16 @@ import com.vaadin.ui.themes.BaseTheme;
 			Map<String, Integer> additionalProperties = sAnswer.getAdditionalProperties();
 			// show the result in a table
 			showTable(result, prominentProperties, additionalProperties);
-			
+
 		} else {
 			//TODO show boolean answer
 		}
 	}
-	
+
 	private void enableRefinement(boolean enabled){
 		refineButton.setVisible(enabled);
 	}
-	
+
 	private void onRefineResult(){
 		List<String> posExamples = new ArrayList<String>();
 		for(Object row : positiveMarkedRows){
@@ -960,18 +958,18 @@ import com.vaadin.ui.themes.BaseTheme;
 			feedbackPanel.addComponent(wrongSolutionButton);
 			feedbackPanel.setComponentAlignment(wrongSolutionButton, Alignment.MIDDLE_CENTER);
 		}
-		
+
 	}
-	
+
 	private void showFeedback(boolean show){
 		feedbackPanel.setVisible(show);
 	}
-	
+
 	private void resetFeedback(){
 		feedbackLabel.setValue("&nbsp;");
 		feedbackPanel.removeComponent(wrongSolutionButton);
 	}
-	
-	
+
+
 
 }

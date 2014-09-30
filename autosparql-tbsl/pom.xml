@@ -20,51 +20,45 @@
 	<build>
 		<finalName>autosparql-lite</finalName>
 		<plugins>
-<!-- Duplicate of gwt-maven-plugin from the profiles. Only putting it here properly applies the extraJvmArgs and thus provides sufficient RAM for successful compilation. -->
- <plugin>
-                                                <groupId>org.codehaus.mojo</groupId>
-                                                <artifactId>gwt-maven-plugin</artifactId>
-                                                <version>${gwt.plugin.version}</version>
-                                                <configuration>
-                                                        <localWorkers>1</localWorkers>
-                                                        <fork>false</fork>
-                                                        <webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
-                                                        <extraJvmArgs>-Xmx2000M -Xss1024k -XX:+UseConcMarkSweepGC</extraJvmArgs>
-                                                        <runTarget>autosparql-tbsl</runTarget>
-                                                        <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
-                                                        <noServer>true</noServer>
-                                                        <port>9090</port>
-                                                        <compileReport>false</compileReport>
-                                                </configuration>
-                                                <!-- 
-                                                <executions>
-                                                        <execution>
-                                                                <goals>
-                                                                        <goal>resources</goal>
-                                                                        <goal>compile</goal>
-                                                                </goals>
-                                                        </execution>
-                                                </executions> -->
-                                                <dependencies>
-                                                        <dependency>
-                                                                <groupId>com.google.gwt</groupId>
-                                                                <artifactId>gwt-dev</artifactId>
-                                                                <version>${gwt.version}</version>
-                                                        </dependency>
-                                                        <dependency>
-                                                                <groupId>com.google.gwt</groupId>
-                                                                <artifactId>gwt-user</artifactId>
-                                                                <version>${gwt.version}</version>
-                                                        </dependency>
-                                                </dependencies>
-                                        </plugin>
+			<!-- Duplicate of gwt-maven-plugin from the profiles. Only putting it
+				here properly applies the extraJvmArgs and thus provides sufficient RAM for
+				successful compilation. -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>${gwt.plugin.version}</version>
+				<configuration>
+					<localWorkers>1</localWorkers>
+					<fork>false</fork>
+					<webappDirectory>src/main/webapp/VAADIN/widgetsets</webappDirectory>
+					<extraJvmArgs>-Xmx2000M -Xss1024k -XX:+UseConcMarkSweepGC</extraJvmArgs>
+					<runTarget>autosparql-tbsl</runTarget>
+					<hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
+					<noServer>true</noServer>
+					<port>9090</port>
+					<compileReport>false</compileReport>
+				</configuration>
+				<!-- <executions> <execution> <goals> <goal>resources</goal> <goal>compile</goal>
+					</goals> </execution> </executions> -->
+				<dependencies>
+					<dependency>
+						<groupId>com.google.gwt</groupId>
+						<artifactId>gwt-dev</artifactId>
+						<version>${gwt.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>com.google.gwt</groupId>
+						<artifactId>gwt-user</artifactId>
+						<version>${gwt.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-<!--				<fork>false</fork>
-				<maxmem>2023m</maxmem>-->
+					<!-- <fork>false</fork> <maxmem>2023m</maxmem> -->
 					<source>1.7</source>
 					<target>1.7</target>
 					<encoding>UTF-8</encoding>
@@ -76,30 +70,30 @@
 				<version>2.1.1</version>
 			</plugin>
 
-			<!-- Compile custom GWT components or widget dependencies with the GWT 
+			<!-- Compile custom GWT components or widget dependencies with the GWT
 				compiler -->
-			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>gwt-maven-plugin</artifactId> 
-				<version>${gwt.plugin.version}</version> <configuration> <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory> 
-				<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs> <runTarget>autosparql-tbsl</runTarget> 
-				<hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp> 
-				<noServer>true</noServer> <port>8080</port> <compileReport>false</compileReport> 
-				</configuration> <executions> <execution> <goals> <goal>resources</goal> 
-				<goal>compile</goal> </goals> </execution> </executions> <dependencies> <dependency> 
-				<groupId>com.google.gwt</groupId> <artifactId>gwt-dev</artifactId> <version>${gwt.version}</version> 
-				</dependency> <dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-user</artifactId> 
-				<version>${gwt.version}</version> </dependency> </dependencies> </plugin> 
-				<plugin> <groupId>com.vaadin</groupId> <artifactId>vaadin-maven-plugin</artifactId> 
-				<version>1.0.2</version> <executions> <execution> <configuration> </configuration> 
-				<goals> <goal>update-widgetset</goal> </goals> </execution> </executions> 
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>gwt-maven-plugin</artifactId>
+				<version>${gwt.plugin.version}</version> <configuration> <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
+				<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs> <runTarget>autosparql-tbsl</runTarget>
+				<hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
+				<noServer>true</noServer> <port>8080</port> <compileReport>false</compileReport>
+				</configuration> <executions> <execution> <goals> <goal>resources</goal>
+				<goal>compile</goal> </goals> </execution> </executions> <dependencies> <dependency>
+				<groupId>com.google.gwt</groupId> <artifactId>gwt-dev</artifactId> <version>${gwt.version}</version>
+				</dependency> <dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-user</artifactId>
+				<version>${gwt.version}</version> </dependency> </dependencies> </plugin>
+				<plugin> <groupId>com.vaadin</groupId> <artifactId>vaadin-maven-plugin</artifactId>
+				<version>1.0.2</version> <executions> <execution> <configuration> </configuration>
+				<goals> <goal>update-widgetset</goal> </goals> </execution> </executions>
 				</plugin> -->
 
-			<!-- A simple Jetty test server at http://localhost:8080/autosparql-tbsl 
+			<!-- A simple Jetty test server at http://localhost:8080/autosparql-tbsl
 				can be launched with the Maven goal jetty:run and stopped with jetty:stop -->
 
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-<!--				<version>9.0.7.v20131107</version>-->
+				<!-- <version>9.0.7.v20131107</version> -->
 				<configuration>
 					<webApp>
 						<contextPath>/${project.build.finalName}</contextPath>
@@ -109,16 +103,16 @@
 					</webApp>
 				</configuration>
 			</plugin>
-			<!-- <plugin> <groupId>org.mortbay.jetty</groupId> <artifactId>maven-jetty-plugin</artifactId> 
-				<version>6.1.24</version> <configuration> <stopPort>9966</stopPort> <stopKey>autosparql-lite</stopKey> 
-				<scanIntervalSeconds>0</scanIntervalSeconds> <webAppConfig> <contextPath>/autosparql-lite</contextPath> 
+			<!-- <plugin> <groupId>org.mortbay.jetty</groupId> <artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.24</version> <configuration> <stopPort>9966</stopPort> <stopKey>autosparql-lite</stopKey>
+				<scanIntervalSeconds>0</scanIntervalSeconds> <webAppConfig> <contextPath>/autosparql-lite</contextPath>
 				<baseResource implementation="org.mortbay.resource.ResourceCollection"> -->
 			<!-- Workaround for Maven/Jetty issue http://jira.codehaus.org/browse/JETTY-680 -->
 			<!-- <resources>src/main/webapp,${project.build.directory}/${project.build.finalName}</resources> -->
 			<!-- <resourcesAsCSV>src/main/webapp,${project.build.directory}/${project.build.finalName}</resourcesAsCSV> -->
-			<!-- <resourcesAsCSV>src/main/webapp,${project.build.directory}/classes</resourcesAsCSV> 
-				</baseResource> </webAppConfig> <connectors> <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector"> 
-				<port>9090</port> <maxIdleTime>60000</maxIdleTime> </connector> </connectors> 
+			<!-- <resourcesAsCSV>src/main/webapp,${project.build.directory}/classes</resourcesAsCSV>
+				</baseResource> </webAppConfig> <connectors> <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+				<port>9090</port> <maxIdleTime>60000</maxIdleTime> </connector> </connectors>
 				</configuration> </plugin> -->
 		</plugins>
 	</build>
@@ -133,13 +127,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.aksw.autosparql</groupId>
-			<artifactId>algorithm-tbsl</artifactId>			
-		<!-- 	<excludes><exclude>**/log4j.properties</exclude></excludes> -->
+			<artifactId>algorithm-tbsl</artifactId>
+			<!-- <excludes><exclude>**/log4j.properties</exclude></excludes> -->
 		</dependency>
 		<dependency>
 			<groupId>org.aksw.autosparql</groupId>
 			<artifactId>commons</artifactId>
-		<!--	<excludes><exclude>**/log4j.properties</exclude></excludes> -->
+			<!-- <excludes><exclude>**/log4j.properties</exclude></excludes> -->
 		</dependency>
 		<dependency>
 			<groupId>javax</groupId>
@@ -150,12 +144,12 @@
 			<artifactId>vaadin</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-user</artifactId> 
-			<version>${gwt.version}</version> <scope>provided</scope> </dependency> <dependency> 
-			<groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> 
-			<version>1.0.0.GA</version> <scope>provided</scope> </dependency> <dependency> 
-			<groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> 
-			<version>1.0.0.GA</version> <classifier>sources</classifier> <scope>provided</scope> 
+		<!-- <dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-user</artifactId>
+			<version>${gwt.version}</version> <scope>provided</scope> </dependency> <dependency>
+			<groupId>javax.validation</groupId> <artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version> <scope>provided</scope> </dependency> <dependency>
+			<groupId>javax.validation</groupId> <artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version> <classifier>sources</classifier> <scope>provided</scope>
 			</dependency> -->
 
 		<dependency>
@@ -200,13 +194,13 @@
 		</dependency>
 
 
-		<!-- <dependency> <groupId>org.dllearner</groupId> <artifactId>components-ext</artifactId> 
-			<exclusions> <exclusion> <artifactId>sparql</artifactId> <groupId>org.aksw.commons</groupId> 
-			</exclusion> <exclusion> <artifactId>pellet</artifactId> <groupId>com.owldl</groupId> 
-			</exclusion> <exclusion> <artifactId>slf4j-log4j12</artifactId> <groupId>org.slf4j</groupId> 
-			</exclusion> <exclusion> <artifactId>jena</artifactId> <groupId>com.hp.hpl.jena</groupId> 
-			</exclusion> <exclusion> <artifactId>any23-core</artifactId> <groupId>org.deri.any23</groupId> 
-			</exclusion> <exclusion> <artifactId>nif</artifactId> <groupId>org.nlp2rdf</groupId> 
+		<!-- <dependency> <groupId>org.dllearner</groupId> <artifactId>components-ext</artifactId>
+			<exclusions> <exclusion> <artifactId>sparql</artifactId> <groupId>org.aksw.commons</groupId>
+			</exclusion> <exclusion> <artifactId>pellet</artifactId> <groupId>com.owldl</groupId>
+			</exclusion> <exclusion> <artifactId>slf4j-log4j12</artifactId> <groupId>org.slf4j</groupId>
+			</exclusion> <exclusion> <artifactId>jena</artifactId> <groupId>com.hp.hpl.jena</groupId>
+			</exclusion> <exclusion> <artifactId>any23-core</artifactId> <groupId>org.deri.any23</groupId>
+			</exclusion> <exclusion> <artifactId>nif</artifactId> <groupId>org.nlp2rdf</groupId>
 			</exclusion> </exclusions> </dependency> -->
 		<dependency>
 			<groupId>org.ini4j</groupId>
@@ -258,7 +252,7 @@
 			<id>compile-widgetset</id>
 			<build>
 				<plugins>
-					<!-- Compile custom GWT components or widget dependencies with the GWT 
+					<!-- Compile custom GWT components or widget dependencies with the GWT
 						compiler -->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>

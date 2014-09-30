@@ -22,27 +22,27 @@ import com.hp.hpl.jena.sparql.syntax.ElementVisitorBase;
 import com.hp.hpl.jena.sparql.util.VarUtils;
 
 public class TriplePatternExtractor extends ElementVisitorBase {
-	
+
 	private Set<Triple> triplePattern;
-	
+
 	private Set<Triple> candidates;
-	
+
 	private boolean inOptionalClause = false;
-	
+
 	private int unionCount = 0;
 	private int optionalCount = 0;
 	private int filterCount = 0;
-	
+
 	public Set<Triple> extractTriplePattern(Query query){
 		return extractTriplePattern(query, false);
 	}
-	
+
 	public Set<Triple> extractTriplePattern(Query query, boolean ignoreOptionals){
 		triplePattern = new HashSet<Triple>();
 		candidates = new HashSet<Triple>();
-		
+
 		query.getQueryPattern().visit(this);
-		
+
 		//postprocessing: triplepattern in OPTIONAL clause
 		if(!ignoreOptionals){
 			if(query.isSelectType()){
@@ -53,30 +53,30 @@ public class TriplePatternExtractor extends ElementVisitorBase {
 				}
 			}
 		}
-		
+
 		return triplePattern;
 	}
-	
+
 	public Set<Triple> extractTriplePattern(ElementGroup group){
 		return extractTriplePattern(group, false);
 	}
-	
+
 	public Set<Triple> extractTriplePattern(ElementGroup group, boolean ignoreOptionals){
 		triplePattern = new HashSet<Triple>();
 		candidates = new HashSet<Triple>();
-		
+
 		group.visit(this);
-		
+
 		//postprocessing: triplepattern in OPTIONAL clause
 		if(!ignoreOptionals){
 			for(Triple t : candidates){
 				triplePattern.add(t);
 			}
 		}
-		
+
 		return triplePattern;
 	}
-	
+
 	@Override
 	public void visit(ElementGroup el) {
 		for (Iterator<Element> iterator = el.getElements().iterator(); iterator.hasNext();) {
@@ -125,7 +125,7 @@ public class TriplePatternExtractor extends ElementVisitorBase {
 			e.visit(this);
 		}
 	}
-	
+
 	@Override
 	public void visit(ElementFilter el) {
 		filterCount++;
