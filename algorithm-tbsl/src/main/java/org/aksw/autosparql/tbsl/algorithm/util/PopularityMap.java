@@ -13,13 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import org.aksw.autosparql.commons.sparql.SparqlQueriable;
 import org.dllearner.core.owl.DatatypeProperty;
 import org.dllearner.core.owl.NamedClass;
 import org.dllearner.core.owl.ObjectProperty;
 import org.dllearner.kb.sparql.SparqlEndpoint;
-
 import com.clarkparsia.owlapiv3.OWL;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -39,7 +37,7 @@ public class PopularityMap {
 	private Map<String, Integer> resource2Popularity = new HashMap<String, Integer>();
 
 	final SparqlQueriable queryable;
-	
+
 	public PopularityMap(String file, SparqlQueriable queryable)
 	{
 		this.file = file;
@@ -67,27 +65,27 @@ public class PopularityMap {
 			serialize();
 		}
 	}
-	
+
 	/* adapted from SPARQLTasks which doesn't accept models *****************************************************************************/
-	
+
 	public Set<NamedClass> getAllClasses() {
 		Set<NamedClass> classes = new TreeSet<NamedClass>();
 		String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> SELECT ?c WHERE {?c a owl:Class} LIMIT 1000";
-	
+
 		ResultSet q = queryable.query(query);
 		while (q.hasNext()) {
 			QuerySolution qs = q.next();
 			if(qs.getResource("c").isURIResource()){
 				classes.add(new NamedClass(qs.getResource("c").getURI()));
 			}
-			
+
 		}
 		//remove trivial classes
 		classes.remove(new NamedClass(OWL.Nothing.toStringID()));
 		classes.remove(new NamedClass(OWL.Thing.toStringID()));
 		return classes;
 	}
-	
+
 	public Set<ObjectProperty> getAllObjectProperties() {
 		Set<ObjectProperty> properties = new TreeSet<ObjectProperty>();
 		String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> SELECT ?p WHERE {?p a owl:ObjectProperty}";
@@ -98,7 +96,7 @@ public class PopularityMap {
 		}
 		return properties;
 	}
-	
+
 	public Set<DatatypeProperty> getAllDataProperties() {
 		Set<DatatypeProperty> properties = new TreeSet<DatatypeProperty>();
 		String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> SELECT ?p WHERE {?p a owl:DatatypeProperty}";
@@ -109,9 +107,9 @@ public class PopularityMap {
 		}
 		return properties;
 	}
-	
+
 	/**********************************************************************************************************************************************/
-	
+
 	private void serialize(){
 		ObjectOutputStream oos = null;
 		try {
@@ -167,7 +165,7 @@ public class PopularityMap {
 			}
 			System.out.println("Loaded popularity map.");
 			return true;
-		} 
+		}
 		return false;
 	}
 
@@ -228,7 +226,7 @@ public class PopularityMap {
 	}
 
 	public static void main(String[] args) {
-		PopularityMap map = new PopularityMap("dbpedia_popularity.map",new SparqlQueriable(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "cache"));		
+		PopularityMap map = new PopularityMap("dbpedia_popularity.map",new SparqlQueriable(SparqlEndpoint.getEndpointDBpediaLiveAKSW(), "cache"));
 		System.out.println(map.getPopularity("http://dbpedia.org/ontology/Book"));
 	}
 
