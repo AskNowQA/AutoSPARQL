@@ -2,10 +2,10 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 
 import org.aksw.autosparql.commons.knowledgebase.OxfordKnowledgebase;
 
-public class TbslOxford extends TBSL 
+public class TbslOxford extends TBSL
 {
 	public static final TBSL INSTANCE = new TbslOxford();
-	
+
 	private TbslOxford()
 	{
 		super(OxfordKnowledgebase.INSTANCE,new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});

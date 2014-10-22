@@ -7,10 +7,10 @@ import java.util.Set;
 public class SPARQL_Filter implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -6243542586884540703L;
-	
+
 	private Set<SPARQL_Pair> terms = new HashSet<SPARQL_Pair>();
 	private boolean and = true;
-	
+
 	@Override public SPARQL_Filter clone()
 	{
 		SPARQL_Filter f = new SPARQL_Filter();
@@ -20,7 +20,7 @@ public class SPARQL_Filter implements Serializable, Cloneable
 		f.and=and;
 		return f;
 	}
-	
+
 	//uses && if set true, otherwise ||
 	public void setAnd(boolean and)
 	{
@@ -32,7 +32,7 @@ public class SPARQL_Filter implements Serializable, Cloneable
 		super();
 		this.terms.add(pair);
 	}
-	
+
 	public SPARQL_Filter()
 	{
 	}
@@ -41,7 +41,7 @@ public class SPARQL_Filter implements Serializable, Cloneable
 	{
 		terms.add(new SPARQL_Pair(term, SPARQL_PairType.B));
 	}
-	
+
 	public void addNotBound(SPARQL_Term term)
 	{
 		terms.add(new SPARQL_Pair(term, SPARQL_PairType.NB));
@@ -51,15 +51,15 @@ public class SPARQL_Filter implements Serializable, Cloneable
 	{
 		terms.add(new SPARQL_Pair(term, o, t));
 	}
-	
+
 	public Set<SPARQL_Pair> getTerms(){
 		return terms;
 	}
-	
+
 	public boolean isAnd(){
 		return and;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -79,7 +79,7 @@ public class SPARQL_Filter implements Serializable, Cloneable
 			if (!first)
 				if (and)
 					retVal += " && ";
-				else 
+				else
 					retVal += " || ";
 			retVal += pair.toString();
 		}

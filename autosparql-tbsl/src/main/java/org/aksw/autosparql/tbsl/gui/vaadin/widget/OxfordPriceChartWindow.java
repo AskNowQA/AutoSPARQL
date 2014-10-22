@@ -39,26 +39,26 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class OxfordPriceChartWindow extends Window{
-	
+
 	private InvientCharts visibleChart;
 
 	public OxfordPriceChartWindow(String question, String propertyURI, final Map<String, String> uri2Label, final Map<String, Set<Object>> data) {
 		setWidth("900px");
 		setHeight("900px");
-		
+
 		final InvientChartsConfig chartConfig = new InvientChartsConfig();
 		final String propertyLabel = Labels.getLabel(propertyURI);
 		String title = propertyLabel + " for " + "\"" + question + "\"";
 		chartConfig.getTitle().setText(title);
-		
+
 		final VerticalLayout mainLayout = new VerticalLayout();
 		mainLayout.setSizeFull();
 		mainLayout.setSpacing(true);
 		setContent(mainLayout);
-		
+
 		final VerticalLayout diagramHolder = new VerticalLayout();
 		diagramHolder.setWidth(null);
-		
+
 		CheckBox aggregateCheckBox = new CheckBox("Aggregate");
 		aggregateCheckBox.addStyleName("aggregate-box");
 		aggregateCheckBox.setHeight(null);
@@ -74,19 +74,19 @@ public class OxfordPriceChartWindow extends Window{
 		});
 		mainLayout.addComponent(aggregateCheckBox);
 		mainLayout.setComponentAlignment(aggregateCheckBox, Alignment.MIDDLE_CENTER);
-	
+
 //		wnd.setContent(mainLayout);
-		
+
 		Panel p = new Panel();
 		p.setSizeFull();
 		p.setContent(diagramHolder);
 		mainLayout.addComponent(p);
 		mainLayout.setExpandRatio(p, 1f);
-		
+
 		visibleChart = getChart(chartConfig, propertyLabel, uri2Label, data, false);
 		diagramHolder.addComponent(visibleChart);
 	}
-	
+
 	private InvientCharts getChart(InvientChartsConfig chartConfig, String propertyLabel, Map<String, String> uri2Label, Map<String, Set<Object>> data, boolean aggregated){
 		 Map<String, Object> sample = Intervals.sample(data);
 	        Map<String, Double> castData = new HashMap<String, Double>();
@@ -103,14 +103,14 @@ public class OxfordPriceChartWindow extends Window{
 			chart.setWidth(width + "px");
 		}
 		chart.setHeight("800px");
-		
+
 		return chart;
 	}
-	
+
 	private InvientCharts showColumnWithRotatedLabels(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Double> data){
-	       
+
         chartConfig.getGeneralChartConfig().setType(SeriesType.COLUMN);
-    
+
         List<Entry<String, Double>> sortedData = MapUtils.sortByValues(data);
         List<String> categories = new ArrayList<String>();
         String label;
@@ -122,7 +122,7 @@ public class OxfordPriceChartWindow extends Window{
         	}
         	categories.add(label);
         }
-        
+
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setCategories(categories);
         xAxis.setLabel(new XAxisDataLabel());
@@ -170,19 +170,19 @@ public class OxfordPriceChartWindow extends Window{
 
        return chart;
     }
-	
+
 	private InvientCharts showAggregatedColumnWithRotatedLabels(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Double> data){
-	       
+
         chartConfig.getGeneralChartConfig().setType(SeriesType.COLUMN);
-    
-       
-        
+
+
+
         Interval[] intervals = Intervals.aggregateDoubles(data, 5);
         List<String> categories = new ArrayList<String>();
         for(Interval interval : intervals){
         	categories.add("<="  + NumberFormat.getCurrencyInstance(Locale.UK).format(interval.getUpperBoundary()));
         }
-        
+
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setCategories(categories);
         xAxis.setLabel(new XAxisDataLabel());
@@ -230,8 +230,8 @@ public class OxfordPriceChartWindow extends Window{
 
        return chart;
     }
-	
-    
+
+
     private static LinkedHashSet<DecimalPoint> getPoints(Series series,
     		Map<String, Double> data) {
     	LinkedHashSet<DecimalPoint> points = new LinkedHashSet<DecimalPoint>();
@@ -240,7 +240,7 @@ public class OxfordPriceChartWindow extends Window{
 		}
 		return points;
     }
-    
+
     private static LinkedHashSet<DecimalPoint> getPoints(Series series,
     		Interval[] intervals) {
     	LinkedHashSet<DecimalPoint> points = new LinkedHashSet<DecimalPoint>();
@@ -249,7 +249,7 @@ public class OxfordPriceChartWindow extends Window{
 		}
 		return points;
     }
-    
+
     private static LinkedHashSet<DecimalPoint> getPoints(Series series,
     		List<Entry<String, Double>> data) {
     	LinkedHashSet<DecimalPoint> points = new LinkedHashSet<DecimalPoint>();

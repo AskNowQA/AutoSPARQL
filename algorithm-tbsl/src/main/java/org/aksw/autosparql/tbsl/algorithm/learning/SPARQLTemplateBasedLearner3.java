@@ -86,84 +86,84 @@
 //
 //@Deprecated
 //public class SPARQLTemplateBasedLearner3 implements SparqlQueryLearningAlgorithm{
-//	
+//
 //	// TODO: is it possible to use this learner concurrently? and if not would it be easy to implement it or at least a copy constructor?
-//	
+//
 //	enum Mode{
 //		BEST_QUERY, BEST_NON_EMPTY_QUERY
 //	}
-//	
+//
 //	private Mode mode = Mode.BEST_QUERY;
-//	
+//
 //	private static final Logger logger = Logger.getLogger(SPARQLTemplateBasedLearner3.class);
 //	private Monitor templateMon = MonitorFactory.getTimeMonitor("template");
 //	private Monitor sparqlMon = MonitorFactory.getTimeMonitor("sparql");
-//	
+//
 //	private boolean useRemoteEndpointValidation;
 //	private boolean stopIfQueryResultNotEmpty;
 //	private int maxTestedQueriesPerTemplate = 50;
 //	private int maxQueryExecutionTimeInSeconds;
 //	private int maxTestedQueries = 200;
 //	private int maxIndexResults;
-//	
+//
 //	private SparqlEndpoint endpoint;
 //	private Model model;
-//	
+//
 //	private ExtractionDBCache cache = new ExtractionDBCache("cache");
-//	
+//
 //	private SimpleIRIShortFormProvider iriSfp = new SimpleIRIShortFormProvider();
-//	
+//
 //	private Index resourcesIndex;
 //	private Index classesIndex;
 //	private Index propertiesIndex;
-//	
+//
 //	private Index datatypePropertiesIndex;
 //	private Index objectPropertiesIndex;
-//	
+//
 //	private MappingBasedIndex mappingIndex;
-//	
+//
 //	private Templator templateGenerator;
 //	private Lemmatizer lemmatizer;
 //	private PartOfSpeechTagger posTagger;
 //	private WordNet wordNet;
-//	
+//
 //	private String question;
 //	private int learnedPos = -1;
-//	
+//
 //	private Set<Template> templates;
 //	private Map<Template, Collection<? extends Query>> template2Queries;
 //	private Map<Slot, List<String>> slot2URI;
-//	
+//
 //	private Collection<WeightedQuery> sparqlQueryCandidates;
 //	private SortedSet<WeightedQuery> learnedSPARQLQueries;
 //	private SortedSet<WeightedQuery> generatedQueries;
-//	
+//
 //	private SPARQLReasoner reasoner;
-//	
+//
 //	private String currentlyExecutedQuery;
-//	
+//
 //	private boolean dropZeroScoredQueries = true;
 //	private boolean useManualMappingsIfExistOnly = true;
-//	
+//
 //	private boolean multiThreaded = true;
-//	
+//
 //	private String [] grammarFiles = new String[]{"tbsl/lexicon/english.lex"};
-//	
+//
 //	private PopularityMap popularityMap;
-//	
+//
 //	private Set<String> relevantKeywords;
-//	
+//
 //	private boolean useDomainRangeRestriction = true;
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex){
 //		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, StanfordPartOfSpeechTagger.INSTANCE);
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
 //		this(knowledgebase, posTagger, wordNet, options, null);
 //		setMappingIndex(knowledgebase.getIndices().getMappingIndex());
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(Knowledgebase knowledgebase, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){
 //		if(knowledgebase instanceof LocalKnowledgebase){
 //			this.model = ((LocalKnowledgebase) knowledgebase).getModel();
@@ -189,54 +189,54 @@
 //		this.posTagger = posTagger;
 //		this.wordNet = wordNet;
 //		this.cache = cache;
-//		
+//
 //		reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint));
 //		setOptions(options);
-//		
+//
 //		setMappingIndex(knowledgebase.getIndices().getMappingIndex());
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(Knowledgebase knowledgebase){
 //		this(knowledgebase, StanfordPartOfSpeechTagger.INSTANCE, WordNet.INSTANCE, new Options());
 //		setMappingIndex(knowledgebase.getIndices().getMappingIndex());
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index index){
 //		this(endpoint, index, StanfordPartOfSpeechTagger.INSTANCE);
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger){
 //		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, posTagger, WordNet.INSTANCE, new Options());
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index index, PartOfSpeechTagger posTagger){
 //		this(endpoint, index, posTagger, WordNet.INSTANCE, new Options());
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, WordNet wordNet){
 //		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, StanfordPartOfSpeechTagger.INSTANCE, wordNet, new Options());
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index index, WordNet wordNet){
 //		this(endpoint, index, StanfordPartOfSpeechTagger.INSTANCE, wordNet, new Options());
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet){
 //		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, posTagger, wordNet, new Options(), new ExtractionDBCache("cache"));
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index index, PartOfSpeechTagger posTagger, WordNet wordNet){
 //		this(endpoint, index, index, index, posTagger, wordNet, new Options(), new ExtractionDBCache("cache"));
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
 //		this(endpoint, resourcesIndex, classesIndex, propertiesIndex, posTagger, wordNet, options, new ExtractionDBCache("cache"));
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index index, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
 //		this(endpoint, index, index, index, posTagger, wordNet, options, new ExtractionDBCache("cache"));
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(SparqlEndpoint endpoint, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){
 //		this.endpoint = endpoint;
 //		this.resourcesIndex = resourcesIndex;
@@ -245,9 +245,9 @@
 //		this.posTagger = posTagger;
 //		this.wordNet = wordNet;
 //		this.cache = cache;
-//		
+//
 //		setOptions(options);
-//		
+//
 //		if(propertiesIndex instanceof SPARQLPropertiesIndex){
 //			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
 //				datatypePropertiesIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
@@ -262,23 +262,23 @@
 //		}
 //		reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint), cache);
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex){
 //		this(model, resourcesIndex, classesIndex, propertiesIndex, StanfordPartOfSpeechTagger.INSTANCE);
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger){
 //		this(model, resourcesIndex, classesIndex, propertiesIndex, posTagger, WordNet.INSTANCE, new Options());
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, WordNet wordNet){
 //		this(model, resourcesIndex, classesIndex, propertiesIndex, StanfordPartOfSpeechTagger.INSTANCE, wordNet, new Options());
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet, Options options){
 //		this(model, resourcesIndex, classesIndex, propertiesIndex, posTagger, wordNet, options, new ExtractionDBCache("cache"));
 //	}
-//	
+//
 //	public SPARQLTemplateBasedLearner3(Model model, Index resourcesIndex, Index classesIndex, Index propertiesIndex, PartOfSpeechTagger posTagger, WordNet wordNet, Options options, ExtractionDBCache cache){
 //		this.model = model;
 //		this.resourcesIndex = resourcesIndex;
@@ -287,9 +287,9 @@
 //		this.posTagger = posTagger;
 //		this.wordNet = wordNet;
 //		this.cache = cache;
-//		
+//
 //		setOptions(options);
-//		
+//
 //		if(propertiesIndex instanceof SPARQLPropertiesIndex){
 //			if(propertiesIndex instanceof VirtuosoPropertiesIndex){
 //				datatypePropertiesIndex = new VirtuosoDatatypePropertiesIndex((SPARQLPropertiesIndex)propertiesIndex);
@@ -303,21 +303,21 @@
 //			objectPropertiesIndex = propertiesIndex;
 //		}
 //	}
-//	
+//
 //	public void setGrammarFiles(String[] grammarFiles){
 //		templateGenerator.setGrammarFiles(grammarFiles);
 //	}
-//	
+//
 //	@Override
 //	public void init() throws ComponentInitException {
 //		 templateGenerator = new Templator(posTagger, wordNet, grammarFiles);
 //		 lemmatizer = new LingPipeLemmatizer();
 //	}
-//	
+//
 //	public void setMappingIndex(MappingBasedIndex mappingIndex) {
 //		this.mappingIndex = mappingIndex;
 //	}
-//	
+//
 //	public void setKnowledgebase(Knowledgebase knowledgebase){
 //		if(knowledgebase instanceof LocalKnowledgebase){
 //			this.model = ((LocalKnowledgebase) knowledgebase).getModel();
@@ -342,32 +342,32 @@
 //		}
 //		reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint));
 //	}
-//	
+//
 //	public void setCache(ExtractionDBCache cache) {
 //		this.cache = cache;
 //	}
-//	
+//
 //	public void setUseDomainRangeRestriction(boolean useDomainRangeRestriction) {
 //		this.useDomainRangeRestriction = useDomainRangeRestriction;
 //	}
-//	
+//
 //	/*
 //	 * Only for Evaluation useful.
 //	 */
 //	public void setUseIdealTagger(boolean value){
 //		templateGenerator.setUNTAGGED_INPUT(!value);
 //	}
-//	
+//
 //	private void setOptions(Options options){
 //		maxIndexResults = Integer.parseInt(options.get("solr.query.limit", "10"));
-//		
+//
 //		maxQueryExecutionTimeInSeconds = Integer.parseInt(options.get("sparql.query.maxExecutionTimeInSeconds", "100"));
 //		cache.setMaxExecutionTimeInSeconds(maxQueryExecutionTimeInSeconds);
-//		
+//
 //		useRemoteEndpointValidation = options.get("learning.validationType", "remote").equals("remote") ? true : false;
 //		stopIfQueryResultNotEmpty = Boolean.parseBoolean(options.get("learning.stopAfterFirstNonEmptyQueryResult", "true"));
 //		maxTestedQueriesPerTemplate = Integer.parseInt(options.get("learning.maxTestedQueriesPerTemplate", "20"));
-//		
+//
 //		String wordnetPath = options.get("wordnet.dictionary", "tbsl/dict");
 //		wordnetPath = this.getClass().getClassLoader().getResource(wordnetPath).getPath();
 //		System.setProperty("wordnet.database.dir", wordnetPath);
@@ -375,20 +375,20 @@
 //
 //	public void setEndpoint(SparqlEndpoint endpoint){
 //		this.endpoint = endpoint;
-//		
+//
 //		reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint));
 //		reasoner.setCache(cache);
 //		reasoner.prepareSubsumptionHierarchy();
 //	}
-//	
+//
 //	public void setQuestion(String question){
 //		this.question = question;
 //	}
-//	
+//
 //	public void setUseRemoteEndpointValidation(boolean useRemoteEndpointValidation){
 //		this.useRemoteEndpointValidation = useRemoteEndpointValidation;
 //	}
-//	
+//
 //	public int getMaxQueryExecutionTimeInSeconds() {
 //		return maxQueryExecutionTimeInSeconds;
 //	}
@@ -412,7 +412,7 @@
 //		relevantKeywords = new HashSet<String>();
 //		currentlyExecutedQuery = null;
 //	}
-//	
+//
 //	public void learnSPARQLQueries() throws NoTemplateFoundException{
 //		reset();
 //		//generate SPARQL query templates
@@ -428,13 +428,13 @@
 //		relevantKeywords.addAll(templateGenerator.getUnknownWords());
 //		if(templates.isEmpty()){
 //			throw new NoTemplateFoundException();
-//		
+//
 //		}
 //		logger.info("Templates:");
 //		for(Template t : templates){
 //			logger.info(t);
 //		}
-//		
+//
 //		//get the weighted query candidates
 //		generatedQueries = getWeightedSPARQLQueries(templates);
 //		sparqlQueryCandidates = new ArrayList<WeightedQuery>();
@@ -447,7 +447,7 @@
 //			}
 //			i++;
 //		}
-//		
+//
 //		if(mode == Mode.BEST_QUERY){
 //			double bestScore = -1;
 //			for(WeightedQuery candidate : generatedQueries){
@@ -464,15 +464,15 @@
 //			if(useRemoteEndpointValidation){ //on remote endpoint
 //				validateAgainstRemoteEndpoint(sparqlQueryCandidates);
 //			} else {//on local model
-//				
+//
 //			}
 //		}
 //	}
-//	
+//
 //	public SortedSet<WeightedQuery> getGeneratedQueries() {
 //		return generatedQueries;
 //	}
-//	
+//
 //	public SortedSet<WeightedQuery> getGeneratedQueries(int topN) {
 //		SortedSet<WeightedQuery> topNQueries = new TreeSet<WeightedQuery>();
 //		int max = Math.min(topN, generatedQueries.size());
@@ -484,28 +484,28 @@
 //		}
 //		return topNQueries;
 //	}
-//	
+//
 //	public Set<Template> getTemplates(){
 //		return templates;
 //	}
-//	
+//
 //	public List<String> getGeneratedSPARQLQueries(){
 //		List<String> queries = new ArrayList<String>();
 //		for(WeightedQuery wQ : sparqlQueryCandidates){
 //			queries.add(wQ.getQuery().toString());
 //		}
-//		
+//
 //		return queries;
 //	}
-//	
+//
 //	public Map<Template, Collection<? extends Query>> getTemplates2SPARQLQueries(){
 //		return template2Queries;
 //	}
-//	
+//
 //	public Map<Slot, List<String>> getSlot2URIs(){
 //		return slot2URI;
 //	}
-//	
+//
 //	private void normProminenceValues(Set<Allocation> allocations){
 //		double min = 0;
 //		double max = 0;
@@ -522,25 +522,25 @@
 //			a.setProminence(prominence);
 //		}
 //	}
-//	
+//
 //	private void computeScore(Set<Allocation> allocations){
 //		double alpha = 0.8;
 //		double beta = 1 - alpha;
-//		
+//
 //		for(Allocation a : allocations){
 //			double score = alpha * a.getSimilarity() + beta * a.getProminence();
 //			a.setScore(score);
 //		}
-//		
+//
 //	}
-//	
+//
 //	public Set<String> getRelevantKeywords(){
 //		return relevantKeywords;
 //	}
-//	
+//
 //	private SortedSet<WeightedQuery> getWeightedSPARQLQueries(Set<Template> templates){
 //		logger.info("Generating SPARQL query candidates...");
-//		
+//
 //		Map<Slot, Set<Allocation>> slot2Allocations = new TreeMap<Slot, Set<Allocation>>(new Comparator<Slot>() {
 //
 //			@Override
@@ -553,21 +553,21 @@
 //			}
 //		});
 //		slot2Allocations = Collections.synchronizedMap(new HashMap<Slot, Set<Allocation>>());
-//		
-//		
+//
+//
 //		SortedSet<WeightedQuery> allQueries = new TreeSet<WeightedQuery>();
-//		
+//
 //		Set<Allocation> allocations;
-//		
+//
 //		for(Template t : templates){
 //			logger.info("Processing template:\n" + t.toString());
 //			allocations = new TreeSet<Allocation>();
-//			
+//
 //			ExecutorService executor = Executors.newFixedThreadPool(t.getSlots().size());
 //			List<Future<Map<Slot, SortedSet<Allocation>>>> list = new ArrayList<Future<Map<Slot, SortedSet<Allocation>>>>();
-//			
+//
 //			long startTime = System.currentTimeMillis();
-//			
+//
 //			for (Slot slot : t.getSlots()) {
 //				if(!slot2Allocations.containsKey(slot)){//System.out.println(slot + ": " + slot.hashCode());System.out.println(slot2Allocations);
 //					Callable<Map<Slot, SortedSet<Allocation>>> worker = new SlotProcessor(slot);
@@ -577,7 +577,7 @@
 //					System.out.println("CACHE HIT");
 //				}
 //			}
-//			
+//
 //			for (Future<Map<Slot, SortedSet<Allocation>>> future : list) {
 //				try {
 //					Map<Slot, SortedSet<Allocation>> result = future.get();
@@ -589,14 +589,14 @@
 //					e.printStackTrace();
 //				}
 //			}
-//			
+//
 //			executor.shutdown();
 //			System.out.println("Time needed: " + (System.currentTimeMillis() - startTime) + "ms");
-//			
+//
 //			Set<WeightedQuery> queries = new HashSet<WeightedQuery>();
 //			Query cleanQuery = t.getQuery();
 //			queries.add(new WeightedQuery(cleanQuery));
-//			
+//
 //			Set<WeightedQuery> tmp = new TreeSet<WeightedQuery>();
 //			List<Slot> sortedSlots = new ArrayList<Slot>();
 //			Set<Slot> classSlots = new HashSet<Slot>();
@@ -630,7 +630,7 @@
 //				queries.addAll(tmp);
 //				tmp.clear();
 //			}
-//		
+//
 //			for(Slot slot : sortedSlots){
 //				if(!slot2Allocations.get(slot).isEmpty()){
 //					for(Allocation a : slot2Allocations.get(slot)){
@@ -643,17 +643,17 @@
 //								w.addAllocations(query.getAllocations());
 //								w.addAllocation(a);
 //								tmp.add(w);
-//								
-//							
+//
+//
 //						}
 //					}
 //					queries.clear();
 //					queries.addAll(tmp);
 //					tmp.clear();
-//					
-//					
+//
+//
 //				}
-//				
+//
 //			}
 //			SPARQLEndpointMetrics metrics = new SPARQLEndpointMetrics(endpoint, new ExtractionDBCache("/opt/tbsl/dbpedia_pmi_cache"));
 //			for (Iterator<WeightedQuery> iterator = queries.iterator(); iterator.hasNext();) {
@@ -663,7 +663,7 @@
 //					SPARQL_Term subject = triple.getVariable();
 //					SPARQL_Property predicate = triple.getProperty();
 //					SPARQL_Value object = triple.getValue();
-//					
+//
 //					if(!predicate.isVariable() && !predicate.getName().equals("type")){
 //						if(subject.isVariable() && !object.isVariable()){
 //							String varName = triple.getVariable().getName();
@@ -672,8 +672,8 @@
 //								types.add(typeTriple.getValue().getName().replace(">", "").replace("<", ""));
 //							}
 //							for(String type : types){
-//								double goodness = metrics.getGoodness(new NamedClass(type), 
-//										new ObjectProperty(predicate.getName().replace(">", "").replace("<", "")), 
+//								double goodness = metrics.getGoodness(new NamedClass(type),
+//										new ObjectProperty(predicate.getName().replace(">", "").replace("<", "")),
 //										new Individual(object.getName().replace(">", "").replace("<", "")));
 //								wQ.setScore(wQ.getScore()+goodness);
 //							}
@@ -684,15 +684,15 @@
 //								types.add(typeTriple.getValue().getName().replace(">", "").replace("<", ""));
 //							}
 //							for(String type : types){
-//								double goodness = metrics.getGoodness(new Individual(subject.getName().replace(">", "").replace("<", "")), 
-//										new ObjectProperty(predicate.getName().replace(">", "").replace("<", "")), 
+//								double goodness = metrics.getGoodness(new Individual(subject.getName().replace(">", "").replace("<", "")),
+//										new ObjectProperty(predicate.getName().replace(">", "").replace("<", "")),
 //										new NamedClass(type));
 //								wQ.setScore(wQ.getScore()+goodness);
 //							}
 //						}
 //					}
 //				}
-//				
+//
 //			}
 //			for (Iterator<WeightedQuery> iterator = queries.iterator(); iterator.hasNext();) {
 //				WeightedQuery wQ = iterator.next();
@@ -703,7 +703,7 @@
 //				} else {
 //					wQ.setScore(wQ.getScore()/t.getSlots().size());
 //				}
-//				
+//
 //			}
 //			allQueries.addAll(queries);
 //			List<Query> qList = new ArrayList<Query>();
@@ -715,31 +715,31 @@
 //		logger.info("...done in ");
 //		return allQueries;
 //	}
-//	
+//
 //	private double getProminenceValue(String uri, SlotType type){
 //		Integer popularity = null;
 //		if(popularityMap != null){
 //			if(type == SlotType.CLASS){
 //				popularity = popularityMap.getPopularity(uri, EntityType.CLASS);
-//			} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY 
+//			} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY
 //					|| type == SlotType.DATATYPEPROPERTY || type == SlotType.OBJECTPROPERTY){
 //				popularity = popularityMap.getPopularity(uri, EntityType.PROPERTY);
 //			} else if(type == SlotType.RESOURCE || type == SlotType.UNSPEC){
 //				popularity = popularityMap.getPopularity(uri, EntityType.RESOURCE);
-//			} 
-//		} 
+//			}
+//		}
 //		if(popularity == null){
 //			String query = null;
 //			if(type == SlotType.CLASS){
 //				query = "SELECT COUNT(?s) WHERE {?s a <%s>}";
-//			} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY 
+//			} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY
 //					|| type == SlotType.DATATYPEPROPERTY || type == SlotType.OBJECTPROPERTY){
 //				query = "SELECT COUNT(*) WHERE {?s <%s> ?o}";
 //			} else if(type == SlotType.RESOURCE || type == SlotType.UNSPEC){
 //				query = "SELECT COUNT(*) WHERE {?s ?p <%s>}";
 //			}
 //			query = String.format(query, uri);
-//			
+//
 //			ResultSet rs = executeSelect(query);
 //			QuerySolution qs;
 //			String projectionVar;
@@ -752,25 +752,25 @@
 //		if(popularity == null){
 //			popularity = Integer.valueOf(0);
 //		}
-//		
-//		
+//
+//
 ////		if(cnt == 0){
 ////			return 0;
-////		} 
+////		}
 ////		return Math.log(cnt);
 //		return popularity;
 //	}
-//	
+//
 //	public void setPopularityMap(PopularityMap popularityMap) {
 //		this.popularityMap = popularityMap;
 //	}
-//	
-//	
+//
+//
 //	private void validateAgainstRemoteEndpoint(Collection<WeightedQuery> queries){
 //		SPARQL_QueryType queryType = queries.iterator().next().getQuery().getQt();
 //		validate(queries, queryType);
 //	}
-//	
+//
 //	private void validate(Collection<WeightedQuery> queries, SPARQL_QueryType queryType){
 //		logger.info("Testing candidate SPARQL queries on remote endpoint...");
 //		sparqlMon.start();
@@ -783,7 +783,7 @@
 //					com.hp.hpl.jena.query.Query q = QueryFactory.create(query.getQuery().toString(), Syntax.syntaxARQ);
 //					q.setLimit(1);
 //					ResultSet rs = executeSelect(q.toString());
-//					
+//
 //					results = new ArrayList<String>();
 //					QuerySolution qs;
 //					String projectionVar;
@@ -795,7 +795,7 @@
 //						} else if(qs.get(projectionVar).isURIResource()){
 //							results.add(qs.get(projectionVar).asResource().getURI());
 //						}
-//						
+//
 //					}
 //					if(!results.isEmpty()){
 //						try{
@@ -817,7 +817,7 @@
 //				} catch (Exception e) {
 //					e.printStackTrace();
 //				}
-//				
+//
 //			}
 //		} else if(queryType == SPARQL_QueryType.ASK){
 //			for(WeightedQuery query : queries){
@@ -834,11 +834,11 @@
 //				logger.info("Result: " + result);
 //			}
 //		}
-//		
+//
 //		sparqlMon.stop();
 //		logger.info("Done in " + sparqlMon.getLastValue() + "ms.");
 //	}
-//	
+//
 //	private boolean executeAskQuery(String query){
 //		currentlyExecutedQuery = query;
 //		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), query);
@@ -848,7 +848,7 @@
 //		boolean ret = qe.execAsk();
 //		return ret;
 //	}
-//	
+//
 //	private ResultSet executeSelect(String query) {
 //		currentlyExecutedQuery = query;
 //		ResultSet rs;
@@ -864,14 +864,14 @@
 //			rs = QueryExecutionFactory.create(QueryFactory.create(query, Syntax.syntaxARQ), model)
 //					.execSelect();
 //		}
-//		
+//
 //		return rs;
 //	}
-//	
+//
 //	public String getCurrentlyExecutedQuery() {
 //		return currentlyExecutedQuery;
 //	}
-//	
+//
 //	public int getLearnedPosition() {
 //		if(learnedPos >= 0){
 //			return learnedPos+1;
@@ -900,7 +900,7 @@
 //			return null;
 //		}
 //	}
-//	
+//
 //	public SortedSet<WeightedQuery> getLearnedSPARQLQueries() {
 //		return learnedSPARQLQueries;
 //	}
@@ -914,13 +914,13 @@
 //	@Override
 //	public void setLearningProblem(LearningProblem learningProblem) {
 //		// TODO Auto-generated method stub
-//		
+//
 //	}
-//	
+//
 //	class SlotProcessor implements Callable<Map<Slot, SortedSet<Allocation>>>{
-//		
+//
 //		private Slot slot;
-//		
+//
 //		public SlotProcessor(Slot slot) {
 //			this.slot = slot;
 //		}
@@ -931,13 +931,13 @@
 //			result.put(slot, computeAllocations(slot));
 //			return result;
 //		}
-//		
+//
 //		private SortedSet<Allocation> computeAllocations(Slot slot){
 //			logger.info("Computing allocations for slot: " + slot);
 //			SortedSet<Allocation> allocations = new TreeSet<Allocation>();
-//			
+//
 //			Index index = getIndexBySlotType(slot);
-//			
+//
 //			IndexResultSet rs;
 //			for(String word : slot.getWords()){
 //				rs = new IndexResultSet();
@@ -961,13 +961,13 @@
 //						rs.add(index.getResourcesWithScores(word, 20));
 //					} else {
 //						if(slot.getSlotType() == SlotType.CLASS){
-//							word = PlingStemmer.stem(word); 
+//							word = PlingStemmer.stem(word);
 //						}
 //						rs.add(index.getResourcesWithScores(word, 20));
 //					}
 //				}
-//				
-//				
+//
+//
 //				for(IndexResultItem item : rs.getItems()){
 //					String label = item.getLabel();
 //					if(label == null){
@@ -987,16 +987,16 @@
 //					double prominence = getProminenceValue(item.getUri(), slot.getSlotType());
 //					allocations.add(new Allocation(item.getUri(), prominence, similarity));
 //				}
-//				
+//
 //			}
-//			
+//
 //			normProminenceValues(allocations);
-//			
+//
 //			computeScore(allocations);
 //			logger.info("Found " + allocations.size() + " allocations for slot " + slot);
 //			return new TreeSet<Allocation>(allocations);
 //		}
-//		
+//
 //		private Index getIndexBySlotType(Slot slot){
 //			Index index = null;
 //			SlotType type = slot.getSlotType();
@@ -1013,13 +1013,13 @@
 //			}
 //			return index;
 //		}
-//		
+//
 //	}
-//	
+//
 //	public String getTaggedInput(){
 //		return templateGenerator.getTaggedInput();
 //	}
-//	
+//
 //	private boolean isDatatypeProperty(String uri){
 //		Boolean isDatatypeProperty = null;
 //		if(mappingIndex != null){
@@ -1031,13 +1031,13 @@
 //		}
 //		return isDatatypeProperty;
 //	}
-//	
+//
 //	/**
 //	 * @param args
-//	 * @throws NoTemplateFoundException 
-//	 * @throws IOException 
-//	 * @throws FileNotFoundException 
-//	 * @throws InvalidFileFormatException 
+//	 * @throws NoTemplateFoundException
+//	 * @throws IOException
+//	 * @throws FileNotFoundException
+//	 * @throws InvalidFileFormatException
 //	 */
 //	public static void main(String[] args) throws Exception {
 //		SparqlEndpoint endpoint = SparqlEndpoint.getEndpointDBpedia();
@@ -1048,17 +1048,17 @@
 //		SOLRIndex boa_propertiesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/boa_fact_detail");
 //		boa_propertiesIndex.setSortField("boa-score");
 //		propertiesIndex = new HierarchicalIndex(boa_propertiesIndex, propertiesIndex);
-//		
+//
 //		SPARQLTemplateBasedLearner3 learner = new SPARQLTemplateBasedLearner3(endpoint, resourcesIndex, classesIndex, propertiesIndex);
 //		learner.init();
-//		
+//
 //		String question = "Give me all books written by Dan Brown";
-//		
+//
 //		learner.setQuestion(question);
 //		learner.learnSPARQLQueries();
 //		System.out.println("Learned query:\n" + learner.getBestSPARQLQuery());
 //		System.out.println("Lexical answer type is: " + learner.getTemplates().iterator().next().getLexicalAnswerType());
-//		System.out.println(learner.getLearnedPosition());		
+//		System.out.println(learner.getLearnedPosition());
 //	}
 //
 //}

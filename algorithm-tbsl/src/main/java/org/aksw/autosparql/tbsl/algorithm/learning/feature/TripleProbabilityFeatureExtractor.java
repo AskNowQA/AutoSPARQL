@@ -36,7 +36,7 @@ public class TripleProbabilityFeatureExtractor extends AbstractFeatureExtractor{
 		double totalScore = computeTripleScore(templateInstantiation);
 		return totalScore;
 	}
-	
+
 	@Override
 	public Feature getFeature() {
 		return Feature.TRIPLE_PROBABILITY;
@@ -57,7 +57,7 @@ public class TripleProbabilityFeatureExtractor extends AbstractFeatureExtractor{
 		//extract types of variables if exist
 		Map<Node, Node> variableToClass = new HashMap<Node, Node>();
 		for(Iterator<Triple> iter = triples.iterator(); iter.hasNext();){
-			Triple t = iter.next(); 
+			Triple t = iter.next();
 			if(t.predicateMatches(RDF.type.asNode()) && t.getSubject().isVariable() && t.getObject().isURI()){
 				variableToClass.put(t.getSubject(), t.getObject());
 				iter.remove();
@@ -67,32 +67,32 @@ public class TripleProbabilityFeatureExtractor extends AbstractFeatureExtractor{
 		Set<Triple> subjectClassTriples = new HashSet<Triple>();
 		Set<Triple> objectClassTriples = new HashSet<Triple>();
 		for(Iterator<Triple> iter = triples.iterator(); iter.hasNext();){
-			Triple t = iter.next(); 
+			Triple t = iter.next();
 			Node subject = t.getSubject();
 			Node object = t.getObject();
-			
+
 			if(subject.isVariable()){
 				Node subjectClassNode = variableToClass.get(subject);
-				Triple newTriple = Triple.create( 
-						(subjectClassNode != null) ? subjectClassNode : subject, 
-						t.getPredicate(), 
+				Triple newTriple = Triple.create(
+						(subjectClassNode != null) ? subjectClassNode : subject,
+						t.getPredicate(),
 						object);
 				subjectClassTriples.add(newTriple);
 			} else if(object.isVariable()){
 				Node objectClassNode = variableToClass.get(object);
-				Triple newTriple = Triple.create( 
-						subject, 
-						t.getPredicate(), 
+				Triple newTriple = Triple.create(
+						subject,
+						t.getPredicate(),
 						(objectClassNode != null) ? objectClassNode : object);
 				objectClassTriples.add(newTriple);
 			}
-			
+
 		}
 		double totalScore = 0;
 		for(Triple t : subjectClassTriples){
 			if(t.getSubject().isURI() && t.getPredicate().isURI() && t.getObject().isURI()){
 				double goodness = metrics.getGoodness(
-						new NamedClass(t.getSubject().getURI()), 
+						new NamedClass(t.getSubject().getURI()),
 						new ObjectProperty(t.getPredicate().getURI()),
 						new Individual(t.getObject().getURI()));
 				System.out.println(t + ": " + goodness);
@@ -102,7 +102,7 @@ public class TripleProbabilityFeatureExtractor extends AbstractFeatureExtractor{
 		for(Triple t : objectClassTriples){
 			if(t.getSubject().isURI() && t.getPredicate().isURI() && t.getObject().isURI()){
 				double goodness = metrics.getGoodness(
-						new Individual(t.getSubject().getURI()), 
+						new Individual(t.getSubject().getURI()),
 						new ObjectProperty(t.getPredicate().getURI()),
 						new NamedClass(t.getObject().getURI()));
 				System.out.println(t + ": " + goodness);
@@ -111,6 +111,6 @@ public class TripleProbabilityFeatureExtractor extends AbstractFeatureExtractor{
 		}
 		return totalScore;
 	}
-	
+
 
 }

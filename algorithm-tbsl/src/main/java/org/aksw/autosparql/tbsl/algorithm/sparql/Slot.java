@@ -8,17 +8,17 @@ import java.util.List;
 public class Slot implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = 8672756914248710435L;
-	
+
 	String anchor;
 	String token;
 	SlotType type;
 	List<String> words;
 	String postag;
-	
+
 	public Slot(String a,List<String> ws) {
 		anchor = a;
 		token = "";
-		type = SlotType.UNSPEC; 
+		type = SlotType.UNSPEC;
 		words = ws;
 		replaceUnderscores();
 		postag = "";
@@ -28,22 +28,22 @@ public class Slot implements Serializable, Cloneable{
 		token = "";
 		type = t;
 		words = ws;
-		replaceUnderscores(); 
+		replaceUnderscores();
 		postag = "";
 	}
-	
+
 	public void setPOStag(String s) {
 		postag = s;
 	}
-	
+
 	public void setSlotType(SlotType st) {
 		type = st;
 	}
-	
+
 	public SlotType getSlotType(){
 		return type;
 	}
-	
+
 	public String getAnchor() {
 		return anchor;
 	}
@@ -56,20 +56,20 @@ public class Slot implements Serializable, Cloneable{
 	public void setToken(String t) {
 		token = t;
 	}
-	
+
 	public List<String> getWords() {
 		return words;
 	}
 	public void setWords(List<String> ws) {
 		words = ws;
 	}
-	
+
 	public void replaceReferent(String ref1,String ref2) {
 		if (anchor.equals(ref1)) {
 			anchor = ref2;
 		}
 	}
-	
+
 	public void replaceUnderscores() {
 		ArrayList<String> newWords = new ArrayList<String>();
 		for (String w : words) {
@@ -77,20 +77,20 @@ public class Slot implements Serializable, Cloneable{
 		}
 		words = newWords;
 	}
-	
+
 	public String toString() {
-		
+
 		String out = anchor + ": " + type + " {";
-		
+
 		for (Iterator<String> i = words.iterator(); i.hasNext();) {
 			out += i.next();
 			if (i.hasNext()) {
 				out += ",";
 			}
 		}
-		
+
 		out += "}";
-		
+
 		return out;
 	}
         public String toTex() {
@@ -102,17 +102,17 @@ public class Slot implements Serializable, Cloneable{
 		out += "\\}";
 		return out;
         }
-	
+
 	public Slot clone() {
-		
+
 		List<String> newWords = new ArrayList<String>();
 		for (String word : words) {
 			newWords.add(word);
 		}
-		
+
 		return new Slot(anchor,type,newWords);
 	}
-	
+
 	/*@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -154,7 +154,7 @@ public class Slot implements Serializable, Cloneable{
 			return false;
 		return true;
 	}*/
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -164,12 +164,12 @@ public class Slot implements Serializable, Cloneable{
 		if (getClass() != obj.getClass())
 			return false;
 		Slot other = (Slot) obj;
-		
+
 		if(other.type != type) {return false;}
 		if(other.token==null) return token==null;
 		return other.token.equals(token);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -178,5 +178,5 @@ public class Slot implements Serializable, Cloneable{
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-		
+
 }

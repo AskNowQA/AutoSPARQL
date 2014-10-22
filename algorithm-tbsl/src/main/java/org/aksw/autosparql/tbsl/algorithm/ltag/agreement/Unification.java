@@ -6,9 +6,9 @@ package org.aksw.autosparql.tbsl.algorithm.ltag.agreement;
  * implements the unification of two Feature objects. This is used by
  * earleyParser.SubstPredictor() to determine if a tree can be substituted into
  * a SubstNode if the SubstNode has Feature requirements.
- * 
+ *
  * @author felix
- * 
+ *
  */
 public class Unification {
 

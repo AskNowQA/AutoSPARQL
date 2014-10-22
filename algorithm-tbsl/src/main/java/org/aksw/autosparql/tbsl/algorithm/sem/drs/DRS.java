@@ -14,19 +14,19 @@ public class DRS implements SemanticRepresentation, Cloneable {
 
 	// A DRS has a set(!) of discourse referents
 	Set<DiscourseReferent> m_DiscourseReferents;
-	
+
 	// A DRS has a set of conditions
 	Set<DRS_Condition> m_DRS_Conditions;
-	
+
 	Label m_Label;
 
-	
+
 	public DRS()
 	{
 		m_DiscourseReferents = new HashSet<DiscourseReferent>();
 		m_DRS_Conditions = new HashSet<DRS_Condition>();
 	}
-	
+
 	public DRS(Label l, Set<DiscourseReferent> rs, Set<DRS_Condition> cs) {
 		m_Label = l;
 		m_DiscourseReferents = rs;
@@ -49,17 +49,17 @@ public class DRS implements SemanticRepresentation, Cloneable {
 	{
 		m_Label = new Label(string);
 	}
-	
+
 	public void setDiscourseReferents(Set<DiscourseReferent> dr_set)
 	{
 		m_DiscourseReferents = dr_set;
 	}
-	
+
 	public void setDRSConditions(Set<DRS_Condition> conditions)
 	{
 		m_DRS_Conditions = conditions;
 	}
-	
+
 	public DRS getComponent(Label label) {
 		if (m_Label.equals(label)) {
 			return this;
@@ -77,55 +77,55 @@ public class DRS implements SemanticRepresentation, Cloneable {
 		}
 		return null;
 	}
-	
+
 	public String toString()
 	{
 		String string ="";
-		
+
 		if (m_Label != null) string = string += m_Label +":";
-		
+
 		string += "[";
-		
+
 		DiscourseReferent dr;
 		DRS_Condition condition;
-		
+
 		for (Iterator<DiscourseReferent> i = m_DiscourseReferents.iterator(); i.hasNext();)
 		{
 			dr = (DiscourseReferent) i.next();
 			 string = string + dr.toString();
 			 if (i.hasNext()) string += ",";
 		}
-		
+
 		string+= " | ";
-		
+
 		for (Iterator<DRS_Condition> i = m_DRS_Conditions.iterator(); i.hasNext();)
 		{
 			condition = (DRS_Condition) i.next();
 			string = string + condition;
 			if (i.hasNext()) string += ",";
 		}
-		
+
 		string+= "]";
-		
+
 		return string;
 	}
         public String toTex() {
-            
+
                 String string ="";
 		if (m_Label != null) string = string += m_Label.toTex() + ":";
 		string += "\\parbox{5cm}{\\Drs{";
-		
+
 		for (Iterator<DiscourseReferent> i = m_DiscourseReferents.iterator(); i.hasNext();) {
                     string += i.next().toString();
                     if (i.hasNext()) string += ",";
 		}
 		string += "}{";
-                
+
 		for (DRS_Condition cond : m_DRS_Conditions) {
                     string += cond.toTex() + " \\\\ ";
 		}
 		string+= "}}";
-		
+
 		return string;
         }
 
@@ -133,9 +133,9 @@ public class DRS implements SemanticRepresentation, Cloneable {
 	{
 		return m_Label;
 	}
-	
+
 	public Label getScopeLabel() {
-		
+
 		Label result = m_Label;
 		if (complexConditionOnly()) {
 			for (DRS_Condition c : m_DRS_Conditions) {
@@ -144,9 +144,9 @@ public class DRS implements SemanticRepresentation, Cloneable {
 		}
 		return result;
 	}
-	
+
 	public Label getResLabel() {
-		
+
 		Label result = m_Label;
 		if (complexConditionOnly()) {
 			for (DRS_Condition c : m_DRS_Conditions) {
@@ -155,28 +155,28 @@ public class DRS implements SemanticRepresentation, Cloneable {
 		}
 		return result;
 	}
-	
-	public List<Label> getAllLabels() 
+
+	public List<Label> getAllLabels()
 	{
 		List<Label> result = new ArrayList<Label>();
-	
+
 		result.add(getLabel());
 		for (DRS_Condition condition : m_DRS_Conditions) {
 			result.addAll(condition.getAllLabels());
 		}
-		
+
 		return result;
 	}
 
 
-	public Set<DiscourseReferent> getDRs() { 		
+	public Set<DiscourseReferent> getDRs() {
 		return m_DiscourseReferents;
 	}
-	
+
 	public Set<DiscourseReferent> getQmarkedDRs() {
-		
+
 		Set<DiscourseReferent> result = new HashSet<DiscourseReferent>();
-		
+
 		for (DiscourseReferent referent : m_DiscourseReferents) {
 			if (referent.isMarked()) {
 				result.add(referent);
@@ -184,7 +184,7 @@ public class DRS implements SemanticRepresentation, Cloneable {
 		}
 		return result;
 	}
-	
+
 	public Set<DiscourseReferent> collectDRs() {
 		Set<DiscourseReferent> result = new HashSet<DiscourseReferent>();
 		result.addAll(m_DiscourseReferents);
@@ -201,7 +201,7 @@ public class DRS implements SemanticRepresentation, Cloneable {
 	public Set<DRS_Condition> getConditions() {
 		return m_DRS_Conditions;
 	}
-	public List<DRS_Condition> getConditionList() {		
+	public List<DRS_Condition> getConditionList() {
 		List<DRS_Condition> conditionList = new ArrayList<DRS_Condition>();
 		for (DRS_Condition condition : m_DRS_Conditions) {
 			conditionList.add(condition);
@@ -224,11 +224,11 @@ public class DRS implements SemanticRepresentation, Cloneable {
 		}
 		return conditionList;
 	}
-	
+
 	public Set<Simple_DRS_Condition> collectPredicates() {
-		
+
 		Set<Simple_DRS_Condition> predicates = new HashSet<Simple_DRS_Condition>();
-		
+
 		for (DRS_Condition condition : m_DRS_Conditions) {
 			if (condition.isNegatedCondition()) {
 				predicates.addAll(((Negated_DRS) condition).getDRS().collectPredicates());
@@ -241,12 +241,12 @@ public class DRS implements SemanticRepresentation, Cloneable {
 				predicates.add((Simple_DRS_Condition) condition);
 			}
 		}
-		
+
 		return predicates;
 	}
 
 	public void removeCondition(DRS_Condition condition) {
-	
+
 		m_DRS_Conditions.remove(condition);
 		Set<DRS_Condition> donotkeep = new HashSet<DRS_Condition>();
 		for (DRS_Condition c : m_DRS_Conditions) {
@@ -261,20 +261,20 @@ public class DRS implements SemanticRepresentation, Cloneable {
 				((Complex_DRS_Condition) c).getScope().removeCondition(condition);
 			}
 		}
-		
+
 		// only because remove sometimes fails (for whatever mysterious reason)
 		Set<DRS_Condition> newconditions = new HashSet<DRS_Condition>();
 		for (DRS_Condition c : m_DRS_Conditions) {
 			if (!c.equals(condition)) {
 				newconditions.add(c);
 			}
-		}		
+		}
 		m_DRS_Conditions = newconditions;
 	}
-	
 
-	public void replaceReferent(String ref1, String ref2) { 
-	
+
+	public void replaceReferent(String ref1, String ref2) {
+
 		DiscourseReferent found = null;
 		for (DiscourseReferent dr : m_DiscourseReferents) {
 			if (dr.m_Referent.equals(ref1)) {
@@ -291,15 +291,15 @@ public class DRS implements SemanticRepresentation, Cloneable {
 			condition.replaceReferent(ref1,ref2);
 		}
 	}
-	
-	public void replaceEqualRef(DiscourseReferent dr1, DiscourseReferent dr2, boolean isInUpperUniverse) { 
-		
+
+	public void replaceEqualRef(DiscourseReferent dr1, DiscourseReferent dr2, boolean isInUpperUniverse) {
+
 		boolean next = isInUpperUniverse;
 		boolean marked = false; // TODO test!
 		boolean nonex = false;
 		DiscourseReferent found = null;
 		for (DiscourseReferent dr : m_DiscourseReferents) {
-			if (dr.m_Referent.equals(dr1.m_Referent)) { 
+			if (dr.m_Referent.equals(dr1.m_Referent)) {
 				found = dr;
 				marked = found.marked;
 				nonex = found.nonexistential;
@@ -332,68 +332,68 @@ public class DRS implements SemanticRepresentation, Cloneable {
 	public DRS clone()
 	{
 		DRS output = new DRS();
-		
+
 		output.setLabel(m_Label);
-		
+
 		for (DiscourseReferent ref : m_DiscourseReferents) {
 			output.addDR(ref.clone());
 		}
 		for (DRS_Condition condition : m_DRS_Conditions) {
 			output.addCondition(condition.clone());
 		}
-		
+
 		return output;
 	}
 
 	public Set<String> collectVariables() {
-		
+
 		Set<String> variables = new HashSet<String>();
-		
+
 		for ( DiscourseReferent ref : m_DiscourseReferents ) {
 			variables.add(ref.m_Referent);
 		}
 		for ( DRS_Condition condition : m_DRS_Conditions ) {
 			variables.addAll(condition.collectVariables());
 		}
-		
+
 		return variables;
 	}
 
 
 	public DRS merge(DRS drs) { // label of this projects
-		
+
 		DRS input = drs.clone();
 		DRS output = clone();
-		
+
 		output.getDRs().addAll(input.getDRs());
 		output.getConditions().addAll(input.getConditions());
-		
+
 		return output;
 	}
 	public DRS merge(DRS drs,Label label) { // label projects
-		
+
 		DRS input = drs.clone();
 		DRS output = clone();
-		
+
 		output.getDRs().addAll(input.getDRs());
 		output.getConditions().addAll(input.getConditions());
-		
+
 		output.setLabel(label);
-		
+
 		return output;
 	}
-	
+
 	public DRS mergeIn(DRS drs,Label loserLabel,Label winnerLabel) {
-		
+
 		Label topLabel = getLabel();
 		DRS result;
-		
-		if ( loserLabel.equals(topLabel) ) { 
-			result = merge(drs,winnerLabel); 
+
+		if ( loserLabel.equals(topLabel) ) {
+			result = merge(drs,winnerLabel);
 		}
 		else { // TODO: first all proper names to top
 			for (DRS_Condition condition : getConditions()) {
-				if ( condition.isNegatedCondition() ) { 
+				if ( condition.isNegatedCondition() ) {
 					DRS subDRS = ((Negated_DRS) condition).getDRS();
 					((Negated_DRS) condition).setDRS(subDRS.mergeIn(drs,loserLabel,winnerLabel));
 				}
@@ -409,20 +409,20 @@ public class DRS implements SemanticRepresentation, Cloneable {
 
 		return result;
 	}
-	
+
 	public boolean complexConditionOnly() {
-		
+
 		List<DRS_Condition> conditionList = getConditionList();
-		
+
 		if ( conditionList.size()==1 && conditionList.get(0).isComplexCondition() ) {
 			return true;
 		}
-		else { 
-			return false; 
+		else {
+			return false;
 		}
 	}
 
- 
+
 
 	@Override
 	public int hashCode() {
@@ -465,8 +465,8 @@ public class DRS implements SemanticRepresentation, Cloneable {
 			return false;
 		return true;
 	}
-	
-	
+
+
 	public boolean equalsModuloLabel(Object obj) {
 		if (this == obj)
 			return true;
@@ -489,16 +489,16 @@ public class DRS implements SemanticRepresentation, Cloneable {
 	}
 
 	public boolean equalsModuloRenaming(DRS drs) {
-			
+
 		DRS drs1 = this.clone();
 		DRS drs2 = drs.clone();
-		
-		drs1.setLabel("l1"); drs2.setLabel("l1");		
+
+		drs1.setLabel("l1"); drs2.setLabel("l1");
 		if (drs1.equals(drs2)) { return true; }
-		
+
 		Set<String> thisVars = drs1.collectVariables();
 		Set<String> drsVars = drs2.collectVariables();
-		
+
 		if (thisVars.size() != drsVars.size()) {
 			return false;
 		}
@@ -515,24 +515,24 @@ public class DRS implements SemanticRepresentation, Cloneable {
 				drsVarsR.add(s);
 			}
 		}
-		
+
 		String oldV; String newV;
 		for (int i=0; i < thisVarsR.size(); i++) {
 			oldV = thisVarsR.get(i);
 			newV = drsVarsR.get(i);
 			drs1.replaceReferent(oldV,newV);
 		}
-		
+
 		// If it looks the same, it is the same.
-		
+
 		DRS_Constructor dc = new DRS_Constructor();
 		if (dc.construct(drs1.toString()).equals(dc.construct(drs2.toString()))) {
 			return true;
-		} 
+		}
 		else {
 			return false;
 		}
-		
+
 	}
 
 }

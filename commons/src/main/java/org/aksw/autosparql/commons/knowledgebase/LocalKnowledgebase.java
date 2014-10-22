@@ -8,15 +8,15 @@ import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.rdf.model.Model;
 
 public class LocalKnowledgebase extends Knowledgebase{
-	
+
 	protected Model model;
-	
+
 	public LocalKnowledgebase(Model model, String label, String description,Indices indices)
 	{
 		super(label, description, indices);
 		this.model = model;
 	}
-	
+
 	public Model getModel() {
 		return model;
 	}

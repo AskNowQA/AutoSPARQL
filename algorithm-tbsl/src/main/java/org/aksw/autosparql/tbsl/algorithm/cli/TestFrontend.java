@@ -12,26 +12,26 @@ import org.aksw.autosparql.tbsl.algorithm.templator.Templator;
 
 
 public class TestFrontend {
-	
+
 	// MODE ::= BASIC | LEIPZIG
-	static String MODE = "LEIPZIG";  
+	static String MODE = "LEIPZIG";
 
     public static void main(String[] args) {
-        
+
         System.out.println("======= SPARQL Templator =================");
         System.out.println("Running in " + MODE + " mode.");
         System.out.println("\nType ':q' to quit.");
 
     	BasicTemplator btemplator = new BasicTemplator();
     	Templator templator = new Templator();
-        
+
         while (true) {
-            String s = getStringFromUser("input > ").trim(); 
-            
+            String s = getStringFromUser("input > ").trim();
+
             if (s.equals(":q")) {
                 System.exit(0);
             }
-            
+
             if (MODE.equals("BASIC")) {
             	Set<BasicQueryTemplate> querytemps = btemplator.buildBasicQueries(s);
             	for (BasicQueryTemplate temp : querytemps) {
@@ -39,7 +39,7 @@ public class TestFrontend {
             	}
             }
             else if (MODE.equals("LEIPZIG")) {
-            	Set<Template> temps = templator.buildTemplates(s);           
+            	Set<Template> temps = templator.buildTemplates(s);
             	for (Template temp : temps) {
             		System.out.println(temp.toString());
             	}

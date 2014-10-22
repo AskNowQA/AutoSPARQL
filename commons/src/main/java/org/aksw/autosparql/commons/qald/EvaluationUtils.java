@@ -24,13 +24,13 @@ public class EvaluationUtils {
 	public static double precision(String sparqlQueryString, String targetSPARQLQueryString, SparqlEndpoint endpoint){
 		return precision(sparqlQueryString, targetSPARQLQueryString, endpoint, null);
 	}
-	
+
 	public static double precision(String sparqlQueryString, String targetSPARQLQueryString, SparqlEndpoint endpoint, ExtractionDBCache cache){
 		Query sparqlQuery = QueryFactory.create(sparqlQueryString, Syntax.syntaxARQ);
 		sparqlQuery.setDistinct(true);
 		Query targetSPARQLQuery = QueryFactory.create(targetSPARQLQueryString, Syntax.syntaxARQ);
-		
-		double precision = 0; 
+
+		double precision = 0;
 		if(sparqlQuery.isSelectType() && targetSPARQLQuery.isSelectType()){
 			Set<RDFNode> nodes = executeSelect(sparqlQuery, endpoint, cache);
 			Set<RDFNode> targetNodes = executeSelect(targetSPARQLQuery, endpoint, cache);
@@ -49,17 +49,17 @@ public class EvaluationUtils {
 		}
 		return precision;
 	}
-	
+
 	public static double recall(String sparqlQueryString, String targetSPARQLQueryString, SparqlEndpoint endpoint){
 		return recall(sparqlQueryString, targetSPARQLQueryString, endpoint, null);
 	}
-	
+
 	public static double recall(String sparqlQueryString, String targetSPARQLQueryString, SparqlEndpoint endpoint, ExtractionDBCache cache){
 		Query sparqlQuery = QueryFactory.create(sparqlQueryString, Syntax.syntaxARQ);
 		sparqlQuery.setDistinct(true);
 		Query targetSPARQLQuery = QueryFactory.create(targetSPARQLQueryString, Syntax.syntaxARQ);
-		
-		double recall = 0; 
+
+		double recall = 0;
 		if(sparqlQuery.isSelectType() && targetSPARQLQuery.isSelectType()){
 			//if queries contain aggregation return always 1
 			if(!sparqlQuery.getAggregators().isEmpty() && !targetSPARQLQuery.getAggregators().isEmpty()){
@@ -79,11 +79,11 @@ public class EvaluationUtils {
 		}
 		return recall;
 	}
-	
+
 	public static double fMeasure(String sparqlQuery, String targetSPARQLQuery, SparqlEndpoint endpoint){
 		return fMeasure(sparqlQuery, targetSPARQLQuery, endpoint, null);
 	}
-	
+
 	public static double fMeasure(String sparqlQuery, String targetSPARQLQuery, SparqlEndpoint endpoint, ExtractionDBCache cache){
 		double precision = precision(sparqlQuery, targetSPARQLQuery, endpoint, cache);
 		double recall = recall(sparqlQuery, targetSPARQLQuery, endpoint, cache);
@@ -93,7 +93,7 @@ public class EvaluationUtils {
 		}
 		return fMeasure;
 	}
-	
+
 	/**
 	 * Returns a set of RDFNode objects by taking the fist projection variable of the query.
 	 * @param queryString
@@ -103,7 +103,7 @@ public class EvaluationUtils {
 	public static Set<RDFNode> executeSelect(Query query, SparqlEndpoint endpoint) {
 		return executeSelect(query, endpoint, null);
 	}
-	
+
 	/**
 	 * Returns a set of RDFNode objects by taking the fist projection variable of the query.
 	 * @param queryString
@@ -123,7 +123,7 @@ public class EvaluationUtils {
 		} else {
 			rs = SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(endpoint, query.toString()));
 		}
-		
+
 		List<Var> projectVars = query.getProjectVars();
 		String projectionVar;
 		if(!projectVars.isEmpty() && query.getAggregators().isEmpty()){//if there is some projection variable
@@ -138,17 +138,17 @@ public class EvaluationUtils {
 			RDFNode rdfNode = qs.get(projectionVar);
 			nodes.add(rdfNode);
 		}
-		
+
 		return nodes;
 	}
-	
+
 	public static boolean executeAsk(Query query, SparqlEndpoint endpoint) {
 		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), query);
 		qe.setDefaultGraphURIs(endpoint.getDefaultGraphURIs());
 		boolean ret = qe.execAsk();
 		return ret;
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		String sparqlQuery = "PREFIX dbo: <http://dbpedia.org/ontology/> " +
 				"PREFIX res: <http://dbpedia.org/resource/> " +
@@ -156,7 +156,7 @@ public class EvaluationUtils {
 				"SELECT DISTINCT ?uri WHERE {	" +
 				"?uri rdf:type dbo:Film ." +
 				"?uri dbo:starring res:Julia_Roberts .}";
-		String targetSPARQLQuery = 
+		String targetSPARQLQuery =
 				"PREFIX dbo: <http://dbpedia.org/ontology/> " +
 				"PREFIX res: <http://dbpedia.org/resource/> " +
 				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
@@ -169,7 +169,7 @@ public class EvaluationUtils {
 		double recall = EvaluationUtils.recall(sparqlQuery, targetSPARQLQuery, endpoint);
 		double fMeasure = EvaluationUtils.fMeasure(sparqlQuery, targetSPARQLQuery, endpoint);
 		System.out.println("P=" + precision + "\nR=" + recall + "\nF=" + fMeasure);
-		
+
 		//SELECT COUNT(?x)...
 		sparqlQuery = "PREFIX dbo: <http://dbpedia.org/ontology/> " +
 				"PREFIX res: <http://dbpedia.org/resource/> " +
@@ -177,7 +177,7 @@ public class EvaluationUtils {
 				"SELECT COUNT(DISTINCT ?uri) WHERE {	" +
 				"?uri rdf:type dbo:Film ." +
 				"?uri dbo:starring res:Julia_Roberts .}";
-		targetSPARQLQuery = 
+		targetSPARQLQuery =
 				"PREFIX dbo: <http://dbpedia.org/ontology/> " +
 				"PREFIX res: <http://dbpedia.org/resource/> " +
 				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.aksw.autosparql.commons;
 

@@ -14,7 +14,7 @@ public class Template implements Serializable, Comparable<Template>{
 
 	Query query;
 	List<Slot> slots;
-	
+
 	/**
 	 * Copy constructor. As Slot is mutable it may not work as intended.
 	 */
@@ -22,7 +22,7 @@ public class Template implements Serializable, Comparable<Template>{
 	{
 		this(new Query(t.query), new ArrayList<>(t.slots));
 	}
-	
+
 	public Template(Query q) {
 		query = q;
 		slots = new ArrayList<Slot>();
@@ -55,7 +55,7 @@ public class Template implements Serializable, Comparable<Template>{
 			// check for clash (v=LITERAL && v=RESOURCE)
 			for (Slot s : slots) {
 				if ((s.words.get(0).equals(slot.words.get(0)) || s.anchor.equals(slot.words.get(0)))
-						&& ((slot.type.equals(SlotType.RESOURCE) && isLiteral(s.type)) || (s.type.equals(SlotType.RESOURCE) && isLiteral(slot.type)))) // !s.type.equals(slot.type)) 
+						&& ((slot.type.equals(SlotType.RESOURCE) && isLiteral(s.type)) || (s.type.equals(SlotType.RESOURCE) && isLiteral(slot.type)))) // !s.type.equals(slot.type))
 					return null;
 			}
 			// check for clash (v=LITERAL && p(...,v)=OBJECTPROPERTY) || (v=RESOURCE && p(...,v)=DATATYPEPROPERTY)
@@ -78,8 +78,8 @@ public class Template implements Serializable, Comparable<Template>{
 					if (ts.a.getName().equals(var) && (isIntegerType(ts.type) || ts.type.equals(SPARQL_PairType.REGEX))) {
 						// clash 1: counting a literal
 						for (SPARQL_Term sel : query.selTerms) {
-							if (sel.name.equals(var) && sel.aggregate.equals(SPARQL_Aggregate.COUNT)) 
-								return null; 
+							if (sel.name.equals(var) && sel.aggregate.equals(SPARQL_Aggregate.COUNT))
+								return null;
 						}
 						// clash 2: FILTER regex(?var,...) and FILTER (?var > ...)
 						for (SPARQL_Filter f : query.filter) {
@@ -96,12 +96,12 @@ public class Template implements Serializable, Comparable<Template>{
 		}
 
 		for (Slot slot : slots) {
-			// check for clashes    
+			// check for clashes
 			if (slot.type.equals(SlotType.CLASS)) {
 				for (SPARQL_Triple triple : query.conditions) {
 					if (triple.property.toString().equals("rdf:type") && triple.value.toString().equals("?"+slot.anchor)) {
 						for (Slot s : argslots) {
-							if (s.words.contains(triple.variable.toString().replace("?","")) && isLiteral(s.type)) 
+							if (s.words.contains(triple.variable.toString().replace("?","")) && isLiteral(s.type))
 								return null;
 						}
 					}
@@ -146,9 +146,9 @@ public class Template implements Serializable, Comparable<Template>{
 			if (!s.anchor.startsWith("SLOT_arg"))
 				keep.add(s);
 		}
-		slots = keep; 
+		slots = keep;
 
-		// additionally, filter out those templates that count a var that does not occur in the triples 
+		// additionally, filter out those templates that count a var that does not occur in the triples
 		// (these templates should not be built in the first place, but they are...)
 		for (SPARQL_Term t : query.selTerms) {
 			if (t.aggregate.equals(SPARQL_Aggregate.COUNT)) {
@@ -176,7 +176,7 @@ public class Template implements Serializable, Comparable<Template>{
 
 	public String toString() {
 
-		String out = ">> QUERY: "+StringDisplay.shortenSparqlQuery(query.toString())				
+		String out = ">> QUERY: "+StringDisplay.shortenSparqlQuery(query.toString())
 				+ "\n>> SLOTS: ";
 		for (Slot s : slots) {
 			out += s.toString();

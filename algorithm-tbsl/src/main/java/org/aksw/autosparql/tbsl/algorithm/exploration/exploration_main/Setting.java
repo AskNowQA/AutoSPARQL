@@ -16,13 +16,13 @@ public class Setting {
 	private static boolean saveAnsweredQueries;
 	private static boolean tagging;
 	private static boolean loadTagging;
-	
+
 	private static long time_tbsl;
 	private static long time_builder;
 	private static long time_elements;
-	
-	
-	
+
+
+
 	public static boolean isWaitModus() {
 		return waitModus;
 	}
@@ -102,7 +102,7 @@ public class Setting {
 	public static void setTime_tbsl(long time_tbsl) {
 		Setting.time_tbsl = time_tbsl;
 	}
-	
+
 	public static void addTime_tbsl(long time_tbsl) {
 		long tmp=getTime_tbsl();
 		Setting.time_tbsl = time_tbsl+tmp;
@@ -113,7 +113,7 @@ public class Setting {
 	public static void setTime_builder(long time_builder) {
 		Setting.time_builder = time_builder;
 	}
-	
+
 	public static void addTime_builder(long time_builder) {
 		long tmp=getTime_builder();
 		Setting.time_builder = time_builder+tmp;
@@ -124,7 +124,7 @@ public class Setting {
 	public static void setTime_elements(long time_elements) {
 		Setting.time_elements = time_elements;
 	}
-	
+
 	public static void addTime_elements(long time_elements) {
 		long tmp = getTime_elements();
 		Setting.time_elements = time_elements+tmp;
@@ -143,7 +143,7 @@ public class Setting {
 	public static void setLoadTagging(boolean loadTagging) {
 		Setting.loadTagging = loadTagging;
 	}
-	
 
-	
+
+
 }

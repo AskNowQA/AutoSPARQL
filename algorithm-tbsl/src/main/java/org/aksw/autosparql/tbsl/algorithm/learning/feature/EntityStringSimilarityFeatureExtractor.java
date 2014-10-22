@@ -11,16 +11,16 @@ import org.aksw.autosparql.tbsl.algorithm.util.Similarity;
 
 /**
  * Computes a score <b>S</b> by:<br/>
- * Sum up the maximum of the String similarity value <b>s</b> between the entity label <b>l</b> and the tokens t_1,...,t_n in each slot, 
+ * Sum up the maximum of the String similarity value <b>s</b> between the entity label <b>l</b> and the tokens t_1,...,t_n in each slot,
  * i.e.<br/>
  * <b>S</b>=SUM(MAX(s(l, t_n)))/#slots
  * @author Lorenz Buehmann
- * 
- * 
- * 				
+ *
+ *
+ *
  */
 public class EntityStringSimilarityFeatureExtractor extends AbstractFeatureExtractor{
-	
+
 	public EntityStringSimilarityFeatureExtractor(Knowledgebase knowledgebase) {
 		super(knowledgebase);
 	}
@@ -43,7 +43,7 @@ public class EntityStringSimilarityFeatureExtractor extends AbstractFeatureExtra
 		total /= allocations.size();
 		return total;
 	}
-	
+
 	@Override
 	public Feature getFeature() {
 		return Feature.STRING_SIMILARITY_AVERAGE;

@@ -35,7 +35,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 import com.vaadin.terminal.ThemeResource;
 
 public class Manager {
-	private static final String SOLR_SERVER_URI_EN	= "http://solr.aksw.org/en_";	
+	private static final String SOLR_SERVER_URI_EN	= "http://solr.aksw.org/en_";
 	private static final Logger logger = Logger.getLogger(TBSLManager.class);
 
 	private static Manager instance;

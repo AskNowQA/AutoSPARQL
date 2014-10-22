@@ -4,24 +4,24 @@ public class Entity {
 
 	private String uri;
 	private String label;
-	
+
 	public Entity(String uri, String label) {
 		this.uri = uri;
 		this.label = label;
 	}
-	
+
 	public Entity(String uri) {
 		this(uri, null);
 	}
-	
+
 	public String getURI() {
 		return uri;
 	}
-	
+
 	public String getLabel() {
 		return label;
 	}
-	
+
 	@Override
 	public String toString() {
 		return uri + "(" + label + ")";
@@ -57,7 +57,7 @@ public class Entity {
 			return false;
 		return true;
 	}
-	
-	
+
+
 
 }

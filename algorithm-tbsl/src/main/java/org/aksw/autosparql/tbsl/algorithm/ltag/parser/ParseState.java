@@ -14,7 +14,7 @@ import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;
  * A ParseState represents a state during a parse of a certain input string.
  * ParserOperations generate new ParseStates with different parameters and can
  * apply only to certain configurations of ParseStates.
- * 
+ *
  * @param tid
  *            is the id of the current tree (unique ID for the input string)
  * @param t
@@ -56,10 +56,10 @@ class ParseState {
 	char side; // dot is either left 'l' or right 'r'
 	char pos; // dot is either above 'a' or below 'b'
 	Integer l; // index of the input string where alpha begins
-	Integer f_l; // 
+	Integer f_l; //
 	Integer f_r; //
 	TreeNode star; // address of the starred node in tree alpha
-	Integer t_star_l; // 
+	Integer t_star_l; //
 	Integer b_star_l; //
 	boolean subst; // shows if tree has been predicted for substitution
 	Integer i; // current i the state belongs to

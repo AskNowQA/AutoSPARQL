@@ -10,7 +10,7 @@ public class Clones
 {
 	static void fromArrayToCollection(Object[] a, Collection<?> c) {
 	}
-	
+
 	static <T extends Cloneable> Set<T> deepCloneSet(Set<T> s)
 	{
 		Set<T> clone = new HashSet<T>();

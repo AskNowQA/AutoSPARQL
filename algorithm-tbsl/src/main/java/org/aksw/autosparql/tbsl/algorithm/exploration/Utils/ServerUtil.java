@@ -14,22 +14,22 @@ import java.util.regex.Pattern;
 
 public class ServerUtil {
 
-	
+
 	//private static String server_Prefix="http://greententacle.techfak.uni-bielefeld.de:5171/sparql";
 	//private static String server_Prefix="http://dbpedia.org/sparql";
 	private static String server_Prefix="http://greententacle.techfak.uni-bielefeld.de:5171/sparql";
 	//private static String server_Prefix="http://purpurtentacle.techfak.uni-bielefeld.de:8897/sparql";
 	//private static String server_Prefix="http://purpurtentacle.techfak.uni-bielefeld.de:8890/sparql";
-	
+
 	private static int timeToTimeoutOnServer=3000;
-	
+
 	public static HashMap<String, String> generatesQueryForOutsideClasses(String query){
 		String working_query= ServerUtil.getServer_Prefix()+"?default-graph-uri=&query="+ServerUtil.createServerRequest(query)+"%0D%0A&format=text%2Fhtml&debug=on&timeout=";
-	    
+
 	    return generateList(getListOfElements(working_query));
-	    
+
 	}
-		
+
 	public static String createServerRequest(String query){
 		String anfrage=null;
 		anfrage=removeSpecialKeys(query);
@@ -58,7 +58,7 @@ public class ServerUtil {
 	    //anfrage=anfrage.replaceAll("\n",".%0D%0A%09");
 		return anfrage;
 	}
-	
+
 	private static String removeSpecialKeys(String query){
 		query=query.replace("\\","");
 	    //query=query.replaceAll("\a","");
@@ -81,29 +81,29 @@ public class ServerUtil {
 	public static void setTimeToTimeoutOnServer(int timeToTimeoutOnServer) {
 		ServerUtil.timeToTimeoutOnServer = timeToTimeoutOnServer;
 	}
-	
-	
+
+
 	/**
 	 * Uses an URI to get the properties of this resource
 	 * @param uri
-	 * @return 
+	 * @return
 	 * @throws IOException
 	 */
 	public static HashMap<String,String> getPropertiesForGivenResource(String uri, String side) throws IOException{
-		
-		
+
+
 		String query_property_left=ServerUtil.getServer_Prefix()+"?default-graph-uri=&query="+ServerUtil.createServerRequest("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT DISTINCT ?s ?p WHERE {?y ?p <"+uri+">. ?p rdfs:label ?s. FILTER (lang(?s) = 'en') }")+"%0D%0A&format=text%2Fhtml&debug=on&timeout=";
 
 		String query_property_right=ServerUtil.getServer_Prefix()+"?default-graph-uri=&query="+ServerUtil.createServerRequest("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT DISTINCT ?s ?p WHERE {<"+uri+"> ?p ?y. ?p rdfs:label ?s. FILTER (lang(?s) = 'en') }")+"%0D%0A&format=text%2Fhtml&debug=on&timeout=";
 
 		String query_property_leftANDright=ServerUtil.getServer_Prefix()+"?default-graph-uri=&query="+ServerUtil.createServerRequest("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT DISTINCT ?s ?p WHERE {{?y ?p <"+uri+">. ?p rdfs:label ?s. FILTER (lang(?s) = 'en') } UNION {<"+uri+"> ?p ?y. ?p rdfs:label ?s. FILTER (lang(?s) = 'en') }}")+"%0D%0A&format=text%2Fhtml&debug=on&timeout=";
 		String verarbeitungsurl=null;
-		
+
 		/*Original*/
 		if(side.contains("RIGHT")) verarbeitungsurl=query_property_right;
 		if(side.contains("LEFT")) verarbeitungsurl=query_property_left;
 		if(side.contains("BOTH")) verarbeitungsurl=query_property_leftANDright;
-		 
+
 		if(!side.contains("LEFT") && !side.contains("RIGHT")) verarbeitungsurl=query_property_left;
 
 	    String result="";
@@ -111,7 +111,7 @@ public class ServerUtil {
 	    System.out.println("side: "+ side);*/
 	   // System.out.println(verarbeitungsurl);
 		result = getListOfElements(verarbeitungsurl);
-	    
+
 	    return generateList(result);
 	}
 
@@ -122,23 +122,23 @@ public class ServerUtil {
 	 * @throws IOException
 	 */
 	public static HashMap<String,String> getElementsForGivenClass(String classUri) throws IOException{
-		
-		
+
+
 		String query="SELECT DISTINCT ?s ?p WHERE {{?x ?p ?y. ?p rdfs:label ?s. FILTER (lang(?s) = 'en').} UNION {?y ?p ?x. ?p rdfs:label ?s. FILTER (lang(?s) = 'en').} { SELECT ?x { ?x rdf:type <"+classUri+">.}LIMIT 10}}";
 		//System.out.println(query);
 		//DebugMode.waitForButton();
 		String query_final=ServerUtil.getServer_Prefix()+"?default-graph-uri=&query="+ServerUtil.createServerRequest(query)+"%0D%0A&format=text%2Fhtml&debug=on&timeout=";
 	    String result="";
 		result = getListOfElements(query_final);
-	    
+
 	    return generateList(result);
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
 	private static HashMap<String, String> generateList(String result) {
 		HashMap<String,String> hm = new HashMap<String,String>();
 	    result=result.replace("<th>s</th>","");
@@ -149,10 +149,10 @@ public class ServerUtil {
 	    result=result.replace("\n", "");
 	    result=result.replace(" ", "");
 	    result=result.replaceFirst("<td>", "");
-	    
-	    
+
+
 	    String[] tmp_array=result.split("</td><td>");
-	    
+
 	    for(int i =1; i<=tmp_array.length-2;i=i+2) {
 	    	//System.out.println("i-1: " +tmp_array[i-1]);
 	    	//System.out.println("i: " +tmp_array[i]);
@@ -165,44 +165,44 @@ public class ServerUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-	    
+
 	    return hm;
 	}
-	
-	
+
+
 
 	private static String getListOfElements(String verarbeitungsurl) {
-		
+
 		String result="";
 		HttpURLConnection connection = null;
 	      BufferedReader rd  = null;
 	      StringBuilder sb = null;
 	      String line = null;
-	    
+
 	      URL serverAddress = null;
-	    
+
 	      try {
 	          serverAddress = new URL(verarbeitungsurl);
 	          //set up out communications stuff
 	          connection = null;
-	        
+
 	          //Set up the initial connection
 	          connection = (HttpURLConnection)serverAddress.openConnection();
 	          connection.setRequestMethod("GET");
 	          connection.setDoOutput(true);
 	          connection.setReadTimeout(getTimeToTimeoutOnServer());
-	                    
+
 	          connection.connect();
 	          rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 	          sb = new StringBuilder();
-	        
+
 	          while ((line = rd.readLine()) != null)
 	          {
 	              sb.append(line + '\n');
 	          }
-	        
+
 	          result=sb.toString();
-	                    
+
 	      } catch (MalformedURLException e) {
 		      //System.out.println("Must enter a valid URL");
 	    	  System.err.println("ATTENTION\n URL not valid : "+verarbeitungsurl+"\n");
@@ -224,7 +224,7 @@ public class ServerUtil {
 	      }
 		return result;
 	}
-	
+
 	public static ArrayList<String> requestAnswerFromServer(String query){
 		query=query.replace(">0",">");
 		String query_url=server_Prefix+"?default-graph-uri=&query="+createServerRequest(query)+"&format=text%2Fhtml&debug=on&timeout=";
@@ -235,32 +235,32 @@ public class ServerUtil {
 	      BufferedReader rd  = null;
 	      StringBuilder sb = null;
 	      String line = null;
-	    
+
 	      URL serverAddress = null;
-	    
+
 	      try {
 	          serverAddress = new URL(query_url);
 	          //set up out communications stuff
 	          connection = null;
-	        
+
 	          //Set up the initial connection
 	          connection = (HttpURLConnection)serverAddress.openConnection();
 	          connection.setRequestMethod("GET");
 	          connection.setDoOutput(true);
 	          connection.setReadTimeout(timeToTimeoutOnServer);
-	                    
+
 	          connection.connect();
 	          rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 	          sb = new StringBuilder();
-	        
+
 	          while ((line = rd.readLine()) != null)
 	          {
 	              sb.append(line + '\n');
 	          }
-	        
+
 	          //System.out.println(sb.toString());
 	          result=sb.toString();
-	                    
+
 	      } catch (MalformedURLException e) {
 	    	  System.err.println("ATTENTION\n URL not valid : "+query_url+"\n");
 		    } catch (IOException e) {
@@ -275,12 +275,12 @@ public class ServerUtil {
 	          wr = null;
 	          connection = null;
 	      }
-	    
-	    
-	    
+
+
+
 		return createAnswerArray(result);
 	}
-	
+
 	private static ArrayList<String> createAnswerArray(String string){
 		/*
 		 * <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><table class="sparql" border="1">
@@ -297,12 +297,12 @@ public class ServerUtil {
 
 		Pattern p = Pattern.compile (".*\\<td\\>(.*)\\</td\\>.*");
 		string = string.replace("<table class=\"sparql\" border=\"1\">", "").replace("<tr>","").replace("</tr>", "").replace("</table>", "");
-	    
+
 		//System.out.println("Nach erster Bearbeitung: "+string);
-		
+
 		Matcher m = p.matcher (string);
 	    String[] bla = string.split("   ");
-	    
+
 	    ArrayList<String> result= new ArrayList<String>();
 	  	for(String s: bla){
 	  		//System.out.println("s von bla: "+s);
@@ -310,9 +310,9 @@ public class ServerUtil {
 	  		s=s.replace("\"@en</td>", "");
 	  		s=s.replace("<td>", "");
 	  		s=s.replace("</td>", "");
-	  		
+
 	  		//System.out.println("s new von bla: "+s);
-	  		
+
 	  		s = s.replace("\"@en","");
   			s = s.replace("\"","");
   			s = s.replace("\n","");
@@ -324,13 +324,13 @@ public class ServerUtil {
   			for(int i =0; i<s.length();i++){
   				s=s.replace("  ","");
   			}
-  			
+
   			if(s.length()>1){
   				if(s.substring(0,1).contains(" ")){
   	  				s = s.substring(1, s.length());
   	  			}
   			}
-  			
+
   			if(!s.contains("<th>")&&!s.matches(" ")&&s.length()>0){
   				//System.out.println("add :"+s+"DONE");
   				result.add(s);
@@ -347,16 +347,16 @@ public class ServerUtil {
 	  			temp = temp.replace("\"","");
 	  			//result.add(m.group(1));
 	  			result.add(temp);
-	  			  		
+
 	  		}*/
 	    }
-	  	
-	  		
+
+
 		//if (result.length()==0) result="EmtyAnswer";
 	  	if(string.matches("true")|| string.matches("false")) result.add(string);
 		return result;
 
 	}
-	
+
 
 }

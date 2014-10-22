@@ -16,18 +16,18 @@ import org.aksw.autosparql.tbsl.algorithm.exploration.exploration_main.Setting;
  */
 public class Elements {
 	private ArrayList<ElementList> elements = new ArrayList<ElementList>();
-	
+
 	public ArrayList<ElementList> getElements() {
 		return elements;
 	}
 	public void setElements(ArrayList<ElementList> resources) {
 		this.elements = resources;
 	}
-	
+
 	private void addElements(ElementList cl) {
 		this.elements.add(cl);
 	}
-	
+
 	public Elements(ArrayList<ArrayList<String>> condition, ArrayList<ArrayList<Hypothesis>> hypothesen){
 		long start = System.currentTimeMillis();
 		/*
@@ -40,7 +40,7 @@ public class Elements {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		/*
 		 * second all Resources
 		 */
@@ -51,14 +51,14 @@ public class Elements {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		if(Setting.isDebugModus())DebugMode.debugPrint("Created Elements");
 		long stop = System.currentTimeMillis();
 		Setting.addTime_elements(stop-start);
 	}
-	
+
 	private void createElementsOfClasses(ArrayList<ArrayList<Hypothesis>> hypothesenList) throws IOException{
-		
+
 		/*
 		 * Iterate over all Hypothesis and look for an IsA
 		 */
@@ -90,11 +90,11 @@ public class Elements {
 				}
 			}
 		}
-		
+
 		//return classes;
 	}
-	
-	
+
+
 	private void createElementsOfResources(ArrayList<ArrayList<Hypothesis>> hypothesenList,ArrayList<ArrayList<String>> conditionList) throws IOException{
 		/*
 		 * Iterate over all Hypothesis and look for an resource
@@ -103,7 +103,7 @@ public class Elements {
 			for(Hypothesis h : hl){
 				if(h.getType().contains("RESOURCE")&&h.getUri().contains("http")){
 					if(Setting.isDebugModus())DebugMode.debugPrint("Create Elements for Resource: "+h.getName()+" Uri: "+h.getUri());
-					
+
 					for(ArrayList<String> cl : conditionList){
 						if(h.getVariable().equals(cl.get(0))) {
 							if(ElementStorage.getStorage_resource_right().containsKey(h.getUri())){
@@ -119,11 +119,11 @@ public class Elements {
 								//resources.add(el);
 								this.addElements(el);
 							}
-								
-					
+
+
 						}
 						if(h.getVariable().equals(cl.get(2))) {
-							
+
 							if(ElementStorage.getStorage_resource_left().containsKey(h.getUri())){
 								ElementList el = new ElementList(h.getName()+"LEFT",h.getUri(),ElementStorage.getStorage_resource_left().get(h.getUri()));
 								//resources.add(el);
@@ -137,26 +137,26 @@ public class Elements {
 								//resources.add(el);
 								this.addElements(el);
 							}
-								
+
 						}
 					}
-					
-					
+
+
 				}
 			}
 		}
-		
+
 		//return resources;
 	}
 
-	
+
 	public void printAll(){
 		System.out.println("Elements: ");
 		for(ElementList el: this.elements){
 			el.printAll();
 		}
 	}
-	
+
 	public String printToString(){
 		String result="";
 		result+="Elements: \n";
@@ -165,8 +165,8 @@ public class Elements {
 		}
 		return result;
 	}
-	
-	
+
+
 	public boolean isElementEmty(){
 		try {
 			if(this.getElements().isEmpty()) return true;

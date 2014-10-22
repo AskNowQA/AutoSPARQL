@@ -156,7 +156,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //		if(kb instanceof RemoteKnowledgebase)	{this.endpoint = ((RemoteKnowledgebase) kb).getEndpoint();}
 //		else if(kb instanceof LocalKnowledgebase) {this.model= ((LocalKnowledgebase) kb).getModel();}
 //		else {throw new RuntimeException("should never happen");}
-//		
+//
 //		this.resourcesIndex = kb.getResourceIndex();
 //		this.classesIndex = kb.getClassIndex();
 //		this.objectPropertiesIndex = kb.getObjectPropertyIndex();
@@ -450,7 +450,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //		Set<Allocation> allocations;
 //
 //		for(Template t : templates){
-//			logger.info("Processing template:\n" + t.toString());			
+//			logger.info("Processing template:\n" + t.toString());
 //			allocations = new TreeSet<Allocation>();
 //			boolean containsRegex = t.getQuery().toString().toLowerCase().contains("(regex(");
 //
@@ -464,7 +464,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //					Callable<Map<Slot, SortedSet<Allocation>>> worker = new SlotProcessor(slot);
 //					Future<Map<Slot, SortedSet<Allocation>>> submit = executor.submit(worker);
 //					list.add(submit);
-//				} 
+//				}
 //			}
 //
 //			for (Future<Map<Slot, SortedSet<Allocation>>> future : list) {
@@ -585,7 +585,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //
 //													if(Sets.intersection(allRanges, allTypes).isEmpty()){
 //														drop = true;
-//													} 
+//													}
 //												}
 //											} else {
 //												drop = true;
@@ -618,7 +618,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //												allTypes.add(type);
 //
 //												if(Sets.intersection(allDomains, allTypes).isEmpty()){
-//													drop = true;												
+//													drop = true;
 //												} else {
 //
 //												}
@@ -746,7 +746,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //					//													object, "'" + regexToken + "'", SPARQL_PairType.REGEX)));
 //					//										}
 //					//										q.replaceVarWithURI(slot.getAnchor(), uri);
-//					//										
+//					//
 //					//									}
 //					//								}
 //					//							} catch (Exception e) {
@@ -787,18 +787,18 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //		if(popularityMap != null){
 //			if(type == SlotType.CLASS){
 //				popularity = popularityMap.getPopularity(uri, EntityType.CLASS);
-//			} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY 
+//			} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY
 //					|| type == SlotType.DATATYPEPROPERTY || type == SlotType.OBJECTPROPERTY){
 //				popularity = popularityMap.getPopularity(uri, EntityType.PROPERTY);
 //			} else if(type == SlotType.RESOURCE || type == SlotType.UNSPEC){
 //				popularity = popularityMap.getPopularity(uri, EntityType.RESOURCE);
-//			} 
-//		} 
+//			}
+//		}
 //		if(popularity == null){
 //			String query = null;
 //			if(type == SlotType.CLASS){
 //				query = "SELECT COUNT(?s) WHERE {?s a <%s>}";
-//			} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY 
+//			} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY
 //					|| type == SlotType.DATATYPEPROPERTY || type == SlotType.OBJECTPROPERTY){
 //				query = "SELECT COUNT(*) WHERE {?s <%s> ?o}";
 //			} else if(type == SlotType.RESOURCE || type == SlotType.UNSPEC){
@@ -822,7 +822,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //
 //		//		if(cnt == 0){
 //		//			return 0;
-//		//		} 
+//		//		}
 //		//		return Math.log(cnt);
 //		if(popularity!=popularity) {throw new AssertionError("prominence NaN for uri "+uri+", slot type "+type);}
 //		return popularity;
@@ -970,14 +970,14 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //	private boolean executeAskQuery(String query)
 //	{
 //		if(query==null) throw new NullPointerException("Parameter query == null");
-//		currentlyExecutedQuery = query;		
+//		currentlyExecutedQuery = query;
 //
 //		boolean ret;
 //		if (model == null)
-//		{		
+//		{
 //			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), query);
 //			qe.setDefaultGraphURIs(endpoint.getDefaultGraphURIs());
-//			ret = qe.execAsk();			
+//			ret = qe.execAsk();
 //		}
 //		else {ret = QueryExecutionFactory.create(QueryFactory.create(query, Syntax.syntaxARQ), model).execAsk();}
 //		return ret;
@@ -1097,7 +1097,7 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //						rs.add(index.getResourcesWithScores(word, 20));
 //					} else {
 //						if(slot.getSlotType() == SlotType.CLASS){
-//							word = PlingStemmer.stem(word); 
+//							word = PlingStemmer.stem(word);
 //						}
 //						rs.add(index.getResourcesWithScores(word, 20));
 //					}
@@ -1167,13 +1167,13 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 //	}
 ////	/**
 ////	 * @param args
-////	 * @throws NoTemplateFoundException 
-////	 * @throws IOException 
-////	 * @throws FileNotFoundException 
-////	 * @throws InvalidFileFormatException 
+////	 * @throws NoTemplateFoundException
+////	 * @throws IOException
+////	 * @throws FileNotFoundException
+////	 * @throws InvalidFileFormatException
 ////	 */
 ////	public static void main(String[] args) throws Exception {
-////		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://greententacle.techfak.uni-bielefeld.de:5171/sparql"), 
+////		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://greententacle.techfak.uni-bielefeld.de:5171/sparql"),
 ////				Collections.<String>singletonList(""), Collections.<String>emptyList());
 ////		Index resourcesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_resources");
 ////		Index classesIndex = new SOLRIndex("http://139.18.2.173:8080/solr/dbpedia_classes");

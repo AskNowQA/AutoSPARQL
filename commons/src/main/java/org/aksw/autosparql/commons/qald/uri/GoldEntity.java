@@ -5,14 +5,14 @@ import java.io.Serializable;
 public class GoldEntity implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6101450152774669016L;
 	public String uri;
 	public String label;
 
 	public GoldEntity(String uri, String label) {
-		
+
 		this.uri = uri;
 		this.label = label;
 	}
@@ -55,6 +55,6 @@ public class GoldEntity implements Serializable {
 	public String toString() {
 		return uri;
 	}
-	
-	
+
+
 }

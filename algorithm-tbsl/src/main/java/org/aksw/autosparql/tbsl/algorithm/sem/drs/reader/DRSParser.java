@@ -1003,7 +1003,7 @@ if (dr_list == null)
       p = p.next;
     }
 
-    p.gen = jj_gen + xla - jj_la; 
+    p.gen = jj_gen + xla - jj_la;
     p.first = token;
     p.arg = xla;
   }

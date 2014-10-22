@@ -17,15 +17,15 @@ public class LemmatizedIndex extends Index
 	protected Index index;
 	static StanfordLemmatizer lemmatizer = new StanfordLemmatizer();
 	static final float LEMMATIZED_PENALITY = 0.8f;
-	
+
 	public LemmatizedIndex(Index index) {this.index=index;}
-	
+
 	public static String lemmatize(String s)
 	{return lemmatizer.stem(s);}
 
 	@Override public IndexResultSet getResourcesWithScores(String queryString, int limit)
 	{
-		IndexResultSet items = index.getResourcesWithScores(queryString, limit);		
+		IndexResultSet items = index.getResourcesWithScores(queryString, limit);
 		if(items.size()<limit)
 		{
 			Set<String> uris = new HashSet<String>();
@@ -37,7 +37,7 @@ public class LemmatizedIndex extends Index
 				// todo: replace with new score if higher or somehow aggregate
 				if(!uris.contains(item.getUri()))
 				{
-					uris.add(item.getUri());					
+					uris.add(item.getUri());
 					items.add(new IndexItem(item.getUri(),item.getLabel(),newScore));
 				}
 			}

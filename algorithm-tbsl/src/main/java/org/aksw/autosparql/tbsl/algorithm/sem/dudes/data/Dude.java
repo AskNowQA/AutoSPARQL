@@ -25,8 +25,8 @@ public class Dude implements SemanticRepresentation{
 	List<Argument> arguments;
 	List<DominanceConstraint> dominanceConstraints;
 	List<Slot> slots;
-	
-	
+
+
 	public Dude()
 	{
 		arguments = new ArrayList<Argument>();
@@ -34,25 +34,25 @@ public class Dude implements SemanticRepresentation{
 		dominanceConstraints = new ArrayList<DominanceConstraint>();
 		slots = new ArrayList<Slot>();
 	}
-	
+
 // set methods
 	public void setReferent(String s) {
-		mainReferent = s;		
+		mainReferent = s;
 	}
 	public void setLabel(Label l) {
-		mainLabel = l;		
+		mainLabel = l;
 	}
 	public void setType(Type t) {
-		mainType = t;		
+		mainType = t;
 	}
 	public void setComponents(List<DRS> drss) {
-		components = drss;		
+		components = drss;
 	}
 	public void setArguments(List<Argument> args) {
 		arguments = args;
-	}	
+	}
 	public void setDominanceConstraints(List<DominanceConstraint> cs) {
-		dominanceConstraints = cs;		
+		dominanceConstraints = cs;
 	}
 	public void setSlots(List<Slot> ls) {
 		slots = ls;
@@ -80,11 +80,11 @@ public class Dude implements SemanticRepresentation{
 	public List<Slot> getSlots() {
 		return slots;
 	}
-	
+
 	public DRS getComponent(Label label) {
-		
+
 		DRS c = new DRS();
-		
+
 		for (DRS component : components) {
 			if ( component.getLabel().equals(label) ) {
 				c = component;
@@ -93,7 +93,7 @@ public class Dude implements SemanticRepresentation{
 		return c;
 	}
 	public Argument getArgument(String index) {
-		
+
 		for ( Argument arg : arguments ) {
 			if ( arg.anchor.equals(index) ) {
 				return arg;
@@ -101,14 +101,14 @@ public class Dude implements SemanticRepresentation{
 		}
 		return null;
 	}
-	
+
 // print method
 	public String toString()
 	{
-		String string = "<" + mainReferent + "," + mainLabel + "," + mainType + ", " 
+		String string = "<" + mainReferent + "," + mainLabel + "," + mainType + ", "
 					+ components + ", " + arguments + ", "+ dominanceConstraints
 					+ slots + ">";
-		
+
 		return string;
 	}
 
@@ -120,24 +120,24 @@ public class Dude implements SemanticRepresentation{
 
 // semantic operation corresponding to SUBSTITUTION
 	public Dude apply(String index, Dude dude) throws UnsupportedOperationException {
-		
+
 		Argument argumentThis = this.getArgument(index);
 		Argument argumentDude = dude.getArgument(index);
-		
+
 		if ( argumentThis != null && argumentThis.type.equals(dude.mainType) ) {
 			return this.applyTo(argumentThis,dude);
-		}	
+		}
 		else {
 			if ( argumentDude != null && argumentDude.type.equals(this.mainType) ) {
 				return dude.applyTo(argumentDude,this);
 			}
 			else {
-				throw new UnsupportedOperationException("Dude.apply failed because of type mismatch:\n Tried to merge " + this + " and " + dude 
+				throw new UnsupportedOperationException("Dude.apply failed because of type mismatch:\n Tried to merge " + this + " and " + dude
 						+ "\n Index is " + index + " and neither " + argumentThis + " and " + dude + " nor " + argumentDude + " and " + this + " fit.");
 			}
 		}
 	}
-	
+
 	public Dude applyTo(Argument argument, Dude dude) {
 
 		Dude output = cloneDude();
@@ -145,39 +145,39 @@ public class Dude implements SemanticRepresentation{
 
 		// first check for name clashes and rename if necessary
 
-		output.avoidClash(input); 
-		
+		output.avoidClash(input);
+
 		// then do the application
-		
+
 		input.replaceLabel(input.mainLabel,argument.label);
-		
-		String ref = argument.referent; 
+
+		String ref = argument.referent;
 		input.replaceReferent(input.mainReferent,ref);
 
-		output.components.addAll(input.components); 		
-		output.dominanceConstraints.addAll(input.dominanceConstraints); 
+		output.components.addAll(input.components);
+		output.dominanceConstraints.addAll(input.dominanceConstraints);
 		output.arguments.remove(argument);
 		output.arguments.addAll(dude.arguments);
                 output.slots.addAll(input.slots);
 
 		return output;
 	}
-	
+
 	// semantic operation corresponding to ADJOIN
 	public Dude merge(Dude dude) {
-		
+
 		Dude output = cloneDude();
 		Dude input  = dude.cloneDude();
-			
-		output.avoidClash(input); 
 
-		// first unify designated referents 
+		output.avoidClash(input);
+
+		// first unify designated referents
 		output.replaceReferent(output.mainReferent,input.mainReferent);
-		
+
 		// then put together both dudes (union of components, constraints, arguments, links, and meta variables)
-		output.components.addAll(input.components); 
+		output.components.addAll(input.components);
 		output.dominanceConstraints.addAll(input.dominanceConstraints);
-		output.arguments.addAll(input.arguments); 
+		output.arguments.addAll(input.arguments);
                 output.slots.addAll(input.slots);
 
 		// finally add a constraint to link the main input-component to the bottom output-component (with DomType.equal)
@@ -187,18 +187,18 @@ public class Dude implements SemanticRepresentation{
 
 		return output;
 	}
-	
+
 	public Label getBottomLabel(Dude dude) {
-		
+
 		List<Label> lowerLabels = new ArrayList<Label>();
-		for (DominanceConstraint constraint : dude.getDominanceConstraints()) {	
+		for (DominanceConstraint constraint : dude.getDominanceConstraints()) {
 			if (!constraint.getType().equals(DomType.equal)) {
 				if (!lowerLabels.contains(constraint.getSub())) {
 					lowerLabels.add(constraint.getSub());
 				}
 			}
 		}
-		for (DominanceConstraint constraint : dude.getDominanceConstraints()) {	
+		for (DominanceConstraint constraint : dude.getDominanceConstraints()) {
 			if (!constraint.getType().equals(DomType.equal)) {
 				lowerLabels.remove(constraint.getSuper());
 			}
@@ -212,19 +212,19 @@ public class Dude implements SemanticRepresentation{
 			}
 			return dude.mainLabel;
 		}
-		
+
 	}
-	
-	
-// clone method	
+
+
+// clone method
 	public Dude cloneDude() {
-				
+
 		List<DRS> cs = new ArrayList<DRS>();
 		List<Argument> args = new ArrayList<Argument>();
 		List<DominanceConstraint> dcs = new ArrayList<DominanceConstraint>();
 		List<Slot> ls = new ArrayList<Slot>();
 //		List<BasicSlot> lbs = new ArrayList<BasicSlot>();
-		
+
 		for (DRS component : components) {
 			cs.add(component.clone());
 		}
@@ -237,9 +237,9 @@ public class Dude implements SemanticRepresentation{
 		for (Slot slot : slots) {
 			ls.add(slot.clone());
 		}
-		
+
 		Dude dude = new Dude();
-		
+
 		dude.mainReferent = mainReferent;
 		dude.mainLabel = mainLabel;
 		dude.mainType = mainType;
@@ -247,45 +247,45 @@ public class Dude implements SemanticRepresentation{
 		dude.dominanceConstraints = dcs;
 		dude.arguments = args;
 		dude.slots = ls;
-		
+
 		return dude;
 	}
-	
+
 	public void avoidClash(Dude dude) {
-		
+
 		//System.out.println("Dudes before avoidClash:\n || " + this + "\n || " + dude); // DEBUG
-		
+
 		Set<String> variables = dude.collectVariables();
 		Set<Label> labels = dude.collectLabels();
-		
+
 		Set<String> allVariables = new HashSet<String>();
 		allVariables.addAll(variables);
 		allVariables.addAll(collectVariables());
 		Set<Label> allLabels = new HashSet<Label>();
 		allLabels.addAll(labels);
 		allLabels.addAll(collectLabels());
-		
+
 		variables.retainAll(collectVariables());
 		labels.retainAll(collectLabels());
-		
+
 		for (String var : variables) {
-			
+
 			String freshbase;
 			String varbase;
-			if (var.charAt(0) == '?') { 
-				freshbase = "?"; 
-				varbase = ""+var.charAt(1); 
+			if (var.charAt(0) == '?') {
+				freshbase = "?";
+				varbase = ""+var.charAt(1);
 			}
-			else { 
+			else {
 				freshbase = "";
 				varbase = ""+var.charAt(0);
 			}
 
-			String fresh = freshbase + varbase + "0"; 
+			String fresh = freshbase + varbase + "0";
 
-			for (int i = 0; (allVariables.contains(varbase+i) || allVariables.contains("?"+varbase+i)); i++) {	
+			for (int i = 0; (allVariables.contains(varbase+i) || allVariables.contains("?"+varbase+i)); i++) {
 				fresh = freshbase + varbase + (i+1);
-			}			
+			}
 			allVariables.add(fresh);
 			dude.replaceReferent(var,fresh);
 		}
@@ -298,14 +298,14 @@ public class Dude implements SemanticRepresentation{
 			allLabels.add(fresh);
 			dude.replaceLabel(l,fresh);
 		}
-		
+
 		//System.out.println("Dude after avoidClash:\n" + this); // DEBUG
 	}
-	
+
 	public Set<String> collectVariables() {
-		
+
 		Set<String> variables = new HashSet<String>();
-		
+
 		variables.add(mainReferent);
 		for ( DRS component : components ) {
 			variables.addAll(component.collectVariables());
@@ -313,17 +313,17 @@ public class Dude implements SemanticRepresentation{
 		for ( Argument argument : arguments ) {
 			variables.addAll(argument.collectVariables());
 		}
-		
+
 		return variables;
 	}
-	
+
 	public Set<Label> collectLabels() {
-		
+
 		Set<Label> labels = new HashSet<Label>();
-		
+
 		labels.add(mainLabel);
 		for (DRS drs : components) {
-			labels.addAll(drs.getAllLabels()); 
+			labels.addAll(drs.getAllLabels());
 		}
 		for (DominanceConstraint dc : dominanceConstraints) { // just to be sure (should be the same labels as in m_Components)
 			labels.add(dc.getSuper());
@@ -332,13 +332,13 @@ public class Dude implements SemanticRepresentation{
 		for (Argument arg : arguments) {
 			labels.add(arg.label);
 		}
-		
+
 		return labels;
 	}
-	
+
 	// method to collect all simple DRS conditions occurring in the DUDE
 	public Set<Simple_DRS_Condition> collectPredicates() {
-		
+
 		Set<Simple_DRS_Condition> predicates = new HashSet<Simple_DRS_Condition>();
 
 		for (DRS component : this.getComponents()) {
@@ -346,9 +346,9 @@ public class Dude implements SemanticRepresentation{
 		}
 		return predicates;
 	}
-	
+
 	public void replaceReferent(String ref1,String ref2) {
-		
+
 		if (mainReferent.equals(ref1)) {
 			mainReferent = ref2;
 		}
@@ -365,9 +365,9 @@ public class Dude implements SemanticRepresentation{
                         if (minus != null) { slot.getWords().remove(minus); slot.getWords().add(ref2.replace("?","")); }
 		}
 	}
-	
+
 	public void replaceLabel(Label l_old, Label l_new) {
-		
+
 		if (mainLabel.equals(l_old)) {
 			mainLabel = l_new;
 		}
@@ -388,26 +388,26 @@ public class Dude implements SemanticRepresentation{
 			}
 		}
 	}
-        
+
         public String toTex() {
-            
+
             String out = "\\Dude{"+mainReferent+","+mainLabel.toTex()+","+mainType.toTex()+"}";
             out += "{";
             for (DRS drs : components) out += drs.toTex() + " \\\\ ";
             out += "}{";
             for (Argument arg : arguments) out += arg.toTex() + "\\ ";
             out += "}{";
-            for (Iterator<DominanceConstraint> i = dominanceConstraints.iterator(); i.hasNext();) { 
+            for (Iterator<DominanceConstraint> i = dominanceConstraints.iterator(); i.hasNext();) {
                 out += i.next().toTex();
                 if (i.hasNext()) out += ",";
             }
             out += "}{";
-            for (Iterator<Slot> i = slots.iterator(); i.hasNext();) { 
+            for (Iterator<Slot> i = slots.iterator(); i.hasNext();) {
                 out += i.next().toTex();
                 if (i.hasNext()) out += ",";
             }
             out += "}";
             return out;
         }
-	
+
 }

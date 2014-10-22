@@ -74,59 +74,59 @@ import com.hp.hpl.jena.sparql.syntax.ElementPathBlock;
 public class TBSLManager
 {
 //	public enum SELECTED_TBSL {DBPEDIA,OXFORD};
-	
+
 	private final Logger logger = Logger.getLogger(TBSLManager.class);
-	
+
 	public ExtendedTBSL activeTBSL = ExtendedTBSL.OXFORD;
 	public ExtendedTBSL[] tbsls = {ExtendedTBSL.OXFORD,ExtendedTBSL.DBPEDIA};
-	
+
 	private FallbackIndex fallback;
-	
+
 	private String learnedSPARQLQuery;
-	
+
 	private Map<String, BasicResultItem> uri2Item;
-	
-	private Set<String> dataProperties = new HashSet<String>();	
-	
+
+	private Set<String> dataProperties = new HashSet<String>();
+
 	private TBSLProgressListener progressListener;
-	
+
 	private Map<String, Map<String, Set<Object>>> property2URI2Values;
 	private String currentQuestion;
-	
+
 	final ExtractionDBCache cache;
-	
+
 	public TBSLManager()
 	{
 		cache = new ExtractionDBCache(Manager.getInstance().getCacheDir());
 		cache.setMaxExecutionTimeInSeconds(100);
 	}
-	
+
 	public void setProgressListener(TBSLProgressListener progressListener) {
 		this.progressListener = progressListener;
 	}
-	
+
 	public Map<String, BasicResultItem> getUri2Items() {
 		return uri2Item;
 	}
-	
+
 	public String getNLRepresentation(String sparqlQueryString){
 		String translatedQuery = translateSPARQLQuery(sparqlQueryString);
 		translatedQuery = translatedQuery.replace("This query retrieves", "").replace("distinct", "").replace(".", "").replace("(ignoring case)","").trim();
 		translatedQuery = normalizeVarNames(translatedQuery);
 		return translatedQuery;
 	}
-	
+
 	private String translateSPARQLQuery(String sparqlQueryString){
 		return translateSPARQLQuery(QueryFactory.create(sparqlQueryString, Syntax.syntaxARQ));
 	}
-	
+
 	private String translateSPARQLQuery(Query sparqlQuery){
-		logger.debug("Translating query: "+sparqlQuery);		
+		logger.debug("Translating query: "+sparqlQuery);
 		return activeTBSL.nlg.getNLR(sparqlQuery);
 	}
-	
-	
-	/** Used after getting answers from a query. 
+
+
+	/** Used after getting answers from a query.
 	 * @param posExamples
 	/** @param negExamples
 	/** @return */
@@ -137,17 +137,17 @@ public class TBSLManager
 		QTL qtl;
 		Knowledgebase kb = getActiveTBSL().getTBSL().getKnowledgebase();
 		if(kb instanceof RemoteKnowledgebase){
-			
+
 			SPARQLEndpointEx endpoint = new SPARQLEndpointEx(((RemoteKnowledgebase) kb).getEndpoint(), null, null, Collections.<String>emptySet());
 //			qtl = new QTL(endpoint,cache);
 			qtl = new QTL(endpoint,cache.getCacheDirectory());
 		} else {
 			qtl = new QTL(((LocalKnowledgebase) kb).getModel());
 		}
-				
+
 		qtl.setRestrictToNamespaces(getActiveTBSL().getPropertyNamespaces());
 		qtl.init();
-		
+
 //		Set<String> relevantKeywords = activeTBSL.getTBSL().ggetRelevantKeywords();
 		logger.info("Relevant filter keywords: " + activeTBSL.getTBSL().getRelevantKeywords());
 		qtl.addStatementFilter(new QuestionBasedStatementFilter2(activeTBSL.getTBSL().getRelevantKeywords()));
@@ -159,7 +159,7 @@ public class TBSLManager
 				logger.info("Refined SPARQL query:\n" + refinedSPARQLQuery);
 				List<BasicResultItem> result = fetchResult(refinedSPARQLQuery);
 				Map<String, Integer> additionalProperties = getAdditionalProperties();
-				
+
 				List<String> mostProminentProperties = new ArrayList<String>();
 				List<Entry<String, Integer>> sortedByValues = sortByValues(additionalProperties);
 				for(int i = 0; i < Math.min(sortedByValues.size(), 5); i++){
@@ -171,7 +171,7 @@ public class TBSLManager
 				Refinement refinement = new Refinement(posExamples, negExamples, learnedSPARQLQuery, refinedSPARQLQuery, new SelectAnswer(result, mostProminentProperties, additionalProperties), example);
 				return refinement;
 			}
-			
+
 		} catch (EmptyLGGException e) {
 			logger.error("Empty LGG", e);
 		} catch (NegativeTreeCoverageExecption e) {
@@ -181,14 +181,14 @@ public class TBSLManager
 		}
 		return null;
 	}
-	
+
 //	public List<ExtendedKnowledgebase> getKnowledgebases() {
 //		return knowledgebases;
 //	}
-	
+
 	public void setKnowledgebase(ExtendedTBSL ekb){
 		this.setActiveTBSL(ekb);
-//		
+//
 //		activeTBSL.setKnowledgebase(ekb.getKnowledgebase());
 //		if(ekb.getInfoBoxClass() == OxfordInfoLabel.class){
 //			try {
@@ -209,7 +209,7 @@ public class TBSLManager
 //			} else {
 //				map = new PopularityMap(this.getClass().getClassLoader().getResource("dbpedia_popularity.map").getPath(),
 //						new SparqlQueriable(((LocalKnowledgebase)kb).getModel()));
-//			}			
+//			}
 //			activeTBSL.setUseDomainRangeRestriction(true);
 //			activeTBSL.setPopularityMap(map);
 //		}
@@ -222,18 +222,18 @@ public class TBSLManager
 //		//		tbsl.setCache(cache);
 //		fallback = ekb.getFallbackIndex();
 	}
-	
+
 //	public ExtendedKnowledgebase getCurrentExtendedKnowledgebase() {
 //		return currentExtendedKnowledgebase;
 //	}
-	
+
 	public List<Entry<String, String>> getMoreSolutions(){
 		return getMoreSolutions(1);
 	}
-	
+
 	public List<Entry<String, String>> getMoreSolutions(int offset){
 //		Map<String, String> query2Translation = new LinkedHashMap<String, String>();
-//		
+//
 //		SortedSet<WeightedQuery> otherCandidates = activeTBSL.getGeneratedQueries();
 //		List<WeightedQuery> subList = new ArrayList<WeightedQuery>(otherCandidates).subList(
 //				offset, Math.min(otherCandidates.size(), offset + 10));
@@ -255,7 +255,7 @@ public class TBSLManager
 //		try {
 //			tbsl.setQuestion(question);
 //			tbsl.learnSPARQLQueries();
-//			
+//
 //			learnedSPARQLQuery = tbsl.getBestSPARQLQuery();
 //			Query q = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
 //			if(!q.hasGroupBy()){
@@ -265,12 +265,12 @@ public class TBSLManager
 //			System.out.println("Learned SPARQL Query:\n" + learnedSPARQLQuery);
 //			String extendedSPARQLQuery = extendSPARQLQuery(learnedSPARQLQuery);
 //			System.out.println("Extended SPARQL Query:\n" + extendedSPARQLQuery);
-//			
+//
 //			ResultSet rs = executeSelect(extendedSPARQLQuery);
 //			QuerySolution qs;
 //			while(rs.hasNext()){
 //				qs = rs.next();
-//				
+//
 //				String uri = qs.getResource(currentExtendedKnowledgebase.getTargetVar()).getURI();
 //				String label = qs.getLiteral("label").getLexicalForm();
 //				String description = qs.getLiteral("desc").getLexicalForm();
@@ -316,16 +316,16 @@ public class TBSLManager
 //			e.printStackTrace();
 ////			result.addAll(fallback.getResources(question));
 //		}
-//		
+//
 //		return result;
 //	}
-	
+
 	private void message(String message){
 		if(progressListener != null){
 			progressListener.message(message);
 		}
 	}
-	
+
 	public Answer answerQuestion(String question) {
 		logger.info("Question: " + question);
 		this.currentQuestion = question;
@@ -339,7 +339,7 @@ public class TBSLManager
 //			tbsl.learnSPARQLQueries();
 			TemplateInstantiation ti = activeTBSL.getTBSL().answerQuestion(question);
 			learnedSPARQLQuery = ti.getQuery();
-					
+
 			if(learnedSPARQLQuery != null){
 				logger.info("Found answer.");
 				logger.info("Learned SPARQL Query:\n" + learnedSPARQLQuery);
@@ -364,10 +364,10 @@ public class TBSLManager
 		if(progressListener != null){
 			progressListener.finished(answer);
 		}
-		
+
 		return answer;
 	}
-	
+
 	public Answer createAnswer(String sparqlQueryString){
 		learnedSPARQLQuery = sparqlQueryString;
 		Answer answer = null;
@@ -378,13 +378,13 @@ public class TBSLManager
 			q.setDistinct(true);
 			learnedSPARQLQuery = q.toString();
 		}
-		
-		
+
+
 		if(q.isSelectType()){
-			
+
 			List<BasicResultItem> result = fetchResult(sparqlQueryString);
 			Map<String, Integer> additionalProperties = getAdditionalProperties();
-			
+
 			List<String> mostProminentProperties = new ArrayList<String>();
 			if(!result.isEmpty()){
 				List<Entry<String, Integer>> sortedByValues = sortByValues(additionalProperties);
@@ -395,7 +395,7 @@ public class TBSLManager
 				}
 				fillItems(mostProminentProperties);
 			}
-			
+
 			answer = new SelectAnswer(result, mostProminentProperties, additionalProperties);
 			if(result.isEmpty()){
 				message("Answer for \"" + translatedQuery + "\" is empty.");
@@ -403,11 +403,11 @@ public class TBSLManager
 				message("Found answer for \"" + translatedQuery + "\".");
 			}
 		} else if(q.isAskType()){
-			
+
 		}
 		return answer;
 	}
-	
+
 	private List<BasicResultItem> fetchResult(String query){
 		Query extendedSPARQLQuery = extendSPARQLQuery(learnedSPARQLQuery);
 		logger.info("Loading result...");
@@ -419,7 +419,7 @@ public class TBSLManager
 		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 		while(rs.hasNext()){
 			qs = rs.next();
-			
+
 			String uri = null;
 			RDFNode targetNode = qs.get(targetVar);
 			if(targetNode.isURIResource()){
@@ -427,7 +427,7 @@ public class TBSLManager
 			} else if(targetNode.isLiteral()){
 				uri = targetNode.asLiteral().getLexicalForm();
 			}
-			
+
 			//get the label
 			String label = null;
 			RDFNode node = qs.get("label");
@@ -440,7 +440,7 @@ public class TBSLManager
 			if(node != null){
 				description = qs.getLiteral("desc").getLexicalForm();
 			}
-			
+
 			String imageURL = null;
 			RDFNode imgNode = qs.get("img");
 			if(imgNode != null){
@@ -471,7 +471,7 @@ public class TBSLManager
 								} else {
 									value = lit.getLexicalForm();
 								}
-								
+
 							} else {
 								value = lit.getLexicalForm();
 							}
@@ -480,7 +480,7 @@ public class TBSLManager
 					}
 				}
 			}
-			
+
 			//Oxford price relation
 			if(getActiveTBSL().getInfoBoxClass() == OxfordInfoLabel.class){
 				Double price = null;
@@ -502,9 +502,9 @@ public class TBSLManager
 			}
 			BasicResultItem item = new BasicResultItem(uri, label, description, imageURL, data);
 			result.add(item);
-			
+
 			uri2Item.put(uri, item);
-			
+
 		}
 		if(getActiveTBSL().getInfoBoxClass() == OxfordInfoLabel.class){
 			Map<String, Set<Object>> uri2Values = new HashMap<String, Set<Object>>();
@@ -520,10 +520,10 @@ public class TBSLManager
 		logger.info("...done.");
 		return result;
 	}
-	
-	
+
+
 	public String getAnswerAsSPARQLQuery(String question){
-		learnedSPARQLQuery = null;		
+		learnedSPARQLQuery = null;
 //		tbsl.setQuestion(question);
 		try {
 //			tbsl.learnSPARQLQueries();
@@ -534,10 +534,10 @@ public class TBSLManager
 		}
 		return learnedSPARQLQuery;
 	}
-	
+
 	private Answer answerQuestionFallback(String question){
 		logger.info("Using fallback.");
-		
+
 		List<BasicResultItem> result = fallback.getData(question, 100, 0);
 		//hack if OXford KB we add the price relation, because we need this for the price chart view
 		if(activeTBSL==ExtendedTBSL.OXFORD){
@@ -553,17 +553,17 @@ public class TBSLManager
 			}
 			property2URI2Values.put("http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice", uri2Values);
 		}
-		
-		
+
+
 		Map<String, Integer> additionalProperties = getAdditionalProperties();
-		
+
 		return new SelectAnswer(result, Collections.<String>emptyList(), additionalProperties);
 	}
-	
+
 	public boolean isDataProperty(String propertyURI){
 		return dataProperties.contains(propertyURI);
 	}
-	
+
 	public Map<String, Integer> getAdditionalProperties(){
 		Map<String, Integer> properties = new HashMap<String, Integer>();
 		if(getActiveTBSL().isAllowAdditionalProperties() && learnedSPARQLQuery !=null){
@@ -577,10 +577,10 @@ public class TBSLManager
 					break;
 				}
 			}
-			
+
 			String targetVar = getActiveTBSL().getTargetVar();
 			targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
-			
+
 			Query newQuery = QueryFactory.create();
 			newQuery.setSyntax(Syntax.syntaxARQ);
 			newQuery.setDistinct(true);
@@ -595,7 +595,7 @@ public class TBSLManager
 			Expr count = newQuery.allocAggregate(new AggCountVarDistinct(new ExprVar(Node.createVariable(targetVar))));
 			newQuery.addResultVar("cnt", count);
 			newQuery.addGroupBy(new ExprVar("prop"));
-			
+
 			ResultSet rs = executeSelect(newQuery.toString());
 			QuerySolution qs;
 			while(rs.hasNext()){
@@ -610,7 +610,7 @@ public class TBSLManager
 		logger.info("...done.");
 		return properties;
 	}
-	
+
 	public void fillItems(String propertyURI){
 		logger.info("Filling data with " + propertyURI + "...");
 		Query extendedSPARQLQuery = QueryFactory.create(learnedSPARQLQuery, Syntax.syntaxARQ);
@@ -629,8 +629,8 @@ public class TBSLManager
 		List<String> vars = new ArrayList<String>();
 		vars.add("value");
 		extendedSPARQLQuery.addProjectVars(vars);
-		
-		
+
+
 		ResultSet rs = executeSelect(extendedSPARQLQuery.toString());
 		QuerySolution qs;
 		Map<String, Set<Object>> uri2Values = new HashMap<String, Set<Object>>();
@@ -658,14 +658,14 @@ public class TBSLManager
 					} else {
 						value = lit.getLexicalForm();
 					}
-					
+
 				} else {
 					value = lit.getLexicalForm();
 				}
 			}
 			values.add(value);
-			
-			
+
+
 		}
 		for(Entry<String, Set<Object>> entry : uri2Values.entrySet()){
 			uri2Item.get(entry.getKey()).getData().put(propertyURI, entry.getValue());
@@ -673,7 +673,7 @@ public class TBSLManager
 		property2URI2Values.put(propertyURI, uri2Values);
 		logger.info("...done.");
 	}
-	
+
 	public void fillItems(List<String> propertyURIs){
 		if(propertyURIs.isEmpty()){
 			return;
@@ -707,13 +707,13 @@ public class TBSLManager
 			i++;
 		}
 		extendedSPARQLQuery.addProjectVars(vars);
-		
+
 		Map<String, Map<String, Set<Object>>> uri2Property2Values = new HashMap<String, Map<String,Set<Object>>>();
 		ResultSet rs = executeSelect(extendedSPARQLQuery.toString());
 		QuerySolution qs;
 		while(rs.hasNext()){
 			qs = rs.next();
-			
+
 			String uri = qs.getResource(targetVar).getURI();
 			for(i = 0; i < propertyURIs.size(); i++){
 				Object value = null;
@@ -744,7 +744,7 @@ public class TBSLManager
 							} else {
 								value = lit.getLexicalForm();
 							}
-							
+
 						} else {
 							value = lit.getLexicalForm();
 						}
@@ -759,7 +759,7 @@ public class TBSLManager
 				String propertyURI = prop2Values.getKey();
 				Set<Object> values = prop2Values.getValue();
 				uri2Item.get(uri).getData().put(propertyURI, values);
-				
+
 				Map<String, Set<Object>> uri2Values = property2URI2Values.get(propertyURI);
 				if(uri2Values == null){
 					uri2Values = new HashMap<String, Set<Object>>();
@@ -770,15 +770,15 @@ public class TBSLManager
 		}
 		logger.info("...done.");
 	}
-	
+
 	public Map<String, Set<Object>> getDataForProperty(String propertyURI){
 		return property2URI2Values.get(propertyURI);
 	}
-	
+
 	public String getCurrentQuestion() {
 		return currentQuestion;
 	}
-	
+
 	public XSDDatatype getDatatype(String propertyURI){
 		String sparqlQuery = String.format("SELECT ?range WHERE {<%s> <http://www.w3.org/2000/01/rdf-schema#range> ?range}", propertyURI);
 		ResultSet rs = executeSelect(sparqlQuery);
@@ -804,8 +804,8 @@ public class TBSLManager
 			//dbpedia specific
 			else if(datatypeURI.equals("http://dbpedia.org/ontology/Time")){
 				return XSDDatatype.XSDdouble;
-			} 
-		} 
+			}
+		}
 		//infer datatype by sample values
 		if(property2URI2Values.containsKey(propertyURI)){
 			Set<Object> values = property2URI2Values.get(propertyURI).entrySet().iterator().next().getValue();
@@ -831,7 +831,7 @@ public class TBSLManager
 		}
 		return null;
 	}
-	
+
 	private Query extendSPARQLQuery(String sparqlQuery){
 		Query extendedSPARQLQuery = QueryFactory.create(sparqlQuery, Syntax.syntaxARQ);
 		ElementGroup wherePart = (ElementGroup)extendedSPARQLQuery.getQueryPattern();
@@ -842,12 +842,12 @@ public class TBSLManager
 				break;
 			}
 		}
-		
+
 		String targetVar = getActiveTBSL().getTargetVar();
 		targetVar = extendedSPARQLQuery.getProjectVars().get(0).getVarName();
 		List<String> vars = new ArrayList<String>();
-		
-		
+
+
 //		if(currentExtendedKnowledgebase.isAllowAdditionalProperties()){
 //			pb.addTriple(new Triple(Node.createVariable(targetVar), Node.createVariable("prop"), Node.createVariable("value")));
 //			wherePart.addElementFilter(new ElementFilter(new E_Regex(new E_Str(new ExprVar("prop")), "http://dbpedia.org/ontology/", "")));
@@ -875,7 +875,7 @@ public class TBSLManager
 			if(filter != null){
 				wherePart.addElementFilter(filter);
 			}
-			
+
 		}
 		vars.add("label");
 		//add description/comment triples
@@ -898,7 +898,7 @@ public class TBSLManager
 			if(filter != null){
 				wherePart.addElementFilter(filter);
 			}
-			
+
 		}
 		vars.add("desc");
 		//add image triples
@@ -911,7 +911,7 @@ public class TBSLManager
 				wherePart.addElement(optionalEl);
 			} else {
 				pb.addTriple(imgTriple);
-				
+
 			}
 			vars.add("img");
 		}
@@ -926,7 +926,7 @@ public class TBSLManager
 		}
 		Map<String, String> mandatoryProperties = getActiveTBSL().getMandatoryProperties();
 		if(mandatoryProperties != null){
-			
+
 		}
 		Map<String, String> optionalProperties = getActiveTBSL().getOptionalProperties();
 		if(optionalProperties != null){
@@ -941,7 +941,7 @@ public class TBSLManager
 		extendedSPARQLQuery.addProjectVars(vars);
 		return extendedSPARQLQuery;
 	}
-	
+
 	private ResultSet executeSelect(String sparqlQuery){
 		logger.info("Executing SPARQL query\n" + sparqlQuery);
 		ResultSet rs = null;
@@ -959,21 +959,21 @@ public class TBSLManager
 			} else {
 				rs = QueryExecutionFactory.create(sparqlQuery, ((LocalKnowledgebase) kb).getModel()).execSelect();
 			}
-			
+
 			logger.info("...done.");
 		} catch (Exception e) {
 			logger.error("Error executing SPARQL query.", e);
 		}
 		return rs;
 	}
-	
+
 	public String getLearnedSPARQLQuery() {
 		return learnedSPARQLQuery;
 	}
-	
+
 	private List<Entry<String, Integer>> sortByValues(Map<String, Integer> map){
 		List<Entry<String, Integer>> entries = new ArrayList<Entry<String, Integer>>(map.entrySet());
-		
+
         Collections.sort(entries, new Comparator<Entry<String, Integer>>() {
 
 			@Override
@@ -982,16 +982,16 @@ public class TBSLManager
 				if(ret == 0){
 					ret = o2.getKey().compareTo(o1.getKey());
 				}
-				return ret; 
+				return ret;
 			}
 		});
         return entries;
 	}
-	
+
 	public static Query normalizeVarNames(Query query){
 		Query copy = QueryFactory.create(query);
-		
-		
+
+
 		List<String> candidates = new LinkedList<String>(Arrays.asList(new String[]{"x", "y", "z"}));
 		//find all vars of form ?LetterNumber
 		SortedSet<String> vars = new TreeSet<String>();
@@ -1015,14 +1015,14 @@ public class TBSLManager
 			queryString = queryString.replace(var, "?" + replacement);
 		}
 		System.out.println(queryString);
-		
-		
+
+
 		return copy;
 	}
-	
+
 	private String normalizeVarNames(String query){
-		
-		
+
+
 		List<String> candidates = new LinkedList<String>(Arrays.asList(new String[]{"x", "y", "z"}));
 		//find all vars of form ?LetterNumber
 		SortedSet<String> vars = new TreeSet<String>();
@@ -1044,8 +1044,8 @@ public class TBSLManager
 			query = query.replace(var, "?" + replacement);
 		}
 		System.out.println(query);
-		
-		
+
+
 		return query;
 	}
 
@@ -1058,5 +1058,5 @@ public class TBSLManager
 	{
 		this.activeTBSL = eTBSL;
 	}
-	
+
 }

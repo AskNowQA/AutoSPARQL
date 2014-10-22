@@ -8,7 +8,7 @@ import java.util.Set;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 public class Query implements Serializable {
-	
+
 	private static final long serialVersionUID = 6040368736352575802L;
 	Set<SPARQL_Term> selTerms; // SELECT ?x ?y
 	Set<SPARQL_Prefix> prefixes;
@@ -44,7 +44,7 @@ public class Query implements Serializable {
                 having = new HashSet<SPARQL_Having>();
                 unions = new HashSet<SPARQL_Union>();
 	}
-	
+
 	public Query(Set<SPARQL_Term> selTerms, Set<SPARQL_Triple> conditions)
 	{
 		this(selTerms, new HashSet<SPARQL_Prefix>(), conditions);
@@ -63,7 +63,7 @@ public class Query implements Serializable {
                 having = new HashSet<SPARQL_Having>();
                 unions = new HashSet<SPARQL_Union>();
 	}
-	
+
 	/** copy constructor **/
 	public Query(Query query){
 		this.qt = query.getQt();
@@ -120,50 +120,50 @@ public class Query implements Serializable {
 		this.filter = filters;
                 this.having = query.having;
                 this.unions = query.unions; // TODO copy unions
-		
+
 		this.limit = query.getLimit();
 		this.offset = query.getOffset();
 	}
-	
+
 	public Set<Integer> getSlotInts() {
-		
-		Set<Integer> result = new HashSet<Integer>(); 
-		
+
+		Set<Integer> result = new HashSet<Integer>();
+
 		String name;
 		int i;
-		
+
 		for (SPARQL_Triple triple : conditions) {
-			
+
 			name = triple.variable.getName();
 			if (name.matches("s[0-9]+")) {
 				i = Integer.parseInt(name.substring(name.indexOf("s") + 1));
 				result.add(i);
 			}
-			
+
 			name = triple.value.getName();
 			if (name.matches("s[0-9]+")) {
 				i = Integer.parseInt(name.substring(name.indexOf("s") + 1));
 				result.add(i);
 			}
-			
+
 			name = triple.property.getName();
 			if (name.matches("s[0-9]+")) {
 				i = Integer.parseInt(name.substring(name.indexOf("s") + 1));
 				result.add(i);
-			}			
+			}
 		}
-		
-		
-		
+
+
+
 		return result;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 
 		String groupBy = null;
-		
+
 		String retVal = "";
 		for (SPARQL_Prefix prefix : prefixes)
 		{
@@ -173,7 +173,7 @@ public class Query implements Serializable {
 		if (qt == SPARQL_QueryType.SELECT)
 		{
 			retVal += "\nSELECT ";
-                        
+
                         boolean group = false;
 			for (SPARQL_Term term : selTerms)
 			{
@@ -186,7 +186,7 @@ public class Query implements Serializable {
                             groupBy = "";
                             for (SPARQL_Term t : selTerms) {
                                 if (!t.toString().contains("COUNT"))
-                                    groupBy += t.toString() + " ";                                    
+                                    groupBy += t.toString() + " ";
                                 }
                         }
 		}
@@ -203,11 +203,11 @@ public class Query implements Serializable {
 		for (SPARQL_Filter f : filter) retVal += "\t" + f.toString() + ".\n";
 
 		retVal += "}\n";
-		
+
 		if(groupBy != null){
 			retVal += "GROUP BY " + groupBy + "\n";
 		}
-                
+
                 if (!having.isEmpty()) {
                     for (SPARQL_Having h : having) retVal += h.toString() + "\n";
                 }
@@ -255,7 +255,7 @@ public class Query implements Serializable {
 	{
 		return prefixes;
 	}
-	
+
 	public Set<SPARQL_Filter> getFilters(){
 		return filter;
 	}
@@ -279,7 +279,7 @@ public class Query implements Serializable {
 	{
 		conditions.add(triple);
 	}
-        
+
         public void addUnion(SPARQL_Union union) {
             unions.add(union);
         }
@@ -305,7 +305,7 @@ public class Query implements Serializable {
 	{
 		if (term.orderBy == SPARQL_OrderBy.NONE)
 			term.orderBy = SPARQL_OrderBy.ASC;
-		
+
 		orderBy.add(term);
 	}
 
@@ -374,13 +374,13 @@ public class Query implements Serializable {
 	{
 		this.qt = qt;
 	}
-	
+
 	public void replaceVarWithURI(String var, String uri){
 		SPARQL_Term subject;
 		SPARQL_Property property;
 		SPARQL_Value object;
 		uri = "<" + uri + ">";
-		
+
 		for(SPARQL_Triple triple : conditions){
 			subject = triple.getVariable();
 			property = triple.getProperty();
@@ -409,15 +409,15 @@ public class Query implements Serializable {
 					}
 				}
 			}
-			
+
 		}
 	}
-	
+
 	public void replaceVarWithPrefixedURI(String var, String uri){
 		SPARQL_Term subject;
 		SPARQL_Property property;
 		SPARQL_Value object;
-		
+
 		for(SPARQL_Triple triple : conditions){
 			subject = triple.getVariable();
 			property = triple.getProperty();
@@ -444,13 +444,13 @@ public class Query implements Serializable {
 					}
 				}
 			}
-			
+
 		}
 	}
-	
+
 	public List<SPARQL_Triple> getTriplesWithVar(String var){
 		List<SPARQL_Triple> triples = new ArrayList<SPARQL_Triple>();
-		
+
 		SPARQL_Term variable;
 		SPARQL_Property property;
 		SPARQL_Value value;
@@ -458,7 +458,7 @@ public class Query implements Serializable {
 			variable = triple.getVariable();
 			property = triple.getProperty();
 			value = triple.getValue();
-			
+
 			if(variable.isVariable() && variable.getName().equals(var)){
 				triples.add(triple);
 			} else if(property.isVariable() && property.getName().equals(var)){
@@ -469,10 +469,10 @@ public class Query implements Serializable {
 		}
 		return triples;
 	}
-	
+
 	public List<SPARQL_Triple> getRDFTypeTriples(){
 		List<SPARQL_Triple> triples = new ArrayList<SPARQL_Triple>();
-		
+
 		for(SPARQL_Triple triple : conditions){
 			if(triple.getProperty().toString().equals("rdf:type")||triple.getProperty().toString().equals(RDF.type.getURI())){
 				triples.add(triple);
@@ -480,10 +480,10 @@ public class Query implements Serializable {
 		}
 		return triples;
 	}
-	
+
 	public List<SPARQL_Triple> getRDFTypeTriples(String var){
 		List<SPARQL_Triple> triples = new ArrayList<SPARQL_Triple>();
-		
+
 		for(SPARQL_Triple triple : conditions){
 			if(triple.getProperty().toString().equals("rdf:type") && triple.getVariable().getName().equals(var)){
 				triples.add(triple);
@@ -555,7 +555,7 @@ public class Query implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Returns the variable in the SPARQL query, which determines the type of the answer
 	 * by an rdf:type property.

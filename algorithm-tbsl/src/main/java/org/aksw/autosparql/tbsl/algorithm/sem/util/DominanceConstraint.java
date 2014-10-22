@@ -5,9 +5,9 @@ public class DominanceConstraint implements Cloneable {
 
 	Label m_Super;
 	Label m_Sub;
-	
+
 	DomType m_Type;
-	
+
 
 	public DominanceConstraint (Label subLabel, Label superLabel)
 	{
@@ -21,38 +21,38 @@ public class DominanceConstraint implements Cloneable {
 		m_Sub = new Label(subLabel);
 		m_Type = DomType.sub;
 	}
-	
-	
+
+
 	public void setSuper(Label superLabel)
 	{
 		m_Super = superLabel;
 	}
-	
+
 	public void setSub(Label subLabel)
 	{
 		m_Sub = subLabel;
 	}
-	
+
 	public Label getSuper()
 	{
 		return m_Super;
 	}
-	
+
 	public Label getSub()
 	{
-		return m_Sub;	
+		return m_Sub;
 	}
-	
+
 	public void setType(DomType type)
 	{
 		m_Type = type;
 	}
-	
+
 	public DomType getType()
 	{
 		return m_Type;
 	}
-	
+
 	public String toString()
 	{
 		if (m_Type.equals(DomType.sub)) {
@@ -63,12 +63,12 @@ public class DominanceConstraint implements Cloneable {
 		}
 	}
         public String toTex() {
-            if (m_Type.equals(DomType.sub)) 
+            if (m_Type.equals(DomType.sub))
                 return m_Sub.toTex() + "<" + m_Super.toTex();
             else
 		return m_Sub.toTex() + "=" + m_Super.toTex();
 	}
-	
+
 	public DominanceConstraint clone() {
 		DominanceConstraint copy = new DominanceConstraint(m_Sub,m_Super);
 		copy.setType(m_Type);
@@ -109,7 +109,7 @@ public class DominanceConstraint implements Cloneable {
 			return false;
 		return true;
 	}
-	
 
-	
+
+
 }

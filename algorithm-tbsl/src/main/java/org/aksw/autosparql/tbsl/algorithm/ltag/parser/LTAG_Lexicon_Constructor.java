@@ -22,9 +22,9 @@ import org.aksw.autosparql.tbsl.algorithm.sem.util.Pair;
  * DudeString is saved as a string within the LTAGLexicon. However it is parsed
  * later by the DudeParser when the semantics are constructed. This is done
  * during the build of the derived trees (see earleyParser.DerivedTree).
- * 
+ *
  * @author felix
- * 
+ *
  */
 public class LTAG_Lexicon_Constructor {
 
@@ -86,7 +86,7 @@ public class LTAG_Lexicon_Constructor {
 							dudeStrings.add(s.trim());
 						}
 					}
-					
+
 					semantics.add(dudeStrings);
 
 				} catch (ArrayIndexOutOfBoundsException aioobe) {

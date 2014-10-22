@@ -25,15 +25,15 @@ import edu.mit.jwi.item.Pointer;
 public class WordNet
 {
 	private static final Logger logger = Logger.getLogger(WordNet.class);
-	
-	public static final WordNet INSTANCE = new WordNet(); 
-	
-	public IDictionary dict;	
+
+	public static final WordNet INSTANCE = new WordNet();
+
+	public IDictionary dict;
 
 	private WordNet()
-	{		
+	{
 		try
-		{			
+		{
 			File dictDirectory = WordNetUnpacker.getUnpackedWordNetDir();
 			logger.debug("loading wordnet from "+dictDirectory);
 			dict = new RAMDictionary(dictDirectory, ILoadPolicy.NO_LOAD);
@@ -43,13 +43,13 @@ public class WordNet
 	}
 
 	public List<String> getBestSynonyms(POS pos, String s)
-	{		
+	{
 		List<String> synonyms = new ArrayList<String>();
 		IIndexWord iw = dict.getIndexWord(s,pos);//dict.getMorphologicalProcessor().lookupBaseForm(pos, s)
 		//			IndexWord iw = dict.getMorphologicalProcessor().lookupBaseForm(pos, s);
 		if(iw != null)
 		{
-			IWordID wordID = iw.getWordIDs().get(0); 
+			IWordID wordID = iw.getWordIDs().get(0);
 			IWord word = dict.getWord(wordID);
 			ISynset synset = word.getSynset () ;
 			// iterate over words associated with the syns
@@ -70,7 +70,7 @@ public class WordNet
 	}
 
 	/**
-	 * Funktion returns a List of Hypo and Hypernyms of a given string 
+	 * Funktion returns a List of Hypo and Hypernyms of a given string
 	 * @param s Word for which you want to get Hypo and Hypersyms
 	 * @return List of Hypo and Hypernyms
 	 * @throws JWNLException
@@ -79,11 +79,11 @@ public class WordNet
 	{
 		List<String> result = new ArrayList<String>();
 		IIndexWord iw = null;
-		Synset sense=null;	
+		Synset sense=null;
 		iw=dict.getIndexWord(s,POS.NOUN);
 		if(iw!=null){
 
-			IWordID wordID = iw.getWordIDs().get(0); 
+			IWordID wordID = iw.getWordIDs().get(0);
 			IWord word = dict.getWord(wordID);
 			ISynset synset = word.getSynset();
 
@@ -95,8 +95,8 @@ public class WordNet
 				words = dict.getSynset(sid ).getWords () ;
 				for(Iterator < IWord > i = words.iterator () ; i.hasNext () ;)
 				{
-					result.add(i.next().getLemma());				      
-				}				      
+					result.add(i.next().getLemma());
+				}
 			}
 		}
 		return result;

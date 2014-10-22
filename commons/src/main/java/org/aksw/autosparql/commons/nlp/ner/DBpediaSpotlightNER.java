@@ -16,22 +16,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DBpediaSpotlightNER implements NER{
-	
+
 	private static final String SERVICE_URL = "http://spotlight.dbpedia.org/rest/annotate?";
-	
+
 	/*
 	 * Confidence (range 0-1): how reliable is the disambiguation? Regulates precision and recall.
 	 */
 	private static final double CONFIDENCE = 0.4;
-	
+
 	/*
-	 * Support (range 0-infinity): do you want only "common" concepts? 
+	 * Support (range 0-infinity): do you want only "common" concepts?
 	 * Specifies the number of Wikipedia inlinks that a concept must have in order to be annotated.
 	 */
 	private static final int SUPPORT = 20;
-	
+
 	public DBpediaSpotlightNER(){
-		
+
 	}
 
 	@Override
@@ -57,10 +57,10 @@ public class DBpediaSpotlightNER implements NER{
 					System.out.println("DBpedia URI: " + entityObject.getString("@URI"));
 					System.out.println("Types: " + entityObject.getString("@types"));
 					namedEntities.add(entityObject.getString("@surfaceForm"));
-					
+
 				}
 			}
-			
+
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -72,7 +72,7 @@ public class DBpediaSpotlightNER implements NER{
 		}
 		return namedEntities;
 	}
-	
-	
+
+
 
 }

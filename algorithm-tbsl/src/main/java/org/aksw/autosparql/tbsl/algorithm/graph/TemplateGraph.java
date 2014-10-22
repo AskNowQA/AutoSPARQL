@@ -7,9 +7,9 @@ public class TemplateGraph extends DefaultDirectedGraph<TemplateNode, TemplateEd
 	public TemplateGraph() {
 		super(TemplateEdge.class);
 	}
-	
-	
 
-	
+
+
+
 
 }

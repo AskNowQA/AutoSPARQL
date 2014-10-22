@@ -10,16 +10,16 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Map;
 
-/** 
+/**
  This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
- It is licensed under the Creative Commons Attribution License 
- (see http://creativecommons.org/licenses/by/3.0) by 
+ It is licensed under the Creative Commons Attribution License
+ (see http://creativecommons.org/licenses/by/3.0) by
  the YAGO-NAGA team (see http://mpii.de/yago-naga).
- 
- 
- 
 
- 
+
+
+
+
  This class provides convenience methods for Input/Output.
  Allows to do basic I/O with easy procedure calls
  -- nearly like in normal programming languages.
@@ -30,31 +30,31 @@ import java.util.Map;
  D.p("This is an easy way to write a string");
  // And this is an easy way to read one:
  String s=D.r();
- 
+
  // Here is a cool way to print something inline
  computeProduct(factor1,(Integer)D.p(factor2));
- 
+
  // Here are some tricks with enums
  enum T {a,b,c};
  EnumSet&lt;T> i=D.intersection(EnumSet.of(T.a,T.b),EnumSet.of(T.b,T.c));
  EnumSet&lt;T> u=D.union(EnumSet.of(T.a,T.b),EnumSet.of(T.b,T.c));
- 
+
  // Here is how to compare things, even if they are NULL
  D.compare(object1, object2);
- 
+
  // Here is how to add something to maps that contain lists
  Map&lt;String,List&lt;String>> string2list=new TreeMap&lt;String,List&lt;String>>();
- D.addKeyValue(string2list,"key","new list element",ArrayList.class); 
+ D.addKeyValue(string2list,"key","new list element",ArrayList.class);
  // now, the map contains "key" -> [ "new list element" ]
  D.addKeyValue(string2list,"key","again a new list element",ArrayList.class);
- // now, the map contains "key" -> [ "new list element", "again a new list element" ]  
+ // now, the map contains "key" -> [ "new list element", "again a new list element" ]
 
  // Here is how to add something to maps that contain integers
  Map&lt;String,Integer> string2list=new TreeMap&lt;String,Integer>();
  D.addKeyValue(string2list,"key",7); // map now contains "key" -> 7
  D.addKeyValue(string2list,"key",3); // map now contains "key" -> 10
 
- </PRE>  
+ </PRE>
  */
 public class D {
 
@@ -82,7 +82,7 @@ public class D {
   }
 
   /** Prints some Objects on one line */
-  public static void pl(Object... a) {    
+  public static void pl(Object... a) {
     System.out.print(toString(a));
   }
 
@@ -225,7 +225,7 @@ public class D {
   public static <K, V, C extends Collection<V>, L extends Collection> void addKeyValues(Map<K, C> map, K key, C values, Class<L> collectionType) {
     for(V val : values) addKeyValue(map,key,val,collectionType);
   }
-  
+
   /** Given a map that maps to integers, adds a new key/value pair or increases the counter*/
   public static <K> void addKeyValue(Map<K, Integer> map, K key, int value) {
     Integer coll = map.get(key);

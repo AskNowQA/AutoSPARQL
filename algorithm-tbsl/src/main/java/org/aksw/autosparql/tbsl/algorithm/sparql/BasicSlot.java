@@ -6,11 +6,11 @@ public class BasicSlot implements Cloneable {
 	String anchor;
 	String token;
 	SlotType type;
-	
+
 	public BasicSlot(String a,String t) {
 		anchor = a;
 		token = t;
-		type = SlotType.UNSPEC; 
+		type = SlotType.UNSPEC;
 		replaceUnderscores();
 	}
 	public BasicSlot(String a,SlotType t,String s) {
@@ -19,15 +19,15 @@ public class BasicSlot implements Cloneable {
 		type = t;
 		replaceUnderscores();
 	}
-	
+
 	public void setSlotType(SlotType st) {
 		type = st;
 	}
-	
+
 	public SlotType getSlotType(){
 		return type;
 	}
-	
+
 	public String getAnchor() {
 		return anchor;
 	}
@@ -40,19 +40,19 @@ public class BasicSlot implements Cloneable {
 	public void setToken(String t) {
 		token = t;
 	}
-	
+
 	public void replaceReferent(String ref1,String ref2) {
 		if (anchor.equals(ref1)) {
 			anchor = ref2;
 		}
 	}
-	
+
 	public void replaceUnderscores() {
 		token = token.replaceAll("_"," ");
 	}
-	
+
 	@Override
-	public String toString() {	
+	public String toString() {
 		return anchor + ": " + type + " {" + token + "}";
 	}
 	@Override
@@ -94,7 +94,7 @@ public class BasicSlot implements Cloneable {
 			return false;
 		return true;
 	}
-	
-	
-	
+
+
+
 }

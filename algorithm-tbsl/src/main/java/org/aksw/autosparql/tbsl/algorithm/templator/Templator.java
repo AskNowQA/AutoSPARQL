@@ -29,67 +29,67 @@ import org.apache.log4j.Logger;
 import edu.mit.jwi.item.POS;
 
 public class Templator {
-	
+
 	private static final Logger logger = Logger.getLogger(Templator.class);
-        
+
         String[] GRAMMAR_FILES = {"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"};
-	
+
 	private String[] noun = {"NN","NNS","NNP","NNPS","NPREP","JJNN","JJNPREP"};
 	private String[] adjective = {"JJ","JJR","JJS","JJH"};
 	private String[] verb = {"VB","VBD","VBG","VBN","VBP","VBZ","PASSIVE","PASSPART","VPASS","VPASSIN","GERUNDIN","VPREP","WHEN","WHERE"};
-	
+
 	PartOfSpeechTagger tagger;
 	LTAGLexicon g;
 	LTAG_Lexicon_Constructor LTAG_Constructor = new LTAG_Lexicon_Constructor();
 
 	Parser parser;
 	Preprocessor pp;
-	
+
 	WordNet wordnet;
 	LingPipeLemmatizer lem = new LingPipeLemmatizer();
-	
+
         DUDE2UDRS_Converter d2u = new DUDE2UDRS_Converter();
         DRS2SPARQL_Converter d2s = new DRS2SPARQL_Converter();
-	
+
 	boolean ONE_SCOPE_ONLY = true;
 	boolean UNTAGGED_INPUT = true;
 	boolean USE_NER = true;
 	boolean USE_WORDNET = false;
 	boolean VERBOSE = true;
-	
+
 	private String taggedInput;
-	
+
 	private Set<Template> templates;
 	private Set<DRS> drses;
-	
+
 	public Templator() {
 		this(StanfordPartOfSpeechTagger.INSTANCE, WordNet.INSTANCE);
 	}
-	
+
 	public Templator(final PartOfSpeechTagger tagger) {
 		this(tagger, WordNet.INSTANCE);
 	}
-	
+
 	public Templator(final PartOfSpeechTagger tagger, WordNet wordnet) {
             this.tagger = tagger;
             this.wordnet = wordnet;
-	
+
             List<InputStream> grammarFiles = new ArrayList<InputStream>();
             for(int i = 0; i < GRAMMAR_FILES.length; i++){
 		grammarFiles.add(this.getClass().getClassLoader().getResourceAsStream(GRAMMAR_FILES[i]));
             }
-		
+
             g = LTAG_Constructor.construct(grammarFiles);
-		
+
 	    parser = new Parser();
 	    parser.SHOW_GRAMMAR = true;
 	    parser.USE_DPS_AS_INITTREES = true;
 	    parser.CONSTRUCT_SEMANTICS = true;
 	    parser.MODE = "LEIPZIG";
-	    
+
 	    pp = new Preprocessor(USE_NER);
 	}
-	
+
 	public Templator(final PartOfSpeechTagger tagger, WordNet wordnet, String[] GRAMMAR_FILES) {
             this.tagger = tagger;
             this.wordnet = wordnet;
@@ -110,30 +110,30 @@ public class Templator {
 
             pp = new Preprocessor(USE_NER);
 }
-	
+
 	public Templator(boolean b) {
             this.tagger = StanfordPartOfSpeechTagger.INSTANCE;
             this.USE_WORDNET = false;
             VERBOSE = b;
-		
+
             List<InputStream> grammarFiles = new ArrayList<InputStream>();
             for(int i = 0; i < GRAMMAR_FILES.length; i++){
             	grammarFiles.add(this.getClass().getClassLoader().getResourceAsStream(GRAMMAR_FILES[i]));
             }
-		
+
             g = LTAG_Constructor.construct(grammarFiles);
-		
+
 	    parser = new Parser();
 	    parser.SHOW_GRAMMAR = false;
 	    parser.VERBOSE = b;
 	    parser.USE_DPS_AS_INITTREES = true;
 	    parser.CONSTRUCT_SEMANTICS = true;
 	    parser.MODE = "LEIPZIG";
-	    
+
 	    pp = new Preprocessor(USE_NER);
 	    pp.setVERBOSE(b);
 	}
-	
+
 	public void setUNTAGGED_INPUT(boolean b) {
 		UNTAGGED_INPUT = b;
 	}
@@ -148,18 +148,18 @@ public class Templator {
             List<InputStream> grammarFiles = new ArrayList<InputStream>();
             for(int i = 0; i < GRAMMAR_FILES.length; i++){
                 grammarFiles.add(this.getClass().getClassLoader().getResourceAsStream(GRAMMAR_FILES[i]));
-            }	
+            }
             g = LTAG_Constructor.construct(grammarFiles);
 	}
 
 	public Set<Template> buildTemplates(String s) {
-		
+
             d2s.setInputString(s);
-                        
+
 		boolean clearAgain = true;
-        
+
 		String tagged;
-		if (UNTAGGED_INPUT) {	
+		if (UNTAGGED_INPUT) {
 			tagged = tagger.tag(pp.replacements(s));
 			logger.debug("Tagged input: " + tagged);
 		}
@@ -168,19 +168,19 @@ public class Templator {
 			s = extractSentence(tagged);
 		}
 		taggedInput = tagged;
-                
+
                 if (USE_NER) {
 			tagged = pp.findNEs(tagged,s);
-		} 
+		}
                 tagged = pp.lowercase(tagged,s);
                 tagged = pp.ascii(tagged);
-		
+
                 String newtagged = pp.condense(pp.condenseNominals(tagged));
-		
-		logger.debug("Preprocessed: " + newtagged); 
-        
+
+		logger.debug("Preprocessed: " + newtagged);
+
         parser.parse(newtagged,g);
-        
+
         if (parser.getDerivationTrees().isEmpty()) {
             parser.clear(g,parser.getTemps());
             clearAgain = false;
@@ -200,21 +200,21 @@ public class Templator {
 			postable.put(st.substring(0,st.indexOf("/")).toLowerCase(),st.substring(st.indexOf("/")+1));;
 		}
         //
-        
+
         Set<DRS> drses = new HashSet<DRS>();
         Set<Template> templates = new HashSet<Template>();
-        
+
         for (Dude dude : parser.getDudes()) {
             UDRS udrs = d2u.convert(dude);
-            if (udrs != null) { 
-                
+            if (udrs != null) {
+
             	for (DRS drs : udrs.initResolve()) {
-                	
+
                 	List<Slot> slots = new ArrayList<Slot>();
             		slots.addAll(dude.getSlots());
             		d2s.setSlots(slots);
                 	d2s.redundantEqualRenaming(drs);
-                	
+
                 	if (!containsModuloRenaming(drses,drs)) {
 //                    	// DEBUG
                 		if (VERBOSE) {
@@ -226,23 +226,23 @@ public class Templator {
                 		}
 //                		//
                 		drses.add(drs);
-                		
+
                 		try {
                 			Template temp = d2s.convert(drs,slots);
                                         if (temp == null) { continue; }
-                                        temp = temp.checkandrefine(); 
-                                        if (temp == null) { continue; }         
-                			
+                                        temp = temp.checkandrefine();
+                                        if (temp == null) { continue; }
+
         					if (USE_WORDNET) { // find WordNet synonyms
 	            				List<String> newwords;
-	            				String word; 
+	            				String word;
 	            				String pos;
 	                			for (Slot slot : temp.getSlots()) {
 	                				if (!slot.getWords().isEmpty()) {
-	                					
+
 	                					word = slot.getWords().get(0);
 	                					pos = postable.get(word.toLowerCase().replace(" ","_"));
-	                					
+
 	                					POS wordnetpos = null;
 	                					if (pos != null) {
 		                					if (equalsOneOf(pos,noun)) {
@@ -255,17 +255,17 @@ public class Templator {
 		                						wordnetpos = POS.VERB;
 		                					}
 		                				}
-	                					
+
 	               						List<String> strings = new ArrayList<String>();
 	               						if (wordnetpos != null && wordnetpos.equals(POS.ADJECTIVE)) {
-	               							
+
 	               							strings = wordnet.getAttributes(word);
 	               						}
-	                					
+
 	                					newwords = new ArrayList<String>();
 	                					newwords.addAll(slot.getWords());
-	                					newwords.addAll(strings);            					
-	                					
+	                					newwords.addAll(strings);
+
 	                					if (wordnetpos != null && !slot.getSlotType().equals(SlotType.RESOURCE)) {
 	                						newwords.addAll(wordnet.getBestSynonyms(wordnetpos,getLemmatizedWord(word)));
 		                					for (String att : getLemmatizedWords(strings)) {
@@ -281,32 +281,32 @@ public class Templator {
 	                				}
 	                			}
                 			}
-                			// 
-                			
+                			//
+
                 			templates.add(temp);
                 		} catch (java.lang.ClassCastException e) {
                 			continue;
                 		}
                 		if (ONE_SCOPE_ONLY) { break; }
-                	}	
+                	}
                 }
             }
         }
- 
+
         if (clearAgain) {
         	parser.clear(g,parser.getTemps());
         }
 //        System.gc();
-        
+
         return templates;
     }
-	
+
 	public Set<Template> buildTemplatesMultiThreaded(String s) {
-		
+
 		boolean clearAgain = true;
-        
+
 		String tagged;
-		if (UNTAGGED_INPUT) {		
+		if (UNTAGGED_INPUT) {
 			s = pp.normalize(s);
 			tagged = tagger.tag(s);
 			logger.debug("Tagged input: " + tagged);
@@ -319,14 +319,14 @@ public class Templator {
 		String newtagged;
 		if (USE_NER) {
 			newtagged = pp.condenseNominals(pp.findNEs(tagged,s));
-		} 
+		}
 		else newtagged = pp.condenseNominals(tagged);
-		
+
 		newtagged = pp.condense(newtagged);
-		logger.debug("Preprocessed: " + newtagged); 
-        
+		logger.debug("Preprocessed: " + newtagged);
+
         parser.parseMultiThreaded(newtagged,g);
-        
+
         if (parser.getDerivationTrees().isEmpty()) {
             parser.clear(g,parser.getTemps());
             clearAgain = false;
@@ -346,29 +346,29 @@ public class Templator {
 			postable.put(st.substring(0,st.indexOf("/")).toLowerCase(),st.substring(st.indexOf("/")+1));;
 		}
         //
-        
+
         drses = new HashSet<DRS>();
         templates = new HashSet<Template>();
-        
+
 //        ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 //        for (Dude dude : p.getDudes()) {
 //           threadPool.execute(new DudeProcessor(dude, postable));
 //        }
 //        threadPool.shutdown();
 //		while(!threadPool.isTerminated()){}
-        
+
         for (Dude dude : parser.getDudes()) {
-           
+
            UDRS udrs = d2u.convert(dude);
-           if (udrs != null) { 
-               
+           if (udrs != null) {
+
            	for (DRS drs : udrs.initResolve()) {
-               	
+
                	List<Slot> slots = new ArrayList<Slot>();
            		slots.addAll(dude.getSlots());
            		d2s.setSlots(slots);
                	d2s.redundantEqualRenaming(drs);
-               	
+
                	if (!containsModuloRenaming(drses,drs)) {
 //                   	// DEBUG
                			logger.debug(dude);
@@ -378,24 +378,24 @@ public class Templator {
 	                		}
 //               		//
                		drses.add(drs);
-               		
+
                		try {
                			Template temp = d2s.convert(drs,slots);
                                 if (temp == null) { continue; }
-                                temp = temp.checkandrefine(); 
-                                if (temp == null) { continue; }   
-               			
-               			
+                                temp = temp.checkandrefine();
+                                if (temp == null) { continue; }
+
+
        					if (USE_WORDNET) { // find WordNet synonyms
 	            				List<String> newwords;
-	            				String word; 
+	            				String word;
 	            				String pos;
 	                			for (Slot slot : temp.getSlots()) {
 	                				if (!slot.getWords().isEmpty()) {
-	                					
+
 	                					word = slot.getWords().get(0);
 	                					pos = postable.get(word.toLowerCase().replace(" ","_"));
-	                					
+
 	                					POS wordnetpos = null;
 	                					if (pos != null) {
 		                					if (equalsOneOf(pos,noun)) {
@@ -408,16 +408,16 @@ public class Templator {
 		                						wordnetpos = POS.VERB;
 		                					}
 		                				}
-	                					
+
 	               						List<String> strings = new ArrayList<String>();
 	               						if (wordnetpos != null && wordnetpos.equals(POS.ADJECTIVE)) {
 	               							strings = wordnet.getAttributes(word);
 	               						}
-	                					
+
 	                					newwords = new ArrayList<String>();
 	                					newwords.addAll(slot.getWords());
-	                					newwords.addAll(strings);            					
-	                					
+	                					newwords.addAll(strings);
+
 	                					if (wordnetpos != null && !slot.getSlotType().equals(SlotType.RESOURCE)) {
 	                						newwords.addAll(wordnet.getBestSynonyms(wordnetpos,getLemmatizedWord(word)));
 		                					for (String att : getLemmatizedWords(strings)) {
@@ -433,36 +433,36 @@ public class Templator {
 	                				}
 	                			}
                			}
-               			// 
-               			
+               			//
+
                			templates.add(temp);
                		} catch (java.lang.ClassCastException e) {
                			continue;
                		}
                		if (ONE_SCOPE_ONLY) { break; }
-               	}	
+               	}
                }
-           
+
 	}
         }
-        
- 
+
+
         if (clearAgain) {
         	parser.clear(g,parser.getTemps());
         }
 //        System.gc();
-        
+
         return templates;
     }
-	
+
 	public String getTaggedInput() {
 		return taggedInput;
 	}
-	
+
 	public List<String> getUnknownWords(){
 		return parser.getUnknownWords();
 	}
-	
+
 	private List<String> getLemmatizedWords(List<String> words){
 		List<String> stemmed = new ArrayList<String>();
 		for(String word : words){
@@ -472,15 +472,15 @@ public class Templator {
 			} else {
 				stemmed.add(getLemmatizedWord(word));
 			}
-			
+
 		}
 		return stemmed;
 	}
-	
+
 	private String getLemmatizedWord(String word){
 		return lem.stem(word);
 	}
-	
+
 	private boolean containsModuloRenaming(Set<DRS> drses, DRS drs) {
 
 		for (DRS d : drses) {
@@ -490,7 +490,7 @@ public class Templator {
 		}
 		return false;
 	}
-	
+
 	private boolean equalsOneOf(String string,String[] strings) {
 		for (String s : strings) {
 			if (string.equals(s)) {
@@ -499,7 +499,7 @@ public class Templator {
 		}
 		return false;
 	}
-	
+
 	private String extractSentence(String taggedSentence){
     	int pos = taggedSentence.indexOf("/");
     	while(pos != -1){
@@ -509,20 +509,20 @@ public class Templator {
     			endPos = taggedSentence.substring(pos).length();
     		}
     		String rest = taggedSentence.substring(pos + endPos);
-    		
+
     		taggedSentence = first + rest;
     		pos = taggedSentence.indexOf("/");
-    		
+
     	}
     	return taggedSentence;
-    	
+
     }
-	
+
 	class DudeProcessor implements Runnable{
-		
+
 		private Dude dude;
 		private Hashtable<String,String> postable;
-		
+
 		public DudeProcessor(Dude dude, Hashtable<String,String> postable) {
 			this.dude = dude;
 			this.postable = postable;
@@ -531,15 +531,15 @@ public class Templator {
 		@Override
 		public void run() {
 			 UDRS udrs = d2u.convert(dude);
-	            if (udrs != null) { 
-	                
+	            if (udrs != null) {
+
 	            	for (DRS drs : udrs.initResolve()) {
-	                	
+
 	                	List<Slot> slots = new ArrayList<Slot>();
 	            		slots.addAll(dude.getSlots());
 	            		d2s.setSlots(slots);
 	                	d2s.redundantEqualRenaming(drs);
-	                	
+
 	                	if (!containsModuloRenaming(drses,drs)) {
 //	                    	// DEBUG
 	                		if (VERBOSE) {
@@ -551,24 +551,24 @@ public class Templator {
 	                		}
 //	                		//
 	                		drses.add(drs);
-	                		
+
 	                		try {
 	                			Template temp = d2s.convert(drs,slots);
 	                                        temp = temp.checkandrefine();
 	                			if (temp == null) {
 	                				continue;
 	                			}
-	                			
+
 	        					if (USE_WORDNET) { // find WordNet synonyms
 		            				List<String> newwords;
-		            				String word; 
+		            				String word;
 		            				String pos;
 		                			for (Slot slot : temp.getSlots()) {
 		                				if (!slot.getWords().isEmpty()) {
-		                					
+
 		                					word = slot.getWords().get(0);
 		                					pos = postable.get(word.toLowerCase().replace(" ","_"));
-		                					
+
 		                					POS wordnetpos = null;
 		                					if (pos != null) {
 			                					if (equalsOneOf(pos,noun)) {
@@ -581,16 +581,16 @@ public class Templator {
 			                						wordnetpos = POS.VERB;
 			                					}
 			                				}
-		                					
+
 		               						List<String> strings = new ArrayList<String>();
 		               						if (wordnetpos != null && wordnetpos.equals(POS.ADJECTIVE)) {
 		               							strings = wordnet.getAttributes(word);
 		               						}
-		                					
+
 		                					newwords = new ArrayList<String>();
 		                					newwords.addAll(slot.getWords());
-		                					newwords.addAll(strings);            					
-		                					
+		                					newwords.addAll(strings);
+
 		                					if (wordnetpos != null && !slot.getSlotType().equals(SlotType.RESOURCE)) {
 		                						newwords.addAll(wordnet.getBestSynonyms(wordnetpos,getLemmatizedWord(word)));
 			                					for (String att : getLemmatizedWords(strings)) {
@@ -606,18 +606,18 @@ public class Templator {
 		                				}
 		                			}
 	                			}
-	                			// 
-	                			
+	                			//
+
 	                			templates.add(temp);
 	                		} catch (java.lang.ClassCastException e) {
 	                			continue;
 	                		}
 	                		if (ONE_SCOPE_ONLY) { break; }
-	                	}	
+	                	}
 	                }
 	            }
 		}
-		
+
 	}
 
 }

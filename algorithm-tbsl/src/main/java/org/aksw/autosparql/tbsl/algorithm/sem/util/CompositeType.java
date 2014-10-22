@@ -4,37 +4,37 @@ public class CompositeType implements Type{
 
 	Type argument;
 	Type result;
-	
+
 	public CompositeType()
 	{
 	}
-	
+
 	public CompositeType(Type arg, Type res)
 	{
 		argument = arg;
 		result = res;
 	}
-	
+
 	public Type getArgumentType()
 	{
 		return argument;
 	}
-	
+
 	public Type getResultType()
 	{
 		return result;
 	}
-	
+
 	public void setArgumentType(Type type)
 	{
 		argument = type;
 	}
-	
+
 	public void setResultType(Type type)
 	{
 		result = type;
 	}
-	
+
 	public String toString()
 	{
 		return "<"+argument+","+result+">";
@@ -72,9 +72,9 @@ public class CompositeType implements Type{
 			return false;
 		return true;
 	}
-        
+
         public String toTex() {
-            return "\\langle " + argument.toTex() + "," + result.toTex() + "\\rangle "; 
+            return "\\langle " + argument.toTex() + "," + result.toTex() + "\\rangle ";
         }
-	
+
 }

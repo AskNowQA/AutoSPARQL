@@ -14,7 +14,7 @@ import org.aksw.autosparql.tbsl.algorithm.sem.util.Pair;
  * ParseGrammar is a Pair of a TreeNode and an ID. This ID is a local ID for the
  * current Parser run. Therefore ParseGrammar also holds a mapping from local
  * IDs to global IDs from a TAG.
- * 
+ *
  * @param auxTrees
  *            is a List of auxiliary trees and their local ids
  * @param initTrees

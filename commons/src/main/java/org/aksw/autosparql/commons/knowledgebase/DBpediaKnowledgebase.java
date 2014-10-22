@@ -20,7 +20,7 @@ public class DBpediaKnowledgebase extends RemoteKnowledgebase
 		{
 			try{dbpediaEndpoint = new SparqlEndpoint(new URL("http://linkedspending.aksw.org/sparql"),Collections.<String>singletonList("http://dbpedia.org"), Collections.<String>emptyList());}
 			catch (MalformedURLException e){throw new RuntimeException(e);}
-		}		
+		}
 		return dbpediaEndpoint;
 	}
 
@@ -29,14 +29,14 @@ public class DBpediaKnowledgebase extends RemoteKnowledgebase
 		try
 		{
 			return new MappingBasedIndex(
-					DBpediaKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/dbpedia_class_mappings.txt"), 
+					DBpediaKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/dbpedia_class_mappings.txt"),
 					DBpediaKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/dbpedia_resource_mappings.txt"),
 					DBpediaKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/dbpedia_dataproperty_mappings.txt"),
 					DBpediaKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/dbpedia_objectproperty_mappings.txt")
 					);
 		}
 		catch (IOException e) {throw new RuntimeException(e);}
-	}	
+	}
 
 	private DBpediaKnowledgebase() {super(getDbpediaEndpoint(),"dbpedia","DBpedia",SolrServer.INSTANCE.getIndices());}
 }

@@ -64,41 +64,41 @@ package org.aksw.autosparql.tbsl.algorithm;
 //import com.hp.hpl.jena.vocabulary.RDFS;
 //
 //public class Evaluation{
-//	
+//
 ////	List<Integer> yagoExclusions = Arrays.asList(new Integer[]{1,	3,	6,	11,	15,	22,	23,	46});
 //	List<Integer> exclusions = Arrays.asList(new Integer[]{1,5,8,9,16,28,30,32,38,51,52,53,74,86,94,95,96,97,98,99,100});
 //	Map<Integer, String> evalCodes = new HashMap<Integer, String>();
-//	
+//
 //	private static Logger logger = Logger.getLogger(Evaluation.class);
 //	private static String PROPERTIES_PATH = "tbsl/evaluation/evaluation.properties";
 //	private static final boolean USE_IDEAL_TAGGER = false;
-//	
+//
 //	private SortedMap<Integer, String> id2Question = new TreeMap<Integer, String>();
 //	private SortedMap<Integer, String> id2Query = new TreeMap<Integer, String>();
 //	private SortedMap<Integer, Object> id2Answer = new TreeMap<Integer, Object>();
-//	
+//
 //	private SparqlEndpoint endpoint;
-//	
+//
 //	private SPARQLTemplateBasedLearner2 stbl;
-//	
+//
 //	private int testID = -1;
 //	private Map<String, String> prefixMap;
-//	
+//
 //	private ExtractionDBCache cache = new ExtractionDBCache("cache");
-//	
-//	
+//
+//
 //	public Evaluation(File ... evaluationFiles) throws FileNotFoundException, IOException{
 //		for(File file : evaluationFiles){
 //			readQueries(file);
 //		}
-//		
+//
 //		SOLRIndex resourcesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_resources");
 //		resourcesIndex.setPrimarySearchField("label");
 ////		resourcesIndex.setSortField("pagerank");
 //		Index classesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_classes");
 //		Index propertiesIndex = new SOLRIndex("http://dbpedia.aksw.org:8080/solr/dbpedia_properties");
-//		
-//		
+//
+//
 //		Knowledgebase kb = new RemoteKnowledgebase(endpoint, "DBpedia Live", "TODO", resourcesIndex, propertiesIndex,propertiesIndex, classesIndex, null);
 //		stbl = new SPARQLTemplateBasedLearner2(kb);
 //		try {
@@ -109,7 +109,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		stbl.setUseIdealTagger(USE_IDEAL_TAGGER);
 //		stbl.setCache(cache);
 //		init();
-//		
+//
 //		prefixMap = new HashMap<String, String>();
 //		prefixMap.put("rdf", RDF.getURI());
 //		prefixMap.put("rdfs", RDFS.getURI());
@@ -120,15 +120,15 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		prefixMap.put("res", "http://dbpedia.org/resource/");
 //		prefixMap.put("foaf", FOAF.getURI());
 //		prefixMap.put("yago", "http://dbpedia.org/class/yago/");
-//		
-//		
+//
+//
 //	}
-//	
+//
 //	public void init() throws FileNotFoundException, IOException{
 //		//load properties for evaluation
 //		Properties props = new Properties();
 //		props.load(new FileInputStream(this.getClass().getClassLoader().getResource(PROPERTIES_PATH).getPath()));
-//		
+//
 //		String endpointURL = props.getProperty("endpointURL", "http://live.dbpedia.org/sparql");
 //		String defaultGraphURI = props.getProperty("defaultGraphURI", "http://live.dbpedia.org");
 //		endpoint = new SparqlEndpoint(new URL(endpointURL), Collections.singletonList(defaultGraphURI), Collections.<String>emptyList());
@@ -140,19 +140,19 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		} catch (MalformedURLException e) {
 //			e.printStackTrace();
 //		}
-//		
+//
 //		boolean useRemoteEndpointValidation = Boolean.parseBoolean(props.getProperty("useRemoteEndpointValidation", "True"));
 //		stbl.setUseRemoteEndpointValidation(useRemoteEndpointValidation);
-//		
+//
 //		int maxTestedQueriesPerTemplate = Integer.parseInt(props.getProperty("maxTestedQueriesPerTemplate", "25"));
 //		stbl.setMaxTestedQueriesPerTemplate(maxTestedQueriesPerTemplate);
-//		
+//
 //		int maxQueryExecutionTimeInSeconds = Integer.parseInt(props.getProperty("maxQueryExecutionTimeInSeconds", "20"));
 //		stbl.setMaxQueryExecutionTimeInSeconds(maxQueryExecutionTimeInSeconds);
-//		
+//
 //		loadAnswers();
 //	}
-//	
+//
 //	private void readQueries(File file){
 //		logger.info("Reading file containing queries and answers...");
 //		try {
@@ -165,7 +165,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //			String question;
 //			String query;
 //			Set<String> answers;
-//			
+//
 //			for(int i = 0; i < questionNodes.getLength(); i++){
 //				Element questionNode = (Element) questionNodes.item(i);
 //				//read question ID
@@ -181,11 +181,11 @@ package org.aksw.autosparql.tbsl.algorithm;
 ////					Element answerNode = (Element) aswersNodes.item(j);
 ////					answers.add(((Element)answerNode.getElementsByTagName("uri").item(0)).getChildNodes().item(0).getNodeValue().trim());
 ////				}
-//				
+//
 //				id2Question.put(id, question);
 //				id2Query.put(id, query);
 ////				question2Answers.put(question, answers);
-//				
+//
 //			}
 //		} catch (DOMException e) {
 //			e.printStackTrace();
@@ -204,15 +204,15 @@ package org.aksw.autosparql.tbsl.algorithm;
 //			BufferedWriter out = new BufferedWriter(new FileWriter("questions.txt"));
 //			out.write(sb.toString());
 //			out.close();
-//			} 
-//			catch (IOException e) 
-//			{ 
+//			}
+//			catch (IOException e)
+//			{
 //			System.out.println("Exception ");
 //
 //			}
 //		logger.info("Done.");
 //	}
-//	
+//
 //	private void loadAnswers(){
 //		int questionId;
 //		String question;
@@ -229,10 +229,10 @@ package org.aksw.autosparql.tbsl.algorithm;
 //			}
 //		}
 //	}
-//	
+//
 //	private Set<String> getResources(String query){
 //		Set<String> resources = new HashSet<String>();
-//		
+//
 //		// TODO: use aksw-commons-sparql instead of sparql-scala
 //		ResultSet rs = executeSelect(query);
 //		QuerySolution qs;
@@ -240,14 +240,14 @@ package org.aksw.autosparql.tbsl.algorithm;
 //			qs = rs.next();
 //			resources.add(qs.getResource("uri").getURI());
 //		}
-//		
+//
 //		return resources;
 //	}
-//	
+//
 //	private Object getAnswerForSPARQLQuery(String query, String targetVar){
 //		logger.debug("Query: " + query);
 //		Object answer = null;
-//		
+//
 //		// TODO: use aksw-commons-sparql instead of sparql-scala
 //		if(query.contains("ASK")){
 //			answer = executeAsk(query);
@@ -257,7 +257,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				query = query + " LIMIT 500";
 //			}
 //			ResultSet rs = executeSelect(query);
-//			
+//
 //			String variable;
 //			if(rs.getResultVars().size() == 1){
 //				variable = rs.getResultVars().get(0);
@@ -265,7 +265,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				variable = targetVar;
 //			}
 //			variable = rs.getResultVars().get(0);
-//			
+//
 //			QuerySolution qs;
 //			RDFNode node;
 //			while(rs.hasNext()){
@@ -281,14 +281,14 @@ package org.aksw.autosparql.tbsl.algorithm;
 //			}
 //		}
 //		logger.debug("Answer: " + answer);
-//		
+//
 //		return answer;
 //	}
-//	
+//
 //	private ResultSet executeSelect(String query){
 //		return SparqlQuery.convertJSONtoResultSet(cache.executeSelectQuery(endpoint, query));
 //	}
-//	
+//
 //	private Boolean executeAsk(String query){
 //		QueryEngineHTTP queryExecution = new QueryEngineHTTP(endpoint.getURL().toString(), query);
 //		for (String dgu : endpoint.getDefaultGraphURIs()) {
@@ -296,10 +296,10 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		}
 //		for (String ngu : endpoint.getNamedGraphURIs()) {
 //			queryExecution.addNamedGraph(ngu);
-//		}			
+//		}
 //		return queryExecution.execAsk();
 //	}
-//	
+//
 //	public void setEndpoint(SparqlEndpoint endpoint){
 //		// TODO: use aksw-commons-sparql instead of sparql-scala
 //		/*
@@ -312,24 +312,24 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		}
 //		*/
 //	}
-//	
+//
 //	public void setUseRemoteValidation(boolean useRemoteValidation){
 //		stbl.setUseRemoteEndpointValidation(useRemoteValidation);
 //	}
-//	
+//
 //	public void setMaxQueryExecutionTimeInSeconds(int maxQueryExecutionTimeInSeconds){
 //		stbl.setMaxQueryExecutionTimeInSeconds(maxQueryExecutionTimeInSeconds);
 //	}
-//	
+//
 //	public void setMaxTestedQueriesPerTemplate(int maxTestedQueriesPerTemplate) {
 //		stbl.setMaxTestedQueriesPerTemplate(maxTestedQueriesPerTemplate);
 //	}
-//	
-//	
+//
+//
 //	public void run(){
 //		int topN2Print = 10;
 //		int correctAnswers = 0;
-//		
+//
 //		int questionId = -1;
 //		String question = "";
 //		String targetQuery;
@@ -353,8 +353,8 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 //				logger.info("QUESTION: " + question + "\n");
 //				logger.info("TARGET QUERY:\n" + targetQuery + "\n");
-//				
-//				
+//
+//
 //				//write new section for query
 //				latex.beginSection(extractSentence(question), questionId);
 //				//write subsection for target
@@ -365,7 +365,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				//write subsubsection for target result
 //				latex.beginSubSubsection("Result" + ((targetAnswer instanceof Collection<?>) ? "(" + ((Collection)targetAnswer).size()+")" : ""));
 //				latex.addText(escapeAnswerString(targetAnswer));
-//				
+//
 //				//set the question
 //				stbl.setQuestion(question);
 //				//start learning
@@ -379,12 +379,12 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				}
 //				//get the used templates
 //				List<Template> templates = new ArrayList<Template>(stbl.getTemplates());
-//				
+//
 //				if(stbl.getLearnedPosition() == -1 || stbl.getLearnedPosition() > 10){
 //					cnt++;
 //				}
 //				i++;
-//				
+//
 //				//start output
 //				//write templates subsection
 //				latex.beginSubsection("Templates (" + templates.size() + ")");
@@ -395,10 +395,10 @@ package org.aksw.autosparql.tbsl.algorithm;
 //					latex.endEnumerationItem();
 //				}
 //				latex.endEnumeration();
-//				
+//
 //				//get the generated SPARQL query candidates
 //				Set<WeightedQuery> generatedQueries = stbl.getGeneratedQueries(15);
-//				
+//
 //				//write generated queries subsection
 //				latex.beginSubsection("Top " + 15 + " generated queries");
 //				if(!generatedQueries.isEmpty()){
@@ -422,7 +422,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //					}
 //					latex.endEnumeration();
 //				}
-//				
+//
 //				//get the URIs for each template slot
 //				latex.beginSubsection("Covered entities");
 //				Map<Slot, List<String>> slot2URIsMap = stbl.getSlot2URIs();
@@ -444,7 +444,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //							break;
 //						}
 //					}
-//					
+//
 //					coveredEntitiesMap.put(entity, covered);
 //					if(!covered){
 ////						errorCode = "NE";
@@ -478,7 +478,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				}
 //				sb.append("\\end{tabular}\n");
 //				latex.addText(sb.toString());
-//				
+//
 //				//write solution subsection if exists
 //				if(learnedQuery != null){
 //					latex.beginSubsection("Solution");
@@ -493,7 +493,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //					}
 //				}
 //				latex.addSummaryTableEntry(questionId, extractSentence(question), precision, recall, errorCode);
-//				
+//
 //			} catch (NoTemplateFoundException e) {cnt++;
 ////				e.printStackTrace();
 //				logger.error("Template generation failed");
@@ -509,7 +509,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		System.out.println(cnt + "/" + i);
 //		latex.write("log/evaluation_" + System.currentTimeMillis()+  ".tex", Calendar.getInstance().getTime().toString(), correctAnswers);
 //	}
-//	
+//
 //	public static List<String> extractEntities(String query){
 //		List<String> exclusions = Arrays.asList(new String[]{"rdf", "rdfs"});
 //		List<String> entities = new ArrayList<String>();
@@ -537,16 +537,16 @@ package org.aksw.autosparql.tbsl.algorithm;
 //			group = matcher.group();
 //			entities.add(buildEntityFromLabel(group));
 //		}
-//		
+//
 //		return entities;
 //	}
-//	
+//
 //	private static String buildEntityFromLabel(String label){
 //		String base = "res:";
 //		String entity = label.substring(1).substring(0, label.lastIndexOf("'")-1).replace(" ", "_");
 //		return base + entity;
 //	}
-//	
+//
 //	private String getFullURI(String prefixedURI){
 //		String fullURI = prefixedURI;
 //		String prefix;
@@ -561,7 +561,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		}
 //		return fullURI;
 //	}
-//	
+//
 //	private String getPrefixedURI(String fullURI){
 //		String prefixedURI = fullURI;
 //		String prefix;
@@ -576,7 +576,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		}
 //		return prefixedURI;
 //	}
-//	
+//
 //	private double computeRecall(Object targetAnswer, Object learnedAnswer){
 //		if(learnedAnswer == null){
 //			return -1;
@@ -598,7 +598,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		}
 //		return recall;
 //	}
-//	
+//
 //	private double computePrecision(Object targetAnswer, Object learnedAnswer){
 //		if(learnedAnswer == null){
 //			return -1;
@@ -620,11 +620,11 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		}
 //		return precision;
 //	}
-//	
+//
 //	public void run_without_testing_answer(){
 //		int topN2Print = 25;
-//		
-//		
+//
+//
 //		int questionId;
 //		String question;
 //		String query;
@@ -642,8 +642,8 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 //				logger.info("QUESTION: " + question + "\n");
 //				logger.info("TARGET QUERY:\n" + query + "\n");
-//				
-//				
+//
+//
 //				//write new section for query
 //				latex.beginSection(question, questionId);
 //				//write subsection for target
@@ -654,7 +654,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				//write subsubsection for target result
 //				latex.beginSubSubsection("Result" + ((answer instanceof Collection<?>) ? "(" + ((Collection)answer).size()+")" : ""));
 //				latex.addText(escapeAnswerString(answer));
-//				
+//
 //				//set the question
 //				stbl.setQuestion(question);
 //				//get the generated SPARQL query candidates
@@ -662,7 +662,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				List<String> queries = stbl.getGeneratedSPARQLQueries();
 //				//get the used templates
 //				Set<Template> templates = stbl.getTemplates();
-//				
+//
 //				//start output
 //				//write templates subsection
 //				latex.beginSubsection("Templates (" + templates.size() + ")");
@@ -673,7 +673,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //					latex.endEnumerationItem();
 //				}
 //				latex.endEnumeration();
-//				
+//
 //				//write generated queries subsection
 //				latex.beginSubsection("Top " + topN2Print + " generated queries per template");
 //				logger.info("LEARNED QUERIES(#" + queries.size() + "):\n");
@@ -696,8 +696,8 @@ package org.aksw.autosparql.tbsl.algorithm;
 //				if(!queries.isEmpty()){
 //					latex.endEnumeration();
 //				}
-//				
-//				
+//
+//
 //			} catch (NoTemplateFoundException e) {
 //				e.printStackTrace();
 //				logger.error("Template generation failed");
@@ -712,7 +712,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 //
 //	private String escapeAnswerString(Object learnedAnswer, Object targetAnswer){
 //		if(learnedAnswer instanceof Collection<?>){
-//			Collection<?> target = (Collection<?>) targetAnswer; 
+//			Collection<?> target = (Collection<?>) targetAnswer;
 //			StringBuilder sb = new StringBuilder();
 //			try {
 //				int i = 1;
@@ -734,13 +734,13 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		} else {
 //			return learnedAnswer.toString();
 //		}
-//		
+//
 //	}
-//	
+//
 //	private String escapeString(String str){
 //		return str.replace("_", "\\_").replace("&", "\\&").replace("%", "\\%").replace("#", "\\#");
 //	}
-//	
+//
 //	private String escapeAnswerString(Object learnedAnswer){
 //		if(learnedAnswer instanceof Collection<?>){
 //			StringBuilder sb = new StringBuilder();
@@ -761,9 +761,9 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		} else {
 //			return learnedAnswer.toString();
 //		}
-//		
+//
 //	}
-//	
+//
 //	private String extractSentence(String taggedSentence){
 //    	int pos = taggedSentence.indexOf("/");
 //    	while(pos != -1){
@@ -773,17 +773,17 @@ package org.aksw.autosparql.tbsl.algorithm;
 //    			endPos = taggedSentence.substring(pos).length();
 //    		}
 //    		String rest = taggedSentence.substring(pos + endPos);
-//    		
+//
 //    		taggedSentence = first + rest;
 //    		pos = taggedSentence.indexOf("/");
-//    		
+//
 //    	}
 //    	return taggedSentence;
-//    	
+//
 //    }
 //	/**
 //	 * @param args
-//	 * @throws IOException 
+//	 * @throws IOException
 //	 */
 //	public static void main(String[] args) throws IOException {
 //		Logger.getLogger(SPARQLTemplateBasedLearner2.class).setLevel(Level.INFO);
@@ -795,13 +795,13 @@ package org.aksw.autosparql.tbsl.algorithm;
 //		fileAppender.setThreshold(Level.INFO);
 //		Logger.getRootLogger().addAppender(fileAppender);
 //		Logger.getRootLogger().addAppender(new ConsoleAppender(layout));
-//		
+//
 //		if(args.length == 0){
 //			System.out.println("Usage: Evaluation <file>");
 //			System.exit(0);
 //		}
 //		File file = new File(Evaluation.class.getClassLoader().getResource(args[0]).getPath());
-//		
+//
 ////		System.out.println(Evaluation.extractEntities("SELECT DISTINCT ?uri ?string WHERE {" +
 ////				"?uri rdf:type onto:Person ." +
 ////				"?uri onto:birthPlace ?city ." +
@@ -810,7 +810,7 @@ package org.aksw.autosparql.tbsl.algorithm;
 ////				"FILTER (lang(?string) = 'en') }" +
 ////				"}}")
 ////		);
-//		
+//
 //		Evaluation eval = new Evaluation(file);
 //		eval.run();
 //

@@ -4,12 +4,12 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 public class SPARQL_Term extends SPARQL_Value implements Cloneable
 {
 	@Override public SPARQL_Term clone() {return new SPARQL_Term(name,isURI,isVariable());}
-	
+
 	SPARQL_OrderBy orderBy = SPARQL_OrderBy.NONE;
 	SPARQL_Aggregate aggregate = SPARQL_Aggregate.NONE;
-	boolean isURI = false; 
+	boolean isURI = false;
 	String alias;
-	
+
 	public SPARQL_Term(String name) {
 		super(name);
 		this.name = name.replace("?","").replace("!","");
@@ -22,7 +22,7 @@ public class SPARQL_Term extends SPARQL_Value implements Cloneable
 		setIsVariable(true);
 		alias = name;
 	}
-	
+
 	public SPARQL_Term(String name, boolean uri, boolean variable) {
 		super(name);
 		this.name = name.replace("?","").replace("!","");
@@ -30,7 +30,7 @@ public class SPARQL_Term extends SPARQL_Value implements Cloneable
 		alias = name;
 		setIsVariable(variable);
 	}
-	
+
 	public SPARQL_Term(String name, SPARQL_Aggregate aggregate) {
 		super(name);
 		this.aggregate = aggregate;
@@ -41,17 +41,17 @@ public class SPARQL_Term extends SPARQL_Value implements Cloneable
 		this.aggregate = aggregate;
 		alias = as;
 	}
-	
+
 	public SPARQL_Term(String name, SPARQL_OrderBy ob) {
 		super(name);
 		orderBy = ob;
 		alias = name;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof SPARQL_Term)) return false;
-		
+
 		SPARQL_Term f = (SPARQL_Term) obj;
 		return f.getName().toLowerCase().equals(this.getName().toLowerCase()) && f.getAggregate() == aggregate && f.getOrderBy() == orderBy;
 	}
@@ -71,20 +71,20 @@ public class SPARQL_Term extends SPARQL_Value implements Cloneable
 	public void setAggregate(SPARQL_Aggregate aggregate) {
 		this.aggregate = aggregate;
 	}
-	
+
 	public boolean isString()
 	{
 		return name.startsWith("'");
 	}
-	
+
 	public void setIsURI(boolean isURI){
 		this.isURI = isURI;
 	}
-	
+
 	public String getAlias() {
 		return alias;
 	}
-	
+
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
@@ -95,13 +95,13 @@ public class SPARQL_Term extends SPARQL_Value implements Cloneable
 		if (aggregate != SPARQL_Aggregate.NONE) {
 			if (alias != null && !alias.equals(name))
 				return "(" + aggregate+"(?"+name.toLowerCase()+") AS ?" + alias + ")";
-			else 
+			else
 				return aggregate+"(?"+name.toLowerCase()+")";
 		}
 		if (orderBy != SPARQL_OrderBy.NONE) {
 			if (orderBy == SPARQL_OrderBy.ASC)
-				return "ASC(?"+alias.toLowerCase()+")"; 
-			else 
+				return "ASC(?"+alias.toLowerCase()+")";
+			else
 				return "DESC(?"+alias.toLowerCase()+")";
 		}
 		if (isString()) {
@@ -112,6 +112,6 @@ public class SPARQL_Term extends SPARQL_Value implements Cloneable
 		}
 		else return "?"+name.toLowerCase();
 	}
-	
+
 
 }

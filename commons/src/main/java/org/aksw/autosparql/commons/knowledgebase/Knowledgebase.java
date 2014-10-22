@@ -4,11 +4,11 @@ import org.aksw.rdfindex.Indices;
 import com.hp.hpl.jena.query.ResultSet;
 
 public abstract class Knowledgebase
-{	
+{
 	private final String label;
 	private final String description;
 	protected final Indices indices;
-	
+
 	public abstract ResultSet querySelect(String query);
 
 	public Knowledgebase(String label, String description, Indices indices)
@@ -20,6 +20,6 @@ public abstract class Knowledgebase
 
 	public String getLabel() {return label;}
 	public String getDescription() {return description;}
-	public Indices getIndices() {return indices;}	
+	public Indices getIndices() {return indices;}
 	@Override public String toString() {return label;}
 }

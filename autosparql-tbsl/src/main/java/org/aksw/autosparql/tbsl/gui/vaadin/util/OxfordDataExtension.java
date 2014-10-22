@@ -25,16 +25,16 @@
 ///** will be moved to org.aksw.autosparql.algorithm.tbsl.knowledgebase*/
 //@Deprecated
 //public class OxfordDataExtension {
-//	
+//
 //	private static final String featurePropertyURI = "http://diadem.cs.ox.ac.uk/ontologies/real-estate#feature";
 //	private static final List<String> features = Arrays.asList(new String[]{"garden", "balcony", "garage", "central heating", "shower", "pool"});
-//	
+//
 //	public static void main(String[] args) throws Exception{
 //		String decriptionPropertyURI = "http://purl.org/goodrelations/v1#description";
 //		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
 //		ExtractionDBCache cache = new ExtractionDBCache("cache");
 //		LuceneIndex index = new LuceneIndex("/opt/tbsl/oxford_index");
-//		
+//
 //		//load the descriptions
 //		Map<String, String> uri2Description = new HashMap<String, String>();
 //		String query = String.format("SELECT ?uri ?desc WHERE {?uri <%s> ?desc}", decriptionPropertyURI);
@@ -46,14 +46,14 @@
 //			String description = qs.get("desc").asLiteral().getLexicalForm();
 //			uri2Description.put(uri, description);
 //		}
-//		
+//
 //		//extract the most frequent terms used in the descriptions
 //		String allDescriptions = StringUtils.join(uri2Description.values(), " ");
 //		WordFrequencyCounter wfc = new WordFrequencyCounter();
 //		for (Word word : wfc.getKeywordsSortedByFrequency(allDescriptions)) {
 //			System.out.println(word.getWord() + ":\t" + word.getFrequency());
 //		}
-//		
+//
 //		//generate triples for each feature
 //		Model model = ModelFactory.createDefaultModel();
 //		Property featureProperty = model.createProperty(featurePropertyURI);

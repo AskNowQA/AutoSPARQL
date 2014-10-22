@@ -9,10 +9,10 @@ import edu.mit.jwi.item.IVersion;
 
 public class WordNetResource<T> implements ILoadableDataSource<T>
 {
-	
+
 	public WordNetResource(String resource, IContentType<T> type)
 	{
-		
+
 	}
 
 	@Override public IContentType<T> getContentType()

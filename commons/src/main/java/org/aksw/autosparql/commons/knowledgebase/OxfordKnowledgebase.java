@@ -14,8 +14,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class OxfordKnowledgebase extends LocalKnowledgebase
-{	
-	static final protected Model oxfordModel; 
+{
+	static final protected Model oxfordModel;
 //	 synchronized protected Model getOxfordModel()
 	 static
 	{
@@ -27,16 +27,16 @@ public class OxfordKnowledgebase extends LocalKnowledgebase
 //		return oxfordModel;
 	}
 	static final QueryExecutionFactory qef = new QueryExecutionFactoryModel(oxfordModel);
-		
+
 	public static final OxfordKnowledgebase INSTANCE = new OxfordKnowledgebase();
-	
+
 
 	private static MappingBasedIndex createMappingIndex()
 	{
 		try
 		{
 			return new MappingBasedIndex(
-					OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/oxford_class_mappings.txt"), 
+					OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/oxford_class_mappings.txt"),
 					OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/oxford_resource_mappings.txt"),
 					OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/oxford_dataproperty_mappings.txt"),
 					OxfordKnowledgebase.class.getClassLoader().getResourceAsStream("tbsl/oxford_objectproperty_mappings.txt")

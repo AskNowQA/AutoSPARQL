@@ -12,24 +12,24 @@ public class Simple_DRS_Condition implements DRS_Condition, Cloneable{
 
 	// A simple DRS condition consists of a predicate
 	String m_Predicate;
-	
+
 	// as well as of a list of arguments
 	List<DiscourseReferent> m_Arguments;
-	
+
 	public Simple_DRS_Condition() {
-		m_Arguments = new ArrayList<DiscourseReferent>();	
+		m_Arguments = new ArrayList<DiscourseReferent>();
 	}
-	
+
 	public Simple_DRS_Condition(String predicate, List<DiscourseReferent> referents) {
 		m_Predicate = predicate;
-		m_Arguments = referents;	
+		m_Arguments = referents;
 	}
-	
+
 	public String toString()
 	{
 		String string ="(";
 		DiscourseReferent dr;
-		
+
 		for (int i=0; i < m_Arguments.size(); i++)
 		{
 			dr = (DiscourseReferent) m_Arguments.get(i);
@@ -39,10 +39,10 @@ public class Simple_DRS_Condition implements DRS_Condition, Cloneable{
 			else
 				string = string +dr.getValue();
 		}
-		
+
 		string = string +")";
-		
-		return m_Predicate+string;	
+
+		return m_Predicate+string;
 	}
         public String toTex() {
             String out = "\\text{"+m_Predicate.replaceAll("\\_","\\\\_")+"}(";
@@ -55,24 +55,24 @@ public class Simple_DRS_Condition implements DRS_Condition, Cloneable{
         }
 
 	// get methods
-	
+
 	// get the predicate
 	public String getPredicate()
 	{
 		return m_Predicate;
 	}
-	
+
 	public void setPredicate(String pred)
 	{
 		m_Predicate = pred;
 	}
-	
+
 	// get the arguments
 	public List<DiscourseReferent> getArguments() {
 		return m_Arguments;
 	}
 
-	
+
 	public boolean hasAsArgument(DiscourseReferent dr) {
 		if (m_Arguments.contains(dr)) {
 			return true;
@@ -81,13 +81,13 @@ public class Simple_DRS_Condition implements DRS_Condition, Cloneable{
 			return false;
 		}
 	}
-	
+
 	// add arguments
 	public void addArgument(DiscourseReferent dr)
 	{
 		m_Arguments.add(dr);
 	}
-	
+
 	// set arguments
 	public void setArguments(List<DiscourseReferent> dr_set)
 	{
@@ -107,34 +107,34 @@ public class Simple_DRS_Condition implements DRS_Condition, Cloneable{
 		Collections.replaceAll(m_Arguments,dr1,dr2);
 	}
 
-	
+
 	public Set<String> collectVariables() {
-		
+
 		Set<String> variables = new HashSet<String>();
-		
+
 		for ( DiscourseReferent ref : m_Arguments ) {
 			variables.add(ref.m_Referent);
 		}
-		
+
 		return variables;
 	}
-	
+
 	public boolean isComplexCondition() { return false; }
 	public boolean isNegatedCondition() { return false; }
-	
+
 	public List<Label> getAllLabels() { return(new ArrayList<Label>()); }
 
 	public Set<DRS_Condition> getEqualConditions() {
-	
+
 		Set<DRS_Condition> out = new HashSet<DRS_Condition>();
 		if (m_Predicate.equals("equal")) {
 			out.add(this);
 		}
 		return out;
 	}
-	
+
 	public DRS_Condition clone() {
-		
+
 		List<DiscourseReferent> newArgs = new ArrayList<DiscourseReferent>();
 		for (DiscourseReferent dr : m_Arguments) {
 			newArgs.add(dr);
@@ -174,6 +174,6 @@ public class Simple_DRS_Condition implements DRS_Condition, Cloneable{
 			return false;
 		return true;
 	}
-	
-	
+
+
 }

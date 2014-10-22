@@ -3,12 +3,12 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 public class RatedQuery extends Query implements Comparable<RatedQuery>{
 
 	private float score;
-	
+
 	public RatedQuery(Query query, float score){
 		super(query);
 		this.score = score;
 	}
-	
+
 	public RatedQuery(float score){
 		this.score = score;
 	}
@@ -20,12 +20,12 @@ public class RatedQuery extends Query implements Comparable<RatedQuery>{
 	public void setScore(float score) {
 		this.score = score;
 	}
-	
+
 //	@Override
 //	public String toString() {
 //		return super.toString() + "\nSCORE(" + score + ")";
 //	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof RatedQuery || obj == null){
@@ -35,9 +35,9 @@ public class RatedQuery extends Query implements Comparable<RatedQuery>{
 			return true;
 		}
 		RatedQuery other = (RatedQuery)obj;
-		return super.equals(other) && this.score == other.score; 
+		return super.equals(other) && this.score == other.score;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return super.hashCode() + Float.valueOf(score).hashCode();
@@ -50,5 +50,5 @@ public class RatedQuery extends Query implements Comparable<RatedQuery>{
 		} else if(o.getScore() > this.score){
 			return 1;
 		} else return this.toString().compareTo(o.toString());
-	}	
+	}
 }

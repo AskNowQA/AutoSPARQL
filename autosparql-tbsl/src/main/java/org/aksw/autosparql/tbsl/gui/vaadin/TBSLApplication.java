@@ -38,12 +38,12 @@ import com.vaadin.ui.Window.CloseEvent;
 @SuppressWarnings("serial")
 public class TBSLApplication extends Application implements ParameterHandler{
     private MainView mainView;
-    
+
     Action action_query = new ShortcutAction("Ctrl+Q",
             ShortcutAction.KeyCode.Q,
             new int[] { ShortcutAction.ModifierKey.CTRL });
-    
-    
+
+
     private String endpoint;
     private String question;
 
@@ -54,43 +54,43 @@ public class TBSLApplication extends Application implements ParameterHandler{
         UserSession sessionData = new UserSession(this);
         // Register it as a listener in the application context
         getContext().addTransactionListener(sessionData);
-        
+
     	setTheme("custom");
-    	
+
     	ViewHandler.initialize(this);
 		SessionHandler.initialize(this);
 		Permissions.initialize(this, new JPAPermissionManager());
-		
-		Window mainWindow = new Window("AutoSPARQL TBSL"); 
+
+		Window mainWindow = new Window("AutoSPARQL TBSL");
 		mainWindow.addParameterHandler(this);
 		setMainWindow(mainWindow);
-		
+
 		mainView = new MainView();
 		mainWindow.setContent(mainView);
 		mainWindow.setSizeFull();
-        
+
         setLogoutURL("http://aksw.org");
-        
-        
-        
+
+
+
         mainWindow.addActionHandler(new Action.Handler() {
-			
+
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if(action == action_query){
 					onShowLearnedQuery();
-				} 
-				
+				}
+
 			}
-			
+
 			@Override
 			public Action[] getActions(Object target, Object sender) {
 				return new Action[] { action_query};
 			}
 		});
-        
+
     }
-    
+
     private void onShowLearnedQuery(){
     	String learnedSPARQLQuery = UserSession.getManager().getLearnedSPARQLQuery();
     	VerticalLayout layout = new VerticalLayout();
@@ -101,7 +101,7 @@ public class TBSLApplication extends Application implements ParameterHandler{
         w.setPositionY(100);
         getMainWindow().addWindow(w);
         w.addListener(new Window.CloseListener() {
-			
+
 			@Override
 			public void windowClose(CloseEvent e) {
 				getMainWindow().removeWindow(w);
@@ -110,12 +110,12 @@ public class TBSLApplication extends Application implements ParameterHandler{
         Label queryLabel =  new Label(learnedSPARQLQuery, Label.CONTENT_PREFORMATTED);
         queryLabel.setWidth(null);
         layout.addComponent(queryLabel);
-        
+
         Label nlLabel = new Label(UserSession.getManager().getNLRepresentation(learnedSPARQLQuery));
         layout.addComponent(nlLabel);
-        
+
     }
-    
+
     @Override
     public void terminalError(Terminal.ErrorEvent event) {
         // Call the default implementation.
@@ -145,7 +145,7 @@ public class TBSLApplication extends Application implements ParameterHandler{
 		if(endpoint != null && question != null){
         	mainView.initWithParams(endpoint, question);
         }
-		
+
 	}
-    
+
 }

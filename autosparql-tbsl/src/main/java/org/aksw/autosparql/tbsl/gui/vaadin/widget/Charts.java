@@ -59,32 +59,32 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Charts {
-	
+
 	private static SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-	
+
 	private static List<String> barChartProperties = Arrays.asList(new String[]{});
 	private static List<String> columnChartProperties = Arrays.asList(new String[]{"http://diadem.cs.ox.ac.uk/ontologies/real-estate#hasPrice"});
 	private static List<String> timeSeriesChartProperties = Arrays.asList(new String[]{});
-	
+
 	public static Window getChart(String question, String propertyURI, XSDDatatype datatype, Map<String, String> uri2Label, Map<String, Set<Object>> data){
 		Window wnd = new Window();
 		wnd.setWidth("900px");
 		wnd.setHeight("900px");
-		
+
 		VerticalLayout mainLayout = new VerticalLayout();
 		mainLayout.setSizeUndefined();
 //		wnd.setContent(mainLayout);
-		
+
 		Panel p = new Panel();
 		p.setSizeFull();
 		p.setContent(mainLayout);
 		wnd.setContent(p);
-		
+
 		InvientChartsConfig chartConfig = new InvientChartsConfig();
 		String propertyLabel = Labels.getLabel(propertyURI);
 		String title = propertyLabel + " for " + "\"" + question + "\"";
 		chartConfig.getTitle().setText(title);
-		
+
 		InvientCharts chart = createChart(chartConfig, propertyURI, propertyLabel, datatype, uri2Label, data);
 		if(chart != null){
 			chart.setSizeFull();
@@ -94,7 +94,7 @@ public class Charts {
 		}
 		return null;
 	}
-	
+
 	public static InvientCharts createChart(InvientChartsConfig chartConfig, String propertyURI, String propertyLabel, XSDDatatype datatype, Map<String, String> uri2Label, Map<String, Set<Object>> data){
 		InvientCharts chart = getChartByPropertyURI(chartConfig, propertyURI, propertyLabel, datatype, uri2Label, data);
 		if(chart == null){
@@ -102,7 +102,7 @@ public class Charts {
 		}
 		return chart;
 	}
-	
+
 	public static InvientCharts getChartByPropertyURI(InvientChartsConfig chartConfig, String propertyURI, String propertyLabel, XSDDatatype datatype, Map<String, String> uri2Label, Map<String, Set<Object>> data){
 		if(barChartProperties.contains(propertyURI)){
 			return createBarChart(chartConfig, propertyLabel, uri2Label, data);
@@ -114,10 +114,10 @@ public class Charts {
 		}
 		return null;
 	}
-	
+
 	public static InvientCharts getChartByDatatype(InvientChartsConfig chartConfig, String propertyURI, String propertyLabel, XSDDatatype datatype, Map<String, String> uri2Label, Map<String, Set<Object>> data){
 		if(datatype != null){
-			if(datatype == XSDDatatype.XSDdouble || datatype == XSDDatatype.XSDint 
+			if(datatype == XSDDatatype.XSDdouble || datatype == XSDDatatype.XSDint
 					|| datatype == XSDDatatype.XSDinteger || datatype == XSDDatatype.XSDpositiveInteger ){
 				return createBarChart(chartConfig, propertyLabel, uri2Label, data);
 			} else if(datatype == XSDDatatype.XSDdate || datatype == XSDDatatype.XSDdateTime){
@@ -127,8 +127,8 @@ public class Charts {
 		}
 		return null;
 	}
-		
-	
+
+
 	private static InvientCharts createTimeChart(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
         chartConfig.getGeneralChartConfig().setZoomType(ZoomType.X);
         chartConfig.getGeneralChartConfig().setSpacing(new Spacing());
@@ -190,10 +190,10 @@ public class Charts {
 
         dateTimeSeries.addPoint((DateTimePoint[]) getTimePoints(dateTimeSeries, data).toArray(new DateTimePoint[0]));
         chart.addSeries(dateTimeSeries);
-        
+
         return chart;
 	}
-	
+
 	public static InvientCharts createColumnChart(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
 		chartConfig.getGeneralChartConfig().setType(SeriesType.COLUMN);
 
@@ -207,7 +207,7 @@ public class Charts {
         	}
         	categories.add(label);
         }
-        
+
         CategoryAxis xAxisMain = new CategoryAxis();
         xAxisMain.setCategories(categories);
         xAxisMain.setLabel(new XAxisDataLabel());
@@ -256,11 +256,11 @@ public class Charts {
         seriesData.setSeriesPoints(getPoints(seriesData, sortedData));
         chart.addSeries(seriesData);
 
-        
+
         return chart;
 	}
-	
-	
+
+
 	private static InvientCharts createBarChart(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
         chartConfig.getGeneralChartConfig().setType(SeriesType.BAR);
 
@@ -274,7 +274,7 @@ public class Charts {
         	}
         	categories.add(label);
         }
-        
+
         CategoryAxis xAxisMain = new CategoryAxis();
         xAxisMain.setCategories(categories);
         LinkedHashSet<XAxis> xAxesSet = new LinkedHashSet<InvientChartsConfig.XAxis>();
@@ -321,14 +321,14 @@ public class Charts {
         seriesData.setSeriesPoints(getPoints(seriesData, sortedData));
         chart.addSeries(seriesData);
 
-        
+
         return chart;
 	}
-	
+
 	public static InvientCharts showColumnWithRotatedLabels(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
-       
+
         chartConfig.getGeneralChartConfig().setType(SeriesType.COLUMN);
-    
+
         SortedMap<String, Set<Object>> sortedData = new TreeMap<String, Set<Object>>(data);
         List<String> categories = new ArrayList<String>();
         String label;
@@ -339,7 +339,7 @@ public class Charts {
         	}
         	categories.add(label);
         }
-        
+
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setCategories(categories);
         xAxis.setLabel(new XAxisDataLabel());
@@ -387,23 +387,23 @@ public class Charts {
 
        return chart;
     }
-	
+
 	public static InvientCharts showAggregatedColumnWithRotatedLabels(InvientChartsConfig chartConfig, String property, Map<String, String> uri2Label, Map<String, Set<Object>> data){
-	       
+
         chartConfig.getGeneralChartConfig().setType(SeriesType.COLUMN);
-    
+
         Map<String, Object> sample = Intervals.sample(data);
         Map<String, Double> castData = new HashMap<String, Double>();
         for(Entry<String, Object> entry : sample.entrySet()){
         	castData.put(entry.getKey(), (Double) entry.getValue());
         }
-        
+
         Interval[] intervals = Intervals.aggregateDoubles(castData, 5);
         List<String> categories = new ArrayList<String>();
         for(Interval interval : intervals){
         	categories.add("<="  + interval.getUpperBoundary());
         }
-        
+
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setCategories(categories);
         xAxis.setLabel(new XAxisDataLabel());
@@ -448,7 +448,7 @@ public class Charts {
         seriesData.setSeriesPoints(getPoints(seriesData, intervals));
 
         chart.addSeries(seriesData);
-        
+
         chart.addListener(new InvientCharts.PointSelectListener() {
 
             @Override
@@ -472,8 +472,8 @@ public class Charts {
 
        return chart;
     }
-	
-    
+
+
     private static LinkedHashSet<DecimalPoint> getPoints(Series series,
     		Map<String, Set<Object>> data) {
     	LinkedHashSet<DecimalPoint> points = new LinkedHashSet<DecimalPoint>();
@@ -497,7 +497,7 @@ public class Charts {
 		}
 		return points;
     }
-    
+
     private static LinkedHashSet<DecimalPoint> getPoints(Series series,
     		Interval[] intervals) {
     	LinkedHashSet<DecimalPoint> points = new LinkedHashSet<DecimalPoint>();
@@ -506,7 +506,7 @@ public class Charts {
 		}
 		return points;
     }
-    
+
     private static LinkedHashSet<DateTimePoint> getTimePoints(Series series, Map<String, Set<Object>> data){
 		LinkedHashSet<DateTimePoint> points = new LinkedHashSet<DateTimePoint>();
 		for(Entry<String, Set<Object>> entry : data.entrySet()){
@@ -522,7 +522,7 @@ public class Charts {
 		}
 		return points;
 	}
-	
-	
+
+
 
 }

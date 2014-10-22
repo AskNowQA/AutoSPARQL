@@ -1,46 +1,46 @@
 package org.aksw.autosparql.tbsl.algorithm;
 
 public class OxfordEvaluation {
-	
+
 	private static final String QUERIES_FILE = OxfordEvaluation.class.getClassLoader().getResource("tbsl/oxford_eval_queries.txt").getPath();
 	private static final String LOG_DIRECTORY = "log/oxford/";
 	private static final String LOG_FILE = "evaluation.txt";
-	
+
 //	public static void main(String[] args) throws Exception{
 //		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
 //		ExtractionDBCache cache = new ExtractionDBCache("cache");
 //		new File(LOG_DIRECTORY).mkdirs();
-//		
+//
 //		SPARQLIndex resourcesIndex = new VirtuosoResourcesIndex(endpoint, cache);
 //		SPARQLIndex classesIndex = new VirtuosoClassesIndex(endpoint, cache);
 //		SPARQLIndex propertiesIndex = new VirtuosoPropertiesIndex(endpoint, cache);
 //		MappingBasedIndex mappingIndex= new MappingBasedIndex(
-//				OxfordEvaluation.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
+//				OxfordEvaluation.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(),
 //				OxfordEvaluation.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
 //				OxfordEvaluation.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
 //				OxfordEvaluation.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
 //				);
-//		
+//
 ////		SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2(endpoint, resourcesIndex, classesIndex, propertiesIndex);
 //		SPARQLTemplateBasedLearner2 learner = new SPARQLTemplateBasedLearner2
 //				(new LocalKnowledgebase("","",SPARQLTemplateBasedLearner3Test.loadOxfordModel(),SPARQLTemplateBasedLearner3Test.getOxfordMappingIndex(), StanfordPartOfSpeechTagger.INSTANCE);
-//		
+//
 //		learner.setMappingIndex(mappingIndex);
 //		learner.init();
 //		learner.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
-//		
+//
 //		int learnedQuestions = 0;
 //		Map<String, String> question2QueryMap = new HashMap<String, String>();
-//		
+//
 //		Monitor mon = MonitorFactory.getTimeMonitor("tbsl");
-//		
+//
 //		BufferedReader in = new BufferedReader(new FileReader(new File(QUERIES_FILE)));
 //		BufferedWriter out = new BufferedWriter(new FileWriter(new File(LOG_DIRECTORY + LOG_FILE), false));
 //		BufferedWriter answerOut = new BufferedWriter(new FileWriter(new File(LOG_DIRECTORY + "questionsWithAnswer.txt"), false));
 //		BufferedWriter noAnswerOut = new BufferedWriter(new FileWriter(new File(LOG_DIRECTORY + "questionsWithNoAnswer.txt"), false));
 //		BufferedWriter templatesOut = new BufferedWriter(new FileWriter(new File(LOG_DIRECTORY + "questionsWithTemplate.txt"), false));
 //		BufferedWriter noTemplatesOut = new BufferedWriter(new FileWriter(new File(LOG_DIRECTORY + "questionsWithNoTemplate.txt"), false));
-//		
+//
 //		int questionCnt = 0;
 //		int errorCnt = 0;
 //		int noTemplateFoundCnt = 0;
@@ -68,20 +68,20 @@ public class OxfordEvaluation {
 //					learnedQuestions++;
 //					out.write("ANSWER FOUND: YES\n");
 //					out.write(learnedQuery + "\n");
-//					
+//
 //					answerOut.write("****************************************\n");
 //					answerOut.write("QUESTION: " + question + "\n");
 //					answerOut.write("ANSWER FOUND: YES\n");
 //					answerOut.write(learnedQuery + "\n");
 //					answerOut.write("TIME NEEDED: " + mon.getLastValue() + "ms\n");
 //					answerOut.flush();
-//					
+//
 //				} else {
 //					noQueryWithNonEmptyResultSetCnt++;
 //					out.write("ANSWER FOUND: NO\n");
 //					out.write("REASON: NO SPARQL QUERY WITH NON-EMPTY RESULTSET FOUND\n");
 //					out.write("SPARQL QUERY WITH HIGHEST SCORE TESTED:\n" + learner.getGeneratedQueries().first());
-//					
+//
 //					noAnswerOut.write("****************************************\n");
 //					noAnswerOut.write("QUESTION: " + question + "\n");
 //					noAnswerOut.write("ANSWER FOUND: NO\n");
@@ -89,7 +89,7 @@ public class OxfordEvaluation {
 //					noAnswerOut.write("SPARQL QUERY WITH HIGHEST SCORE TESTED:\n" + learner.getGeneratedQueries().first() + "\n");
 //					noAnswerOut.write("TIME NEEDED: " + mon.getLastValue() + "ms\n");
 //					noAnswerOut.flush();
-//					
+//
 //				}
 //				templatesOut.write(question + "\n");
 //				templatesOut.flush();
@@ -109,7 +109,7 @@ public class OxfordEvaluation {
 //						out.write("\nLast tested SPARQL query: " + learner.getCurrentlyExecutedQuery());
 //					}
 //				}
-//				
+//
 //			} catch (Error e){
 //				mon.stop();
 //				e.printStackTrace();
@@ -130,12 +130,12 @@ public class OxfordEvaluation {
 //		out.write("Questions with no answer (and no error):\t" + noQueryWithNonEmptyResultSetCnt + "\n");
 //		out.write("Questions with no templates:\t" + noTemplateFoundCnt + "\n");
 //		out.write("Questions with other errors:\t" + errorCnt + "\n");
-//		
+//
 //		in.close();
 //		out.close();
 //		templatesOut.close();
 //		noTemplatesOut.close();
-//		
+//
 //
 //	}
 

@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class SPARQL_Pair implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -1255754209857823420L;
-	
+
 	public SPARQL_Value a;
 	public Object b;
 
@@ -16,7 +16,7 @@ public class SPARQL_Pair implements Serializable, Cloneable
 	{
 		return new SPARQL_Pair(a.clone(),b,type);
 	}
-	
+
 	public SPARQL_Pair(SPARQL_Value a, Object b, SPARQL_PairType type)
 	{
 		super();
@@ -94,7 +94,7 @@ public class SPARQL_Pair implements Serializable, Cloneable
 			return false;
 		return true;
 	}
-	
-	
+
+
 
 }

@@ -11,7 +11,7 @@ import org.aksw.autosparql.tbsl.algorithm.sem.util.Pair;
 
 /**
  * The TAG class extends an ArrayList<Pair<TreeNode,Integer>>
- * 
+ *
  * @param index
  *            Holds a mapping between treeIDs and the corresponding tree.
  * @param anchorToTrees
@@ -47,9 +47,9 @@ public class TAG extends ArrayList<Pair<TreeNode, Integer>> implements
 		idToSemantics = new Hashtable<Integer, List<String>>();
 
 	}
-	
+
 	public void clear(List<Integer> temps) {
-		
+
 		for (int t : temps) {
 			index.remove(t);
 			anchorToTrees.remove(idToAnchor.get(t));
@@ -70,9 +70,9 @@ public class TAG extends ArrayList<Pair<TreeNode, Integer>> implements
 		}
 
 	}
-	
+
 	public int addTree(int id, Pair<String, TreeNode> pair, List<String> sem) {
-		
+
 		String anchor = pair.getFirst();
 		TreeNode t = pair.getSecond();
 
@@ -104,9 +104,9 @@ public class TAG extends ArrayList<Pair<TreeNode, Integer>> implements
 		idToAnchor.put(id, anchor);
 
 		idToSemantics.put(id, sem);
-		
+
 		return id+1;
-		
+
 	}
 
 	public String toString() {

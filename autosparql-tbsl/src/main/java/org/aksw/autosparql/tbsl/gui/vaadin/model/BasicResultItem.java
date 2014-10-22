@@ -3,22 +3,22 @@ package org.aksw.autosparql.tbsl.gui.vaadin.model;
 import java.util.Map;
 
 public class BasicResultItem implements ResultItem{
-	
+
 	private String uri;
 	private String label;
 	private String description;
 	private String imageURL;
-	
+
 	private Map<String, Object> data;
-	
+
 	public BasicResultItem(String uri, String label, String description) {
 		this(uri, label, description, null);
 	}
-	
+
 	public BasicResultItem(String uri, String label, String description, String imageURL) {
 		this(uri, label, description, imageURL, null);
 	}
-	
+
 	public BasicResultItem(String uri, String label, String description, String imageURL, Map<String, Object> data) {
 		// workaround for faulty dbpedia urls
 		if(imageURL!=null) {imageURL=imageURL.replace("http://upload.wikimedia.org/wikipedia/commons/","http://upload.wikimedia.org/wikipedia/en/");}
@@ -28,7 +28,7 @@ public class BasicResultItem implements ResultItem{
 		this.imageURL = imageURL;
 		this.data = data;
 	}
-	
+
 	public String getUri() {
 		return uri;
 	}
@@ -40,7 +40,7 @@ public class BasicResultItem implements ResultItem{
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public Map<String, Object> getData() {
 		return data;
 	}
@@ -48,7 +48,7 @@ public class BasicResultItem implements ResultItem{
 	public String getImageURL() {
 		return imageURL;
 	}
-	
+
 	public Object getValue(String property){
 		return data.get(property);
 	}
@@ -77,7 +77,7 @@ public class BasicResultItem implements ResultItem{
 //			return false;
 //		return true;
 //	}
-	
-	
-	
+
+
+
 }

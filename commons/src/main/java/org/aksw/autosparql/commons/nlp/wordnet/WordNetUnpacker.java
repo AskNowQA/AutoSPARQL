@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 public class WordNetUnpacker
 {
 	private static final Logger logger = Logger.getLogger(WordNetUnpacker.class);
-	static final String ID = "178558556719"; // minimize the chance of interfering  with an existing directory	
+	static final String ID = "178558556719"; // minimize the chance of interfering  with an existing directory
 	static final String jarDir = "models/en/wordnet/dict";
 
 	/**If running from within a jar, unpack wordnet from the jar to a temp directory (if not already done) and return that.

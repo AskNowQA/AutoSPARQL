@@ -66,7 +66,7 @@
 //			ois.close();
 //			return testData;
 //		}
-//		catch (ClassNotFoundException e){throw new RuntimeException(e);}		
+//		catch (ClassNotFoundException e){throw new RuntimeException(e);}
 //	}
 //
 //	public QueryTestData generateAnswers(SparqlEndpoint endpoint, ExtractionDBCache cache,Model model)
@@ -74,8 +74,8 @@
 //		if(!id2Answers.isEmpty()) {throw new AssertionError("Answers already existing.");}
 //		for(int i:id2Query.keySet())
 //		{
-//			Set<String> uris = SPARQLTemplateBasedLearner3Test.getUris(endpoint, id2Query.get(i),cache,model); 
-//			id2Answers.put(i, uris); // empty answer set better transfers intended meaning and doesn't cause NPEs in html generation :-) 
+//			Set<String> uris = SPARQLTemplateBasedLearner3Test.getUris(endpoint, id2Query.get(i),cache,model);
+//			id2Answers.put(i, uris); // empty answer set better transfers intended meaning and doesn't cause NPEs in html generation :-)
 //			if(!uris.isEmpty())	{/*id2Answers.put(i, uris);*/}
 //			else				{id2LearnStatus.put(i, LearnStatus.QUERY_RESULT_EMPTY);}
 //		}
@@ -84,7 +84,7 @@
 //
 //	/** reads test data from a QALD2 benchmark XML file, including questions, queries and answers.
 //	 * each question needs to have a query but not necessarily an answer.
-//	 * @param file a QALD benchmark XML file 
+//	 * @param file a QALD benchmark XML file
 //	 * @return the test data read from the XML file */
 //	public static QueryTestData readQaldXml(final File file)
 //	{
@@ -105,7 +105,7 @@
 //				Set<String> answers = new HashSet<String>();
 //				Element questionNode = (Element) questionNodes.item(i);
 //				//read question ID
-//				id = Integer.valueOf(questionNode.getAttribute("id"));				
+//				id = Integer.valueOf(questionNode.getAttribute("id"));
 //				//Read question
 //				question = ((Element)questionNode.getElementsByTagName("string").item(0)).getChildNodes().item(0).getNodeValue().trim();
 //				//Read SPARQL query
@@ -118,14 +118,14 @@
 //				//					answers.add(((Element)answerNode.getElementsByTagName("uri").item(0)).getChildNodes().item(0).getNodeValue().trim());
 //				//				}
 //
-//				if(!query.equals("OUT OF SCOPE")) // marker in qald benchmark file, will create holes interval of ids (e.g. 1,2,5,7)   
+//				if(!query.equals("OUT OF SCOPE")) // marker in qald benchmark file, will create holes interval of ids (e.g. 1,2,5,7)
 //				{
 //					testData.id2Question.put(id, question);
-//					testData.id2Query.put(id, query);					
+//					testData.id2Query.put(id, query);
 //					Element answersElement = (Element) questionNode.getElementsByTagName("answers").item(0);
 //					if(answersElement!=null)
 //					{
-//						NodeList answerElements = answersElement.getElementsByTagName("answer");						
+//						NodeList answerElements = answersElement.getElementsByTagName("answer");
 //						for(int j=0; j<answerElements.getLength();j++)
 //						{
 //							String answer = ((Element)answerElements.item(j)).getTextContent();
@@ -133,7 +133,7 @@
 //						}
 //						testData.id2Answers.put(id, answers);
 //					}
-//				}				
+//				}
 //				//				question2Answers.put(question, answers);
 //
 //			}
@@ -145,15 +145,15 @@
 //			e.printStackTrace();
 //		} catch (IOException e) {
 //			e.printStackTrace();
-//		}		
+//		}
 //		return testData;
 //	}
 //
 //	/** write the test data to a QALD2 benchmark XML file, including questions, queries and answers.
 //	 * each question needs to have a query but not necessarily an answer.
-//	 * @param file a QALD benchmark XML file **/ 
+//	 * @param file a QALD benchmark XML file **/
 //	public void writeQaldXml(final File file)
-//	{		
+//	{
 //		// see http://www.genedavis.com/library/xml/java_dom_xml_creation.jsp
 //		try
 //		{
@@ -174,7 +174,7 @@
 //				questionElement.appendChild(stringElement);
 //				String query = id2Query.get(i);
 //				if(query!=null)
-//				{					
+//				{
 //					Element queryElement = doc.createElement("query");
 ////					queryElement.setTextContent(query);
 //					queryElement.appendChild(doc.createCDATASection(query));
@@ -190,21 +190,21 @@
 //						questionElement.appendChild(answerElement);
 //					}
 //				}
-//			}		
+//			}
 //			   //set up a transformer
 //            TransformerFactory transfac = TransformerFactory.newInstance();
 //            Transformer trans = transfac.newTransformer();
 //            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 //            trans.setOutputProperty(OutputKeys.INDENT, "yes");
 //
-//            
+//
 //            //create string from xml tree
 //            PrintWriter sw = new PrintWriter(file);
 //            StreamResult result = new StreamResult(sw);
 //            DOMSource source = new DOMSource(doc);
-//            trans.transform(source, result);            
+//            trans.transform(source, result);
 //		}
-//		catch (Exception e) {throw new RuntimeException(e);}				
+//		catch (Exception e) {throw new RuntimeException(e);}
 //	}
 //
 //}

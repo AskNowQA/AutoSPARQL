@@ -14,32 +14,32 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 public class MultithreadedSPARQLQueryExecutor {
-	
+
 	private int threadCount;
 	private SparqlEndpoint endpoint;
-	
+
 	private ExecutorService es;
-	
+
 	public MultithreadedSPARQLQueryExecutor(SparqlEndpoint endpoint) {
 		this(endpoint, Runtime.getRuntime().availableProcessors());
 	}
-	
+
 	public MultithreadedSPARQLQueryExecutor(SparqlEndpoint endpoint, int threadCount) {
 		this.endpoint = endpoint;
 		this.threadCount = threadCount;
-		
+
 		es = Executors.newFixedThreadPool(threadCount);
 	}
-	
+
 	public List<ResultSet> executeQueries(List<String> queries){
 		List<ResultSet> result = new ArrayList<ResultSet>();
-		
+
 		Future<ResultSet>[] ret = new Future[queries.size()];
-		
+
 		for(int i = 0; i < queries.size(); i++){
 			ret[i] = es.submit(new SPARQLQueryExecutionTask(queries.get(i)));
 		}
-		
+
 		for (int i = 0; i < queries.size(); i++) {
             try {
             	result.add(ret[i].get());
@@ -49,18 +49,18 @@ public class MultithreadedSPARQLQueryExecutor {
             	e.printStackTrace();
             }
         }
-		
+
 		return result;
 	}
-	
+
 	public void close(){
 		es.shutdown();
 	}
-	
+
 	private class SPARQLQueryExecutionTask implements Callable<ResultSet>{
-		
+
 		private String query;
-		
+
 		public SPARQLQueryExecutionTask(String query){
 			this.query = query;
 		}
@@ -74,7 +74,7 @@ public class MultithreadedSPARQLQueryExecutor {
 			for (String ngu : endpoint.getNamedGraphURIs()) {
 				queryExecution.addNamedGraph(ngu);
 			}
-			
+
 			ResultSet rs = null;
 			if(query.contains("SELECT")){
 				rs = queryExecution.execSelect();

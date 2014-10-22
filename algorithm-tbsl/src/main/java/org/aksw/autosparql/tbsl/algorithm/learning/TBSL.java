@@ -39,12 +39,12 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import java.net.MalformedURLException;
 
-// TODO: reasoner.setCache(cache) somewhere else 
+// TODO: reasoner.setCache(cache) somewhere else
 public class TBSL
 {
 	final String label;
 	public String getLabel() {return label;}
-	//	public static final TBSL DBPEDIA = new TBSL(DBpediaKnowledgebase.INSTANCE,new String[]{"tbsl/lexicon/english.lex"});  
+	//	public static final TBSL DBPEDIA = new TBSL(DBpediaKnowledgebase.INSTANCE,new String[]{"tbsl/lexicon/english.lex"});
 	//	public static final TBSL OXFORD = new TBSL(OxfordKnowledgebase.INSTANCE,new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
 
 	enum Mode{
@@ -80,7 +80,7 @@ public class TBSL
 
 	//	private String [] grammarFiles = new String[]{"tbsl/lexicon/english.lex"};
 
-	public final Set<String> relevantKeywords = new HashSet<>(); 
+	public final Set<String> relevantKeywords = new HashSet<>();
 
 	private static final String DEFAULT_WORDNET_PROPERTIES_FILE = "tbsl/wordnet_properties.xml";
 
@@ -148,7 +148,7 @@ public class TBSL
 	}
 
 	/**
-	 * @param question A natural language factual question (who/what ...) or "give me ...". 
+	 * @param question A natural language factual question (who/what ...) or "give me ...".
 	 * @return template instantiations sorted by score (last is highest is best)
 	 * @throws NoTemplateFoundException
 	 */
@@ -310,15 +310,15 @@ public class TBSL
 	/** Reverses triples for symmetric properties if occurring and returns those instantiations along with the original ones. Only one symmetric property per template is supported.
 	 * May not adhere to all expectations of real hulls (e.g. if called several times may increasingly grow the result as the equals method of class TemplateInstantiation may not be sufficient)
 	 * @param instantiations
-	 * @return the original instantiations along with duplicates with reversed triples for symmetric properties if occurring 
+	 * @return the original instantiations along with duplicates with reversed triples for symmetric properties if occurring
 	 */
 	static public List<TemplateInstantiation> symmetricHullTemplateInstantiations(List<TemplateInstantiation> instantiations)
-	{		
+	{
 		Set<TemplateInstantiation> hull = new HashSet<>(instantiations);
 		for(TemplateInstantiation instantiation: instantiations)
 		{
 			for(Slot slot: instantiation.getAllocations().keySet())
-			{				
+			{
 				if(slot.getSlotType()==SlotType.SYMPROPERTY)
 				{
 					String anchor = slot.getAnchor();
@@ -328,7 +328,7 @@ public class TBSL
 					for(SPARQL_Triple triple: query.getConditions())
 					{
 						if(anchor.equals(triple.getProperty().getName()))
-						{						
+						{
 							SPARQL_Term newSubject = (SPARQL_Term)triple.getValue();
 							SPARQL_Value newObject = (SPARQL_Value)triple.getVariable();
 							triple.setVariable(newSubject);
@@ -397,7 +397,7 @@ public class TBSL
 	//			rs = QueryExecutionFactory.create(QueryFactory.create(query, Syntax.syntaxARQ), model)
 	//					.execSelect();
 	//		}
-	//		
+	//
 	//		return rs;
 	//	}
 

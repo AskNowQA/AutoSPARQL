@@ -11,9 +11,9 @@ import org.aksw.autosparql.tbsl.algorithm.util.Prominences;
 import org.aksw.autosparql.tbsl.algorithm.util.Statistics;
 
 public class EntityProminenceFeatureExtractor extends AbstractFeatureExtractor{
-	
+
 	private Map<Slot, Prominences> prominenceScores;
-	
+
 	public EntityProminenceFeatureExtractor(Knowledgebase knowledgebase, Map<Slot, Prominences> prominenceScores) {
 		super(knowledgebase);
 		this.prominenceScores = prominenceScores;
@@ -32,12 +32,12 @@ public class EntityProminenceFeatureExtractor extends AbstractFeatureExtractor{
 			double normalizedProminence = Statistics.minMaxNorm(prominence, prominencesValues.getMax(), prominencesValues.getMin());
 			totalScore += normalizedProminence;
 		}
-		//compute the average		 
+		//compute the average
 //		totalScore /= templateInstantiation.getTemplate().getSlots().size();
-		totalScore /= allocations.size();				
+		totalScore /= allocations.size();
 		return totalScore;
 	}
-	
+
 	@Override
 	public Feature getFeature() {
 		return Feature.PROMINENCE_AVERAGE;

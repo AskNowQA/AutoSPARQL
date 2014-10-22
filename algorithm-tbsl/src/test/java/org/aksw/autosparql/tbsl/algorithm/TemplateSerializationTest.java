@@ -17,12 +17,12 @@ public class TemplateSerializationTest {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception{
-		
+
 		Templator templateGenerator = new Templator();
 		templateGenerator.setUNTAGGED_INPUT(true);
-		
+
 		Hashtable<Template,String> testcorpus = new Hashtable<Template,String>();
-		
+
 		//generate templates
 		String q = "Give me all soccer clubs in Premier League.";
 		Set<Template> templates = templateGenerator.buildTemplates(q);
@@ -30,17 +30,17 @@ public class TemplateSerializationTest {
 			System.out.println(t);
 			testcorpus.put(t,q);
 		}
-		
+
 		//serialize
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("templates.out")));
 //		oos.writeObject(templates);
 		oos.writeObject(testcorpus);
-		
+
 		//deserialize
 		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("templates.out")));
 //		templates = (Set<Template>) ois.readObject();
 		testcorpus = (Hashtable<Template,String>) ois.readObject();
-		
+
 //		for(Template t : templates){
 //			System.out.println(t);
 //		}

@@ -5,9 +5,9 @@ import java.util.regex.Pattern;
 /**
  * Object to store the morphological properties of a TreeNode (root node) or the
  * morphological requirements of a SubstNode.
- * 
+ *
  * @author felix
- * 
+ *
  */
 public class Feature {
 
@@ -25,7 +25,7 @@ public class Feature {
 
 	/**
 	 * used by the ltagParser to construct the Feature object from a string.
-	 * 
+	 *
 	 * @param s
 	 *            e.g. "{c:nom,g:g}"
 	 * @return
@@ -133,11 +133,11 @@ public class Feature {
 	public void setG(Gender g) {
 		this.g = g;
 	}
-	
+
 	public Prep_de getP() {
 		return p;
 	}
-	
+
 	public void setP(Prep_de p) {
 		this.p = p;
 	}

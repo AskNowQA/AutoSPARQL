@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.aksw.autosparql.commons.diadem;
 
@@ -33,7 +33,7 @@ public class Word implements Comparable<Word> {
 
     /**
      * Increases the total frequency with 1
-     * 
+     *
      * @return The new frequency
      */
     public int incrementFrequency() {
@@ -67,7 +67,7 @@ public class Word implements Comparable<Word> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -81,7 +81,7 @@ public class Word implements Comparable<Word> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

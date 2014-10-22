@@ -52,12 +52,12 @@ public class GoldTemplateGenerator {
 		SPARQLReasoner reasoner = new SPARQLReasoner(new SparqlEndpointKS(SparqlEndpoint.getEndpointDBpedia()));
 		List<Question> questions = QaldLoader.loadAndSerializeQuestions(Arrays.asList("en"), "de_wac_175m_600.crf.ser.gz", "english.all.3class.distsim.crf.ser.gz",
 				"german-dewac.tagger", "english-left3words-distsim.tagger", false);
-		
+
 		TriplePatternExtractor triplePatternExtractor = new TriplePatternExtractor();
 		Map<Integer, GoldTemplate> id2Template = new HashMap<Integer, GoldTemplate>();
 		for (Question question : questions) {
 			if(question.outOfScope) continue;//if(question.id != 85) continue;
-			
+
 			String sparqlQueryString = question.sparqlQuery;
 			//extract URIs and replace them with variables
 			Map<String, String> var2URI = new HashMap<String, String>();
@@ -104,7 +104,7 @@ public class GoldTemplateGenerator {
 						goldTemplate.addSlot(slot);
 						var2URI.remove(var);
 					}
-					
+
 				} else if(triple.getPredicate().isVariable()){
 					//slot for subject
 					Node subject = triple.getSubject();
@@ -141,12 +141,12 @@ public class GoldTemplateGenerator {
 						} else {
 							System.err.println(uri);
 						}
-					} 
+					}
 					if(!processedVariables.contains(var)){
 						goldTemplate.addSlot(slot);
 						processedVariables.add(var);
 					}
-					
+
 				} else {
 					//should not happen
 				}
@@ -155,16 +155,16 @@ public class GoldTemplateGenerator {
 		}
 		serialize(id2Template);
 	}
-	
+
 	private void serialize(Map<Integer, GoldTemplate> questionID2Template){
 		try {
-			
+
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new File(QaldLoader.class.getResource("/qald/dbpedia-train.xml").getFile()));
             doc.getDocumentElement().normalize();
             NodeList questionNodes = doc.getElementsByTagName("question");
-            
+
 			for (int i = 0; i < questionNodes.getLength(); i++) {
 
 				Element questionNode = (Element) questionNodes.item(i);
@@ -200,7 +200,7 @@ public class GoldTemplateGenerator {
 			  DOMSource source = new DOMSource(doc);
 			  StreamResult streamResult =  new StreamResult(new File("dbpedia-train-with-templates.xml"));
 			  transformer.transform(source, streamResult);
-		} 
+		}
 		catch (DOMException e) {
 	            e.printStackTrace();
 	    }
@@ -209,7 +209,7 @@ public class GoldTemplateGenerator {
 	    }
 		catch (SAXException e) {
 	            e.printStackTrace();
-	    } 
+	    }
 		catch (IOException e) {
 	            e.printStackTrace();
 	    } catch (TransformerConfigurationException e) {
@@ -218,7 +218,7 @@ public class GoldTemplateGenerator {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		new GoldTemplateGenerator();
 	}

@@ -12,7 +12,7 @@ import org.aksw.autosparql.commons.nlp.ner.NER;
 import org.apache.log4j.Logger;
 
 public class Preprocessor {
-	
+
 	private static final Logger logger = Logger.getLogger(Preprocessor.class);
 
 	static final String[] genericReplacements = { "[!?.,;]", "" };
@@ -23,7 +23,7 @@ public class Preprocessor {
 	static boolean USE_NER;
 	static boolean VERBOSE;
 	static NER ner;
-	
+
 	public Preprocessor(boolean n) {
 		USE_NER = n;
 		VERBOSE = true;
@@ -32,24 +32,24 @@ public class Preprocessor {
 			ner = new DBpediaSpotlightNER();
 		}
 	}
-	
+
 	public void setVERBOSE(boolean b) {
 		VERBOSE = b;
 	}
-	
-	public String normalize(String s) {           
+
+	public String normalize(String s) {
 		return replacements(ascii(s), new String[0]);
 	}
 
-        public String ascii(String s) {    
+        public String ascii(String s) {
                 s = Normalizer.normalize(s,Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
                 s = s.replaceAll("ß","ss");
                 return s;
         }
-        
+
 	public String replacements(String s, String... repl) {
 
-		if (repl.length % 2 != 0 || genericReplacements.length % 2 != 0 
+		if (repl.length % 2 != 0 || genericReplacements.length % 2 != 0
                                          || englishReplacements.length % 2 != 0) {
 			throw new IllegalArgumentException();
 		}
@@ -66,33 +66,33 @@ public class Preprocessor {
 
 		return s;
 	}
-        
+
         public String lowercase(String s, String original_s) {
-               
+
                for (String w : replacements(original_s).split(" ")) {
                    s = s.replace(w,w.toLowerCase());
                }
                return s;
         }
-	
+
 	public String condense(String taggedstring) {
-		
-		/* condense: 
+
+		/* condense:
 		 * x/RBR adj/JJ > adj/JJR, x/RBS adj/JJ > adj/JJS, x/WRB adj/JJ > x/JJH
 		 * nn/RBR of/IN > nn/NPREP
-		 * usw. 
+		 * usw.
 		 * Note: Matching these patterns is order-dependent!
-		 * */ 
+		 * */
 		String condensedstring = taggedstring.replaceAll("``/``","").replaceAll("''/''","").replaceAll("  "," ");
 		Matcher m;
-		
+
 		Pattern compAdjPattern    = Pattern.compile("(\\w+/RBR.(\\w+)/JJ)");
 //		Pattern superAdjPattern   = Pattern.compile("(\\w+/RBS.(\\w+)/JJ)"); // TODO "(the most) official languages" vs "the (most official) languages"
-		Pattern howManyPattern    = Pattern.compile("(how/WRB.many/JJ)"); 
-		Pattern howAdjPattern     = Pattern.compile("(\\w+/WRB.(\\w+)(?<!many)/JJ)"); 
+		Pattern howManyPattern    = Pattern.compile("(how/WRB.many/JJ)");
+		Pattern howAdjPattern     = Pattern.compile("(\\w+/WRB.(\\w+)(?<!many)/JJ)");
 		Pattern thesameasPattern  = Pattern.compile("(the/DT.same/JJ.(\\w+)/NN.as/IN)");
 		Pattern nprepPattern      = Pattern.compile("\\s((\\w+)/NNS?.of/IN)");
-		Pattern didPattern        = Pattern.compile("(?i)(\\s((did)|(do)|(does))/VB.?)\\s"); 
+		Pattern didPattern        = Pattern.compile("(?i)(\\s((did)|(do)|(does))/VB.?)\\s");
 		Pattern prepfrontPattern  = Pattern.compile("(\\A\\w+/((TO)|(IN)).)\\w+/WDT"); // TODO (Nicht ganz sauber. Bei P-Stranding immer zwei Querys, hier nur eine.)
 		Pattern passivePattern1a  = Pattern.compile("(((has)|(have)|(had))/VB[A-Z]?.been/VBN.(\\w+)/VBN.by/IN)");
 		Pattern passivePattern1b  = Pattern.compile("(\\s((has)|(have)|(had))/VB[A-Z]?(.+\\s)been/VBN\\s(\\w+)/VB(N|D))");
@@ -112,28 +112,28 @@ public class Preprocessor {
 //              Pattern adjnnpPattern     = Pattern.compile("((\\w+)(?<!many)/JJ.(\\w+)/NNP(S)?)");
 		Pattern adjnounPattern    = Pattern.compile("((\\w+)(?<!many)/JJ.(\\w+)/NN(S)?(\\s|\\z))");
 		Pattern adjnprepPattern   = Pattern.compile("((\\w+)(?<!many)/JJ.(\\w+)/NPREP)");
-		
-		m = compAdjPattern.matcher(condensedstring); 
+
+		m = compAdjPattern.matcher(condensedstring);
 		while (m.find()) {
 			if (VERBOSE) logger.debug("Replacing " + m.group(1) + " by " + m.group(2)+"/JJR");
 			condensedstring = condensedstring.replaceFirst(m.group(1),m.group(2)+"/JJR");
 		}
-//		m = superAdjPattern.matcher(condensedstring); 
+//		m = superAdjPattern.matcher(condensedstring);
 //		while (m.find()) {
 //			logger.debug("Replacing " + m.group(1) + " by " + m.group(2)+"/JJS");
 //			condensedstring = condensedstring.replaceFirst(m.group(1),m.group(2)+"/JJS");
 //		}
-		m = howManyPattern.matcher(condensedstring); 
+		m = howManyPattern.matcher(condensedstring);
 		while (m.find()) {
 			if (VERBOSE) logger.debug("Replacing " + m.group(1) + " by how/WLEX many/WLEX");
 			condensedstring = condensedstring.replaceFirst(m.group(1),"how/WLEX many/WLEX");
 		}
-		m = howAdjPattern.matcher(condensedstring); 
+		m = howAdjPattern.matcher(condensedstring);
 		while (m.find()) {
 			if (VERBOSE) logger.debug("Replacing " + m.group(1) + " by " + m.group(2)+"/JJH");
 			condensedstring = condensedstring.replaceFirst(m.group(1),m.group(2)+"/JJH");
 		}
-		m = thesameasPattern.matcher(condensedstring); 
+		m = thesameasPattern.matcher(condensedstring);
 		while (m.find()) {
 			if (VERBOSE) logger.debug("Replacing " + m.group(1) + " by " + m.group(2)+"/NNSAME");
 			condensedstring = condensedstring.replaceFirst(m.group(1),m.group(2)+"/NNSAME");
@@ -227,31 +227,31 @@ public class Preprocessor {
 			if (VERBOSE) logger.debug("Replacing " + m.group(1) + " by " + m.group(2)+m.group(3)+"/WHERE");
 			condensedstring = condensedstring.replaceFirst(m.group(1),m.group(2) + m.group(3)+"/WHERE");
 		}
-		m = adjsPattern.matcher(condensedstring); 
+		m = adjsPattern.matcher(condensedstring);
 		while (m.find()) {
 			if (VERBOSE) logger.debug("Replacing " + m.group(1) + " by " + m.group(2)+"_"+m.group(3)+"/JJ");
 			condensedstring = condensedstring.replaceFirst(m.group(1),m.group(2)+"_"+m.group(3)+"/JJ");
 		}
-		m = adjnounPattern.matcher(condensedstring); 
+		m = adjnounPattern.matcher(condensedstring);
 		while (m.find()) {
 //                    if (!m.group(4).startsWith("NNP")) {
 			if (VERBOSE) logger.debug("Replacing " + m.group(1) + " by " + m.group(2)+"_"+m.group(3)+"/JJNN");
 			condensedstring = condensedstring.replaceFirst(m.group(1),m.group(2)+"_"+m.group(3)+"/JJNN ");
 //                    }
 		}
-		m = adjnprepPattern.matcher(condensedstring); 
+		m = adjnprepPattern.matcher(condensedstring);
 		while (m.find()) {
 			if (VERBOSE) logger.debug("Replacing " + m.group(1) + " by " + m.group(2)+"_"+m.group(3)+"/NPREP");
 			condensedstring = condensedstring.replaceFirst(m.group(1),m.group(2)+"_"+m.group(3)+"/NPREP");
 		}
-		
+
 		return condensedstring;
 	}
 
 	public String condenseNominals(String s) {
-		
+
 		String flat = s;
-		
+
 		Matcher m;
 		Pattern quotePattern1 = Pattern.compile("``/``(\\s)?(\\w+(/\\w+\\s)).*''/''");
 		Pattern quotePattern2 = Pattern.compile("(``/``((.*)_)''/'')");
@@ -268,7 +268,7 @@ public class Preprocessor {
 		while (m.find()) {
 			flat = flat.replaceFirst(m.group(2),m.group(3)+"/NNP");
 		}
-		
+
 		m = nnpPattern.matcher(flat);
 		while (m.find()) {
 			flat = flat.replaceFirst(m.group(1),m.group(2) + "_" + m.group(3));
@@ -289,27 +289,27 @@ public class Preprocessor {
 			flat = flat.replaceFirst(m.group(1),m.group(2) + "_" + m.group(3) + "/NNP" + m.group(4));
 			m = nnnnpPattern.matcher(flat);
 		}
-		
+
 		return flat;
 	}
-	
+
 	public String findNEs(String tagged,String untagged) {
-		
+
 		String out = tagged;
-                               	
+
 		String[] postags = {"NN","NNS","NNP","NNPS","NPREP","JJ","JJR","JJS","JJH",
 				"VB","VBD","VBG","VBN","VBP","VBZ","PASSIVE","PASSPART","VPASS","VPASSIN",
 				"GERUNDIN","VPREP","WHEN","WHERE","IN","TO","DT"};
-		
+
 		List<String> namedentities = ner.getNamedEntitites(untagged);
 		List<String> usefulnamedentities = new ArrayList<String>();
-		
+
 		if (VERBOSE) logger.debug("Proposed NEs: " + namedentities);
-		
-		// keep only longest matches (e.g. keep 'World of Warcraft' and forget about 'Warcraft') 
+
+		// keep only longest matches (e.g. keep 'World of Warcraft' and forget about 'Warcraft')
 		// containing at least one upper case letter (in order to filter out errors like 'software')
 		for (String s1 : namedentities) {
-			if (s1.matches(".*[A-Z].*") && !Arrays.asList(postags).contains(s1)) { 
+			if (s1.matches(".*[A-Z].*") && !Arrays.asList(postags).contains(s1)) {
 				boolean isLongestMatch = true;
 				for (String s2 : namedentities) {
 					if (!s2.equals(s1) && s2.contains(s1)) {
@@ -321,9 +321,9 @@ public class Preprocessor {
 				}
 			}
 		}
-		
+
 		if (VERBOSE) logger.debug("Accepted NEs: " + usefulnamedentities);
-		
+
 		// replace POS tags accordingly
 		for (String ne : usefulnamedentities) {
 			String[] neparts = ne.split(" ");
@@ -336,8 +336,8 @@ public class Preprocessor {
 				}
 			}
 		}
-                		
+
 		return out;
 	}
-	
+
 }

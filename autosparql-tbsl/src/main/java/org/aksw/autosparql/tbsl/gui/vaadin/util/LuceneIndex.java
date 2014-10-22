@@ -27,9 +27,9 @@
 //@Deprecated /** Is not used anymore except in OxfordDataExcetion main class (what is that class used for?)
 //Is made absolete by SolrServerAksw?**/
 //public class LuceneIndex implements FallbackIndex{
-//	
+//
 //	private IndexSearcher searcher;
-//	
+//
 //	public LuceneIndex(String directoryPath) {
 //		 try {
 //			Directory index = new RAMDirectory(NIOFSDirectory.open(new File(directoryPath)),IOContext.READ);
@@ -44,7 +44,7 @@
 //	            throw new RuntimeException("Could not create index", e);
 //		}
 //	}
-//	
+//
 //	public List<BasicResultItem> getData(String queryString, int limit, int offset) {
 //		List<BasicResultItem> items = new ArrayList<BasicResultItem>();
 //        try {
@@ -80,7 +80,7 @@
 //			    if(d.get("receptions") != null){
 //			    	 data.put("receptions", Integer.valueOf(d.get("receptions")));
 //			    }
-//			    
+//
 //			    BasicResultItem item = new BasicResultItem(uri, label, description, imageURL, data);
 //			    items.add(item);
 //			}
@@ -95,5 +95,5 @@
 //		}
 //        return items;
 //	}
-//	
+//
 //}

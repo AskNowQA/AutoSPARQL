@@ -20,7 +20,7 @@ public class queryInformation {
 	 public long timeWithoutParser;
 	 public HashMap<String,String> hashMap;
 	 public String isaResource;
-	 
+
 	 public String getIsaResource() {
 		return isaResource;
 	}
@@ -36,7 +36,7 @@ public class queryInformation {
 	public void setHashMap(HashMap<String, String> hashMap) {
 		this.hashMap = hashMap;
 	}
-	
+
 	public String getHashValue(String key) {
 		key=key.toLowerCase();
 		key=key.replace("  ", "");
@@ -51,14 +51,14 @@ public class queryInformation {
 		}
 		return result;
 	}
-	
+
 	public void setHashValue(String key, String value) {
 		key=key.replace("  ", "");
 		key=key.replace("_", " ");
 		value=value.replace("__", "");
 		this.hashMap.put(key.toLowerCase(), value);
 	}
-	
+
 
 	public long getTimeGesamt() {
 		return timeGesamt;
@@ -83,25 +83,25 @@ public class queryInformation {
 	public void setTimeWithoutParser(long time) {
 		this.timeWithoutParser=time;
 	}
-	
-	 
-	 
+
+
+
 	 public ArrayList<String> getResult() {
 		return result;
 	}
-	 
+
 	 public void setQueryInformation(ArrayList<ArrayList<String>> lstquery) {
 		 this.queryInformation=lstquery;
 		}
-	 
+
 	 public ArrayList<ArrayList<String>>  getQueryInformation() {
 			return queryInformation;
 		}
-		 
+
 	 public void setResult(ArrayList<String> new_result) {
 			 this.result=new_result;
 			}
-		 
+
 
 
 	public boolean isHint() {
@@ -113,7 +113,7 @@ public class queryInformation {
 		return XMLtype;
 	}
 
-	 
+
 	 public String getId() {
 		return id;
 	}
@@ -132,7 +132,7 @@ public class queryInformation {
 	public boolean isYago() {
 		return yago;
 	}
-	
+
 	public queryInformation(String query1, String id1, String type1, boolean fusion1, boolean aggregation1, boolean yago1, String XMLtype1, boolean hint1){
 		this.query=query1;
 		 this.type=type1;

@@ -7,7 +7,7 @@ import java.util.Set;
 import org.aksw.autosparql.tbsl.gui.vaadin.model.Interval;
 
 public class Intervals {
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T extends Number> Interval[] aggregate(Map<String, Set<T>> data, int nrOfIntervals){
 		Map<String, T> sample = sampleNumbers(data);
@@ -16,8 +16,8 @@ public class Intervals {
 		}
 		return null;
 	}
-	
-	
+
+
 	public static Interval[] aggregateDoubles(Map<String, Double> data, int nrOfIntervals){
 		//find maximum
 		Double max = Double.MIN_VALUE;
@@ -25,7 +25,7 @@ public class Intervals {
 			if(entry.getValue() > max){
 				max = entry.getValue();
 			}
-		}		
+		}
 		//create intervals
 		double intervalSize = findNiceUpperBound2(max) / nrOfIntervals;
 		Interval[] intervals = new Interval[nrOfIntervals];
@@ -45,7 +45,7 @@ public class Intervals {
 		}
 		return intervals;
 	}
-	
+
 	public static <T extends Number> Map<String, T> sampleNumbers(Map<String, Set<T>> data){
 		Map<String, T> sample = new HashMap<String, T>();
 		for(Entry<String, Set<T>> entry : data.entrySet()){
@@ -53,7 +53,7 @@ public class Intervals {
 		}
 		return sample;
 	}
-	
+
 	public static  Map<String, Object> sample(Map<String, Set<Object>> data){
 		Map<String, Object> sample = new HashMap<String, Object>();
 		for(Entry<String, Set<Object>> entry : data.entrySet()){
@@ -61,7 +61,7 @@ public class Intervals {
 		}
 		return sample;
 	}
-	
+
 	private static double findNiceUpperBound(double value){
 		int exponent = 0;
 		double base = 10;
@@ -73,7 +73,7 @@ public class Intervals {
 			exponent++;
 		}
 	}
-	
+
 	private static double findNiceUpperBound2(double value){
 		int exponent = 0;
 		double base = 10;
@@ -86,7 +86,7 @@ public class Intervals {
 			exponent++;
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println(findNiceUpperBound2(145));
 		System.out.println(Math.ceil(1.2));

@@ -5,7 +5,7 @@ public class DiscourseReferent implements Cloneable {
 	String m_Referent;
 	boolean marked;
 	boolean nonexistential;
-	
+
 	public DiscourseReferent(String referent)
 	{
 		m_Referent = referent;
@@ -17,8 +17,8 @@ public class DiscourseReferent implements Cloneable {
 		marked = m;
 		nonexistential = e;
 	}
-	
-	
+
+
 	// get the value
 	public String getValue()
 	{
@@ -29,18 +29,18 @@ public class DiscourseReferent implements Cloneable {
 	{
 		m_Referent = referent;
 	}
-	
+
 	public boolean isMarked() {
 		return marked;
 	}
 	public boolean isNonexistential() {
 		return nonexistential;
 	}
-	
+
 	public DiscourseReferent clone() {
 		return new DiscourseReferent(m_Referent,marked,nonexistential);
 	}
-	
+
 	// printing methods
 	public String toString()
 	{
@@ -81,6 +81,6 @@ public class DiscourseReferent implements Cloneable {
 		return true;
 	}
 
-	
+
 
 }

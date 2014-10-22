@@ -22,9 +22,9 @@ public class RemoteKnowledgebase extends Knowledgebase {
 		System.out.println("Using cache directory "+cacheDir);
 		cache.setMaxExecutionTimeInSeconds(60);
 	}
-	
+
 	public RemoteKnowledgebase(SparqlEndpoint endpoint, Indices indices) {this(endpoint,"","",indices);}
-	
+
 		@Deprecated public RemoteKnowledgebase(SparqlEndpoint endpoint, String label, String description, Index resourceIndex, Index propertyIndex,
 			Index classIndex, MappingBasedIndex mappingIndex) {
 			super(description, description, null);
@@ -33,13 +33,13 @@ public class RemoteKnowledgebase extends Knowledgebase {
 	public SparqlEndpoint getEndpoint() {return endpoint;}
 
 	public ResultSet querySelectNoCache(String query)
-	{		
+	{
 			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint.getURL().toString(), query);
 			qe.setDefaultGraphURIs(endpoint.getDefaultGraphURIs());
 			return qe.execSelect();
 	}
-	
-	
+
+
 	@Override public ResultSet querySelect(String query)
 	{
 		if (cache == null) {

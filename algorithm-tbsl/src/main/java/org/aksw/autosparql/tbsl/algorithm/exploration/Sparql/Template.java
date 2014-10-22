@@ -23,7 +23,7 @@ public class Template {
 	private long time_generateElements;
 	private long time_part1;
 	private long time_part2;
-	
+
 	public String getHaving() {
 		return having;
 	}
@@ -48,15 +48,15 @@ public class Template {
 	public void setLimit(String limit) {
 		this.limit = limit;
 	}
-	
+
 	public String getSelectTerm() {
 		return selectTerm;
 	}
 	public void setSelectTerm(String selectTerm) {
 		this.selectTerm = selectTerm;
 	}
-	
-	
+
+
 	public Template(ArrayList<ArrayList<String>>condition_new, String queryType_new, String having_new, String filter_new, String SelectTerm_new, String OrderBy_new, String limit_new, String question_new){
 		this.setCondition(condition_new);
 		this.setHaving(having_new);
@@ -79,12 +79,12 @@ public class Template {
 	public void setHypothesen(ArrayList<ArrayList<Hypothesis>> hypotesen) {
 		this.hypothesen = hypotesen;
 	}
-	
+
 	public void addHypothese(ArrayList<Hypothesis> ht){
 		this.hypothesen.add(ht);
 	}
-	
-	
+
+
 	public void printAll(){
 		System.out.println("###### Template ######");
 		System.out.println("question: "+ question);
@@ -98,7 +98,7 @@ public class Template {
 				z.printAll();
 			}
 		}
-		
+
 		anzahl = 1;
 		for(ArrayList<Hypothesis> x : hypothesenLevensthein){
 			System.out.println("\nSet of HypothesenLevensthein"+anzahl+":");
@@ -107,8 +107,8 @@ public class Template {
 				z.printAll();
 			}
 		}
-		
-		
+
+
 		System.out.print("\n");
 		System.out.println("QueryType "+queryType);
 		System.out.println("selectTerm: "+selectTerm);
@@ -142,7 +142,7 @@ public class Template {
 	public void setList_of_element_uri_pair(ArrayList<ElementList> list_of_element_uri_pair) {
 		this.list_of_element_uri_pair = list_of_element_uri_pair;
 	}
-	
+
 	public void addToList_of_element_uri_pair(ElementList newElement) {
 		this.list_of_element_uri_pair.add(newElement);
 	}
@@ -194,7 +194,7 @@ public class Template {
 	public void setHypothesenRelate(ArrayList<ArrayList<Hypothesis>> hypothesenRelate) {
 		this.hypothesenRelate = hypothesenRelate;
 	}
-	
+
 
 }
 

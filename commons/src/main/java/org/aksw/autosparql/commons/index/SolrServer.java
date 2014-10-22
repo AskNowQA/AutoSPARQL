@@ -14,24 +14,24 @@ public enum SolrServer
 	INSTANCE;
 
 	public Indices getIndices() {return dbpediaIndices;}
-	
+
 	static public final String	SOLR_SERVER_URI_EN	= "http://linkedspending.aksw.org/solr/en_";
 	static public final String SOLR_SERVER_URI_EN_DBPEDIA_RESOURCES = SOLR_SERVER_URI_EN+"dbpedia_resources";
 	static public final String SOLR_SERVER_URI_EN_DBPEDIA_CLASSES = SOLR_SERVER_URI_EN+"dbpedia_classes";
 	static public final String SOLR_SERVER_URI_EN_DBPEDIA_DATA_PROPERTIES = SOLR_SERVER_URI_EN+"dbpedia_data_properties";
 	static public final String SOLR_SERVER_URI_EN_DBPEDIA_OBJECT_PROPERTIES = SOLR_SERVER_URI_EN+"dbpedia_object_properties";
 //	static final String	BOA_SERVER_URI_EN	= "http://[2001:638:902:2010:0:168:35:138]:8080/solr/boa";
-	
-	public final Index resourcesIndex;		
+
+	public final Index resourcesIndex;
 	public final Index classesIndex;
 	public final Index dataPropertiesIndex;
 	public final Index objectPropertiesIndex;
-	public final Indices dbpediaIndices;  
+	public final Indices dbpediaIndices;
 
 //	// boa index already integrated
 //	private SolrServerAksw()
 //	{
-//		resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
+//		resourcesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");
 //		classesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
 //		dataPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
 //		objectPropertiesIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"dbpedia_object_properties");
@@ -52,7 +52,7 @@ public enum SolrServer
 		SOLRIndex boaIndex = new SOLRIndex(SOLR_SERVER_URI_EN+"boa","nlr-no-var");
 		boaIndex.setSortField("boa-score");
 //		boaIndex.getResources("test");
-		
+
 		this.resourcesIndex = new FilteredIndex(resourcesIndex, DbpediaFilter.INSTANCE);
 		this.classesIndex = new FilteredIndex(classesIndex, DbpediaFilter.INSTANCE);
 		this.dataPropertiesIndex= new FilteredIndex(new HierarchicalIndex(dataPropertiesIndex,boaIndex),DbpediaFilter.INSTANCE);
@@ -60,5 +60,5 @@ public enum SolrServer
 
 		dbpediaIndices = new Indices(this.resourcesIndex,this.classesIndex,this.objectPropertiesIndex,this.dataPropertiesIndex);
 	}
-	
+
 }

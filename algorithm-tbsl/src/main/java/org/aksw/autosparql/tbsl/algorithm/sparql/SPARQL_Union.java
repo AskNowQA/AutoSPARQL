@@ -12,7 +12,7 @@ import java.util.Set;
  * @author christina
  */
 public class SPARQL_Union {
-    
+
     Set<SPARQL_Triple> conditions_left;
     Set<SPARQL_Filter> filters_left;
     Set<SPARQL_Triple> conditions_right;
@@ -41,5 +41,5 @@ public class SPARQL_Union {
         out += "}";
         return out;
     }
-    
+
 }

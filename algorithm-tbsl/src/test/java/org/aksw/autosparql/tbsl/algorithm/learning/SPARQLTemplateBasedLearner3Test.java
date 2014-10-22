@@ -93,14 +93,14 @@
 // * The updated test data and the test runs are saved in the cache folder in the same format as the original test data
 // * (an xml with the tags question, query and answer).
 // * A test fails if it generates questions whose generated queries fail while in the first test run it worked.
-// * Because the logging in the dl-learner is so verbose (TODO: rewrite all prints to logging statements), the 
+// * Because the logging in the dl-learner is so verbose (TODO: rewrite all prints to logging statements), the
 // * logging output is also wrote to the file log/#classname.
 // * @author Konrad Höffner
 // *  **/
 //
 //// problem mit "In/IN which/WDT films/NNS did/VBD Julia/NNP Roberts/NNP as/RB well/RB as/IN Richard/NNP Gere/NNP play/NN"
 //public class SPARQLTemplateBasedLearner3Test
-//{			
+//{
 //	private static final File evaluationFolder = new File("cache/evaluation");
 //	private static final boolean	DBPEDIA_PRETAGGED	= true;
 //	private static final boolean	OXFORD_PRETAGGED	= false;
@@ -132,12 +132,12 @@
 ////		{
 ////			logger.info("Comparing answers for question "+testData.id2Question.get(i));
 ////			String referenceQuery = testData.id2Query.get(i);
-////			String newQuery = newTestData.id2Query.get(i);			
+////			String newQuery = newTestData.id2Query.get(i);
 ////			if(!referenceQuery.equals(newQuery))
 ////			{
 ////				logger.warn("not equal, reference query: "+referenceQuery+", new query: "+newQuery);
 ////				Collection<String> referenceAnswers = testData.id2Answers.get(i);
-////				Collection<String> newAnswers = newTestData.id2Answers.get(i);			
+////				Collection<String> newAnswers = newTestData.id2Answers.get(i);
 ////				if(!referenceAnswers.equals(newAnswers)) fail("not equal, reference answers: "+referenceAnswers+", new answers: "+newAnswers);
 ////			}
 ////		}
@@ -190,7 +190,7 @@
 //	public static MappingBasedIndex getOxfordMappingIndex()
 //	{
 //		return new MappingBasedIndex(
-//				SPARQLTemplateBasedLearner3.class.getClassLoader().getResourceAsStream("tbsl/oxford_class_mappings.txt"), 
+//				SPARQLTemplateBasedLearner3.class.getClassLoader().getResourceAsStream("tbsl/oxford_class_mappings.txt"),
 //				SPARQLTemplateBasedLearner3.class.getClassLoader().getResourceAsStream("tbsl/oxford_resource_mappings.txt"),
 //				SPARQLTemplateBasedLearner3.class.getClassLoader().getResourceAsStream("tbsl/oxford_dataproperty_mappings.txt"),
 //				SPARQLTemplateBasedLearner3.class.getClassLoader().getResourceAsStream("tbsl/oxford_objectproperty_mappings.txt")
@@ -238,13 +238,13 @@
 //		for(final String s:rdf)
 //		{
 //			// see http://jena.apache.org/documentation/javadoc/jena/com/hp/hpl/jena/rdf/model/Model.html#read%28java.io.InputStream,%20java.lang.String,%20java.lang.String%29
-//			String ending = s.substring(s.lastIndexOf('.')+1, s.length());			
+//			String ending = s.substring(s.lastIndexOf('.')+1, s.length());
 //			String type = (ending.equals("ttl")||ending.equals("nt"))?"TURTLE":ending.equals("owl")?"RDF/XML":String.valueOf(Integer.valueOf("filetype "+ending+" not handled."));
 //			// switch(type) {case "ttl":type="TURTLE";break;case "owl":type="RDF/XML";break;default:throw new RuntimeException("filetype "+ending+" not handled.");} // no Java 1.7 :-(
 //			try{
 //				//				m.read(new FileInputStream(new File("/home/lorenz/arbeit/papers/question-answering-iswc-2012/data/"+s)), null, type);}catch (FileNotFoundException e) {}
 //				m.read(SPARQLTemplateBasedLearner3Test.class.getClassLoader().getResourceAsStream("oxford/"+s),null, type);}
-//			catch(RuntimeException e) {throw new RuntimeException("Could not read into model: "+s,e);} 
+//			catch(RuntimeException e) {throw new RuntimeException("Could not read into model: "+s,e);}
 //		}
 //		//		test("Oxford evaluation questions", new File(getClass().getClassLoader().getResource("tbsl/evaluation/qald2-dbpedia-train-tagged(ideal).xml").getFile()),
 //		//			SparqlEndpoint.getEndpointDBpediaLiveAKSW(),dbpediaLiveCache);
@@ -252,13 +252,13 @@
 //	}
 //
 //	/*@Test*/ public void justTestTheLastWorkingOnesDBpedia() throws Exception
-//	{		
+//	{
 //		SortedMap<Long,Evaluation> evaluations;
 //
 //		if((evaluations=Evaluation.read()).isEmpty())
 //		{
 //			testDBpedia();
-//			evaluations=Evaluation.read();		
+//			evaluations=Evaluation.read();
 //		}
 //
 //		Evaluation latestEvaluation = evaluations.get(evaluations.lastKey());
@@ -271,13 +271,13 @@
 //
 //	public void test(String title, final File referenceXML,final  SparqlEndpoint endpoint,ExtractionDBCache cache,Knowledgebase kb, Model model, MappingBasedIndex index)
 //			throws ParserConfigurationException, SAXException, IOException, TransformerException, ComponentInitException, NoTemplateFoundException
-//	{		
+//	{
 //		evaluateAndWrite(title,referenceXML,endpoint,cache,kb,model,index);
-//		generateHTML(title); 
+//		generateHTML(title);
 //
 //		//				if(evaluation.numberOfCorrectAnswers<3) {fail("only " + evaluation.numberOfCorrectAnswers+" correct answers.");}
 //		/*		{
-//							logger.info("Comparing updated reference test data with learned test data:");	
+//							logger.info("Comparing updated reference test data with learned test data:");
 //							Diff queryTestDataDiff = diffTestData(referenceTestData,learnedTestData);
 //							logger.info(queryTestDataDiff);
 //				}
@@ -295,7 +295,7 @@
 //				}
 //				catch(IOException e)
 //				{
-//					logger.info("Old test data not loadable, creating it and exiting.");					
+//					logger.info("Old test data not loadable, creating it and exiting.");
 //				}
 //				learnedTestData.write();*/
 //	}
@@ -327,7 +327,7 @@
 //		learnedTestData.generateAnswers(endpoint,cache,model);
 //		long endGeneratingAnswers = System.currentTimeMillis();
 //		logger.info("finished generating answers in "+(endGeneratingAnswers-endLearning)/1000.0+"s");
-//		Evaluation evaluation = evaluate(referenceTestData, learnedTestData); 
+//		Evaluation evaluation = evaluate(referenceTestData, learnedTestData);
 //		logger.info(evaluation);
 //		evaluation.write();
 //	}
@@ -343,7 +343,7 @@
 //	 * if a query for a question does not match and the answers are not provided or don't match as well then the question is marked as incorrectly answered.*/
 //	private static Evaluation evaluate(QueryTestData reference, QueryTestData suspect)
 //	{
-//		//		Diff d = diffTestData(reference,testData);	
+//		//		Diff d = diffTestData(reference,testData);
 //		Evaluation evaluation = new Evaluation(suspect,reference);
 //		evaluation.numberOfQuestions = reference.id2Question.keySet().size();
 //
@@ -376,7 +376,7 @@
 //	}
 //
 //	static class Evaluation implements Serializable
-//	{		
+//	{
 //		private static final long	serialVersionUID	= 5L;
 //		final QueryTestData testData;
 //		final QueryTestData referenceData;
@@ -384,10 +384,10 @@
 //		int numberOfAnsweredQuestions = 0;
 //		int numberOfCorrectAnswers = 0;
 //		double precision = 0;
-//		double recall = 0;	
+//		double recall = 0;
 //		final Set<String> unansweredQuestions = new HashSet<String>();
 //		final Set<String> incorrectlyAnsweredQuestions = new HashSet<String>();
-//		final Set<String> correctlyAnsweredQuestions = new HashSet<String>();		
+//		final Set<String> correctlyAnsweredQuestions = new HashSet<String>();
 //
 //		public Evaluation(QueryTestData testData,QueryTestData referenceData) {this.testData = testData;this.referenceData = referenceData;}
 //
@@ -431,7 +431,7 @@
 //
 //		public synchronized void write()
 //		{
-//			evaluationFolder.mkdirs(); 
+//			evaluationFolder.mkdirs();
 //			try
 //			{
 //				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(evaluationFolder,String.valueOf(System.currentTimeMillis()))));
@@ -444,7 +444,7 @@
 //		{
 //			SortedMap<Long,Evaluation> evaluations = new ConcurrentSkipListMap<Long,Evaluation>();
 //			evaluationFolder.mkdirs();
-//			File[] files = evaluationFolder.listFiles();		
+//			File[] files = evaluationFolder.listFiles();
 //			for(int i=0;i<files.length;i++) {evaluations.put(Long.valueOf(files[i].getName()),read(files[i]));}
 //			return evaluations;
 //		}
@@ -458,7 +458,7 @@
 //				ois.close();
 //				return evaluation;
 //			}
-//			catch (Exception e){throw new RuntimeException(e);}		
+//			catch (Exception e){throw new RuntimeException(e);}
 //		}
 //
 //		@Override public boolean equals(Object obj)
@@ -503,10 +503,10 @@
 //			//			logger.info("questions b: "+newData.id2Question.keySet());
 //			//		}
 //			aMinusB.addAll(reference.id2Question.keySet());
-//			aMinusB.removeAll(newData.id2Question.keySet());		
+//			aMinusB.removeAll(newData.id2Question.keySet());
 //
 //			bMinusA.addAll(newData.id2Question.keySet());
-//			bMinusA.removeAll(reference.id2Question.keySet());				
+//			bMinusA.removeAll(reference.id2Question.keySet());
 //
 //			intersection.addAll(reference.id2Question.keySet());
 //			intersection.retainAll(newData.id2Question.keySet());
@@ -514,17 +514,17 @@
 //			for(int i: intersection)
 //			{
 //				// the questions are the same - we don't care about the answer
-//				if(reference.id2Question.get(i).equals(newData.id2Question.get(i))) 
+//				if(reference.id2Question.get(i).equals(newData.id2Question.get(i)))
 //
 //					if(reference.id2Answers.containsKey(i)&&!reference.id2Answers.get(i).equals(newData.id2Answers.get(i)))
 //					{
 //						differentAnswers.add(i);
-//					} 
+//					}
 //			}
 //		}
 //
 //		@Override public String toString()
-//		{			
+//		{
 //			StringBuilder sb = new StringBuilder();
 //			if(!aMinusB.isEmpty())			sb.append("questions a/b: "+aMinusB+" ("+aMinusB.size()+" elements)\n");
 //			if(!bMinusA.isEmpty())			sb.append("questions b/a: "+bMinusA+" ("+bMinusA.size()+" elements)\n");
@@ -569,7 +569,7 @@
 //				case NO_QUERY_LEARNED:	return "no query learned";
 //				case EXCEPTION:			return "<summary>Exception: <details>"+Arrays.toString(exception.getStackTrace())+"</details></summary>";
 //				default: throw new RuntimeException("switch type not handled");
-//			}			
+//			}
 //		}
 //
 //	}
@@ -587,8 +587,8 @@
 //	private QueryTestData generateTestDataMultiThreaded(SortedMap<Integer, String> id2Question,Knowledgebase kb,Model model, MappingBasedIndex index,boolean pretagged)
 //	{
 //		QueryTestData testData = new QueryTestData();
-//		// -- only create the learner parameters once to save time -- 
-//		//		PartOfSpeechTagger posTagger = StanfordPartOfSpeechTagger.INSTANCE;		
+//		// -- only create the learner parameters once to save time --
+//		//		PartOfSpeechTagger posTagger = StanfordPartOfSpeechTagger.INSTANCE;
 //		//		WordNet wordnet = WordNet.INSTANCE;
 //		//		Options options = new Options();
 //		// ----------------------------------------------------------
@@ -610,7 +610,7 @@
 //			String question = id2Question.get(i);
 //			try
 //			{
-//				testData.id2LearnStatus.put(i,futures.get(i).get(30, TimeUnit.MINUTES));				
+//				testData.id2LearnStatus.put(i,futures.get(i).get(30, TimeUnit.MINUTES));
 //			}
 //			catch (InterruptedException e)
 //			{
@@ -628,13 +628,13 @@
 //				logger.warn("Timeout while generating test data for question "+question+".");
 //				testData.id2LearnStatus.put(i, LearnStatus.TIMEOUT);
 //			}
-//		}		
+//		}
 //		service.shutdown();
 //		//		try{service.awaitTermination(10, TimeUnit.MINUTES);} catch (InterruptedException e)	{throw new RuntimeException("Timeout while generating test data.");}
 //
-//		//		try{service.invokeAll(todo);} catch (InterruptedException e) {throw new RuntimeException(e);}			
-//		//			logger.debug("generating query for question \""+question+"\", id "+i);			
-//		//			long start = System.currentTimeMillis();	
+//		//		try{service.invokeAll(todo);} catch (InterruptedException e) {throw new RuntimeException(e);}
+//		//			logger.debug("generating query for question \""+question+"\", id "+i);
+//		//			long start = System.currentTimeMillis();
 //		//			SPARQLTemplateBasedLearner3 dbpediaLiveLearner = new SPARQLTemplateBasedLearner3(dbpediaLiveKnowledgebase,posTagger,wordnet,options);
 //		//			//			dbpediaLiveLearner.setUseIdealTagger(true); // TODO: use this or not?
 //		//			dbpediaLiveLearner.init();
@@ -644,12 +644,12 @@
 //		//			catch(NoTemplateFoundException e) {continue;}
 //		//			catch(NullPointerException e) {continue;}
 //		//catch(Exception e) {logger.error("Error processing question """+question,e);continue;}
-//		//			successes++;									
-//		//			String learnedQuery = dbpediaLiveLearner.getBestSPARQLQuery();			
+//		//			successes++;
+//		//			String learnedQuery = dbpediaLiveLearner.getBestSPARQLQuery();
 //		//			if(learnedQuery==null) {continue;}
 //		//
 //		//			testData.id2Question.put(i, question);
-//		//			testData.id2Query.put(i, learnedQuery);						
+//		//			testData.id2Query.put(i, learnedQuery);
 //		//			try {testData.id2Answers.put(i,getUris(endpoint, learnedQuery));}
 //		//			catch(Exception e) {logger.warn("Error with learned query "+learnedQuery+" for question "+question+" at endpoint "+endpoint+": "+e.getLocalizedMessage());}
 //
@@ -664,10 +664,10 @@
 //	/**
 //	 * @param file
 //	 * @param updatedFile
-//	 * @throws ParserConfigurationException 
-//	 * @throws IOException 
-//	 * @throws SAXException 
-//	 * @throws TransformerException 
+//	 * @throws ParserConfigurationException
+//	 * @throws IOException
+//	 * @throws SAXException
+//	 * @throws TransformerException
 //	 */
 //	private void generateUpdatedXML(File originalFile, File updatedFile,SparqlEndpoint endpoint, ExtractionDBCache cache,Model model) throws ParserConfigurationException, SAXException, IOException, TransformerException
 //	{
@@ -679,17 +679,17 @@
 //		Document doc = db.parse(originalFile);
 //
 //		doc.getDocumentElement().normalize();
-//		NodeList questionNodes = doc.getElementsByTagName("question");			
-//		List<Element> questionElementsToDelete = new LinkedList<Element>(); 
+//		NodeList questionNodes = doc.getElementsByTagName("question");
+//		List<Element> questionElementsToDelete = new LinkedList<Element>();
 //		int id;
 //		String question;
 //		String query;
 //		//			Set<String> answers;
 //
 //		for(int i = 0; i < questionNodes.getLength(); i++)
-//		{				
+//		{
 //			Element questionNode = (Element) questionNodes.item(i);
-//			//keep the id to aid comparison between original and updated files 			
+//			//keep the id to aid comparison between original and updated files
 //			id = Integer.valueOf(questionNode.getAttribute("id"));
 //			//Read question
 //
@@ -706,23 +706,23 @@
 //			//					answers.add(((Element)answerNode.getElementsByTagName("uri").item(0)).getChildNodes().item(0).getNodeValue().trim());
 //			//				}
 //
-//			if(!query.equals("OUT OF SCOPE")) // marker in qald benchmark file, will create holes interval of ids (e.g. 1,2,5,7)   
+//			if(!query.equals("OUT OF SCOPE")) // marker in qald benchmark file, will create holes interval of ids (e.g. 1,2,5,7)
 //			{
 //				Set<String> uris = getUris(endpoint, query,cache,model);
 //				if(!uris.isEmpty())
 //				{
 //					// remove reference answers of the benchmark because they are obtained from an other endpoint
 //					Element existingAnswersElement = (Element)questionNode.getElementsByTagName("answers").item(0); // there is at most one "answers"-element
-//					if(existingAnswersElement!=null) {questionNode.removeChild(existingAnswersElement);} 
+//					if(existingAnswersElement!=null) {questionNode.removeChild(existingAnswersElement);}
 //
 //					Element answersElement =  doc.createElement("answers");
 //					questionNode.appendChild(answersElement);
 //					for(String uri:uris)
-//					{							
+//					{
 //						Element answerElement =  doc.createElement("answer");
 //						answerElement.setTextContent(uri);
 //						answersElement.appendChild(answerElement);
-//					}		
+//					}
 //					System.out.print('.');
 //					continue;
 //				}
@@ -739,7 +739,7 @@
 //
 //		DOMSource source = new DOMSource(doc);
 //		StreamResult result = new StreamResult(new FileOutputStream(updatedFile));
-//		transformer.transform(source, result);			  
+//		transformer.transform(source, result);
 //
 //		//		catch (DOMException e) {
 //		//			e.printStackTrace();
@@ -778,8 +778,8 @@
 //
 //	@Before
 //	public void setup() throws IOException
-//	{			
-//		Logger.getRootLogger().setLevel(Level.WARN);	
+//	{
+//		Logger.getRootLogger().setLevel(Level.WARN);
 //		Logger.getLogger(Templator.class).setLevel(Level.WARN);
 //		Logger.getLogger(Parser.class).setLevel(Level.WARN);
 //		Logger.getLogger(SPARQLTemplateBasedLearner3.class).setLevel(Level.WARN);
@@ -787,17 +787,17 @@
 //		logger.setLevel(Level.INFO); // TODO: remove when finishing implementation of this class
 //		logger.addAppender(new FileAppender(new SimpleLayout(), "log/"+this.getClass().getSimpleName()+".log", false));
 //
-//		//		oxfordEndpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());		
+//		//		oxfordEndpoint = new SparqlEndpoint(new URL("http://lgd.aksw.org:8900/sparql"), Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
 //		//		oxfordLearner = new SPARQLTemplateBasedLearner3(createOxfordKnowledgebase(oxfordCache));
 //	}
 //
 //	public static Set<String> getUris(final SparqlEndpoint endpoint, final String query, ExtractionDBCache cache, Model model)
-//	{		
+//	{
 //		if(query==null)		{throw new AssertionError("query is null");}
-//		//		if(endpoint==null)	{throw new AssertionError("endpoint is null");}		
+//		//		if(endpoint==null)	{throw new AssertionError("endpoint is null");}
 //		if(!query.contains("SELECT")&&!query.contains("select")) {return Collections.<String>emptySet();} // abort when not a select query
 //		Set<String> uris = new HashSet<String>();
-//		//		QueryEngineHTTP qe = new QueryEngineHTTP(DBPEDIA_LIVE_ENDPOINT_URL_STRING, query);		
+//		//		QueryEngineHTTP qe = new QueryEngineHTTP(DBPEDIA_LIVE_ENDPOINT_URL_STRING, query);
 //
 //		ResultSet rs;
 //		//		try{rs = qe.execSelect();}
@@ -815,27 +815,27 @@
 //		resultsetloop:
 //			while(rs.hasNext())
 //			{
-//				QuerySolution qs = rs.nextSolution();						
-//				RDFNode node = qs.get(variable);			
+//				QuerySolution qs = rs.nextSolution();
+//				RDFNode node = qs.get(variable);
 //				if(node!=null&&node.isResource())
 //				{
 //					String uri=node.asResource().getURI();
-//					uris.add(urlDecode(uri));			
+//					uris.add(urlDecode(uri));
 //				}
-//				else // there is no variable "uri" 
+//				else // there is no variable "uri"
 //				{
 //					// try to guess the correct variable by using the first one which is assigned to a resource
 //					for(Iterator<String> it = qs.varNames();it.hasNext();)
 //					{
 //						String varName = it.next();
-//						RDFNode node2 = qs.get(varName); 
-//						if(node2.isResource())					 					
+//						RDFNode node2 = qs.get(varName);
+//						if(node2.isResource())
 //						{
 //							variable = "?"+varName;
 //							String uri=node2.asResource().getURI();
 //							uris.add(urlDecode(uri));
 //							continue resultsetloop;
-//						}				
+//						}
 //					}
 //					if(uris.isEmpty()) {return Collections.<String>emptySet();} // we didn't a resource for the first query solution - give up and don't look in the others
 //				}
@@ -874,17 +874,17 @@
 //	//			URL url;
 //	//			try{url = new URL("http://lgd.aksw.org:8900/sparql");} catch(Exception e) {throw new RuntimeException(e);}
 //	//			SparqlEndpoint endpoint = new SparqlEndpoint(url, Collections.singletonList("http://diadem.cs.ox.ac.uk"), Collections.<String>emptyList());
-//	//	
+//	//
 //	//			SPARQLIndex resourcesIndex = new VirtuosoResourcesIndex(endpoint, cache);
 //	//			SPARQLIndex classesIndex = new VirtuosoClassesIndex(endpoint, cache);
 //	//			SPARQLIndex propertiesIndex = new VirtuosoPropertiesIndex(endpoint, cache);
 //	//			MappingBasedIndex mappingIndex= new MappingBasedIndex(
-//	//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
+//	//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(),
 //	//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
 //	//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
 //	//					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
 //	//					);
-//	//	
+//	//
 //	//			Knowledgebase kb = new Knowledgebase(oxfordEndpoint, "Oxford - Real estate", "TODO", resourcesIndex, propertiesIndex, classesIndex, mappingIndex);
 //	//
 //	//			return kb;
@@ -899,64 +899,64 @@
 //		private final QueryTestData testData;
 //
 //		static private final WordNet wordnet = WordNet.INSTANCE;
-//		static private final Options options = new Options();	
+//		static private final Options options = new Options();
 //		private final SPARQLTemplateBasedLearner3 learner;
 //
 //		public LearnQueryCallable(String question, int id, QueryTestData testData, Knowledgebase knowledgeBase,boolean pretagged)
 //		{
 //			this.question=question;
-//			this.id=id;					
+//			this.id=id;
 //			this.testData=testData;
 //			learner = new SPARQLTemplateBasedLearner3(knowledgeBase,pretagged?null:StanfordPartOfSpeechTagger.INSTANCE,wordnet,options);
 //			try {learner.init();} catch (ComponentInitException e) {throw new RuntimeException(e);}
 //			learner.setUseIdealTagger(pretagged);
-//		}								
+//		}
 //
 //		public LearnQueryCallable(String question, int id, QueryTestData testData, Model model,MappingBasedIndex index,boolean pretagged)
 //		{
 //			this.question=question;
-//			this.id=id;					
+//			this.id=id;
 //			this.testData=testData;
 //			learner = null;
 //			throw new RuntimeException("method must be changed because the learner has changed");
 ////			MappingBasedIndex mappingIndex= new MappingBasedIndex(
-////					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(), 
+////					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_class_mappings.txt").getPath(),
 ////					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_resource_mappings.txt").getPath(),
 ////					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_dataproperty_mappings.txt").getPath(),
 ////					SPARQLTemplateBasedLearner3.class.getClassLoader().getResource("tbsl/oxford_objectproperty_mappings.txt").getPath()
 ////					);
 ////
-////			
+////
 ////			learner = new SPARQLTemplateBasedLearner3(model,mappingIndex,pretagged?null:POSTaggerHolder.posTagger);
 ////			try {learner.init();} catch (ComponentInitException e) {throw new RuntimeException(e);}
 ////			learner.setUseIdealTagger(pretagged);
 ////			learner.setGrammarFiles(new String[]{"tbsl/lexicon/english.lex","tbsl/lexicon/english_oxford.lex"});
 ////			learner.setUseDomainRangeRestriction(false);
-//		}								
+//		}
 //
 //		@Override public LearnStatus call()
 //		{
 //
-//			logger.trace("learning question: "+question);					
+//			logger.trace("learning question: "+question);
 //			try
-//			{			
+//			{
 //				// learn query
 //
-//				learner.setQuestion(question);						
-//				learner.learnSPARQLQueries();						
+//				learner.setQuestion(question);
+//				learner.learnSPARQLQueries();
 //				String learnedQuery = learner.getBestSPARQLQuery();
 //				testData.id2Question.put(id, question);
 //				if(learnedQuery!=null&&!learnedQuery.isEmpty())
-//				{				
+//				{
 //					testData.id2Query.put(id, learnedQuery);
 //				}
-//				else {return LearnStatus.NO_QUERY_LEARNED;} 
+//				else {return LearnStatus.NO_QUERY_LEARNED;}
 //				logger.trace("learned query for question "+question+": "+learnedQuery);
 //
 //				//						Set<String> learnedURIs = getUris(DBPEDIA_LIVE_ENDPOINT_URL_STRING,learnedQuery);
 //			}
 //			catch(NoTemplateFoundException e)
-//			{		
+//			{
 //				logger.warn(String.format("no template found for question \"%s\"",question));
 //				return LearnStatus.NO_TEMPLATE_FOUND;
 //			}
@@ -965,7 +965,7 @@
 //				logger.error(String.format("Exception for question %d \"%s\": %s",id, question,e.getLocalizedMessage()));
 //				e.printStackTrace();
 //				return LearnStatus.exceptionStatus(e);
-//			}			
+//			}
 //			return LearnStatus.OK;
 //		}
 //	}
@@ -997,7 +997,7 @@
 //
 //	private static String getAnswerHTMLList(String[] answers)
 //	{
-//		StringBuilder sbAnswers = new StringBuilder();					
+//		StringBuilder sbAnswers = new StringBuilder();
 //		final int MAX = 10;
 //		for(int i=0;i<answers.length;i++)
 //		{
@@ -1014,13 +1014,13 @@
 //	/** Generates the HTML string content for one of the 3 colored bars which represent the correctly, incorrectly and unanswered question.
 //	 * Also creates and links to a file which contains the questions.*/
 //	private static String createColoredColumn(/*@NonNull*/ File link,/*@NonNull*/ String title,/*@NonNull*/ String color,/*@NonNull*/ Collection<String> questions, int numberOfQuestionsTotal, boolean queriesAvailable, Evaluation evaluation)
-//	{				
+//	{
 //		final StringBuilder sb = new StringBuilder();
 //		sb.append("<a href='"+link.getAbsolutePath()+"' title='"+title+"'>");
 //		sb.append("<div style='float:left;width:"+100.0*questions.size()/numberOfQuestionsTotal+"%;height:1em;background-color:"+color+";'></div>");
 //		sb.append("</a>");
 //
-//		//		link.getParentFile().mkdirs();		
+//		//		link.getParentFile().mkdirs();
 //		try
 //		{
 //			PrintWriter out = new PrintWriter(link);
@@ -1029,7 +1029,7 @@
 //			for(Integer i: evaluation.referenceData.id2Question.keySet()) {question2Id.put(evaluation.referenceData.id2Question.get(i),i);}
 //			out.println("<!DOCTYPE html><html>\n<head><title>"+title+"</title></head>\n<body>\n<table border='1'>");
 //			if(queriesAvailable)
-//			{				
+//			{
 //				out.println("<tr><th>Question</th><th>Learned Query</th><th>Reference Query</th><th>Learned Answers</th><th>Reference Answers</th></tr>");
 //				for(String question: questions)
 //				{
@@ -1040,10 +1040,10 @@
 //									"<td><code><pre>"+escapePre(evaluation.testData.id2Query.get(id))+"</pre></code></td>"+
 //									"<td><code><pre>"+escapePre(evaluation.referenceData.id2Query.get(id))+"</pre></code></td>"+
 //									"<td><ul>"+getAnswerHTMLList(evaluation.testData.id2Answers.get(id).toArray(new String[0]))+"</ul></td>"+
-//									"<td><ul>"+getAnswerHTMLList(evaluation.referenceData.id2Answers.get(id).toArray(new String[0]))+"</ul></td></tr>");					
-//				}								
+//									"<td><ul>"+getAnswerHTMLList(evaluation.referenceData.id2Answers.get(id).toArray(new String[0]))+"</ul></td></tr>");
+//				}
 //			} else
-//			{				
+//			{
 //				out.println("<tr><th>Question</th><th>Error Type</th></tr>");
 //				for(String question: questions)
 //				{
@@ -1052,18 +1052,18 @@
 //					out.println(
 //							"<tr><td>"+question+"</td>"+
 //									"<td>"+evaluation.testData.id2LearnStatus.get(id)+"</td></tr>");
-//				}					
+//				}
 //			}
 //			out.println("</table>\n</body>\n</html>");
-//			out.close();	
+//			out.close();
 //		}
-//		catch (Exception e){throw new RuntimeException(e);}		
+//		catch (Exception e){throw new RuntimeException(e);}
 //
 //		return sb.toString();
 //	}
 //
 //	static String createChangeHTML(File link, Evaluation from, Evaluation to)
-//	{				
+//	{
 //		try
 //		{
 //			PrintWriter out = new PrintWriter(link);
@@ -1103,10 +1103,10 @@
 //		{
 //			StringBuilder sb2 = new StringBuilder();
 //			try
-//			{		
-//				File folder = new File("log/"+SPARQLTemplateBasedLearner3Test.class.getSimpleName()+"/"+timestamp);			
+//			{
+//				File folder = new File("log/"+SPARQLTemplateBasedLearner3Test.class.getSimpleName()+"/"+timestamp);
 //				folder.mkdirs();
-//				Evaluation e = evaluations.get(timestamp);			
+//				Evaluation e = evaluations.get(timestamp);
 //				sb2.append("<tr><td style='white-space: nowrap'>");
 //				Date date = new Date(timestamp);
 //				sb2.append(DateFormat.getInstance().format(date));
@@ -1116,26 +1116,26 @@
 //					if(last.equals(e))	{/*sb2.append("no change");*/}
 //					else				{sb2.append(createChangeHTML(new File(folder,"change.html"),last,e));}
 //				}
-//				sb2.append("</td><td width='100%'>");		
-//				sb2.append("<div style='width:100%;height:1em;border:solid 1px;'>");			
+//				sb2.append("</td><td width='100%'>");
+//				sb2.append("<div style='width:100%;height:1em;border:solid 1px;'>");
 //				sb2.append(createColoredColumn(new File(folder,"correctly_answered.html"),	"Correctly Answered Questions",		"green",	e.correctlyAnsweredQuestions,	e.numberOfQuestions,true,e));
 //				sb2.append(createColoredColumn(new File(folder,"incorrectly_answered.html"),	"Incorrectly Answered Questions",	"orange",	e.incorrectlyAnsweredQuestions,	e.numberOfQuestions,true,e));
 //				sb2.append(createColoredColumn(new File(folder,"unanswered.html"),			"Unanswered Questions",				"red",		e.unansweredQuestions,			e.numberOfQuestions,false,e));
 //				sb2.append("<span style='width:1000px;'></span>");
-//				sb2.append("</td></tr>\n");				
+//				sb2.append("</td></tr>\n");
 //				last = e;
 //				stack.push(sb2.toString());
 //			} catch(Exception e) {logger.warn("error with evaluation from timestamp "+timestamp,e);}
 //		}
 //		while(!stack.isEmpty()) {sb.append(stack.pop());}
-//		sb.append("</table>\n</body>\n</html>");				
+//		sb.append("</table>\n</body>\n</html>");
 //		try
 //		{
 //			PrintWriter out = new PrintWriter("log/"+SPARQLTemplateBasedLearner3Test.class.getSimpleName()+".html");
 //			out.println(sb.toString());
 //			out.close();
 //		}
-//		catch (Exception e){throw new RuntimeException(e);}				
+//		catch (Exception e){throw new RuntimeException(e);}
 //	}
 //
 //}

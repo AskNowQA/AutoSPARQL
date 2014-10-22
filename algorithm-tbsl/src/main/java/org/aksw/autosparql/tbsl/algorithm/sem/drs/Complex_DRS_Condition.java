@@ -76,11 +76,11 @@ public class Complex_DRS_Condition implements DRS_Condition, Cloneable {
             return out;
 	}
         public String toTex() {
-            
+
             String out = m_Restrictor.toTex() + " \\langle " + m_Quantifier + " ";
             if (!m_Referent.m_Referent.equals("null")) out += m_Referent;
-            out += " \\rangle " + m_Scope.toTex(); 
-            
+            out += " \\rangle " + m_Scope.toTex();
+
             return out;
         }
 
@@ -96,7 +96,7 @@ public class Complex_DRS_Condition implements DRS_Condition, Cloneable {
 		m_Restrictor.replaceReferent(ref1, ref2);
 		m_Scope.replaceReferent(ref1, ref2);
 	}
-	public void replaceEqualRef(DiscourseReferent dr1, DiscourseReferent dr2, boolean isInUpperUniverse) { 
+	public void replaceEqualRef(DiscourseReferent dr1, DiscourseReferent dr2, boolean isInUpperUniverse) {
 		if (m_Referent.equals(dr1.m_Referent)) {
 			setReferent(dr2);
 		}
@@ -129,18 +129,18 @@ public class Complex_DRS_Condition implements DRS_Condition, Cloneable {
 		result.addAll(m_Scope.getAllLabels());
 		return result;
 	}
-	
+
 	public Set<DRS_Condition> getEqualConditions() {
-		
+
 		Set<DRS_Condition> out = new HashSet<DRS_Condition>();
-		
+
 		for (DRS_Condition c : m_Restrictor.getConditions()) {
 			out.addAll(c.getEqualConditions());
 		}
 		for (DRS_Condition c: m_Scope.getConditions()) {
 			out.addAll(c.getEqualConditions());
 		}
-		
+
 		return out;
 	}
 

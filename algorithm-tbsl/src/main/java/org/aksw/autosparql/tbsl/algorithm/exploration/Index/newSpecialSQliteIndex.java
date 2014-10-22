@@ -26,51 +26,51 @@ public class newSpecialSQliteIndex {
 		ArrayList<ArrayList<String>> tmp_result = new ArrayList<ArrayList<String>>();
 		try {
 			for(String s : temp_list)first_result.add(getNumberForWordInIndex(s));
-			
-			
+
+
 			for(String s : first_result){
 				ArrayList<String> second_result=new ArrayList<String>();
 				if(s!=null){
 					String[] tmp = s.split(":");
-					
+
 					for(String z : tmp) second_result.add(z);
-						
-						
-					
-				
+
+
+
+
 					tmp_result.add(second_result);
 				}
-				
+
 			}
-		
+
 			for(int i=1;i<tmp_result.size();i++){
 				tmp_result.get(0).retainAll(tmp_result.get(i));
 			}
-			
-			
+
+
 			if(tmp_result.get(0).size()!=0){
 				for(String s : tmp_result.get(0)){
 					result.add(getUriForIndex(s));
 				}
 			}
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return null;
 			}
-			
-		
-		
+
+
+
 		return result;
 	}
-	
-	
+
+
 	public newSpecialSQliteIndex() throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated constructor stub
 		System.out.println("start");
@@ -80,12 +80,12 @@ public class newSpecialSQliteIndex {
 		createNewSpecialIndexNumber();
 		System.out.println("start SpecialIndex");
 		createNewSpecialIndex();
-		
+
 		System.out.println("done");
-	
+
 	}
 
-	
+
 	public String getUriForIndex(String string) throws SQLException{
 		/*  while(rs.next())
 	      {*/
@@ -99,10 +99,10 @@ public class newSpecialSQliteIndex {
 			//e.printStackTrace();
 			return null;
 		}
-		  
+
 	  }
-	
-	
+
+
 	public String getNumberForWordInIndex(String string) throws SQLException{
 		/*  while(rs.next())
 	      {*/
@@ -116,7 +116,7 @@ public class newSpecialSQliteIndex {
 			//e.printStackTrace();
 			return null;
 		}
-		  
+
 	  }
 private void createNewSpecialIndex() throws ClassNotFoundException, SQLException{
 			System.out.println("start indexing Properties");
@@ -161,13 +161,13 @@ private void createNewSpecialIndex() throws ClassNotFoundException, SQLException
 						e.printStackTrace();
 					}
 			    }
-		 
+
 		    conn.setAutoCommit(false);
 		    prep.executeBatch();
 		    conn.setAutoCommit(true);
 		    System.out.println("Number of newSpecialIndex: "+zaehler);
 		    System.out.println("Done");
-		    
+
 		  }
 
 
@@ -186,7 +186,7 @@ private void createNewSpecialIndexNumber() throws ClassNotFoundException, SQLExc
 	      String s;
 		while( null != (s = in.readLine()) ) {
 	        String[] tmp_array =s.split(":::");
-	       
+
 	        tmp_array[1]=tmp_array[1].replace("\n", "");
 	        tmp_array[0]=tmp_array[0].replace("\n", "");
 	        /*System.out.println(tmp_array[0]);
@@ -217,13 +217,13 @@ private void createNewSpecialIndexNumber() throws ClassNotFoundException, SQLExc
 				e.printStackTrace();
 			}
 	    }
- 
+
     conn.setAutoCommit(false);
     prep.executeBatch();
     conn.setAutoCommit(true);
     System.out.println("Number of IndexNumberUri: "+zaehler);
     System.out.println("Done");
-    
+
   }
 
 

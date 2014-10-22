@@ -21,7 +21,7 @@ public class FixOxfordXML
 				if(line.contains("<query>")||line.contains("</query>")) inQuery=!inQuery;
 				else if(inQuery)
 				{
-					line=StringEscapeUtils.escapeXml(line); 
+					line=StringEscapeUtils.escapeXml(line);
 				}
 				System.out.println(line);
 			}

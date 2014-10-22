@@ -6,9 +6,9 @@ import java.io.FileReader;
 public class AdjPolarityTest {
 
 	public static void main(String[] args) {
-		
+
 		String polarity = "POS";
-		
+
 		BufferedReader in;
 		try {
 			in = new BufferedReader(new FileReader("src/main/resources/tbsl/lexicon/adj_list.txt"));
@@ -23,7 +23,7 @@ public class AdjPolarityTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		System.out.println(polarity);
 
 	}

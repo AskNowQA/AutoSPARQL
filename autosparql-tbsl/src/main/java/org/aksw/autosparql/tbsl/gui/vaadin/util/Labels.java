@@ -14,11 +14,11 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 public class Labels {
-	
-	
+
+
 	private static Cache<String, String> cache = CacheBuilder.newBuilder().maximumSize(200).concurrencyLevel(1).build();
 	private static SimpleIRIShortFormProvider sfp = new SimpleIRIShortFormProvider();
-	
+
 	public static String getLabel(final String uri){
 		String label = null;
 		try {
@@ -36,9 +36,9 @@ public class Labels {
 			e.printStackTrace();
 		}
 		return label;
-		
+
 	}
-	
+
 	public static String getLabelForResource(final String uri){
 		String label = null;
 		try {
@@ -64,9 +64,9 @@ public class Labels {
 			e.printStackTrace();
 		}
 		return label;
-		
+
 	}
-	
+
 	public static String upperCaseWordFirst(String str) {
 	    StringBuffer sb = new StringBuffer();
 	    Matcher m = Pattern.compile

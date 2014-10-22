@@ -9,8 +9,8 @@ import org.dllearner.algorithms.qtl.filters.Filter;
 public class FilteredIndex extends Index
 {
 	/*@Nonnull*/ final Index index;
-	/*@Nonnull*/ final Filter filter; 
-	
+	/*@Nonnull*/ final Filter filter;
+
 	public FilteredIndex(/*@Nonnull*/ Index index,/*@Nonnull*/  Filter filter) {this.index=index;this.filter=filter;}
 
 	@Override public IndexResultSet getResourcesWithScores(String queryString, int limit)

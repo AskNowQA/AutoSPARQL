@@ -45,50 +45,50 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class IndexEvaluation {
-	
+
 	private static Logger logger = Logger.getLogger(IndexEvaluation.class);
-	
+
 	private SortedMap<Integer, String> id2Question = new TreeMap<Integer, String>();
 	private SortedMap<Integer, String> id2Query = new TreeMap<Integer, String>();
-	
+
 	private Map<String, String> prefixMap;
-	
+
 	private Templator templateGenerator;
-	
+
 	private SolrSearch resource_index;
 	private SolrSearch class_index;
 	private SolrSearch property_index;
-	
+
 	public IndexEvaluation(File ... evaluationFiles) {
 		for(File file : evaluationFiles){
 			readQueries(file);
 		}
 		init();
 	}
-	
+
 	private void init(){
 		try {
 			Options options = new Options(new FileInputStream(this.getClass().getClassLoader().getResource("tbsl/tbsl.properties").getPath()));
-			
+
 			templateGenerator = new Templator();
 			prefixMap = Prefixes.getPrefixes();
-			
+
 			String resourcesIndexUrl = options.fetch("solr.resources.url");
 			String resourcesIndexSearchField = options.fetch("solr.resources.searchfield");
 			resource_index = new ThresholdSlidingSolrSearch(resourcesIndexUrl, resourcesIndexSearchField, 1.0, 0.1);
-			
+
 			String classesIndexUrl = options.fetch("solr.classes.url");
 			String classesIndexSearchField = options.fetch("solr.classes.searchfield");
 			class_index = new ThresholdSlidingSolrSearch(classesIndexUrl, classesIndexSearchField, 1.0, 0.1);
-			
+
 			String propertiesIndexUrl = options.fetch("solr.properties.url");
 			String propertiesIndexSearchField = options.fetch("solr.properties.searchfield");
 			SolrSearch labelBasedPropertyIndex = new SolrSearch(propertiesIndexUrl, propertiesIndexSearchField);
-			
+
 			String boaPatternIndexUrl = options.fetch("solr.boa.properties.url");
 			String boaPatternIndexSearchField = options.fetch("solr.boa.properties.searchfield");
 			SolrSearch patternBasedPropertyIndex = new SolrSearch(boaPatternIndexUrl, boaPatternIndexSearchField);
-			
+
 			property_index = new HierarchicalSolrSearch(patternBasedPropertyIndex, labelBasedPropertyIndex);
 		} catch (InvalidFileFormatException e) {
 			e.printStackTrace();
@@ -98,7 +98,7 @@ public class IndexEvaluation {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void readQueries(File file){
 		logger.info("Reading file containing queries and answers...");
 		try {
@@ -118,10 +118,10 @@ public class IndexEvaluation {
 				question = ((Element)questionNode.getElementsByTagName("string").item(0)).getChildNodes().item(0).getNodeValue().trim();
 				//Read SPARQL query
 				query = ((Element)questionNode.getElementsByTagName("query").item(0)).getChildNodes().item(0).getNodeValue().trim();
-				
+
 				id2Question.put(id, question);
 				id2Query.put(id, query);
-				
+
 			}
 		} catch (DOMException e) {
 			e.printStackTrace();
@@ -134,7 +134,7 @@ public class IndexEvaluation {
 		}
 		logger.info("Done.");
 	}
-	
+
 	private Set<String> extractEntities(String query){
 		List<String> exclusions = Arrays.asList(new String[]{"rdf", "rdfs"});
 		Set<String> entities = new HashSet<String>();
@@ -162,10 +162,10 @@ public class IndexEvaluation {
 			group = matcher.group();
 			entities.add(getFullURI(buildEntityFromLabel(group)));
 		}
-		
+
 		return entities;
 	}
-	
+
 	private String getFullURI(String prefixedURI){
 		String fullURI = prefixedURI;
 		String prefix;
@@ -180,7 +180,7 @@ public class IndexEvaluation {
 		}
 		return fullURI;
 	}
-	
+
 	private String getPrefixedURI(String fullURI){
 		String prefixedURI = fullURI;
 		String prefix;
@@ -195,21 +195,21 @@ public class IndexEvaluation {
 		}
 		return prefixedURI;
 	}
-	
+
 	private String buildEntityFromLabel(String label){
 		String base = "res:";
 		String entity = label.substring(1).substring(0, label.lastIndexOf("'")-1).replace(" ", "_");
 		return base + entity;
 	}
-	
+
 	private List<String> getCandidateURIsSortedBySimilarity(Slot slot){
 		List<String> sortedURIs = new ArrayList<String>();
 		//get the appropriate index based on slot type
 		SolrSearch index = getIndexBySlotType(slot);
-		
+
 		SortedSet<String> tmp;
 		List<String> uris;
-		
+
 		//prune the word list only when slot type is not RESOURCE
 		List<String> words;
 		if(slot.getSlotType() == SlotType.RESOURCE){
@@ -218,20 +218,20 @@ public class IndexEvaluation {
 //			words = pruneList(slot.getWords());//getLemmatizedWords(slot.getWords());
 			words = pruneList(slot.getWords());
 		}
-		
+
 		for(String word : words){
 			tmp = new TreeSet<String>(new StringSimilarityComparator(word));
 			uris = index.getResources(word, 5);
-		
+
 			tmp.addAll(uris);
 			sortedURIs.addAll(tmp);
 			tmp.clear();
 		}
-		
+
 		logger.info(slot.getToken() + "(" + slot.getSlotType() + ")" + "-->" + sortedURIs);
 		return sortedURIs;
 	}
-	
+
 	private List<String> pruneList(List<String> words){
 		List<String> prunedList = new ArrayList<String>();
 		for(String w1 : words){
@@ -252,7 +252,7 @@ public class IndexEvaluation {
 //		return getLemmatizedWords(words);
 		return prunedList;
 	}
-	
+
 	private SolrSearch getIndexBySlotType(Slot slot){
 		SolrSearch index = null;
 		SlotType type = slot.getSlotType();
@@ -265,7 +265,7 @@ public class IndexEvaluation {
 		}
 		return index;
 	}
-	
+
 	public void run(){
 		String question;
 		String targetQuery;
@@ -276,18 +276,18 @@ public class IndexEvaluation {
 				question = entry.getValue();
 				targetQuery = id2Query.get(entry.getKey());
 				targetQuery = targetQuery.replace("onto:", "dbo:").replace("res:", "dbr:").replace("prop:", "dbp:");
-				
+
 				logger.info("####################################################");
 				logger.info(question);
 //				logger.info(targetQuery);
-				
-				
+
+
 				templates = templateGenerator.buildTemplates(question);
 				if(!templates.isEmpty()){
 					targetEntities = extractEntities(targetQuery);
 					logger.info("Target entities:" + targetEntities);
-					
-					
+
+
 					SortedSet<Slot> slots = new TreeSet<Slot>(new Comparator<Slot>() {
 
 						@Override
@@ -302,12 +302,12 @@ public class IndexEvaluation {
 					for(Template t : templates){
 						slots.addAll(t.getSlots());
 					}
-					
+
 					Set<List<String>> uriLists = new HashSet<List<String>>();
 					for(Slot slot : slots){
 						uriLists.add(getCandidateURIsSortedBySimilarity(slot));
 					}
-					
+
 					int pos = -1;
 					for(String entity : targetEntities){
 						for(List<String> uris : uriLists){
@@ -325,17 +325,17 @@ public class IndexEvaluation {
 				} else {
 					logger.info("No template generated.");
 				}
-				
-				
-				
+
+
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				logger.error("Error");
 			}
-			
+
 		}
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		Logger.getRootLogger().removeAllAppenders();
 		Logger.getRootLogger().addAppender(new FileAppender(new SimpleLayout(), "log/index_eval.txt", false));
@@ -344,7 +344,7 @@ public class IndexEvaluation {
 			System.out.println("Usage: IndexEvaluation <file>");
 			System.exit(0);
 		}
-		
+
 		File file = new File(IndexEvaluation.class.getClassLoader().getResource(args[0]).getPath());
 		new IndexEvaluation(file).run();
 	}

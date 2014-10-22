@@ -12,9 +12,9 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.params.ModifiableSolrParams;
 
 public class SolrIndex implements FallbackIndex{
-	
+
 	private HttpSolrServer server;
-	
+
 	public SolrIndex(String solrServerURL)
 	{
 			server = new HttpSolrServer(solrServerURL);

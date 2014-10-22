@@ -11,7 +11,7 @@ public class Argument implements Cloneable {
 	String referent;
 	Type type;
 	Label label;
-	
+
 	public Argument() {
 	}
 	public Argument(String a,String r,Type t,Label l) {
@@ -20,39 +20,39 @@ public class Argument implements Cloneable {
 		anchor = a;
 		type = t;
 	}
-	
+
 	public void setLabel(Label l) {
 		label = l;
 	}
 	public void setAnchor(String s) {
-		anchor = s;	
+		anchor = s;
 	}
 	public void setType(Type t) {
-		type = t;	
+		type = t;
 	}
 	public void setReferent(String s) {
-		referent = s;	
+		referent = s;
 	}
-	
+
 	public String toString() {
 		return "(" + anchor + "," + referent + "," + type + "," + label + ")";
 	}
         public String toTex() {
             return "(\\text{"+anchor+"},"+referent+","+type.toTex()+","+label.toTex()+")";
         }
-	
+
 	public Argument clone() {
 		return new Argument(anchor,referent,type,label);
 	}
-	
+
 	public void replaceReferent(String ref1, String ref2) {
 		if (referent.equals(ref1)) {
 			referent = ref2;
 		}
 	}
-	
+
 	public Set<String> collectVariables() {
-		
+
 		Set<String> variables = new HashSet<String>();
 		variables.add(referent);
 		return variables;
@@ -99,5 +99,5 @@ public class Argument implements Cloneable {
 			return false;
 		return true;
 	}
-	
+
 }

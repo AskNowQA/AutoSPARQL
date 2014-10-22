@@ -10,7 +10,7 @@ public class HeuristicSort {
 	 * TODO: test if the sorted queries are given back properly
 	 */
 	public static ArrayList<QueryPair> doHeuristicSort(ArrayList<QueryPair> qp, String question){
-		
+
 		boolean change=true;
 		//while(change){
 			//change=false;
@@ -23,21 +23,21 @@ public class HeuristicSort {
 				    if(string.matches(".*\\<http://dbpedia.org/resource/.*\\> \\<http://dbpedia.org/.*\\> \\?.*")){
 				    	qp.set(i, one);
 						qp.set(i+1, two);
-				    	
-				    } 
+
+				    }
 				    else{
 				    	qp.set(i, two);
 						qp.set(i+1, one);
 				    }
-				   
+
 				}
 			}
 		//}
-		
+
 		if(Setting.isDebugModus())DebugMode.printQueryPair(qp);
-		
+
 		return qp;
 
 	}
-	
+
 }

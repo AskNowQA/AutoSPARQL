@@ -4,26 +4,26 @@ package org.aksw.autosparql.tbsl.algorithm.exploration.Utils;
 
 public class Levenshtein {
 
-	
+
 	public static double nld(String orig, String eing){
 		double result = computeLevenshteinDistance(orig,eing);
 		//System.out
 		double length=Math.max(orig.length(),eing.length());
-		
+
 		if(result==0.0 ){
 			return 1.0;
 		}
 		else{
-			
+
 			double result_nld =result/length;
 			double result1 = 1-result_nld;
 			//System.out.println(orig + " " + eing +" : "+result1);
 			return result1;
 		}
-	
+
 	}
-	
-	
+
+
 	//http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Java
 	 private static int minimum(int a, int b, int c) {
          return Math.min(Math.min(a, b), c);

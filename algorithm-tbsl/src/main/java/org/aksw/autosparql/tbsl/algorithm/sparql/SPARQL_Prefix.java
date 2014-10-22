@@ -3,9 +3,9 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 import java.io.Serializable;
 
 public class SPARQL_Prefix implements Serializable, Cloneable {
-	
+
 	private static final long serialVersionUID = 1971250768286898228L;
-	
+
 	private String name;
 	private String url;
 
@@ -21,17 +21,17 @@ public class SPARQL_Prefix implements Serializable, Cloneable {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	@Override public SPARQL_Prefix clone()
 	{
 		return new SPARQL_Prefix(name, url);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "PREFIX "+name+": <"+url+">";
 	}
-	
+
 	public SPARQL_Prefix(String name, String url) {
 		super();
 		this.name = name;
@@ -67,5 +67,5 @@ public class SPARQL_Prefix implements Serializable, Cloneable {
 		return true;
 	}
 
-	
+
 }

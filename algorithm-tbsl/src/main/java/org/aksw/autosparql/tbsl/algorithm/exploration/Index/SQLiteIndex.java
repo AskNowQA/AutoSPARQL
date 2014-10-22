@@ -34,17 +34,17 @@ public class SQLiteIndex {
 		createIndexOntology();
 		createIndexOntologyClass();
 		//createIndexofYago();
-		
+
 		/*System.out.println("start IndexNumber");
 		createNewSpecialIndexNumber();
 		System.out.println("start SpecialIndex");
 		createNewSpecialIndex();*/
-		
+
 		lemma = new StanfordLemmatizer();
-		
+
 		//optional!!
 		//createIndexWikipedia();
-	
+
 	}
 
 	/*
@@ -54,7 +54,7 @@ We use the following SELECT statement:
 SELECT * FROM Persons
 WHERE City LIKE '%tav%'
 	 */
-	
+
 	public String getResourceURI(String string) throws SQLException, IOException{
 		/*  while(rs.next())
 	      {*/
@@ -69,13 +69,13 @@ WHERE City LIKE '%tav%'
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-		        
+
 			return null;
-			
+
 		}
-		  
+
 	  }
-	
+
 	public ArrayList<String> getResourceURILike(String string, String original_string) throws SQLException{
 		/*  while(rs.next())
 	      {*/
@@ -97,9 +97,9 @@ WHERE City LIKE '%tav%'
 			//e.printStackTrace();
 			return null;
 		}
-		  
+
 	  }
-	
+
 	public ArrayList<String> getYagoURILike(String string, String original_string) throws SQLException{
 		/*  while(rs.next())
 	      {*/
@@ -122,10 +122,10 @@ WHERE City LIKE '%tav%'
 			//e.printStackTrace();
 			return null;
 		}
-		  
+
 	  }
-	
-	
+
+
 	public String getYagoURI(String string) throws SQLException{
 		/*  while(rs.next())
 	      {*/
@@ -139,9 +139,9 @@ WHERE City LIKE '%tav%'
 			//e.printStackTrace();
 			return null;
 		}
-		  
+
 	  }
-	
+
 
 	public String getPropertyURI(String string) throws SQLException, IOException{
 		  Statement stat = conn.createStatement();
@@ -159,7 +159,7 @@ WHERE City LIKE '%tav%'
 				}
 				if(found==false)al.add(result_string);
 			}
-			
+
 			rs = stat.executeQuery("select uri from ontology where name='"+string.toLowerCase()+"';");
 			while(rs.next()){
 				String result_string= rs.getString("uri");
@@ -188,20 +188,20 @@ WHERE City LIKE '%tav%'
 					return al.get(0);
 				}
 			}
-			
+
 		  return null;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			//System.err.println("Error in SQLiteIndex.getProperty!!");
-    
-		        
+
+
 			return null;
 		}
-	
-		  
+
+
 	  }
-	
+
 	public String getManualPropertyURI(String string) throws SQLException, IOException{
 		  Statement stat = conn.createStatement();
 		  ResultSet rs;
@@ -212,20 +212,20 @@ WHERE City LIKE '%tav%'
 				String result_string= rs.getString("uri");
 				return result_string;
 			}
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			//System.err.println("Error in SQLiteIndex.getProperty!!");
-  
-		        
+
+
 			return null;
 		}
-	
+
 		  return null;
 	  }
-	
-	
+
+
 	public String getontologyURI(String string) throws SQLException{
 		  Statement stat = conn.createStatement();
 		  ResultSet rs;
@@ -237,10 +237,10 @@ WHERE City LIKE '%tav%'
 			//e.printStackTrace();
 			return null;
 		}
-	
-		  
+
+
 	  }
-	
+
 	public String getontologyClassURI(String string) throws SQLException{
 		  Statement stat = conn.createStatement();
 		  ResultSet rs;
@@ -252,8 +252,8 @@ WHERE City LIKE '%tav%'
 			//e.printStackTrace();
 			return null;
 		}
-	
-		  
+
+
 	  }
 	public ArrayList<String> getontologyClassURILike(String string, String original_string) throws SQLException{
 		  Statement stat = conn.createStatement();
@@ -274,12 +274,12 @@ WHERE City LIKE '%tav%'
 			//e.printStackTrace();
 			return null;
 		}
-	
-		  
+
+
 	  }
-	
-	
-	
+
+
+
 	public String getWikipediaURI(String string) throws SQLException{
 		  Statement stat = conn.createStatement();
 		  ResultSet rs;
@@ -291,10 +291,10 @@ WHERE City LIKE '%tav%'
 			//e.printStackTrace();
 			return null;
 		}
-	
-		  
+
+
 	  }
-	
+
 	public String getWordnetHelp(String string) throws SQLException{
 		  Statement stat = conn.createStatement();
 		  ResultSet rs;
@@ -306,10 +306,10 @@ WHERE City LIKE '%tav%'
 			//e.printStackTrace();
 			return null;
 		}
-	
-		  
+
+
 	  }
-	
+
 	private void createWordnetHelp() throws SQLException{		/*System.out.println("Start SQL test");
 		Class.forName( "org.sqlite.JDBC" );
 		conn = DriverManager.getConnection("jdbc:sqlite::memory:");*/
@@ -362,14 +362,14 @@ WHERE City LIKE '%tav%'
 					e.printStackTrace();
 				}
 		    }
-	 
+
 	    conn.setAutoCommit(false);
 	    prep.executeBatch();
 	    conn.setAutoCommit(true);
 	    System.out.println("Done");
-	    
+
 	  }
-	
+
 	  private void createIndexWikipedia() throws ClassNotFoundException, SQLException{
 			/*System.out.println("Start SQL test");
 			Class.forName( "org.sqlite.JDBC" );
@@ -415,7 +415,7 @@ WHERE City LIKE '%tav%'
 						e.printStackTrace();
 					}
 			    }
-		 
+
 		    conn.setAutoCommit(false);
 		    prep.executeBatch();
 		    conn.setAutoCommit(true);
@@ -462,13 +462,13 @@ private void createIndexPropertys() throws ClassNotFoundException, SQLException{
 						e.printStackTrace();
 					}
 			    }
-		 
+
 		    conn.setAutoCommit(false);
 		    prep.executeBatch();
 		    conn.setAutoCommit(true);
 		    System.out.println("Number of Property: "+zaehler);
 		    System.out.println("Done");
-		    
+
 		  }
 
 
@@ -514,13 +514,13 @@ private void createIndexManualPropertys() throws ClassNotFoundException, SQLExce
 				e.printStackTrace();
 			}
 	    }
- 
+
     conn.setAutoCommit(false);
     prep.executeBatch();
     conn.setAutoCommit(true);
     System.out.println("Number of ManualProperty: "+zaehler);
     System.out.println("Done");
-    
+
   }
 
 
@@ -565,15 +565,15 @@ private void createIndexResource() throws ClassNotFoundException, SQLException{
 						e.printStackTrace();
 					}
 			    }
-		 
+
 		    conn.setAutoCommit(false);
 		    prep.executeBatch();
 		    conn.setAutoCommit(true);
 		    System.out.println("Number of Resources: "+zaehler);
 		    System.out.println("Done");
 
-			
-		    
+
+
 		  }
 private void createIndexOntology() throws ClassNotFoundException, SQLException{
 	/*System.out.println("Start SQL test");*/
@@ -619,13 +619,13 @@ private void createIndexOntology() throws ClassNotFoundException, SQLException{
 					e.printStackTrace();
 				}
 		    }
-	 
+
 	    conn.setAutoCommit(false);
 	    prep.executeBatch();
 	    conn.setAutoCommit(true);
 	    System.out.println("Number of Ontologys: "+zaehler);
 	    System.out.println("Done");
-	    
+
 	  }
 
 private void createIndexOntologyClass() throws ClassNotFoundException, SQLException{
@@ -672,13 +672,13 @@ private void createIndexOntologyClass() throws ClassNotFoundException, SQLExcept
 					e.printStackTrace();
 				}
 		    }
-	 
+
 	    conn.setAutoCommit(false);
 	    prep.executeBatch();
 	    conn.setAutoCommit(true);
 	    System.out.println("Number of OntologyClass: "+zaehler);
 	    System.out.println("Done");
-	    
+
 	  }
 
 
@@ -726,17 +726,17 @@ private void createIndexofYago() throws ClassNotFoundException, SQLException{
 					e.printStackTrace();
 				}
 		    }
-	 
+
 	    conn.setAutoCommit(false);
 	    prep.executeBatch();
 	    conn.setAutoCommit(true);
 	    System.out.println("Number of Yago: "+zaehler);
 	    System.out.println("Done");
-	    
+
 	  }
 
 public ArrayList<String> getListOfUriSpecialIndex(String string){
-	
+
 	if(!Setting.isNewIndex())return null;
 	string= string.toLowerCase();
 	String[] temp_list = string.split(" ");
@@ -745,45 +745,45 @@ public ArrayList<String> getListOfUriSpecialIndex(String string){
 	ArrayList<ArrayList<String>> tmp_result = new ArrayList<ArrayList<String>>();
 	try {
 		for(String s : temp_list)first_result.add(getNumberForWordInIndex(s));
-		
-		
+
+
 		for(String s : first_result){
 			ArrayList<String> second_result=new ArrayList<String>();
 			if(s!=null){
 				String[] tmp = s.split(":");
-				
+
 				for(String z : tmp) second_result.add(z);
-					
-					
-				
-			
+
+
+
+
 				tmp_result.add(second_result);
 			}
-			
+
 		}
-	
+
 		for(int i=1;i<tmp_result.size();i++){
 			tmp_result.get(0).retainAll(tmp_result.get(i));
 		}
-		
-		
+
+
 		if(tmp_result.get(0).size()!=0){
 			for(String s : tmp_result.get(0)){
 				result.add(getUriForIndex(s));
 			}
 		}
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
-		
+
 	System.out.println(result.size() + " URI's over new Index were found!");
 	try {
 		DebugMode.waitForButton();
@@ -791,7 +791,7 @@ public ArrayList<String> getListOfUriSpecialIndex(String string){
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	
+
 	return result;
 }
 
@@ -810,7 +810,7 @@ public String getUriForIndex(String string) throws SQLException{
 		//e.printStackTrace();
 		return null;
 	}
-	  
+
   }
 
 
@@ -827,7 +827,7 @@ public String getNumberForWordInIndex(String string) throws SQLException{
 		//e.printStackTrace();
 		return null;
 	}
-	  
+
   }
 private void createNewSpecialIndex() throws ClassNotFoundException, SQLException{
 		System.out.println("start indexing Properties");
@@ -872,13 +872,13 @@ private void createNewSpecialIndex() throws ClassNotFoundException, SQLException
 					e.printStackTrace();
 				}
 		    }
-	 
+
 	    conn.setAutoCommit(false);
 	    prep.executeBatch();
 	    conn.setAutoCommit(true);
 	    System.out.println("Number of newSpecialIndex: "+zaehler);
 	    System.out.println("Done");
-	    
+
 	  }
 
 
@@ -897,7 +897,7 @@ try {
       String s;
 	while( null != (s = in.readLine()) ) {
         String[] tmp_array =s.split(":::");
-       
+
         tmp_array[1]=tmp_array[1].replace("\n", "");
         tmp_array[0]=tmp_array[0].replace("\n", "");
         /*System.out.println(tmp_array[0]);

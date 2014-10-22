@@ -10,7 +10,7 @@ public class LinearSort {
 	 * TODO: test if the sorted queries are given back properly
 	 */
 	public static ArrayList<QueryPair> doSort(ArrayList<QueryPair> qp){
-		
+
 		boolean change=true;
 		while(change){
 			change=false;
@@ -24,11 +24,11 @@ public class LinearSort {
 				}
 			}
 		}
-		
+
 		if(Setting.isDebugModus())DebugMode.printQueryPair(qp);
-		
+
 		return qp;
 
 	}
-	
+
 }

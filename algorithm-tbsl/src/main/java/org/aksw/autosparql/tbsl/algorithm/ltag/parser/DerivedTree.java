@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.aksw.autosparql.tbsl.algorithm.ltag.parser;
 
@@ -22,7 +22,7 @@ import org.aksw.autosparql.tbsl.algorithm.sem.util.Pair;
  * Derivation Tree. If CONSTRUCT_SEMANTICS is set, the corresponding Dudes are
  * also parsed (DudeParser), constructed and merged (adjunction) / applied
  * (subsitution).
- * 
+ *
  */
 public class DerivedTree {
 
@@ -72,10 +72,10 @@ public class DerivedTree {
 					dudeConstructor, parseGram, G, CONSTRUCT_SEMANTICS));
 			myDudeIndex.put(op.getTid2(), getDudeFromTid(op.getTid2(),
 					dudeConstructor, parseGram, G, CONSTRUCT_SEMANTICS));
-			
+
 
 		}
-		
+
 		for (int i = parse.getOperations().size() - 1; i >= 0; i--) {
 
 			Operation op = parse.getOperations().get(i);
@@ -91,7 +91,7 @@ public class DerivedTree {
 				// semantics
 				if (CONSTRUCT_SEMANTICS) {
 					newDudes = new ArrayList<Dude>();
-					
+
 					List<Dude> dudeList1 = myDudeIndex.get(op.getTid1());
 					List<Dude> dudeList2 = myDudeIndex.get(op.getTid2());
 					for (Dude d1 : dudeList1) {
@@ -113,7 +113,7 @@ public class DerivedTree {
 				// semantics
 				if (CONSTRUCT_SEMANTICS) {
 					newDudes = new ArrayList<Dude>();
-					
+
 					List<Dude> dudeList1 = myDudeIndex.get(op.getTid1());
 					List<Dude> dudeList2 = myDudeIndex.get(op.getTid2());
 					for (Dude d1 : dudeList1) {
@@ -137,7 +137,7 @@ public class DerivedTree {
 		for (Dude d : newDudes) {
 			output.add(new Pair<TreeNode,Dude>(newTree, d));
 		}
-		
+
 		return output;
 
 	}

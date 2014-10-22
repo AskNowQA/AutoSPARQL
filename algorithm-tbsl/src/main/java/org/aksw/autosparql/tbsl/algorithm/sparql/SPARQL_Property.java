@@ -1,7 +1,7 @@
 package org.aksw.autosparql.tbsl.algorithm.sparql;
 
 public class SPARQL_Property extends SPARQL_Value implements Cloneable{
-	
+
 	private SPARQL_Prefix prefix = null;
 
 	@Override public SPARQL_Property clone()
@@ -10,7 +10,7 @@ public class SPARQL_Property extends SPARQL_Value implements Cloneable{
 		p.setIsVariable(isVariable());
 		return p;
 	}
-	
+
 	public SPARQL_Property(String name) {
 		super();
 		this.prefix = null;
@@ -21,7 +21,7 @@ public class SPARQL_Property extends SPARQL_Value implements Cloneable{
 		this.name = name;
 		this.prefix = prefix;
 	}
-	
+
 	public SPARQL_Prefix getPrefix() {
 		return prefix;
 	}
@@ -29,7 +29,7 @@ public class SPARQL_Property extends SPARQL_Value implements Cloneable{
 	public void setPrefix(SPARQL_Prefix prefix) {
 		this.prefix = prefix;
 	}
-	
+
 	@Override
 	public String toString() {
 		if (isVariable()) {
@@ -63,7 +63,7 @@ public class SPARQL_Property extends SPARQL_Value implements Cloneable{
 			return false;
 		return true;
 	}
-	
-	
+
+
 
 }

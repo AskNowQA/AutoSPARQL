@@ -24,31 +24,31 @@ import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 
 public class DBpediaCategoriesSolrIndexCreator {
-	
+
 	private SolrInputField uriField = new SolrInputField("uri");
 	private SolrInputField labelField = new SolrInputField("label");
 	private SolrInputField commentField = new SolrInputField("comment");
-	
+
 	private SolrInputDocument doc;
 	private HttpSolrServer solr;
-	
+
 	private Set<SolrInputDocument> docs = new HashSet<SolrInputDocument>();
-	
+
 	private static final int COMMIT_SIZE = 1000;//number of documents in a batch
-	
+
 	public DBpediaCategoriesSolrIndexCreator(String solrIndexServerURL, String coreName){
 		solr = new HttpSolrServer(solrIndexServerURL + "/" + coreName);
 		solr.setRequestWriter(new BinaryRequestWriter());
-		
+
         initDocument();
 	}
-	
-	
+
+
 	public void createIndex(String versionNumber, String languageTag){
 		InputStream is = loadDBpediaCategoriesFile(versionNumber, languageTag);
 		createIndex(is);
 	}
-	
+
 	/**
 	 * The DBpedia categories only have labels and no comments, i.e. we do not have to sort the file and can just
 	 * iterate over the categories.
@@ -64,7 +64,7 @@ public class DBpediaCategoriesSolrIndexCreator {
 			String comment = "";
 			@Override
 			public void startRDF() throws RDFHandlerException {}
-			
+
 			@Override
 			public void handleStatement(org.openrdf.model.Statement stmt) throws RDFHandlerException {
 				uri = stmt.getSubject().stringValue();
@@ -75,7 +75,7 @@ public class DBpediaCategoriesSolrIndexCreator {
 					write2Index();
 				}
 			}
-			
+
 			@Override
 			public void handleNamespace(String arg0, String arg1) throws RDFHandlerException {}
 			@Override
@@ -98,9 +98,9 @@ public class DBpediaCategoriesSolrIndexCreator {
 			e.printStackTrace();
 		} catch (SolrServerException e) {
 			e.printStackTrace();
-		} 
+		}
 	}
-	
+
 	private InputStream loadDBpediaCategoriesFile(String version, String languageTag) {
 		//http://downloads.dbpedia.org/3.8/en/category_labels_en.nt.bz2
 		try {
@@ -118,14 +118,14 @@ public class DBpediaCategoriesSolrIndexCreator {
 		}
 		return null;
 	}
-	
+
 	private void initDocument(){
 		doc = new SolrInputDocument();
 		doc.put("uri", uriField);
 		doc.put("label", labelField);
 		doc.put("comment", commentField);
 	}
-	
+
 	private void addDocument(String uri, String label, String comment){
 		doc = new SolrInputDocument();
 		uriField = new SolrInputField("uri");
@@ -137,10 +137,10 @@ public class DBpediaCategoriesSolrIndexCreator {
 		uriField.setValue(uri, 1.0f);
 		labelField.setValue(label, 1.0f);
 		commentField.setValue(comment, 1.0f);
-		
+
 		docs.add(doc);
 	}
-	
+
 	private void write2Index(){
 		try {
 			solr.add(docs);
@@ -151,18 +151,18 @@ public class DBpediaCategoriesSolrIndexCreator {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		if(args.length != 4){
 			System.out.println("Usage: DBpediaCategoriesSolrIndexCreator <SOLR-Server-URL> <SOLR-Core-Name> <DBpedia-Version-Number> <Language-Tag> ");
 			System.exit(0);
 		}
-		
+
 		String solrServerURL = args[0];
 		String solrCoreName = args[1];
 		String versionNumber = args[2];
 		String languageTag = args[3];
-		
+
 		new DBpediaCategoriesSolrIndexCreator(solrServerURL, solrCoreName).createIndex(versionNumber, languageTag);
 	}
 

@@ -69,7 +69,7 @@ public class POSTaggerQALDEvaluation {
 					.item(0)).getChildNodes().item(0).getNodeValue().trim();
 			id2TaggedQuestion.put(id, question);
 		}
-		
+
 //		int correctTaggedQuestions = 0;
 //		for(Entry<Integer, String> entry : id2UntaggedQuestion.entrySet()){
 //			String untaggedQuestion = entry.getValue();
@@ -85,13 +85,13 @@ public class POSTaggerQALDEvaluation {
 //			}
 //		}
 //		System.out.println("Correct: " + correctTaggedQuestions + "/" + id2TaggedQuestion.size());
-		
+
 		for(PartOfSpeechTagger tagger : taggers){
 			Map<Integer, Integer> position2Correct = new TreeMap<Integer, Integer>();
 			for(Entry<Integer, String> entry : id2UntaggedQuestion.entrySet()){
 				String untaggedQuestion = entry.getValue();
 				String idealTaggedQuestion = id2TaggedQuestion.get(entry.getKey()).toLowerCase();
-				
+
 				List<String> taggedQuestions = tagger.tagTopK(untaggedQuestion);
 				for(int i = 0; i < taggedQuestions.size(); i++){
 					String taggedQuestion = taggedQuestions.get(i).
@@ -111,7 +111,7 @@ public class POSTaggerQALDEvaluation {
 								correct = correct + 1;
 							}
 							position2Correct.put(j, correct);
-							
+
 						}
 					}
 				}
@@ -120,11 +120,11 @@ public class POSTaggerQALDEvaluation {
 			for(Entry<Integer, Integer> pos2CorrectCnt : position2Correct.entrySet()){
 				System.out.println("First " + (pos2CorrectCnt.getKey()+1) + " tags: " + pos2CorrectCnt.getValue() + "/" + id2UntaggedQuestion.size());
 			}
-			
-			
+
+
 		}
-		
-		
+
+
 
 	}
 

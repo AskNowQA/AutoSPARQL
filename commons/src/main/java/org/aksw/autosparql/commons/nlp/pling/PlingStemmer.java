@@ -6,15 +6,15 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Set;
 
-/** 
+/**
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
-It is licensed under the Creative Commons Attribution License 
-(see http://creativecommons.org/licenses/by/3.0) by 
+It is licensed under the Creative Commons Attribution License
+(see http://creativecommons.org/licenses/by/3.0) by
 the YAGO-NAGA team (see http://mpii.de/yago-naga).
-  
 
-  
- 
+
+
+
 
   The PlingStemmer stems an English noun (plural or singular) to its singular
   form. It deals with "firemen"->"fireman", it knows Greek stuff like
@@ -46,7 +46,7 @@ the YAGO-NAGA team (see http://mpii.de/yago-naga).
   It cannot be guaranteed that the stemmer correctly stems a plural word
   or correctly ignores a singular word -- let alone that it treats an
   ambiguous word form in the way expected by the user.<P>
-  
+
   The PlingStemmer uses material from <A HREF=http://wordnet.princeton.edu/>WordNet</A>.<P>
   It requires the class FinalSet from the <A HREF=http://www.mpii.mpg.de/~suchanek/downloads/javatools>
   Java Tools</A>.
@@ -62,14 +62,14 @@ public class PlingStemmer {
   /** Tells whether a word form is singular. Note that a word can be both plural and singular */
   public static boolean isSingular(String s) {
     return(singAndPlur.contains(s.toLowerCase()) || !isPlural(s));
-  }  
+  }
 
   /** Tells whether a word form is the singular form of one word and at
    * the same time the plural form of another.*/
   public static boolean isSingularAndPlural(String s) {
     return(singAndPlur.contains(s.toLowerCase()));
-  }  
-  
+  }
+
   /** Cuts a suffix from a string (that is the number of chars given by the suffix) */
   public static String cut(String s, String suffix) {
     return(s.substring(0,s.length()-suffix.length()));
@@ -903,9 +903,9 @@ public class PlingStemmer {
         "tactics",
         "tropics"
         );
-  
+
   /** Test routine */
-  public static void main(String[] argv) throws Exception {    
+  public static void main(String[] argv) throws Exception {
     System.out.println("Enter an English word in plural form and press ENTER");
     BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
     while(true) {

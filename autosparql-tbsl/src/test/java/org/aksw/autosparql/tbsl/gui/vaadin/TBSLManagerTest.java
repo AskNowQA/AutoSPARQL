@@ -26,9 +26,9 @@ public class TBSLManagerTest
 		List<String> p = new ArrayList<String>();
 		p.add(a.getItems().get(1).getUri());
 		p.add(a.getItems().get(2).getUri());
-		p.add(a.getItems().get(0).getUri());		
+		p.add(a.getItems().get(0).getUri());
 		List<String> n = new ArrayList<String>();
 		man.refine(p, n);
-		
+
 	}
 }

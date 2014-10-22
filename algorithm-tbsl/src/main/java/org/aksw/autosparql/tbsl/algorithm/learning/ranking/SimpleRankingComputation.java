@@ -35,10 +35,10 @@ import org.dllearner.kb.SparqlEndpointKS;
 import org.dllearner.reasoning.SPARQLReasoner;
 
 public class SimpleRankingComputation extends AbstractRankingComputation{
-	
-	
+
+
 	private static final Logger logger = Logger.getLogger(SimpleRankingComputation.class.getName());
-	
+
 	protected SPARQLReasoner reasoner;
 //	private SPARQLEndpointMetrics metrics;
 	private List<Feature> features = Arrays.asList(
@@ -46,14 +46,14 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 			,Feature.STRING_SIMILARITY_AVERAGE
 			,Feature.TRIPLE_PROBABILITY
 			);
-	
+
 	public SimpleRankingComputation(Knowledgebase knowledgebase)
 	{
 		super(knowledgebase);
 		if(knowledgebase instanceof RemoteKnowledgebase)
 		{reasoner = new SPARQLReasoner(new SparqlEndpointKS(((RemoteKnowledgebase)knowledgebase).getEndpoint()));}
 		else
-		{reasoner = new SPARQLReasoner(new LocalModelBasedSparqlEndpointKS(((LocalKnowledgebase)knowledgebase).getModel()));}		
+		{reasoner = new SPARQLReasoner(new LocalModelBasedSparqlEndpointKS(((LocalKnowledgebase)knowledgebase).getModel()));}
 //		metrics = new SPARQLEndpointMetrics(((RemoteKnowledgebase) knowledgebase).getEndpoint(), new ExtractionDBCache("/opt/tbsl/dbpedia_pmi_cache_v2"));
 	}
 
@@ -61,22 +61,22 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 	public Ranking computeRanking(Template template, Collection<TemplateInstantiation> templateInstantiations, Map<Slot, Collection<Entity>> slot2Entites) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
 	public Ranking computeRanking(Map<Template, List<TemplateInstantiation>> template2Instantiations,
-			Map<Template, Map<Slot, Collection<Entity>>> template2Allocations, List<Double> weights) {		
+			Map<Template, Map<Slot, Collection<Entity>>> template2Allocations, List<Double> weights) {
 		System.out.println();
 		Ranking ranking = new Ranking();
 		for (Entry<Template, List<TemplateInstantiation>> entry : template2Instantiations.entrySet()) {
 			Template template = entry.getKey();
-			
-			//precompute the prominence scores here to be able to perform a min-max normalization 
+
+			//precompute the prominence scores here to be able to perform a min-max normalization
 			Map<Slot, Collection<Entity>> allocations = template2Allocations.get(template);
 			Map<Slot, Prominences> entityProminenceScores = computeEntityProminenceScoresWithReasoner(allocations);
-			
+
 			//create the feature extractors only once for each template
 			Collection<FeatureExtractor> featureExtractors = createFeatureExtractors(entityProminenceScores);
-			
+
 			//extract for each template instantiation the selected features
 			List<TemplateInstantiation> instantiations = entry.getValue();
 			for (TemplateInstantiation templateInstantiation : instantiations) {
@@ -84,12 +84,12 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 					for (FeatureExtractor featureExtractor : featureExtractors) {
 						double value = featureExtractor.extractFeature(templateInstantiation);
 						templateInstantiation.addFeature(featureExtractor.getFeature(), value);
-						
+
 					}
 					//compute the overall score
 					double score = 0;
 					int index = 0;
-										
+
 					for(Entry<Feature, Double> feature2score : templateInstantiation.getFeaturesWithScore().entrySet())
 					{
 						double weight = weights.size()>index?weights.get(index++):1;
@@ -109,13 +109,13 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 //		{
 //			break;
 //		}
-		//print top n 
+		//print top n
 		for(TemplateInstantiation t : ranking.getTopN(10)){
 			logger.debug(StringDisplay.shortenSparqlQuery(t.asQuery().toString()) + " (Score: " + ranking.getScore(t) + ")");
 		}
 		return ranking;
 	}
-	
+
 	private Collection<FeatureExtractor> createFeatureExtractors(Map<Slot, Prominences> entityProminenceScores){
 		Collection<FeatureExtractor> featureExtractors = new ArrayList<FeatureExtractor>();
 		FeatureExtractor featureExtractor;
@@ -134,7 +134,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 		}
 		return featureExtractors;
 	}
-	
+
 //	/**
 //	 * Compute the (unnormalized) prominence score for each entity depending on the slot type.
 //	 * @param slot2Allocations
@@ -183,7 +183,7 @@ public class SimpleRankingComputation extends AbstractRankingComputation{
 				else if(slotType == SlotType.DATATYPEPROPERTY)
 				{
 					prominence = reasoner.getPopularity(new DatatypeProperty(entity.getURI()));
-				}				
+				}
 				else if (slotType == SlotType.OBJECTPROPERTY
 						|| slotType == SlotType.PROPERTY || slotType == SlotType.SYMPROPERTY) {
 					prominence = reasoner.getPopularity(new ObjectProperty(entity.getURI()));

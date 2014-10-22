@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.BitSet;
 
 /**
- * 
+ *
  * @author Joe Mill (posted at http://stackoverflow.com/questions/607176/java-equivalent-to-javascripts-encodeuricomponent-that-produces-identical-outpu)
  *
  */
@@ -55,7 +55,7 @@ public final class EscapeUtils
 
     /**
      * Escapes all characters except the following: alphabetic, decimal digits, - _ . ! ~ * ' ( )
-     * 
+     *
      * @param input
      *            A component of a URI
      * @return the escaped URI component

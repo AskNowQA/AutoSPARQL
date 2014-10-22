@@ -9,9 +9,9 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 
 public class Prefixes {
-	
+
 	private static Map<String, String> prefixes = new HashMap<String, String>();
-	
+
 	static {
 		prefixes.put(RDF.getURI(), "rdf");
 		prefixes.put(RDFS.getURI(), "rdfs");
@@ -21,7 +21,7 @@ public class Prefixes {
 		prefixes.put(FOAF.getURI(), "foaf");
 		prefixes.put("http://dbpedia.org/class/yago/", "yago");
 	}
-	
+
 	public static Map<String, String> getPrefixes(){
 		return prefixes;
 	}

@@ -2,14 +2,14 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 
 
 public class Allocation implements Comparable<Allocation>{
-	
+
 	private String uri;
-	
+
 	private double similarity;
 	private double prominence;
-	
+
 	private double score;
-	
+
 	public Allocation(String uri, double prominence, double similarity) {
 		this.uri = uri;
 		this.prominence = prominence;
@@ -23,7 +23,7 @@ public class Allocation implements Comparable<Allocation>{
 	public double getSimilarity() {
 		return similarity;
 	}
-	
+
 	public double getProminence() {
 		return prominence;
 	}
@@ -85,9 +85,9 @@ public class Allocation implements Comparable<Allocation>{
 			return this.uri.compareTo(o.getUri());
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 
 }

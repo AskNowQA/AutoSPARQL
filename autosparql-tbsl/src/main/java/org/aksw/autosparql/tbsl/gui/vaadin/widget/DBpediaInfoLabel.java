@@ -14,16 +14,16 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.BaseTheme;
 
 public class DBpediaInfoLabel extends HorizontalLayout implements InfoLabel{
-	
+
 	private List<FeedBackListener> listeners = new ArrayList<FeedBackListener>();
 	private BasicResultItem item;
-	
+
 	public DBpediaInfoLabel(BasicResultItem item) {
 		this.item = item;
 		setWidth(null);
-		
+
 		addStyleName("tweet");
-		
+
 		VerticalLayout buttons = new VerticalLayout();
 		buttons.setHeight("100%");
 		buttons.addStyleName("buttons");
@@ -32,7 +32,7 @@ public class DBpediaInfoLabel extends HorizontalLayout implements InfoLabel{
 		posExampleButton.addStyleName(BaseTheme.BUTTON_LINK);
 		posExampleButton.setDescription("Click if this entry is definitely correct.");
 		posExampleButton.addListener(new Button.ClickListener() {
-			
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				firePositiveExampleSelected();
@@ -44,7 +44,7 @@ public class DBpediaInfoLabel extends HorizontalLayout implements InfoLabel{
 		negExampleButton.addStyleName(BaseTheme.BUTTON_LINK);
 		negExampleButton.setDescription("Click if this entry is definitely wrong.");
 		negExampleButton.addListener(new Button.ClickListener() {
-			
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				fireNegativeExampleSelected();
@@ -54,8 +54,8 @@ public class DBpediaInfoLabel extends HorizontalLayout implements InfoLabel{
 		buttons.setComponentAlignment(posExampleButton, Alignment.MIDDLE_CENTER);
 		buttons.setComponentAlignment(negExampleButton, Alignment.MIDDLE_CENTER);
 		addComponent(buttons);
-		
-		
+
+
 		String label = item.getLabel();
 		if(label == null){
 			label = item.getUri();
@@ -69,7 +69,7 @@ public class DBpediaInfoLabel extends HorizontalLayout implements InfoLabel{
 		if(item.getDescription() != null){
 			s1 += "<div>" + item.getDescription() + "</div>";
 		}
-		
+
 		Label l1 = new Label(s1, Label.CONTENT_XHTML);
 		l1.addStyleName("wrap");
 		l1.setWidth("500px");
@@ -84,15 +84,15 @@ public class DBpediaInfoLabel extends HorizontalLayout implements InfoLabel{
 
 	@Override
 	public void removeFeedBackListener(FeedBackListener l) {
-		listeners.remove(l);		
+		listeners.remove(l);
 	}
-	
+
 	private void firePositiveExampleSelected(){
 		for(FeedBackListener l : listeners){
 			l.positiveExampleSelected(item);
 		}
 	}
-	
+
 	private void fireNegativeExampleSelected(){
 		for(FeedBackListener l : listeners){
 			l.negativeExampleSelected(item);

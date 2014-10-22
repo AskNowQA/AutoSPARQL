@@ -28,50 +28,50 @@ public class testClass_new {
 
 	/**
 	 * @param args
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 * @throws IOException 
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
 		// TODO Auto-generated method stub
 		ArrayList<Template> temp_list_result = new ArrayList<Template>();
-		
+
 		/*
 		 * nice
-		 * 
+		 *
 		 */
 		/*PrintStream out = new PrintStream(new FileOutputStream("/home/swalter/Dokumente/outputTEST.txt"));
 		System.setOut(out);
 		*/
-		
+
 		BasicTemplator btemplator = new BasicTemplator();
     	btemplator.UNTAGGED_INPUT = false;
 		SQLiteIndex myindex = new SQLiteIndex();
-		
+
 		WordNet wordnet = WordNet.INSTANCE;
-		
+
 		TemplateBuilder testobject = new TemplateBuilder(btemplator, myindex);
-		
+
 		String filepath = "/home/swalter/Dokumente/Auswertung/";
 		//String file="very_small.xml";
 		String file="XMLDateien/dbpedia-train-tagged-new.xml";
 		//line="/home/swalter/Dokumente/Auswertung/XMLDateien/dbpedia-train-tagged-new.xml";
 		long start = System.currentTimeMillis();
-		
+
 		//String question = "Is the wife of president Obama called Michelle?";
-		
+
 		//String question = "Who is the mayor of Berlin?";
-		
+
 		/*
 		 * Original eine resource zwei properties, nachher nur noch eine Resource und eine property
 		 */
 		//String question ="Who is the daughter of Bill Clinton married to?";
-		
+
 		long start_template = System.currentTimeMillis();
 		//temp_list_result=testobject.createTemplates(question);
-		
+
 //		Map<QueryPair,String> tm = new HashMap<QueryPair, String>();
-		
+
 		/*
 		 * Generate Templates
 		 */
@@ -81,10 +81,10 @@ public class testClass_new {
 		for(queryInformation s : list_of_structs){
 			ArrayList<Template> temp_list = new ArrayList<Template>();
 			if(!s.getQuery().contains("Natalie/NNP Portman/NNP")){
-				
-			
+
+
 			temp_list=testobject.createTemplates(s.getQuery().replace("<[CDATA[", "").replace("]]>", ""));
-			
+
 			/*for(Template t : temp_list){
 				temp_list_result.add(t);
 				/*try {
@@ -96,14 +96,14 @@ public class testClass_new {
 			//}*/
 			}
 		}
-		
+
 	/*	long stop_template = System.currentTimeMillis();
-		
+
 		long start_iteration = System.currentTimeMillis();
 		long time_generatingElements=0;
 		long time_part1=0;
 		long time_part2=0;
-		
+
 		for(Template t : temp_list_result){
 			time_generatingElements+=t.getTime_generateElements();
 			time_part1+=t.getTime_part1();
@@ -112,13 +112,13 @@ public class testClass_new {
 				//t.getElm().printAll();
 				ArrayList<ArrayList<Hypothesis>> blub = IterationModule.doIteration(t.getElm(),t.getHypothesen(),t.getCondition(),"LEVENSTHEIN",myindex,wordnet);
 				t.setHypothesenLevensthein(blub);
-				
+
 				//t.printAll();
 			}
 			catch (Exception e){
-				
+
 			}
-		
+
 		}*/
 		/*long stop_iteration = System.currentTimeMillis();
 		System.out.println("The Iteration and Levensthein Mode took "+ (stop_iteration-start_iteration)+"ms");
@@ -134,43 +134,43 @@ public class testClass_new {
 		System.out.println("Average Time part2 "+ (time_part2/temp_list_result.size())+"ms");
 		System.out.println("Time getting Properties etc "+ (time_generatingElements)+"ms");
 		System.out.println("DONE");*/
-		
-		
-		
-		
+
+
+
+
 		/*
 		 * Create Query for each Template
 		 */
-		
+
 		//Map<QueryPair,String> tm = new HashMap<QueryPair, String>();
-		
+
 		/*for(Template t : temp_list_result){
 			//t.printAll();
 			ArrayList<QueryPair> qp = Query.returnSetOfQueries(t, "LEVENSTHEIN");
 			for(QueryPair p : qp){
-				tm.put(p, t.getQuestion());  
+				tm.put(p, t.getQuestion());
 			}
 		}*/
-		
-		
-		
+
+
+
 		/*
 		 * Get Elements for Each Resource and Class
 		 */
-		
+
 		/*
 		System.out.println("Duration in ms: " + (stop - start));
 		writeStringToFile(result,filepath,file,start,stop);		*/
-		
+
 		/*
 		 * Write Results in File
 		 */
 		long stop = System.currentTimeMillis();
 	//	writeQueriesInFile(tm,filepath,file,start,stop );
 		writeTemplatesInFile(temp_list_result,filepath,file,start,stop );
-        
+
 	}
-	
+
 
 	private static void writeTemplatesInFile(ArrayList<Template> temp_list_result, String filepath,String given_file, float start, float stop ) throws IOException{
 		File file = new File(filepath+"Ausgabe"+stop+".txt");
@@ -197,7 +197,7 @@ public class testClass_new {
 						result+="%%%%%%%%%%%"+"\n";
 				}
 			}
-			
+
 			anzahl = 1;
 			for(ArrayList<Hypothesis> x : t.getHypothesenLevensthein()){
 				result+="\nSet of LevenstheinHypothesen"+anzahl+":\n";
@@ -212,7 +212,7 @@ public class testClass_new {
 						result+="%%%%%%%%%%%"+"\n";
 				}
 			}
-			
+
 			result+="\n";
 			result+="queryType: "+t.getQueryType()+"\n";
 			result+="selectTerm: "+t.getSelectTerm()+"\n";
@@ -227,21 +227,21 @@ public class testClass_new {
 			//bw.flush();
 			System.out.println("Done "+anzahl1);
 			anzahl1 +=1;
-			
+
 		}
 		String result="";
 		result+="Time over generating All Templates: "+(stop-start)+"ms\n";
 		result+="Average Time for one Template: "+((stop-start)/temp_list_result.size())+"ms\n";
 		result+="Overall created Templates: "+temp_list_result.size();
 		//System.out.println(result);
-		
+
 
         bw.write(result);
         bw.flush();
         bw.close();
 	}
-	
-	
+
+
 	private static void writeQueriesInFile(Map<QueryPair,String> tm, String filepath,String given_file, float start, float stop ) throws IOException{
 		File file = new File(filepath+"Queries"+stop+given_file.replace(".xml", "")+".txt");
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -261,7 +261,7 @@ public class testClass_new {
         bw.flush();
         bw.close();
 	}
-	
+
 	private static void writeStringToFile(String result,String filepath,String given_file, float start, float stop ) throws IOException{
 		File file = new File(filepath+"Sonstiges"+stop+given_file.replace(".xml", "")+".txt");
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -269,17 +269,17 @@ public class testClass_new {
         bw.flush();
         bw.close();
 	}
-	
-	
-	
-	
+
+
+
+
 
 private static ArrayList<queryInformation> generateStruct(String filename) {
 	System.out.println("In generate Struct");
 	String XMLType=null;
-	
+
 	BufferedReader in = null;
-	
+
     String tmp="";
 	// Lies Textzeilen aus der Datei in einen Vector:
     try {
@@ -301,16 +301,16 @@ private static ArrayList<queryInformation> generateStruct(String filename) {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }	
-    
-    
+    }
+
+
    // System.out.println("XML read in");
 	//System.out.println(tmp);
     String string=tmp;
     Pattern p = Pattern.compile (".*\\<question(.*)\\</question\\>.*");
     Matcher m = p.matcher (string);
-    
-    
+
+
     if(string.contains("id=\"dbpedia-train\"><question")){
     	string=string.replace("id=\"dbpedia-train\"><question", "");
     	XMLType="dbpedia-train";
@@ -336,7 +336,7 @@ private static ArrayList<queryInformation> generateStruct(String filename) {
    	 	boolean aggregation=false;
    	 	boolean yago=false;
    	 	String id="";
-   	 
+
     	//Pattern p1= Pattern.compile("(id.*)\\</string\\>\\<keywords\\>.*\\</keywords\\>\\<query\\>.*");
    	 Pattern p1= Pattern.compile("(id.*)\\</string\\>\\<keywords\\>.*");
     	Matcher m1 = p1.matcher(s);
@@ -360,14 +360,14 @@ private static ArrayList<queryInformation> generateStruct(String filename) {
 	    		//System.out.println("Id: "+ m3.group(1));
 	    		id=m3.group(1);
 	    	}
-	    	
+
 	    	Pattern p4= Pattern.compile(".*answertype=\"(.*)\" fusion.*");
 	    	Matcher m4 = p4.matcher(m1.group(1));
 	    	while(m4.find()){
 	    		//System.out.println("answertype: "+ m4.group(1));
 	    		type=m4.group(1);
 	    	}
-	    	
+
 	    	Pattern p5= Pattern.compile(".*fusion=\"(.*)\" aggregation.*");
 	    	Matcher m5 = p5.matcher(m1.group(1));
 	    	while(m5.find()){
@@ -375,7 +375,7 @@ private static ArrayList<queryInformation> generateStruct(String filename) {
 	    		if(m5.group(1).contains("true"))fusion=true;
 	    		else fusion=false;
 	    	}
-	    	
+
 	    	Pattern p6= Pattern.compile(".*aggregation=\"(.*)\" yago.*");
 	    	Matcher m6 = p6.matcher(m1.group(1));
 	    	while(m6.find()){
@@ -383,7 +383,7 @@ private static ArrayList<queryInformation> generateStruct(String filename) {
 	    		if(m6.group(1).contains("true"))aggregation=true;
 	    		else aggregation=false;
 	    	}
-	    	
+
 	    	Pattern p7= Pattern.compile(".*yago=\"(.*)\" ><string>.*");
 	    	Matcher m7 = p7.matcher(m1.group(1));
 	    	while(m7.find()){
@@ -391,9 +391,9 @@ private static ArrayList<queryInformation> generateStruct(String filename) {
 	    		if(m7.group(1).contains("true"))yago=true;
 	    		else yago=false;
 	    	}
-	    	
-	    	
-	    	
+
+
+
     	}
     	queryInformation blaquery=new queryInformation(query, id,type,fusion,aggregation,yago,XMLType,false);
     	if(id!=""&&id!=null) querylist.add(blaquery);

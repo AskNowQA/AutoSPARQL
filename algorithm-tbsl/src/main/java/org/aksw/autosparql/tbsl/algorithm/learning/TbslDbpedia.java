@@ -2,10 +2,10 @@ package org.aksw.autosparql.tbsl.algorithm.learning;
 
 import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
 
-public class TbslDbpedia extends TBSL 
+public class TbslDbpedia extends TBSL
 {
 	public static final TBSL INSTANCE = new TbslDbpedia();
-	
+
 	private TbslDbpedia()
 	{
 		super(DBpediaKnowledgebase.INSTANCE,new String[]{"tbsl/lexicon/english.lex"});

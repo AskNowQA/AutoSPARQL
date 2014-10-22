@@ -14,21 +14,21 @@ import org.dllearner.common.index.Index;
 public enum SolrServerAksw
 {
 	INSTANCE;
-	
+
 //	static final String	SOLR_SERVER_URI_EN	= "http://solr.aksw.org/en_";
 	static final String	SOLR_SERVER_URI_EN	= "http://[2001:638:902:2010:0:168:35:138]:8080/solr/en_";
-	
-	public final Index resourcesIndex;		
+
+	public final Index resourcesIndex;
 	public final Index classesIndex;
 	public final Index dataPropertiesIndex;
 	public final Index objectPropertiesIndex;
 
-	public final Indices dbpediaIndices;  
+	public final Indices dbpediaIndices;
 
 //	// boa index already integrated
 //	private SolrServerAksw()
 //	{
-//		resourcesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");		
+//		resourcesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_resources");
 //		classesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_classes");
 //		dataPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_data_properties");
 //		objectPropertiesIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"dbpedia_object_properties");
@@ -49,7 +49,7 @@ public enum SolrServerAksw
 		BugfixedSolrIndex boaIndex = new BugfixedSolrIndex(SOLR_SERVER_URI_EN+"boa","nlr-no-var");
 		boaIndex.setSortField("boa-score");
 		boaIndex.getResources("test");
-		
+
 		this.resourcesIndex = new FilteredIndex(resourcesIndex, DbpediaFilter.INSTANCE);
 		this.classesIndex = new FilteredIndex(classesIndex, DbpediaFilter.INSTANCE);
 		this.dataPropertiesIndex= new FilteredIndex(new HierarchicalIndex(dataPropertiesIndex,boaIndex),DbpediaFilter.INSTANCE);
@@ -57,6 +57,6 @@ public enum SolrServerAksw
 
 		dbpediaIndices = new Indices(resourcesIndex,classesIndex,objectPropertiesIndex,dataPropertiesIndex);
 	}
-	
+
 }
 */

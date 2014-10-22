@@ -18,9 +18,9 @@
 //import net.didion.jwnl.dictionary.Dictionary;
 //
 //public class WordNetOld {
-//	
-//	public Dictionary dict;	
-//	
+//
+//	public Dictionary dict;
+//
 //	public WordNetOld() {
 //		try {
 //			JWNL.initialize(this.getClass().getClassLoader().getResourceAsStream("models/en/wordnet/wordnet_properties.xml"));
@@ -29,7 +29,7 @@
 //			e.printStackTrace();
 //		}
 //	}
-//	
+//
 //	public WordNetOld(String configPath) {
 //		try {
 //			JWNL.initialize(this.getClass().getClassLoader().getResourceAsStream(configPath));
@@ -38,7 +38,7 @@
 //			e.printStackTrace();
 //		}
 //	}
-//	
+//
 //	public WordNetOld(InputStream propertiesStream) {
 //		try {
 //			JWNL.initialize(propertiesStream);
@@ -47,11 +47,11 @@
 //			e.printStackTrace();
 //		}
 //	}
-//	
+//
 //	public List<String> getBestSynonyms(POS pos, String s) {
-//		
+//
 //		List<String> synonyms = new ArrayList<String>();
-//		
+//
 //		try {
 //			IndexWord iw = dict.getIndexWord(pos, s);//dict.getMorphologicalProcessor().lookupBaseForm(pos, s)
 ////			IndexWord iw = dict.getMorphologicalProcessor().lookupBaseForm(pos, s);
@@ -65,16 +65,16 @@
 //					}
 //				}
 //			}
-//			
+//
 //		} catch (JWNLException e) {
 //			e.printStackTrace();
 //		}
 //		return synonyms;
 //	}
-//	
+//
 //	public List<String> getSisterTerms(POS pos, String s){
 //		List<String> sisterTerms = new ArrayList<String>();
-//		
+//
 //		try {
 //			IndexWord iw = dict.getIndexWord(pos, s);//dict.getMorphologicalProcessor().lookupBaseForm(pos, s)
 ////			IndexWord iw = dict.getMorphologicalProcessor().lookupBaseForm(pos, s);
@@ -83,19 +83,19 @@
 //				//System.out.println(synsets[0]);
 //				PointerTarget[] pointerArr = synsets[0].getTargets();
 //			}
-//			
+//
 //		} catch (JWNLException e) {
 //			e.printStackTrace();
 //		}
 //		return sisterTerms;
 //	}
-//	
+//
 //	public List<String> getAttributes(String s) {
-//		
+//
 //		List<String> result = new ArrayList<String>();
-//		
+//
 //		try {
-//			IndexWord iw = dict.getIndexWord(POS.ADJECTIVE, s);			
+//			IndexWord iw = dict.getIndexWord(POS.ADJECTIVE, s);
 //			if(iw != null){
 //				Synset[] synsets = iw.getSenses();
 //				Word[] words = synsets[0].getWords();
@@ -106,16 +106,16 @@
 //					}
 //				}
 //			}
-//			
+//
 //		} catch (JWNLException e) {
 //			e.printStackTrace();
 //		}
-//		
+//
 //		return result;
 //	}
-//	
+//
 //	/**
-//	 * Funktion returns a List of Hypo and Hypernyms of a given string 
+//	 * Funktion returns a List of Hypo and Hypernyms of a given string
 //	 * @param s Word for which you want to get Hypo and Hypersyms
 //	 * @return List of Hypo and Hypernyms
 //	 * @throws JWNLException
@@ -129,7 +129,7 @@
 //			if(word!=null){
 //				sense = word.getSense(1);
 //				//Synset sense = word.getSense(1);
-//				
+//
 //				PointerTargetNodeList relatedListHypernyms = null;
 //				PointerTargetNodeList relatedListHyponyms = null;
 //				try {
@@ -144,7 +144,7 @@
 //					// TODO Auto-generated catch block
 //					e.printStackTrace();
 //				}
-//				
+//
 //				Iterator i = relatedListHypernyms.iterator();
 //				while (i.hasNext()) {
 //				  PointerTargetNode related = (PointerTargetNode) i.next();
@@ -158,7 +158,7 @@
 //				  String[] array_tmp=tmp.split(",");
 //				  for(String z : array_tmp) result.add(z.replace(" ", ""));
 //				}
-//				
+//
 //				Iterator j = relatedListHyponyms.iterator();
 //				while (j.hasNext()) {
 //				  PointerTargetNode related = (PointerTargetNode) j.next();
@@ -177,10 +177,10 @@
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-//		
-//		
-//		
+//
+//
+//
 //		return result;
 //	}
-//	
+//
 //}

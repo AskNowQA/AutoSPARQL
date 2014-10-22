@@ -57,7 +57,7 @@ class LeftCompletor implements ParserOperation {
 
 				// Case 2: s.dot is not on the foot node
 				else {
-					
+
 					ParseState newState = new ParseState(s);
 					newState.side = 'l';
 					newState.pos = 'b';

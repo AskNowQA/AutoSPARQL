@@ -8,7 +8,7 @@ public class Prominences extends HashMap<Entity, Double>{
 
 	private double min = Double.MAX_VALUE;
 	private double max = 0;
-	
+
 	@Override
 	public Double put(Entity key, Double value) {
 		//update minimum and maximum
@@ -19,16 +19,16 @@ public class Prominences extends HashMap<Entity, Double>{
 			min = value;
 		}
 		return super.put(key, value);
-		
+
 	}
-	
+
 	public double getMin() {
 		return min;
 	}
-	
+
 	public double getMax() {
 		return max;
 	}
-	
+
 
 }

@@ -6,9 +6,9 @@ import java.util.Map;
 public class PartOfSpeechTagNormalizer {
 
 	public final static Map<String,String> PART_OF_SPEECH_TAG_MAPPINGS = new HashMap<String,String>();
-	
+
 	static {
-		
+
 		PART_OF_SPEECH_TAG_MAPPINGS.put("CC",	"CC");
 		PART_OF_SPEECH_TAG_MAPPINGS.put("CD",	"CD");
 		PART_OF_SPEECH_TAG_MAPPINGS.put("DT",	"DT");
@@ -49,7 +49,7 @@ public class PartOfSpeechTagNormalizer {
 		PART_OF_SPEECH_TAG_MAPPINGS.put("WP",	"WP");
 		PART_OF_SPEECH_TAG_MAPPINGS.put("WP$",	"WP$");
 		PART_OF_SPEECH_TAG_MAPPINGS.put("WRB",	"WRB");
-		
+
 		PART_OF_SPEECH_TAG_MAPPINGS.put(".",	".");
 		PART_OF_SPEECH_TAG_MAPPINGS.put(",",	",");
 		PART_OF_SPEECH_TAG_MAPPINGS.put("!",	"!");

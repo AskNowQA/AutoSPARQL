@@ -27,13 +27,13 @@ public class GoldTagger {
 
 	static String GOLD = "/home/christina/Downloads/dbpedia-test-new.xml";
 	static String OUT  = "/home/christina/Downloads/dbpedia-test-new-tagged.xml";
-	
+
 	public static void main(String[] args) {
-						
+
 		PartOfSpeechTagger tagger = StanfordPartOfSpeechTagger.INSTANCE;
-		
+
 		System.out.print("\nStart tagging " + GOLD + "...");
-		try {			
+		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(new File(GOLD));
@@ -48,14 +48,14 @@ public class GoldTagger {
 				tagged = tagger.tag(question);
 				qnode.setNodeValue(tagged);
 			}
-			
+
 			Source source = new DOMSource(doc);
 		    Result result = new StreamResult(new File(OUT));
 		    Transformer xformer = TransformerFactory.newInstance().newTransformer();
 		    xformer.transform(source,result);
-			
+
 			System.out.print("Done.");
-			
+
 		} catch (DOMException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
@@ -67,7 +67,7 @@ public class GoldTagger {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
-	}	
+	}
 
 
 }

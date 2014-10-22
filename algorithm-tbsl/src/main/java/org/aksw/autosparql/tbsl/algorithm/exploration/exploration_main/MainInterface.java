@@ -112,7 +112,7 @@ public class MainInterface {
 		}
 
 		//sort QueryPairs
-		qp=LinearSort.doSort(qp);	
+		qp=LinearSort.doSort(qp);
 		qp=HeuristicSort.doHeuristicSort(qp, Question);
 		//if(Setting.isDebugModus())printQueries(qp, "NORMAL", Question);
 		//printQueries(qp, "NORMAL", Question);
@@ -154,7 +154,7 @@ public class MainInterface {
 									if(s_t.contains(s)) double_result=true;
 								}
 								//TODO Test!!!!!!
-								//if in one answer is an http, only add uri's 
+								//if in one answer is an http, only add uri's
 								if(!double_result){
 									if(contains_uri){
 										if(s.contains("http"))answers.add(s);
@@ -264,7 +264,7 @@ public class MainInterface {
 				Thread t1;
 				try {
 					t1 = new Thread(group,String.valueOf(anzahl_thread))
-					{ 
+					{
 						String blub=do_something(anzahl_thread_new);
 					};
 
@@ -358,7 +358,7 @@ public class MainInterface {
 		}
 
 		//sort QueryPairs
-		qp=LinearSort.doSort(qp);	
+		qp=LinearSort.doSort(qp);
 		qp=HeuristicSort.doHeuristicSort(qp, Question);
 		//printQueries(qp, type, Question);
 
@@ -393,7 +393,7 @@ public class MainInterface {
 						}
 					}
 					/*
-					 * in which queries with an answer, dont accept a second Query, is there is already an answer. 
+					 * in which queries with an answer, dont accept a second Query, is there is already an answer.
 					 */
 					if(Question.toLowerCase().contains("which")) go_on=false;
 					if(Question.toLowerCase().contains("who")) go_on=false;
@@ -419,7 +419,7 @@ public class MainInterface {
 								if(s_t.contains(s)) double_result=true;
 							}
 							//TODO Test!!!!!!
-							//if in one answer is an http, only add uri's 
+							//if in one answer is an http, only add uri's
 							if(!double_result){
 								if (Question.toLowerCase().contains("who")){
 									if(!s.contains("http"))answers.add(s);
@@ -470,7 +470,7 @@ public class MainInterface {
 								if(s_t.contains(s)) double_result=true;
 							}
 							//TODO Test!!!!!!
-							//if in one answer is an http, only add uri's 
+							//if in one answer is an http, only add uri's
 							if(!double_result){
 								if(contains_uri){
 									if(s.contains("http"))answers.add(s);
@@ -550,7 +550,7 @@ public class MainInterface {
 	       String thisLine;
 		while ((thisLine = br.readLine()) != null) { // while loop begins here
 	         result_string+=thisLine+"\n";
-	       } // end while 
+	       } // end while
 	     } // end try
 	     catch (IOException e) {
 	       System.err.println("Error: " + e);
@@ -611,7 +611,7 @@ public class MainInterface {
 	       String thisLine;
 		while ((thisLine = br.readLine()) != null) { // while loop begins here
 	         result_string+=thisLine+"\n";
-	       } // end while 
+	       } // end while
 	     } // end try
 	     catch (IOException e) {
 	       System.err.println("Error: " + e);
@@ -1041,7 +1041,7 @@ public class MainInterface {
 			String thisLine;
 			while ((thisLine = br.readLine()) != null) { // while loop begins here
 				result_string+=thisLine+"\n";
-			} // end while 
+			} // end while
 		} // end try
 		catch (IOException e) {
 			System.err.println("Error: " + e);

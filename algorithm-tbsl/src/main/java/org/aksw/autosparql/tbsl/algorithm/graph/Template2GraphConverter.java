@@ -25,10 +25,10 @@ public class Template2GraphConverter {
 		for (Slot slot : slots) {
 			var2Slot.put(slot.getAnchor(), slot);
 		}
-		
+
 		TriplePatternExtractor extractor = new TriplePatternExtractor();
 		Set<Triple> triples = extractor.extractTriplePattern(query);
-		
+
 		//process rdf:type triples, i.e. remove them from the triples because we merge their information into the other nodes
 		Map<String, Slot> var2ClassSlot = new HashMap<String, Slot>();
 		for (Iterator<Triple> iterator = triples.iterator(); iterator.hasNext();) {
@@ -62,27 +62,27 @@ public class Template2GraphConverter {
 			} else {
 				targetNode = new TemplateNode(var2Slot.get(object.getName()));
 			}
-			
+
 			//add type informations to nodes
 			for (Entry<String, Slot> entry : var2ClassSlot.entrySet()) {
 				String var = entry.getKey();
 				Slot slot = entry.getValue();
 				if(var.equals(subject.getName())){
 					sourceNode.addType(slot);
-				} 
+				}
 				if(var.equals(object.getName())){
 					targetNode.addType(slot);
 				}
 			}
-			
+
 			//process predicate
 			Slot predicateSlot = var2Slot.get(predicate.getName());
 			TemplateEdge edge = new TemplateEdge(predicateSlot);
-			
+
 			graph.addVertex(sourceNode);
 			graph.addVertex(targetNode);
 			graph.addEdge(sourceNode, targetNode, edge);
-			
+
 		}
 		return graph;
 	}

@@ -14,15 +14,15 @@ public class UserSession implements TransactionListener, Serializable {
 	private Application app; // For distinguishing between apps
 
 	private static ThreadLocal<UserSession> instance = new ThreadLocal<UserSession>();
-	
+
 	private TBSLManager manager;
-	
+
 	public UserSession(TBSLApplication app) {
 		this.app = app;
 
 		// It's usable from now on in the current request
 		instance.set(this);
-		
+
 		manager = new TBSLManager();
 	}
 
@@ -49,7 +49,7 @@ public class UserSession implements TransactionListener, Serializable {
 	public static Locale getLocale() {
 		return instance.get().locale;
 	}
-	
+
 	public static UserSession getCurrentSession() {
 		return instance.get();
 	}
@@ -57,9 +57,9 @@ public class UserSession implements TransactionListener, Serializable {
 	public static String getMessage(String msgId) {
 		return instance.get().bundle.getString(msgId);
 	}
-	
+
 	public static TBSLManager getManager(){
 		return instance.get().manager;
 	}
-	
+
 }

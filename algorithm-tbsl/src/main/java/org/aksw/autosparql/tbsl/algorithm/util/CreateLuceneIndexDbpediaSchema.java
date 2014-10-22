@@ -62,29 +62,29 @@ public class CreateLuceneIndexDbpediaSchema
 //			model = FileManager.get().loadModel("input/dbpedia_3.9.owl");
 			model.read(is, null,"RDF/XML");
 		}
-				
+
 		System.out.println(model.size()+" triples loaded.");
 
 		Set<Resource> classes = subjects(model, RDF.type,OWL.Class);
 		Set<Resource> objectProperties = subjects(model, RDF.type,OWL.ObjectProperty);
 		Set<Resource> dataProperties = subjects(model, RDF.type,OWL.DatatypeProperty);
 
-		Map<Set<Resource>,String> setToName = new HashMap<>(); 
+		Map<Set<Resource>,String> setToName = new HashMap<>();
 		setToName.put(classes, "classes");
 		setToName.put(objectProperties, "objectproperties");
 		setToName.put(dataProperties, "dataproperties");
 
-		
+
 		FieldType stringType = new FieldType(StringField.TYPE_STORED);
 		stringType.setStoreTermVectors(false);
 		FieldType textType = new FieldType(TextField.TYPE_STORED);
 		textType.setStoreTermVectors(false);
-		
+
 		for(Set<Resource> set: setToName.keySet())
 		{
 			IndexWriter writer = createWriter(setToName.get(set));
 			Set<Document> documents = new HashSet<>();
-			
+
 			for(Resource resource:set)
 			{
 				for(RDFNode object : model.listObjectsOfProperty(resource, RDFS.label).toSet())
@@ -98,7 +98,7 @@ public class CreateLuceneIndexDbpediaSchema
 //					documents.add(luceneDocument);
 					writer.addDocument(luceneDocument);
 				}
-				
+
 			}
 			writer.addDocuments(documents);
 			writer.commit();

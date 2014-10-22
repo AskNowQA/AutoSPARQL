@@ -18,7 +18,7 @@ public class WordNetUnpackerTest
 	/*@Test*/ public void testCopyResourcesToDirectory() throws IOException
 	{
 		File dir = new File("/tmp/test");
-		dir.mkdir();		
+		dir.mkdir();
 		WordNetUnpacker.copyResourcesToDirectory
 		(new JarFile("/home/konrad/projekte/java-maven/AutoSPARQL/commons/target/commons-1.0-SNAPSHOT.jar"), "models/en/wordnet/dict", dir.getPath());
 	}

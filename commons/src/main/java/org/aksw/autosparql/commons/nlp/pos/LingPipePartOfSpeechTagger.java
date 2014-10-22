@@ -17,11 +17,11 @@ import com.aliasi.tokenizer.IndoEuropeanTokenizerFactory;
 import com.aliasi.util.Streams;
 
 public class LingPipePartOfSpeechTagger implements PartOfSpeechTagger{
-	
+
 	private static final String MODEL_PATH = "models/en/pos/lingpipe/pos-en-general-brown.HiddenMarkovModel";
-	
+
 	private static final int TOP_K = 5;
-	
+
 	private HmmDecoder tagger;
 
 	public LingPipePartOfSpeechTagger() {
@@ -40,12 +40,12 @@ public class LingPipePartOfSpeechTagger implements PartOfSpeechTagger{
 		}
 
 	}
-	
+
 	@Override
 	public String getName() {
 		return "LingPipe POS Tagger";
 	}
-	
+
 	@Override
 	public String tag(String sentence) {
 		com.aliasi.tokenizer.Tokenizer tokenizer = IndoEuropeanTokenizerFactory.INSTANCE.tokenizer(sentence.toCharArray(), 0, sentence.length());
@@ -53,14 +53,14 @@ public class LingPipePartOfSpeechTagger implements PartOfSpeechTagger{
 	    String[] tokens = tokenizer.tokenize();
 	    List<String> tokenList = Arrays.asList(tokens);
 		Tagging<String> tagging = tagger.tag(tokenList);
-		
+
 		return tagging.toString();
 	}
 
 	@Override
 	public List<String> tagTopK(String sentence) {
 		List<String> taggedSentences = new ArrayList<String>();
-		
+
 		com.aliasi.tokenizer.Tokenizer tokenizer = IndoEuropeanTokenizerFactory.INSTANCE.tokenizer(sentence.toCharArray(), 0, sentence.length());
 //		Tokenizer tokenizer = TOKENIZER_FACTORY.tokenizer(cs,0,cs.length);
 	    String[] tokens = tokenizer.tokenize();
@@ -71,7 +71,7 @@ public class LingPipePartOfSpeechTagger implements PartOfSpeechTagger{
 		}
 		return taggedSentences;
 	}
-	
+
 	@Override
 	public Tagging<String> getTagging(String sentence) {
 		com.aliasi.tokenizer.Tokenizer tokenizer = IndoEuropeanTokenizerFactory.INSTANCE.tokenizer(sentence.toCharArray(), 0, sentence.length());
@@ -79,7 +79,7 @@ public class LingPipePartOfSpeechTagger implements PartOfSpeechTagger{
 	    String[] tokens = tokenizer.tokenize();
 	    List<String> tokenList = Arrays.asList(tokens);
 		Tagging<String> tagging = tagger.tag(tokenList);
-		
+
 		return tagging;
 	}
 

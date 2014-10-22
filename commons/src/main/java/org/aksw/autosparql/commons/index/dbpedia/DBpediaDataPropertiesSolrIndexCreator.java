@@ -24,30 +24,30 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 public class DBpediaDataPropertiesSolrIndexCreator {
-	
+
 	private SolrInputField uriField = new SolrInputField("uri");
 	private SolrInputField labelField = new SolrInputField("label");
 	private SolrInputField commentField = new SolrInputField("comment");
-	
+
 	private SolrInputDocument doc;
 	private HttpSolrServer solr;
-	
+
 	private Set<SolrInputDocument> docs = new HashSet<SolrInputDocument>();
-	
+
 	private static final int COMMIT_SIZE = 1000;//number of documents in a batch
-	
+
 	public DBpediaDataPropertiesSolrIndexCreator(String solrIndexServerURL, String coreName){
 		solr = new HttpSolrServer(solrIndexServerURL + "/" + coreName);
 		solr.setRequestWriter(new BinaryRequestWriter());
-		
+
         initDocument();
 	}
-	
+
 	public void createIndex(String versionNumber, String languageTag){
 		OWLOntology ontology = loadDBpediaOntology(versionNumber);
 		createIndex(ontology, languageTag);
 	}
-	
+
 	public void createIndex(OWLOntology ontology, String language){
 		try {
 			OWLOntologyManager man = OWLManager.createOWLOntologyManager();
@@ -68,7 +68,7 @@ public class DBpediaDataPropertiesSolrIndexCreator {
 							label = lit.getLiteral();
 						}
 					}
-					
+
 				}
 				for(OWLAnnotation com : prop.getAnnotations(ontology, commentProperty)){
 					if(com.getValue() instanceof OWLLiteral){
@@ -92,7 +92,7 @@ public class DBpediaDataPropertiesSolrIndexCreator {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private OWLOntology loadDBpediaOntology(String version) {
 		OWLOntology ontology = null;
 		try {
@@ -111,14 +111,14 @@ public class DBpediaDataPropertiesSolrIndexCreator {
 		}
 		return ontology;
 	}
-	
+
 	private void initDocument(){
 		doc = new SolrInputDocument();
 		doc.put("uri", uriField);
 		doc.put("label", labelField);
 		doc.put("comment", commentField);
 	}
-	
+
 	private void addDocument(String uri, String label, String comment){
 		doc = new SolrInputDocument();
 		uriField = new SolrInputField("uri");
@@ -130,10 +130,10 @@ public class DBpediaDataPropertiesSolrIndexCreator {
 		uriField.setValue(uri, 1.0f);
 		labelField.setValue(label, 1.0f);
 		commentField.setValue(comment, 1.0f);
-		
+
 		docs.add(doc);
 	}
-	
+
 	private void write2Index(){
 		try {
 			solr.add(docs);
@@ -144,18 +144,18 @@ public class DBpediaDataPropertiesSolrIndexCreator {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		if(args.length != 4){
 			System.out.println("Usage: DBpediaDataPropertiesSolrIndexCreator <SOLR-Server-URL> <SOLR-Core-Name> <DBpedia-Version-Number> <Language-Tag> ");
 			System.exit(0);
 		}
-		
+
 		String solrServerURL = args[0];
 		String solrCoreName = args[1];
 		String versionNumber = args[2];
 		String languageTag = args[3];
-		
+
 		new DBpediaDataPropertiesSolrIndexCreator(solrServerURL, solrCoreName).createIndex(versionNumber, languageTag);
 	}
 

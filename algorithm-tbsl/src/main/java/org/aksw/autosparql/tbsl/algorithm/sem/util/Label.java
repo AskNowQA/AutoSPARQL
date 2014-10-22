@@ -14,23 +14,23 @@ public class Label {
 		m_Label = l;
 		m_Position = p;
 	}
-	
+
 	public String getLabel() {
 		return m_Label;
 	}
-	
+
 	public String toString() {
-		
+
 		if (m_Position != null) {
 			return m_Position + "(" + m_Label + ")";
-		} 
+		}
 		else {
 			return m_Label;
 		}
 	}
 
 	public boolean occursAsSubIn(Set<DominanceConstraint> constraints,DominanceConstraint constraint) {
-		
+
 		for (DominanceConstraint c : constraints) {
 			if ( !c.equals(constraint) && c.getSub().equals(this) ) { return true; }
 		}
@@ -39,14 +39,14 @@ public class Label {
 
 	public void setPosition(Position position) {
 		m_Position = position;
-		
+
 	}
-	
+
 	public Position getPosition()
 	{
 		return m_Position;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -74,10 +74,10 @@ public class Label {
 
 
 	public String toTex() {
-            if (m_Position != null) 
+            if (m_Position != null)
                 return "\\text{"+m_Position+"}" + "(" + m_Label.replace("l","l_") + ")";
             else return m_Label.replace("l","l_");
         }
-	
+
 
 }

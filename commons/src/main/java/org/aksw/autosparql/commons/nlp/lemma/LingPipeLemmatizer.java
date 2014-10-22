@@ -9,7 +9,7 @@ public class LingPipeLemmatizer implements Lemmatizer {
 
 	public LingPipeLemmatizer() {
 	}
-	
+
 	@Override
 	public String stem(String word) {
 		return PorterStemmerTokenizerFactory.stem(word);

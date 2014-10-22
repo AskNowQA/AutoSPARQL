@@ -5,14 +5,14 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.TreeMap;
 
-/** 
+/**
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
-It is licensed under the Creative Commons Attribution License 
-(see http://creativecommons.org/licenses/by/3.0) by 
+It is licensed under the Creative Commons Attribution License
+(see http://creativecommons.org/licenses/by/3.0) by
 the YAGO-NAGA team (see http://mpii.de/yago-naga).
-  
 
-  
+
+
 
   This class provides static methods to <I>decode, encode</I> and <I>normalize</I> Strings.<BR>
   <B>Decoding</B> converts the following codes to Java 16-bit characters (<TT>char</TT>):
@@ -56,7 +56,7 @@ the YAGO-NAGA team (see http://mpii.de/yago-naga).
   They store -1 in case the String starts with a corrupted code. Of course, you can
   use the <TT>eat...</TT> methods also to decode one single code. There are methods
   <TT>decode...</TT> that decode the percentage code, the UTF8-codes, the backslash codes
-  or the Ampersand codes, respectively. 
+  or the Ampersand codes, respectively.
   The method <TT>decode(String)</TT> decodes all codes of a String.<BR>
   Example:
   <PRE>
@@ -64,16 +64,16 @@ the YAGO-NAGA team (see http://mpii.de/yago-naga).
      --> "This String contains some codes: &amp; , A"
   </PRE>
   <P>
-  <B>Normalization</B> is done by the method <TT>normalize(int c)</TT>. It converts a Unicode 
+  <B>Normalization</B> is done by the method <TT>normalize(int c)</TT>. It converts a Unicode
   character (a 16-bit Java character <TT>char</TT>)
-  to a sequence of normal characters (i.e. characters in the range 0x20-0x7F). 
+  to a sequence of normal characters (i.e. characters in the range 0x20-0x7F).
   The transliteration may consist of multiple chars (e.g. for umlauts) and also of no
   chars at all (e.g. for Unicode Zero-Space-Characters). <BR>
   Example:
   <PRE>
     normalize('&auml;');
     --> "ae"
-  </PRE>  
+  </PRE>
   The method <TT>normalize(String)</TT>  normalizes all characters in a String.<BR>
   Example:
   <PRE>
@@ -91,13 +91,13 @@ the YAGO-NAGA team (see http://mpii.de/yago-naga).
   <PRE>
      encodePercentage('�');
      -->  "%C4"
-  </PRE>  
+  </PRE>
   There are also methods that work on entire Strings<BR>
   Example:
   <PRE>
      encodePercentage("This String contains the umlauts �, � and �");
      -->  "This String contains the umlauts %C4, %D6 and %DC;"
-  </PRE>  
+  </PRE>
   <P>
   Last, this class provides the character categorization for URIs, as given in
   http://tools.ietf.org/html/rfc3986 . It also provides a method to encode only those
@@ -108,7 +108,7 @@ the YAGO-NAGA team (see http://mpii.de/yago-naga).
      -->  true
      encodeURIPathComponent("a: b")
      -->  "a:%20b"
-  </PRE>    
+  </PRE>
  */
 public class Char {
 
@@ -661,7 +661,7 @@ public class Char {
   }
 
   /** Eats a String of the form "%xx" from a string, where
-   * xx is a hexadecimal code. If xx is a UTF8 code start, 
+   * xx is a hexadecimal code. If xx is a UTF8 code start,
    * tries to complete the UTF8-code and decodes it.*/
   public static char eatPercentage(String a, int[] n) {
     // Length 0
@@ -677,7 +677,7 @@ public class Char {
       n[0] = -1;
       return ((char) 0);
     }
-    // For non-UTF8, return the char    
+    // For non-UTF8, return the char
     int len = Utf8Length(c);
     n[0] = 3;
     if (len <= 1) return (c);
@@ -1055,7 +1055,7 @@ public class Char {
 	  if (isAlphanumeric(c) || c=='_') return ("" + c);
 	  return ("&#" + ((int) c) + ";");
   }
-  
+
   /** Encodes a character to an Percentage code (if necessary).
    * If the character is greater than 0x80, the character is converted to
    * a UTF8-sequence and this sequence is encoded as percentage codes. */
@@ -1200,7 +1200,7 @@ public class Char {
     }
     return (r.toString());
   }
-  
+
   /** Replaces non-normal characters in a String by Percentage codes.
    * If a character is greater than 0x80, the character is converted to
    * a UTF8-sequence and this sequence is encoded as percentage codes. */
@@ -1304,7 +1304,7 @@ public class Char {
   public static boolean endsWith(CharSequence s, String end) {
 	  return(s.length()>=end.length() && s.subSequence(s.length()-end.length(),s.length()).equals(end));
   }
-  
+
   /** Test routine */
   public static void main(String argv[]) throws Exception {
     System.out.println("Enter a string with HTML ampersand codes, umlauts and/or UTF-8 codes and hit ENTER.");

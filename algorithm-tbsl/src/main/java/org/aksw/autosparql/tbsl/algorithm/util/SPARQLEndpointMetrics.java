@@ -27,31 +27,31 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 
 public class SPARQLEndpointMetrics {
-	
+
 	private static final Logger log = Logger.getLogger(SPARQLEndpointMetrics.class);
-	
+
 	private SparqlEndpoint endpoint;
 	private ExtractionDBCache cache;
 	private SPARQLReasoner reasoner;
-	
+
 	public SPARQLEndpointMetrics(SparqlEndpoint endpoint, ExtractionDBCache cache) {
 		this.endpoint = endpoint;
 		this.cache = cache;
 		cache.setFreshnessInMilliseconds(Long.MAX_VALUE);//31536000000l);
 		cache.setMaxExecutionTimeInSeconds(300);
-		
+
 		this.reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint), cache);
 	}
-	
+
 	public SPARQLEndpointMetrics(Knowledgebase knowledgebase, ExtractionDBCache cache) {
 		this.endpoint = ((RemoteKnowledgebase)knowledgebase).getEndpoint();
 		this.cache = cache;
 		cache.setFreshnessInMilliseconds(Long.MAX_VALUE);//31536000000l);
 		cache.setMaxExecutionTimeInSeconds(300);
-		
+
 		this.reasoner = new SPARQLReasoner(new SparqlEndpointKS(endpoint), cache);
 	}
-	
+
 	/**
 	 * Computes the directed Pointwise Mutual Information(PMI) measure. Formula: log( (f(prop, cls) * N) / (f(cls) * f(prop) ) )
 	 * @param cls
@@ -60,12 +60,12 @@ public class SPARQLEndpointMetrics {
 	 */
 	public double getDirectedPMI(ObjectProperty prop, NamedClass cls){
 		log.debug(String.format("Computing PMI(%s, %s)", prop, cls));
-		
+
 		double classOccurenceCnt = getOccurencesInObjectPosition(cls);
 		double propertyOccurenceCnt = getOccurences(prop);
 		double coOccurenceCnt = getOccurencesPredicateObject(prop, cls);
 		double total = getTotalTripleCount();
-		
+
 		double pmi = 0;
 		if(coOccurenceCnt > 0 && classOccurenceCnt > 0 && propertyOccurenceCnt > 0){
 			pmi = Math.log( (coOccurenceCnt * total) / (classOccurenceCnt * propertyOccurenceCnt) );
@@ -73,7 +73,7 @@ public class SPARQLEndpointMetrics {
 		log.debug(String.format("PMI(%s, %s) = %f", prop, cls, pmi));
 		return pmi;
 	}
-	
+
 	/**
 	 * Computes the directed Pointwise Mutual Information(PMI) measure. Formula: log( (f(cls,prop) * N) / (f(cls) * f(prop) ) )
 	 * @param cls
@@ -82,12 +82,12 @@ public class SPARQLEndpointMetrics {
 	 */
 	public double getDirectedPMI(NamedClass cls, Property prop){
 		log.debug(String.format("Computing PMI(%s, %s)...", cls, prop));
-		
+
 		double classOccurenceCnt = getOccurencesInSubjectPosition(cls);
 		double propertyOccurenceCnt = getOccurences(prop);
 		double coOccurenceCnt = getOccurencesSubjectPredicate(cls, prop);
 		double total = getTotalTripleCount();
-		
+
 		double pmi = 0;
 		if(coOccurenceCnt > 0 && classOccurenceCnt > 0 && propertyOccurenceCnt > 0){
 			pmi = Math.log( (coOccurenceCnt * total) / (classOccurenceCnt * propertyOccurenceCnt) );
@@ -95,7 +95,7 @@ public class SPARQLEndpointMetrics {
 		log.debug(String.format("PMI(%s, %s) = %f", cls, prop, pmi));
 		return pmi;
 	}
-	
+
 	/**
 	 * Computes the directed Pointwise Mutual Information(PMI) measure. Formula: log( (f(cls,prop) * N) / (f(cls) * f(prop) ) )
 	 * @param cls
@@ -104,12 +104,12 @@ public class SPARQLEndpointMetrics {
 	 */
 	public double getPMI(NamedClass subject, NamedClass object){
 		log.debug(String.format("Computing PMI(%s, %s)", subject, object));
-		
+
 		double coOccurenceCnt = getOccurencesSubjectObject(subject, object);
 		double subjectOccurenceCnt = getOccurencesInSubjectPosition(subject);
 		double objectOccurenceCnt = getOccurencesInObjectPosition(object);
 		double total = getTotalTripleCount();
-		
+
 		double pmi = 0;
 		if(coOccurenceCnt > 0 && subjectOccurenceCnt > 0 && objectOccurenceCnt > 0){
 			pmi = Math.log( (coOccurenceCnt * total) / (subjectOccurenceCnt * objectOccurenceCnt) );
@@ -117,7 +117,7 @@ public class SPARQLEndpointMetrics {
 		log.debug(String.format("PMI(%s, %s) = %f", subject, object, pmi));
 		return pmi;
 	}
-	
+
 	/**
 	 * Returns the direction of the given triple, computed by calculating the PMI values of each combination.
 	 * @param subject
@@ -131,12 +131,12 @@ public class SPARQLEndpointMetrics {
 		double pmi_pred_subj = getDirectedPMI(predicate, subject);
 		double pmi_subj_pred = getDirectedPMI(subject, predicate);
 		double pmi_pred_obj = getDirectedPMI(predicate, object);
-		
+
 		double threshold = 2.0;
-		
+
 		double value = ((pmi_obj_pred + pmi_pred_subj) - (pmi_subj_pred + pmi_pred_obj));
 		log.info("(PMI(OBJECT, PREDICATE) + PMI(PREDICATE, SUBJECT)) - (PMI(SUBJECT, PREDICATE) + PMI(PREDICATE, OBJECT)) = " + value);
-		
+
 		if( value > threshold){
 			log.info(object + "---" + predicate + "--->" + subject);
 			return -1;
@@ -145,7 +145,7 @@ public class SPARQLEndpointMetrics {
 			return 1;
 		}
 	}
-	
+
 	public Map<ObjectProperty, Integer> getMostFrequentProperties(NamedClass cls1, NamedClass cls2){
 		Map<ObjectProperty, Integer> prop2Cnt = new HashMap<ObjectProperty, Integer>();
 		String query = String.format("SELECT ?p (COUNT(*) AS ?cnt) WHERE {?x1 a <%s>. ?x2 a <%s>. ?x1 ?p ?x2} GROUP BY ?p", cls1, cls2);
@@ -159,7 +159,7 @@ public class SPARQLEndpointMetrics {
 		}
 		return prop2Cnt;
 	}
-	
+
 	/**
 	 * Returns the number of triples with the given property as predicate and where the subject belongs to the given class.
 	 * @param cls
@@ -172,7 +172,7 @@ public class SPARQLEndpointMetrics {
 		int cnt = rs.next().getLiteral("cnt").getInt();
 		return cnt;
 	}
-	
+
 	/**
 	 * Returns the number of triples with the given property as predicate and where the object belongs to the given class.
 	 * @param cls
@@ -185,7 +185,7 @@ public class SPARQLEndpointMetrics {
 		int cnt = rs.next().getLiteral("cnt").getInt();
 		return cnt;
 	}
-	
+
 	/**
 	 * Returns the number of triples with the first given class as subject and the second given class as object.
 	 * @param cls
@@ -198,7 +198,7 @@ public class SPARQLEndpointMetrics {
 		int cnt = rs.next().getLiteral("cnt").getInt();
 		return cnt;
 	}
-	
+
 	/**
 	 * Returns the number of triples where the subject belongs to the given class.
 	 * @param cls
@@ -211,7 +211,7 @@ public class SPARQLEndpointMetrics {
 		int classOccurenceCnt = rs.next().getLiteral("cnt").getInt();
 		return classOccurenceCnt;
 	}
-	
+
 	/**
 	 * Returns the number of triples where the object belongs to the given class.
 	 * @param cls
@@ -224,7 +224,7 @@ public class SPARQLEndpointMetrics {
 		int classOccurenceCnt = rs.next().getLiteral("cnt").getInt();
 		return classOccurenceCnt;
 	}
-	
+
 	/**
 	 * Returns the number of triples where the given individual is in subject position(out-going links).
 	 * @param cls
@@ -237,7 +237,7 @@ public class SPARQLEndpointMetrics {
 		int classOccurenceCnt = rs.next().getLiteral("cnt").getInt();
 		return classOccurenceCnt;
 	}
-	
+
 	/**
 	 * Returns the number of triples where the given individual is in object position(in-going links).
 	 * @param cls
@@ -250,7 +250,7 @@ public class SPARQLEndpointMetrics {
 		int classOccurenceCnt = rs.next().getLiteral("cnt").getInt();
 		return classOccurenceCnt;
 	}
-	
+
 	/**
 	 * Returns the number triples with the given property as predicate.
 	 * @param prop
@@ -263,7 +263,7 @@ public class SPARQLEndpointMetrics {
 		int propOccurenceCnt = rs.next().getLiteral("cnt").getInt();
 		return propOccurenceCnt;
 	}
-	
+
 	/**
 	 * Returns the number of triples where the subject or object belongs to the given class.
 	 * (This is not the same as computing the number of instances of the given class {@link SPARQLEndpointMetrics#getPopularity(NamedClass)})
@@ -277,7 +277,7 @@ public class SPARQLEndpointMetrics {
 		int classOccurenceCnt = rs.next().getLiteral("cnt").getInt();
 		return classOccurenceCnt;
 	}
-	
+
 	/**
 	 * Returns the number of instances of the given class.
 	 * @param cls
@@ -289,7 +289,7 @@ public class SPARQLEndpointMetrics {
 		int classOccurenceCnt = rs.next().getLiteral("cnt").getInt();
 		return classOccurenceCnt;
 	}
-	
+
 	/**
 	 * Returns the total number of triples in the endpoint. For now we return a fixed number 275494030(got from DBpedia Live 18. July 14:00).
 	 * @return
@@ -301,23 +301,23 @@ public class SPARQLEndpointMetrics {
 		int cnt = rs.next().getLiteral("cnt").getInt();
 		return cnt;*/
 	}
-	
+
 	public double getGoodness(NamedClass subject, ObjectProperty predicate, NamedClass object){
 		log.info(String.format("Computing goodness of [%s, %s, %s]", subject.getName(), predicate.getName(), object.getName()));
 		double pmi_subject_predicate = getDirectedPMI(subject, predicate);
 		double pmi_preciate_object = getDirectedPMI(predicate, object);
 		double pmi_subject_object = getPMI(subject, object);
-		
+
 		double goodness = pmi_subject_predicate + pmi_preciate_object + 2*pmi_subject_object;
 		log.info(String.format("Goodness of [%s, %s, %s]=%f", subject.getName(), predicate.getName(), object.getName(), Double.valueOf(goodness)));
 		return goodness;
 	}
-	
+
 	public double getGoodness(Individual subject, ObjectProperty predicate, NamedClass object){
 		log.info(String.format("Computing goodness of [%s, %s, %s]", subject.getName(), predicate.getName(), object.getName()));
 		//this is independent of the subject types
 		double pmi_preciate_object = getDirectedPMI(predicate, object);
-		
+
 		double goodness = Double.MIN_VALUE;
 		//get all asserted classes of subject and get the highest value
 		//TODO inference
@@ -334,12 +334,12 @@ public class SPARQLEndpointMetrics {
 		log.info(String.format("Goodness of [%s, %s, %s]=%f", subject.getName(), predicate.getName(), object.getName(), Double.valueOf(goodness)));
 		return goodness;
 	}
-	
+
 	public double getGoodness(NamedClass subject, ObjectProperty predicate, Individual object){
 		log.info(String.format("Computing goodness of [%s, %s, %s]", subject.getName(), predicate.getName(), object.getName()));
 		//this is independent of the object types
 		double pmi_subject_predicate = getDirectedPMI(subject, predicate);
-		
+
 		double goodness = Double.MIN_VALUE;
 		//get all asserted classes of subject and get the highest value
 		//TODO inference
@@ -356,25 +356,25 @@ public class SPARQLEndpointMetrics {
 		log.info(String.format("Goodness of [%s, %s, %s]=%f", subject.getName(), predicate.getName(), object.getName(), Double.valueOf(goodness)));
 		return goodness;
 	}
-	
-	public double getGoodnessConsideringSimilarity(NamedClass subject, ObjectProperty predicate, NamedClass object, 
+
+	public double getGoodnessConsideringSimilarity(NamedClass subject, ObjectProperty predicate, NamedClass object,
 			double subjectSim, double predicateSim, double objectSim){
-		
+
 		double pmi_subject_predicate = getDirectedPMI(subject, predicate);
 		double pmi_preciate_object = getDirectedPMI(predicate, object);
 		double pmi_subject_object = getPMI(subject, object);
-		
+
 		double goodness = pmi_subject_predicate * subjectSim * predicateSim
 				+ pmi_preciate_object * objectSim * predicateSim
 				+ 2 * pmi_subject_object * subjectSim * objectSim;
-		
+
 		return goodness;
 	}
-	
+
 	public void precompute(){
 		precompute(Collections.<String>emptySet());
 	}
-	
+
 	public void precompute(Collection<String> namespaces){
 		log.info("Precomputing...");
 		long startTime = System.currentTimeMillis();
@@ -390,7 +390,7 @@ public class SPARQLEndpointMetrics {
 			qs = rs.next();
 			classes.add(new NamedClass(qs.getResource("class").getURI()));
 		}
-		
+
 		SortedSet<ObjectProperty> objectProperties = new TreeSet<ObjectProperty>();
 		query = "SELECT DISTINCT ?prop WHERE {?prop a owl:ObjectProperty. ";
 		for(String namespace : namespaces){
@@ -402,7 +402,7 @@ public class SPARQLEndpointMetrics {
 			qs = rs.next();
 			objectProperties.add(new ObjectProperty(qs.getResource("prop").getURI()));
 		}
-		
+
 		for(NamedClass cls : classes){
 			for(ObjectProperty prop : objectProperties){
 				log.info("Processing class " + cls + " and property " + prop);
@@ -414,7 +414,7 @@ public class SPARQLEndpointMetrics {
 				}
 			}
 		}
-		
+
 //		for(NamedClass cls1 : classes){
 //			for(NamedClass cls2 : classes){
 //				if(!cls1.equals(cls2)){
@@ -430,14 +430,14 @@ public class SPARQLEndpointMetrics {
 //		}
 		log.info("Done in " + ((System.currentTimeMillis() - startTime)/1000d) + "s");
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		Logger.getLogger(SPARQLEndpointMetrics.class).setLevel(Level.DEBUG);
 		SparqlEndpoint endpoint = new SparqlEndpoint(new URL("http://[2001:638:902:2010:0:168:35:138]/sparql"), "http://boa.dbpedia.org");
 		ExtractionDBCache cache = new ExtractionDBCache("/opt/tbsl/dbpedia_pmi_cache");
 		String NS = "http://dbpedia.org/ontology/";
 		String NS_Res = "http://dbpedia.org/resource/";
-		
+
 		NamedClass person = new NamedClass(NS + "Person");
 		NamedClass writer = new NamedClass(NS + "Writer");
 		NamedClass book = new NamedClass(NS + "Book");
@@ -450,62 +450,62 @@ public class SPARQLEndpointMetrics {
 		Individual bradPittBoxer = new Individual(NS_Res + "Brad_Pitt_%28boxer%29");
 		Individual danBrown = new Individual(NS_Res + "Dan_Brown");
 		Individual danBrowne = new Individual(NS_Res + "Dan_Browne");
-		
+
 		SPARQLEndpointMetrics pmiGen = new SPARQLEndpointMetrics(endpoint, cache);
 		System.out.println(pmiGen.getPMI(new NamedClass(NS + "River"), new NamedClass(NS + "Film")));
 //		pmiGen.precompute(Arrays.asList(new String[]{"http://dbpedia.org/ontology/"}));
-		
+
 		System.out.println(pmiGen.getDirectedPMI(pAuthor, person));
-		
+
 		System.out.println("#########################################");
-		
+
 		System.out.println(pmiGen.getDirectedPMI(pAuthor, writer));
-		
+
 		System.out.println("#########################################");
-		
+
 		System.out.println(pmiGen.getDirectedPMI(book, pAuthor));
-		
+
 		System.out.println("#########################################");
-		
+
 		System.out.println(pmiGen.getDirection(writer, pAuthor, book));
-		
+
 		System.out.println("#########################################");
-		
+
 		System.out.println(pmiGen.getDirection(person, pStarring, film));
-		
+
 		System.out.println("#########################################");
-		
+
 		System.out.println(pmiGen.getMostFrequentProperties(person, film));
-		
+
 		System.out.println("#########################################");
-		
+
 		System.out.println(pmiGen.getMostFrequentProperties(film, actor));
-		
+
 		System.out.println("#########################################");
-		
+
 		System.out.println(pmiGen.getMostFrequentProperties(film, person));
-		
+
 		System.out.println("#########################################");
-		
+
 		System.out.println(pmiGen.getOccurences(book));
 		System.out.println(pmiGen.getOccurencesInObjectPosition(book));
 		System.out.println(pmiGen.getOccurencesInSubjectPosition(book));
-		
+
 		System.out.println("#########################################");
-		
+
 		System.out.println("Goodness: " + pmiGen.getGoodness(film, pStarring, person));
 		System.out.println("Goodness: " + pmiGen.getGoodness(person, pAuthor, book));
 		System.out.println("Goodness: " + pmiGen.getGoodness(person, pWriter, book));
 		System.out.println("Goodness: " + pmiGen.getGoodness(book, pAuthor, person));
 		System.out.println("Goodness: " + pmiGen.getGoodness(book, pWriter, person));
-		
+
 		System.out.println("Goodness: " + pmiGen.getGoodness(film, pStarring, bradPitt));
 		System.out.println("Goodness: " + pmiGen.getGoodness(film, pStarring, bradPittBoxer));
 		System.out.println("Goodness: " + pmiGen.getGoodness(book, pAuthor, danBrown));
 		System.out.println("Goodness: " + pmiGen.getGoodness(book, pAuthor, danBrowne));
-		
-		
-		
+
+
+
 	}
 
 }

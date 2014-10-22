@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class SolrServerTest
 {
-		
+
 	@Test public void testDBpediaIndices()
 	{
 		{
@@ -21,7 +21,7 @@ public class SolrServerTest
 		{
 			List<String> datatypeProperties = SolrServer.INSTANCE.dataPropertiesIndex.getResources("old name");
 			assertNotNull(datatypeProperties);
-			assertFalse(datatypeProperties.isEmpty());			
+			assertFalse(datatypeProperties.isEmpty());
 			assertTrue(datatypeProperties.contains("http://dbpedia.org/ontology/oldName"));
 			assertTrue(datatypeProperties.contains("http://dbpedia.org/ontology/formerName"));
 		}
@@ -33,7 +33,7 @@ public class SolrServerTest
 		}
 		{
 			List<String> objectProperties = SolrServer.INSTANCE.dbpediaIndices.getObjectPropertyIndex().getResources("written");
-			assertNotNull(objectProperties);			
+			assertNotNull(objectProperties);
 			assertFalse("boa doesn't find author by 'written'",objectProperties.isEmpty());
 			assertTrue("boa doesn't find author by 'written'",objectProperties.contains("http://dbpedia.org/ontology/author"));
 		}

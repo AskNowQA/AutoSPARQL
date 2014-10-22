@@ -9,7 +9,7 @@ public class NifExamples {
 
     public static void main(String[] args) {
     	// commented out since the NIF dependency was removed
-    	
+
 //        OLiAManager m = new OLiAManager();
 //        OLiAOntology brown = m.getOLiAOntology("http://purl.org/olia/brown-link.rdf");
 //

@@ -7,14 +7,14 @@ public class SPARQL_Entity extends SPARQL_Value {
 		super(name);
 		this.prefix = prefix;
 	}
-	
+
 	@Override
 	public String toString() {
 		if(prefix == null) {
 			return name;
 		}
 		return prefix.getName()+":"+name;
-		
-		
+
+
 	}
 }

@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 
 
 public class TemplateGenerationTest {
-	
+
 	private static List<String> readQuestions(File file){
 		List<String> questions = new ArrayList<String>();
 		try {
@@ -33,15 +33,15 @@ public class TemplateGenerationTest {
 			Document doc = db.parse(file);
 			doc.getDocumentElement().normalize();
 			NodeList questionNodes = doc.getElementsByTagName("question");
-			
+
 			String question;
 			for(int i = 0; i < questionNodes.getLength(); i++){
 				Element questionNode = (Element) questionNodes.item(i);
 				//Read question
 				question = ((Element)questionNode.getElementsByTagName("string").item(0)).getChildNodes().item(0).getNodeValue().trim();
-				
+
 				questions.add(question);
-				
+
 			}
 		} catch (DOMException e) {
 			e.printStackTrace();
@@ -59,16 +59,16 @@ public class TemplateGenerationTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		File file = new File("src/main/resources/tbsl/evaluation/dbpedia-test-questions-tagged(ideal).xml");
 		List<String> questions = readQuestions(file);
-		
+
 		StringBuilder successful = new StringBuilder();
 		StringBuilder failed = new StringBuilder();
-		
+
 		Templator templateGenerator = new Templator();
 		templateGenerator.setUNTAGGED_INPUT(false);
-		
+
 		int cnt = 0;
 		for(String question : questions){
 			System.out.println("Question: " + question);
@@ -90,12 +90,12 @@ public class TemplateGenerationTest {
 				e.printStackTrace();
 			}
 		}
-		
+
 		System.out.println("Could generate templates for " + cnt + "/" + questions.size() + " questions.");
-		
+
 		System.out.println(successful);
 		System.out.println(failed);
-		
+
 		try {
 			Writer out = new OutputStreamWriter(new FileOutputStream(
 					"successful.txt"));
@@ -117,7 +117,7 @@ public class TemplateGenerationTest {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 
 	}
 

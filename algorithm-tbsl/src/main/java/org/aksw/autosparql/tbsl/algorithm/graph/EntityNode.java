@@ -7,7 +7,7 @@ public class EntityNode extends Node{
 	public EntityNode(String token) {
 		this.token = token;
 	}
-	
+
 	@Override
 	public String toString() {
 		return token + (types.isEmpty() ? "" : types.toString());

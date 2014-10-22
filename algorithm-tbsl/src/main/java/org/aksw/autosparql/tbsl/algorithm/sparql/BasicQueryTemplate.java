@@ -31,15 +31,15 @@ public class BasicQueryTemplate
 		having     = new HashSet<SPARQL_Having>();
 		slots      = new ArrayList<Slot>();
 	}
-	
+
 	public void addSlot(Slot s) {
 		slots.add(s);
 	}
-	
+
 	public void addConditions(Path p) {
 		conditions.add(p);
 	}
-	
+
 	@Override
 	public String toString()
 	{
@@ -62,7 +62,7 @@ public class BasicQueryTemplate
 		else retVal += "\nASK ";
 
 		retVal += "WHERE {\n";
-		
+
 		for (Path p : conditions) {
 			retVal += "\t" + p.toString() + "\n";
 		}
@@ -73,7 +73,7 @@ public class BasicQueryTemplate
 		}
 
 		retVal += "}\n";
-		
+
 		for (SPARQL_Having h : having) {
 			retVal += h + "\n";
 		}
@@ -112,7 +112,7 @@ public class BasicQueryTemplate
 		}
 		return result;
 	}
-	
+
 	public Set<String> getVariablesInConditions() {
 		Set<String> vars = new HashSet<String>();
 		for (Path p : conditions) {
@@ -137,11 +137,11 @@ public class BasicQueryTemplate
 	{
 		return prefixes;
 	}
-	
+
 	public Set<SPARQL_Filter> getFilters(){
 		return filter;
 	}
-	
+
 	public Set<Path> getConditions() {
 		return conditions;
 	}
@@ -158,11 +158,11 @@ public class BasicQueryTemplate
 
 		this.filter.add(f);
 	}
-	
+
 	public Set<SPARQL_Having> getHavings() {
 		return having;
 	}
-	
+
 	public void addHaving(SPARQL_Having h) {
 		having.add(h);
 	}
@@ -176,7 +176,7 @@ public class BasicQueryTemplate
 	{
 		if (term.orderBy == SPARQL_OrderBy.NONE)
 			term.orderBy = SPARQL_OrderBy.ASC;
-		
+
 		orderBy.add(term);
 	}
 
@@ -231,7 +231,7 @@ public class BasicQueryTemplate
 		return offset;
 	}
 
-	
+
 	public void setOffset(int offset)
 	{
 		this.offset = offset;

@@ -12,7 +12,7 @@ public class OxfordKnowledgebaseTest
 	{
 		assertTrue(OxfordKnowledgebase.INSTANCE.getModel().size()>0);
 	}
-	
+
 	@Test public void testQuerySelect()
 	{
 		assertTrue(OxfordKnowledgebase.INSTANCE.querySelect("select * where {?s a <http://diadem.cs.ox.ac.uk/ontologies/real-estate#House>.} limit 1")

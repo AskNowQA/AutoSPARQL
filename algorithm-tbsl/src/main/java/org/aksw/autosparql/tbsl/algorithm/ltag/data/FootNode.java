@@ -27,7 +27,7 @@ public class FootNode implements TreeNode, Cloneable {
 		out.NA = NA;
 		return out;
 	}
-	
+
 	public TreeNode adjoin(String label, TreeNode tree)
 			throws UnsupportedOperationException {
 
@@ -79,7 +79,7 @@ public class FootNode implements TreeNode, Cloneable {
 		return output;
 
 	}
-	
+
 	public List<TerminalNode> getTerminalNodes() {
 		List<TerminalNode> output = new ArrayList<TerminalNode>();
 		return output;
@@ -120,7 +120,7 @@ public class FootNode implements TreeNode, Cloneable {
 	public String toFileString() {
 		return this.getCategory().toString()+"*";
 	}
-	
+
 	public String toString(String indent) {
 		return indent + category + "*";
 	}
@@ -181,7 +181,7 @@ public class FootNode implements TreeNode, Cloneable {
 	public Feature getFeature() {
 		return null;
 	}
-	
+
 	public void setFeature(Feature f) {}
 
 

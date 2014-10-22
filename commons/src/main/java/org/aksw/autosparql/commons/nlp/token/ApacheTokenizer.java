@@ -7,10 +7,10 @@ import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 
 public class ApacheTokenizer implements Tokenizer{
-	
+
 	private opennlp.tools.tokenize.Tokenizer tokenizer;
 	private static final String MODEL_PATH = "tbsl/models/en-token.bin";
-	
+
 	public ApacheTokenizer() {
 		InputStream modelIn = this.getClass().getClassLoader().getResourceAsStream(MODEL_PATH);
 		TokenizerModel model = null;

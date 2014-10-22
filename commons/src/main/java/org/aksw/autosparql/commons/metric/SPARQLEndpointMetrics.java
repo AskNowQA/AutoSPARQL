@@ -68,14 +68,14 @@ public class SPARQLEndpointMetrics {
 		return new SPARQLEndpointMetrics(DBpediaKnowledgebase.getDbpediaEndpoint(),new ExtractionDBCache("cache"),getDefaultReadOnlyConnection());
 	}
 
-	
+
 	static Connection getDefaultReadOnlyConnection()
 	{
 		//create database connection
 		try {Class.forName("com.mysql.jdbc.Driver");}
 		catch (ClassNotFoundException e) {throw new RuntimeException("com.mysql.jdbc.Driver could not be loaded or not found.",e);}
 		//		String dbHost = "linkedspending.aksw.org/sql";
-		String dbHost = "[2001:638:902:2010:0:168:35:119]";		
+		String dbHost = "[2001:638:902:2010:0:168:35:119]";
 		String dbPort = "3306";
 
 		String database = "dbpedia_metrics";
@@ -167,7 +167,7 @@ public class SPARQLEndpointMetrics {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}		
+		}
 
 	}
 
@@ -311,7 +311,7 @@ public class SPARQLEndpointMetrics {
 	 * Returns the number of triples with the given property as predicate and where the subject belongs to the given class.
 	 * @param cls
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public int getOccurencesSubjectPredicate(NamedClass cls, Property prop){
 		try {
@@ -330,7 +330,7 @@ public class SPARQLEndpointMetrics {
 					subjectClassPredicateInsertPreparedStatement.setString(1, cls.getName());
 					subjectClassPredicateInsertPreparedStatement.setString(2, prop.getName());
 					subjectClassPredicateInsertPreparedStatement.setInt(3, cnt);
-					subjectClassPredicateInsertPreparedStatement.executeUpdate();				
+					subjectClassPredicateInsertPreparedStatement.executeUpdate();
 				}
 				return cnt;
 			}
@@ -345,7 +345,7 @@ public class SPARQLEndpointMetrics {
 	 * Returns the number of triples with the given property as predicate and where the object belongs to the given class.
 	 * @param cls
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public int getOccurencesPredicateObject(Property prop, NamedClass cls){
 		try {
@@ -378,7 +378,7 @@ public class SPARQLEndpointMetrics {
 	 * Returns the number of triples with the first given class as subject and the second given class as object.
 	 * @param cls
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public int getOccurencesSubjectObject(NamedClass subject, NamedClass object){
 		try {
@@ -411,7 +411,7 @@ public class SPARQLEndpointMetrics {
 	 * Returns the number of triples where the subject belongs to the given class.
 	 * @param cls
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public int getOccurencesInSubjectPosition(NamedClass cls){
 		try {
@@ -442,7 +442,7 @@ public class SPARQLEndpointMetrics {
 	 * Returns the number of triples where the object belongs to the given class.
 	 * @param cls
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public int getOccurencesInObjectPosition(NamedClass cls){
 		try {
@@ -473,7 +473,7 @@ public class SPARQLEndpointMetrics {
 	 * Returns the number triples with the given property as predicate.
 	 * @param prop
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public int getOccurences(Property prop){
 		try {
@@ -505,7 +505,7 @@ public class SPARQLEndpointMetrics {
 	 * (This is not the same as computing the number of instances of the given class {@link SPARQLEndpointMetrics#getPopularity(NamedClass)})
 	 * @param cls
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public int getOccurences(NamedClass cls){
 		try {
@@ -599,7 +599,7 @@ public class SPARQLEndpointMetrics {
 		return goodness;
 	}
 
-	public double getGoodnessConsideringSimilarity(NamedClass subject, ObjectProperty predicate, NamedClass object, 
+	public double getGoodnessConsideringSimilarity(NamedClass subject, ObjectProperty predicate, NamedClass object,
 			double subjectSim, double predicateSim, double objectSim){
 
 		double pmi_subject_predicate = getDirectedPMI(subject, predicate);

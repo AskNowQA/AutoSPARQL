@@ -6,13 +6,13 @@ import java.util.Hashtable;
 import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;
 
 /**
- * 
+ *
  * A DerivationTree contains a List of Operations that are to be executed on an
  * initial tree in order to obtain a DerivedTree
  * @param initTreeID TreeID of the initial tree
  * @param operations List of parsing operations executed during a parse path
  * @param treeMappings Hashtable that maps TreeIDs to trees.
- *  
+ *
  **/
 
 public class DerivationTree {

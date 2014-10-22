@@ -38,13 +38,13 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class TimeChartWindow extends Window{
-	
+
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-	
+
 	public TimeChartWindow() {
 		showTimeChart();
 	}
-	
+
 	private void showTimeChart(){
 		InvientChartsConfig chartConfig = new InvientChartsConfig();
         chartConfig.getGeneralChartConfig().setZoomType(ZoomType.X);
@@ -107,17 +107,17 @@ public class TimeChartWindow extends Window{
 
         dateTimeSeries.addPoint((DateTimePoint[]) getTimePoints(dateTimeSeries).toArray(new DateTimePoint[0]));
         chart.addSeries(dateTimeSeries);
-        
+
         chart.setSizeFull();
 
         VerticalLayout content = new VerticalLayout();
         content.setSizeFull();
         setContent(content);
-        
+
         content.addComponent(chart);
         content.setExpandRatio(chart, 1f);
 	}
-	
+
 	private LinkedHashSet<DateTimePoint> getTimePoints(Series series){
 		Map<String, Set<Object>> data = UserSession.getManager().getDataForProperty("http://dbpedia.org/ontology/releaseDate");
 		LinkedHashSet<DateTimePoint> points = new LinkedHashSet<DateTimePoint>();
@@ -134,7 +134,7 @@ public class TimeChartWindow extends Window{
 		}
 		return points;
 	}
-	
+
 	private static long getPointStartDate(int year, int month, int day) {
         Calendar cal = GregorianCalendar.getInstance();
         cal.set(Calendar.YEAR, year);
@@ -146,7 +146,7 @@ public class TimeChartWindow extends Window{
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTimeInMillis();
     }
-	
+
 	private LinkedHashSet<DateTimePoint> getDateTimePoints(Series series,
             double... values) {
         LinkedHashSet<DateTimePoint> points = new LinkedHashSet<DateTimePoint>();
@@ -155,7 +155,7 @@ public class TimeChartWindow extends Window{
         }
         return points;
     }
-	
+
 	private static LinkedHashSet<DecimalPoint> getPoints(Series series,
             double[]... values) {
         LinkedHashSet<DecimalPoint> points = new LinkedHashSet<DecimalPoint>();
@@ -173,8 +173,8 @@ public class TimeChartWindow extends Window{
         }
         return points;
     }
-	
-	
+
+
 	public static void main(String[] args) throws ParseException {
 	System.out.println(new SimpleDateFormat("yyyy-mm-dd").parse("2000-11-09"));
 	AreaConfig serieaAreaCfg = new AreaConfig();

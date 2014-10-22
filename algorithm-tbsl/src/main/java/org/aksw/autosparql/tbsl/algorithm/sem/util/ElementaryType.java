@@ -28,12 +28,12 @@ public class ElementaryType implements Type{
 	}
 
 	ElemType type;
-	
+
 	public ElementaryType(ElemType elemtype)
 	{
 		type = elemtype;
 	}
-	
+
 	public String toString()
 	{
 		return type.toString();
@@ -41,5 +41,5 @@ public class ElementaryType implements Type{
         public String toTex() {
             return type.toString();
         }
-	
+
 }

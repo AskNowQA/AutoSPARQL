@@ -7,9 +7,9 @@ public class QueryGraph extends DefaultDirectedGraph<Node, PropertyEdge>{
 	public QueryGraph() {
 		super(PropertyEdge.class);
 	}
-	
-	
 
-	
+
+
+
 
 }

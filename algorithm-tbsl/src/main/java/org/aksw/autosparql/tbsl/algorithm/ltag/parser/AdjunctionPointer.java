@@ -5,7 +5,7 @@ import org.aksw.autosparql.tbsl.algorithm.ltag.data.TreeNode;
 
 
 /**
- * 
+ *
  * An AdjunctionPointer extends an OperationPointer with three additional
  * pointers required for this adjunction: A pointer to the LeftPredictor state,
  * a pointer to the LeftCompletor state and a pointer for the RightPredictor

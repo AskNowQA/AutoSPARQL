@@ -28,20 +28,20 @@ public class TemplateBuilder {
 
 static BasicTemplator btemplator;
 private static SQLiteIndex myindex;
-	
-	
+
+
 public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLException, ClassNotFoundException, SQLException{
-		
+
 		TemplateBuilder.btemplator = bt;
     	//btemplator.UNTAGGED_INPUT = false;
 		TemplateBuilder.myindex = sq;
 	}
-		
-	
+
+
 	public ArrayList<Template> createTemplates(String question) throws IOException{
-		
+
 		long start = System.currentTimeMillis();
-		
+
 		ArrayList<Template> resultArrayList = new ArrayList<Template>();
 		Set<BasicQueryTemplate> querytemps =null;
 		try{
@@ -51,7 +51,7 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
 			System.err.println("Error in Templategeneration");
 			querytemps=null;
  		}
-		
+
 		/*
 		 * check if templates were build, if not, safe the question and delete it for next time from the xml file.
 		 * Only in Debug Mode
@@ -66,36 +66,36 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
 			       String thisLine;
 				while ((thisLine = br.readLine()) != null) { // while loop begins here
 			         result_string+=thisLine+"\n";
-			       } // end while 
+			       } // end while
 			     } // end try
 			     catch (IOException e) {
 			       System.err.println("Error: " + e);
 			     }
-			     
+
 			     File file = new File(dateiname);
 			     BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 
 			        bw.write(result_string+"\n"+question);
 			        bw.flush();
 			        bw.close();
-	    
-	    
+
+
 			}
 		}
-		
-		
+
+
 		long stop_template = System.currentTimeMillis();
 		Setting.addTime_tbsl(stop_template-start);
-		
-		
-		
-		
-		
+
+
+
+
+
 		long start_builder = System.currentTimeMillis();
 		if(Setting.isDebugModus())DebugMode.waitForButton();
 		if(querytemps!=null){
      	for (BasicQueryTemplate bqt : querytemps) {
-     		
+
      		long start_part1= System.currentTimeMillis();
      		ArrayList<ArrayList<String>> condition = new ArrayList<ArrayList<String>>();
      		//ArrayList<ArrayList<Hypothesis>> hypotesen = new ArrayList<ArrayList<Hypothesis>>();
@@ -105,7 +105,7 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      		String OrderBy= "";
      		String limit= "";
      		//String condition_String = "";
-     		
+
      		boolean addTemplate=true;
      		try{
      			for(SPARQL_Term terms :bqt.getSelTerms()) selectTerm=selectTerm+(terms.toString())+" ";
@@ -114,7 +114,7 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      			selectTerm="";
      			addTemplate=false;
      		}
-     		
+
      		//ArrayList<String> temp_array = new ArrayList<String>();
 			try{
      			for(Path conditions1: bqt.getConditions()) {
@@ -126,15 +126,15 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      					temp_array.add(s);
      				}
      				condition.add(temp_array);
-         			
-     			}	
+
+     			}
      		}
      		catch (Exception e){
      			//condition_String="";
      			addTemplate=false;
      		}
- 			
-     		
+
+
      		try{
      			for(SPARQL_Filter tmp : bqt.getFilters()) filter=filter+tmp+" ";
      		}
@@ -148,8 +148,8 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      		catch(Exception e){
      			having="";
      			addTemplate=false;
-     		}	
-     		
+     		}
+
      		//if there is no order by, replace with ""
      		OrderBy="ORDER BY ";
      		try{
@@ -162,29 +162,29 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      			OrderBy="";
      			addTemplate=false;
      		}
-     		
-     		
+
+
      		try{
      			limit="LIMIT "+bqt.getLimit();
-     			
+
      			if(bqt.getLimit()==0)limit="";
      		}
      		catch(Exception e){
      			limit="";
      			addTemplate=false;
      		}
-     		
+
      		long stop_part1= System.currentTimeMillis();
-     		
+
      		if(addTemplate!=false){
      			long start_part2= System.currentTimeMillis();
-     			
+
      			/*
      			 * SLOT_title: PROPERTY {title,name,label} mitfuehren
      			 */
- //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    			     		
+ //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
      			Template template = new Template(condition,bqt.getQt().toString(), having, filter, selectTerm,OrderBy, limit,question);
-     			
+
      			for(ArrayList<String> al : condition){
      				String con_temp="";
      				for(String s : al){
@@ -192,11 +192,11 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      				}
      				if(Setting.isDebugModus())DebugMode.debugPrint("Condition: "+con_temp);
      			}
-     			
+
      			template.setTime_part1(stop_part1-start_part1);
      			boolean add_reverse_template = true;
-     			
-     			
+
+
      			ArrayList<Hypothesis> list_of_hypothesis = new ArrayList<Hypothesis>();
      			for(Slot slot : bqt.getSlots()){
      				//System.out.println("Slot: "+slot.toString());
@@ -211,31 +211,31 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      							Hypothesis tmp_hypothesis = new Hypothesis("?"+tmp_array[0],tmp_array[1], tmp_array[1], "ISA", 0.0);
      	     					//tmp_hypothesis.printAll();
      	         				list_of_hypothesis.add(tmp_hypothesis);
-     	         				
+
      	         				/*
      	         				 * if you have already found an isA -Class-Pair, you don't have to create the up-side-down, because it will be false
      	         				 */
      	            			add_reverse_template = false;
      						}
      					}
-     					
+
      					if(no_iaA_found){
      						Hypothesis tmp_hypothesis = new Hypothesis("?"+tmp_array[0],tmp_array[1], tmp_array[1], "PROPERTY", 0.0);
  							//tmp_hypothesis.printAll();
  							list_of_hypothesis.add(tmp_hypothesis);
      					}
-     					
+
      				}
      				if(slot.toString().contains("PROPERTY")){
      					String tmp= slot.toString().replace(" PROPERTY {", "");
      					tmp=tmp.replace("}","");
      					String[] tmp_array = tmp.split(":");
      					if(tmp_array.length>1){
-	     					
+
 	     					Hypothesis tmp_hypothesis = new Hypothesis("?"+tmp_array[0], tmp_array[1],tmp_array[1], "PROPERTY", 0.0);
 	     					list_of_hypothesis.add(tmp_hypothesis);
      					}
-     					
+
      				}
      				if(slot.toString().contains("RESOURCE")){
      					String tmp= slot.toString().replace(" RESOURCE {", "");
@@ -246,11 +246,11 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      				}
      			}
      			ArrayList<ArrayList<Hypothesis>> final_list_set_hypothesis = new ArrayList<ArrayList<Hypothesis>>();
- //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    	
-     			
+ //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
      			if(Setting.isDebugModus())DebugMode.printHypothesen(list_of_hypothesis,"Alle Hypothesen VOR der Verarbeitung");
 
-     			
+
      			for(Hypothesis x : list_of_hypothesis){
      				/*
      				 * TODO: Change if ISA only ask classes, else resource
@@ -270,7 +270,7 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
 						}
      					for(String s : result){
      						ArrayList<Hypothesis> new_list = new ArrayList<Hypothesis>();
-     						
+
      						//String variable, String uri, String type, float rank
      						for(Hypothesis h : list_of_hypothesis){
      							if (h.getUri().equals(x.getUri())){
@@ -284,7 +284,7 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
          								new_list.add(new_h);
          								//new_h.printAll();
      								}
-     								
+
      							}
      							else{
      								Hypothesis new_h = new Hypothesis(h.getVariable(),h.getName(), h.getUri(), h.getType(), h.getRank());
@@ -296,20 +296,20 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      					}
      				}
      			}
-     			
-     			
+
+
      			if(Setting.isDebugModus())DebugMode.printHypothesenSet(final_list_set_hypothesis,"Alle Hypothesen nach der ERSTEN Verarbeitung");
-     			
- //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-     			
+
+ //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
      			/*
  				 * safe lookups for properties, so we dont have to access sql database every time
  				 */
  				HashMap<String,String> hm = new HashMap<String, String>();
- 				
+
      			for(ArrayList<Hypothesis> x : final_list_set_hypothesis){
-     				
-     				
+
+
      				for(Hypothesis h : x){
      					if(h.getType().contains("PROPERTY")){
          					ArrayList<String> result= new ArrayList<String>();
@@ -332,10 +332,10 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      					}
      				}
      			}
-     			
-     			
-     			
-     			
+
+
+
+
      			/*
      			 * BUGFIX: Before adding Hypothesis to template check, if each Hypothesis has an uri
      			 * TODO: check all functions before
@@ -354,7 +354,7 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-     							
+
      						}
      						if(h.getType().contains("RESOURCE")){
      							try {
@@ -367,20 +367,20 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-     							
+
      						}
      					}
      				}
      			}
-     			
+
      			if(Setting.isDebugModus())DebugMode.printHypothesenSet(final_list_set_hypothesis,"Alle Hypothesen nach der ZWEITEN Verarbeitung");
-     			
+
      			template.setHypothesen(final_list_set_hypothesis);
-     			
-     			
-     			
+
+
+
      			Template template_reverse_conditions = new Template(template.getCondition(),template.getQueryType(), template.getHaving(), template.getFilter(), template.getSelectTerm(), template.getOrderBy(), template.getLimit(), template.getQuestion());
-     			
+
      			ArrayList<ArrayList<String>> condition_template_reverse_conditions = template_reverse_conditions.getCondition();
      			ArrayList<ArrayList<String>> condition_reverse_new= new ArrayList<ArrayList<String>>();
      			if(add_reverse_template==false){
@@ -405,20 +405,20 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
              				new_list.add(x.get(0));
              				condition_reverse_new.add(new_list);
          				}
-         				
+
          			}
      			}
-     			
+
      			long stop = System.currentTimeMillis();
      			template_reverse_conditions.setOverallTime(stop-start);
      			template.setOverallTime(stop-start);
-     			
+
      			template_reverse_conditions.setTime_Templator(stop_template-start);
      			template.setTime_Templator(stop_template-start);
-     			
+
      			template_reverse_conditions.setCondition(condition_reverse_new);
      			template_reverse_conditions.setHypothesen(template.getHypothesen());
-     			
+
      			/*
      			 * Before adding Templates, generate for each Template a set of Properties and Elements
      			 */
@@ -426,7 +426,7 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      			Elements elm = new Elements(template.getCondition(),template.getHypothesen());
      			long stop_elements = System.currentTimeMillis();
      			template.setTime_generateElements(stop_elements-start_elements);
-     			
+
      			/*
      			 * If no Elements are created, dont add Template!
      			 */
@@ -438,7 +438,7 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
          			resultArrayList.add(template);
      			}
      			/*
-     			 * Also change the condition, if you have two Conditions in which is one an isa 
+     			 * Also change the condition, if you have two Conditions in which is one an isa
      			 */
      			if(add_reverse_template){
      				start_elements = System.currentTimeMillis();
@@ -447,7 +447,7 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      				template_reverse_conditions.setTime_generateElements(stop_elements-start_elements);
      				template_reverse_conditions.setTime_part1(stop_part1-start_part1);
      				template_reverse_conditions.setTime_part2(stop_part2-start_part2);
-         			
+
      				if(elm_reverse.isElementEmty()==false){
      				//elm_reverse.printAll();
      				template_reverse_conditions.setElm(elm_reverse);
@@ -456,12 +456,12 @@ public TemplateBuilder(BasicTemplator bt, SQLiteIndex sq) throws MalformedURLExc
      			}
      		}
      	}
-     	
+
      	long stop_builder = System.currentTimeMillis();
      	Setting.addTime_builder(stop_builder-start_builder);
      	if(Setting.isDebugModus())DebugMode.printTemplateList(resultArrayList, "Templates nach allen Verarbeitungsschritten");
-     	
-     	
+
+
 		return resultArrayList;
 	}
 		return resultArrayList;

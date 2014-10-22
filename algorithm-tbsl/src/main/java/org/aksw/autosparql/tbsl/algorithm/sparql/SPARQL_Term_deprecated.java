@@ -1,11 +1,11 @@
 package org.aksw.autosparql.tbsl.algorithm.sparql;
 
 public class SPARQL_Term_deprecated extends SPARQL_Value {
-	
+
 	SPARQL_OrderBy orderBy = SPARQL_OrderBy.NONE;
 	SPARQL_Aggregate aggregate = SPARQL_Aggregate.NONE;
 	SPARQL_Term_deprecated as = null;
-	
+
 	public SPARQL_Term_deprecated(String name) {
 		super(name);
 		this.name = name.replace("?","").replace("!","");
@@ -15,7 +15,7 @@ public class SPARQL_Term_deprecated extends SPARQL_Value {
 		this.name = name.replace("?","").replace("!","");
 		setIsVariable(b);
 	}
-	
+
 	public SPARQL_Term_deprecated(String name, SPARQL_Aggregate aggregate) {
 		super(name);
 		this.aggregate = aggregate;
@@ -26,7 +26,7 @@ public class SPARQL_Term_deprecated extends SPARQL_Value {
 		setIsVariable(b);
 		as = t;
 	}
-	
+
 	public SPARQL_Term_deprecated(String name, SPARQL_OrderBy orderBy) {
 		super(name);
 		this.orderBy = orderBy;
@@ -37,11 +37,11 @@ public class SPARQL_Term_deprecated extends SPARQL_Value {
 		setIsVariable(b);
 		as = t;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof SPARQL_Term_deprecated)) return false;
-		
+
 		SPARQL_Term_deprecated f = (SPARQL_Term_deprecated) obj;
 		return f.getName().toLowerCase().equals(this.getName().toLowerCase()) && f.getAggregate() == aggregate && f.getOrderBy() == orderBy;
 	}
@@ -61,7 +61,7 @@ public class SPARQL_Term_deprecated extends SPARQL_Value {
 	public void setAggregate(SPARQL_Aggregate aggregate) {
 		this.aggregate = aggregate;
 	}
-	
+
 	public boolean isString()
 	{
 		return name.startsWith("'");
@@ -92,7 +92,7 @@ public class SPARQL_Term_deprecated extends SPARQL_Value {
 			return name;
 		}
 	}
-	
-	
+
+
 
 }

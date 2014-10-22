@@ -3,9 +3,9 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 import java.io.Serializable;
 
 public class SPARQL_Value implements Serializable,Cloneable{
-	
+
 	private static final long serialVersionUID = -3733491240975566183L;
-	
+
 	protected String name;
 	private boolean isVariable = false;
 
@@ -15,7 +15,7 @@ public class SPARQL_Value implements Serializable,Cloneable{
 		value.setIsVariable(isVariable());
 		return value;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -23,11 +23,11 @@ public class SPARQL_Value implements Serializable,Cloneable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public void setIsVariable(boolean b) {
 		isVariable = b;
 	}
-	
+
 	public boolean isVariable(){
 		return isVariable;
 	}
@@ -39,7 +39,7 @@ public class SPARQL_Value implements Serializable,Cloneable{
 
 	public SPARQL_Value() {
 	}
-	
+
 	public String toString() {
 		if (isVariable) {
 			return "?"+name.toLowerCase();
@@ -75,7 +75,7 @@ public class SPARQL_Value implements Serializable,Cloneable{
 			return false;
 		return true;
 	}
-	
-	
+
+
 
 }

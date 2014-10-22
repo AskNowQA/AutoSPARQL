@@ -53,7 +53,7 @@ public class SubstNode implements TreeNode, Cloneable {
 		List<FootNode> output = new ArrayList<FootNode>();
 		return output;
 	}
-	
+
 	public List<TerminalNode> getTerminalNodes() {
 		List<TerminalNode> output = new ArrayList<TerminalNode>();
 		return output;
@@ -186,7 +186,7 @@ public class SubstNode implements TreeNode, Cloneable {
 	public Feature getFeature() {
 		return null;
 	}
-	
+
 	public void setFeature(Feature f) {
 	}
 
@@ -202,7 +202,7 @@ public class SubstNode implements TreeNode, Cloneable {
 	}
 
 	@Override
-	public void setAnchor(String old_anchor, String new_anchor) {		
+	public void setAnchor(String old_anchor, String new_anchor) {
 	}
 
 }

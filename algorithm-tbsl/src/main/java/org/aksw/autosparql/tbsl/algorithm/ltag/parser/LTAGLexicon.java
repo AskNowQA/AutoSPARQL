@@ -9,9 +9,9 @@ import org.aksw.autosparql.tbsl.algorithm.sem.util.Pair;
 
 /**
  * the interface represents an LTAGLexicon. It is implemented by TAG
- * 
+ *
  * @author felix
- * 
+ *
  */
 public interface LTAGLexicon {
 
@@ -19,22 +19,22 @@ public interface LTAGLexicon {
 	 * adds a tree, its anchor and the corresponding semantic string to the
 	 * grammar. Requires also the id that is used within the grammar to
 	 * distinguish between trees. (use this.size() to obtain the correct id).
-	 * 
+	 *
 	 * @param id
 	 * @param tree
 	 * @param semantics
 	 * @return
 	 */
 	public void clear(List<Integer> temps);
-	
+
 	public int addTree(int id, Pair<String, TreeNode> tree, List<String> semantics);
 
 	/**
 	 * adds a list of trees, their anchors and the corresponding semantics to
 	 * the grammar. The list of pairs and the list of semantics should be of the
 	 * same size. (calls addTree() for each pair).
-	 * 
-	 * @param trees 
+	 *
+	 * @param trees
 	 * @param semantics
 	 */
 	public void addTrees(List<Pair<String, TreeNode>> trees,

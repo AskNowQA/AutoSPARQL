@@ -8,7 +8,7 @@ public class LemmatizationTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		LingPipeLemmatizer lem = new LingPipeLemmatizer();
 
 		System.out.println(lem.stem("soccer clubs"));

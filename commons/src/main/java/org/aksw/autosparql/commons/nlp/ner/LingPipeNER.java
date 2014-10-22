@@ -18,21 +18,21 @@ import com.aliasi.tokenizer.IndoEuropeanTokenizerFactory;
 import com.aliasi.util.AbstractExternalizable;
 
 public class LingPipeNER implements NER{
-	
+
 	private static Logger logger = Logger.getLogger(LingPipeNER.class.getSimpleName());
-	
+
 	private static final String DICTIONARY_PATH = "models/en/ner/lingpipe/dbpedia_lingpipe.dictionary";
-	
+
 	private Chunker ner;
-	
+
 	public LingPipeNER() {
 		this(true, false);
 	}
-	
+
 	public LingPipeNER(boolean caseSensitive) {
 		this(caseSensitive, false);
 	}
-	
+
 	public LingPipeNER(boolean caseSensitive, boolean allMatches) {
 		try {
 			long startTime = System.currentTimeMillis();

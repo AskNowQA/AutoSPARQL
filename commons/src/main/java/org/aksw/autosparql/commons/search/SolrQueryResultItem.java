@@ -1,15 +1,15 @@
 package org.aksw.autosparql.commons.search;
 
 public class SolrQueryResultItem {
-	
+
 	private String label;
 	private String uri;
 	private float score;
-	
+
 	public SolrQueryResultItem(String label, String uri) {
 		this(label, uri, -1);
 	}
-	
+
 	public SolrQueryResultItem(String label, String uri, float score) {
 		super();
 		this.label = label;
@@ -62,7 +62,7 @@ public class SolrQueryResultItem {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return uri + "(label: " + label + ", score: " + score + ")";

@@ -14,11 +14,11 @@ public class DUDE_Constructor {
 	{
 		Dude dude;
 		DUDE_Parser parser =  new DUDE_Parser(new StringReader(new String(string)));
-		parser.ReInit(new StringReader(new String(string)));		
+		parser.ReInit(new StringReader(new String(string)));
 		dude = parser.DUDE();
-	
+
 		return dude;
 	}
-	
-	
+
+
 }

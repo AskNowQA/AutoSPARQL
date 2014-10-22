@@ -25,7 +25,7 @@ public class SimpleEntityDisambiguation {
 	private static final Logger logger = Logger.getLogger(SimpleEntityDisambiguation.class.getName());
 
 	private Knowledgebase knowledgebase;
-	private SimpleIRIShortFormProvider iriSfp = new SimpleIRIShortFormProvider(); 
+	private SimpleIRIShortFormProvider iriSfp = new SimpleIRIShortFormProvider();
 
 	public SimpleEntityDisambiguation(Knowledgebase knowledgebase) {
 		this.knowledgebase = knowledgebase;
@@ -37,7 +37,7 @@ public class SimpleEntityDisambiguation {
 		for(Template template : templates){
 			Map<Slot, Collection<Entity>> slot2Entities = performEntityDisambiguation(template);
 			template2Allocations.put(template, slot2Entities);
-		}		
+		}
 		return template2Allocations;
 	}
 
@@ -69,7 +69,7 @@ public class SimpleEntityDisambiguation {
 			Index index = getIndexForSlot(slot);
 			List<String> words = slot.getWords();
 			for(String word : words){
-				
+
 				// disable system.out
 				PrintStream out = System.out;
 				System.setOut(new PrintStream(new OutputStream() {@Override public void write(int arg0) throws IOException {}}));
@@ -98,9 +98,9 @@ public class SimpleEntityDisambiguation {
 		} else if(type == SlotType.PROPERTY || type == SlotType.SYMPROPERTY){
 			index = knowledgebase.getIndices().getPropertyIndex();
 		} else if(type == SlotType.DATATYPEPROPERTY){
-			index = knowledgebase.getIndices().getDataPropertyIndex();			
+			index = knowledgebase.getIndices().getDataPropertyIndex();
 		} else if(type == SlotType.OBJECTPROPERTY){
-			index = knowledgebase.getIndices().getObjectPropertyIndex();		
+			index = knowledgebase.getIndices().getObjectPropertyIndex();
 		} else if(type == SlotType.RESOURCE || type == SlotType.UNSPEC){
 			index = knowledgebase.getIndices().getResourceIndex();
 		}

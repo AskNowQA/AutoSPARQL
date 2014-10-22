@@ -22,7 +22,7 @@ class MoveDotDown implements ParserOperation {
 			TreeNode child = state.dot.getChildren().get(0);
 
 			if (child != null) {
-				
+
 				state.pos = 'a';
 				state.dot = child;
 				state.i = i;

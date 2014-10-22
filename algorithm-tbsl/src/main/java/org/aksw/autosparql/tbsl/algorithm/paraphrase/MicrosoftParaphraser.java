@@ -38,11 +38,11 @@ public class MicrosoftParaphraser implements Paraphraser {
         }
         return result;
     }
-    
+
     public static void main(String args[])
     {
         MicrosoftParaphraser ms = new MicrosoftParaphraser("X", "Y");
         System.out.println(ms.getParaphrases("Give me all actors of the television series Charmed."));
     }
-    
+
 }

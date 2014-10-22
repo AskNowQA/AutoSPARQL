@@ -3,32 +3,32 @@ package org.aksw.autosparql.tbsl.algorithm;
 
 // commented out because the NIF dependency was removed
 public class POSTaggerEvaluation { /* extends StringParser<ObjectHandler<Tagging<String>>>{
-	
-	
+
+
 	private List<PartOfSpeechTagger> taggers = Arrays.asList(new PartOfSpeechTagger[]{
 			new ApachePartOfSpeechTagger(), StanfordPartOfSpeechTagger.INSTANCE, new LingPipePartOfSpeechTagger()});
-	
+
 	private OLiAManager m = new OLiAManager();
     private OLiAOntology brown;
     private OLiAOntology penn;
-    
+
     private static final String OLIA_NS = "http://purl.org/olia/olia.owl";
-    
+
     private Filter<OntClass> olia_filter = new Filter<OntClass>() {
 		@Override
 		public boolean accept(OntClass oc) {
 			return oc.getURI().startsWith(OLIA_NS);
 		}
 	};
-	
-	
+
+
 	public POSTaggerEvaluation() {
 //    	brown = m.getOLiAOntology("http://purl.org/olia/brown-link.rdf");
 //    	penn = m.getOLiAOntology("http://purl.org/olia/penn-link.rdf");
 	}
-	
+
 	public void run(File directory){
-		 // train on files in data directory 
+		 // train on files in data directory
         File[] files = directory.listFiles();
         for (File file : files) {
             System.out.println("Training file=" + file);
@@ -40,7 +40,7 @@ public class POSTaggerEvaluation { /* extends StringParser<ObjectHandler<Tagging
 			break;
         }
 	}
-	
+
     @Override
     public void parseString(char[] cs, int start, int end) {
         String in = new String(cs,start,end-start);
@@ -64,7 +64,7 @@ public class POSTaggerEvaluation { /* extends StringParser<ObjectHandler<Tagging
         if (lastHyphen >= 0) {
             String first = tag.substring(0,lastHyphen);
             String suffix = tag.substring(lastHyphen+1);
-            if (suffix.equalsIgnoreCase("HL") 
+            if (suffix.equalsIgnoreCase("HL")
                 || suffix.equalsIgnoreCase("TL")
                 || suffix.equalsIgnoreCase("NC")) {
                 tag = first;
@@ -93,7 +93,7 @@ public class POSTaggerEvaluation { /* extends StringParser<ObjectHandler<Tagging
         // multiple runs to normalize
         return tag.equals(startTag) ? tag : normalizeTag(tag);
     }
-    
+
     private String extractSentence(String taggedSentence){
     	int pos = taggedSentence.indexOf("/");
     	int i = 0;
@@ -104,34 +104,34 @@ public class POSTaggerEvaluation { /* extends StringParser<ObjectHandler<Tagging
     			endPos = taggedSentence.substring(pos).length();
     		}
     		String rest = taggedSentence.substring(pos + endPos);
-    		
+
     		taggedSentence = first + rest;
     		pos = taggedSentence.indexOf("/");
-    		
+
 //    		if(i++ == 22)break;
     	}
     	return taggedSentence;
-    	
+
     }
 
     private void processSentence(String taggedSentence) {
         String[] tagTokenPairs = taggedSentence.split(" ");
         List<String> tokenList = new ArrayList<String>(tagTokenPairs.length);
         List<String> tagList = new ArrayList<String>(tagTokenPairs.length);
-    
+
         for (String pair : tagTokenPairs) {
             int j = pair.lastIndexOf('/');
             String token = pair.substring(0,j);
-            String tag = normalizeTag(pair.substring(j+1)); 
+            String tag = normalizeTag(pair.substring(j+1));
             tokenList.add(token);
             tagList.add(tag);
         }
         Tagging<String> tagging = new Tagging<String>(tokenList,tagList);
 
         evaluateTaggers(taggedSentence, tagging);
-        
+
     }
-    
+
     private void evaluateTaggers(String taggedSentence, Tagging<String> referenceTagging){
 //    	System.out.println("Checking tagged sentence:\n" + taggedSentence);
     	System.out.println(referenceTagging);
@@ -141,7 +141,7 @@ public class POSTaggerEvaluation { /* extends StringParser<ObjectHandler<Tagging
         	System.out.println("Testing " + tagger.getName());
         	//get the tagging form the POS tagger
         	Tagging<String> tagging = tagger.getTagging(extractedSentence);
-        	
+
         	String referenceTag;
             String tag;
             int errorCnt = 0;
@@ -156,28 +156,28 @@ public class POSTaggerEvaluation { /* extends StringParser<ObjectHandler<Tagging
             }
         }
     }
-    
+
     //
     //  Returns TRUE if in the OLia hierarchy is somewhere a common class.
     //
     private boolean matchesOLiaClass(String brownTag, String pennTag){
     	Set<String> brownClasses = brown.getClassURIsForTag(brownTag.toUpperCase());
     	Set<String> pennClasses = penn.getClassURIsForTag(pennTag);
-    	
+
     	System.out.println(brownTag + "-BROWN:" + brownClasses);
     	System.out.println(pennTag + "-PENN:" + pennClasses);
-    	
+
     	OntModel brownModel = ModelFactory.createOntologyModel();
     	OntModel pennModel = ModelFactory.createOntologyModel();
-    	
+
     	for (String classUri : brownClasses) {
     		brownModel.add(brown.getHierarchy(classUri));
         }
-    	
+
     	for (String classUri : pennClasses) {
     		pennModel.add(penn.getHierarchy(classUri));
         }
-    	
+
     	for(OntClass oc1 : brownModel.listClasses().filterKeep(olia_filter).toList()){
     		for(OntClass oc2 : pennModel.listClasses().filterKeep(olia_filter).toList()){
     			if(oc1.equals(oc2)){
@@ -185,14 +185,14 @@ public class POSTaggerEvaluation { /* extends StringParser<ObjectHandler<Tagging
     			}
     		}
     	}
-    	
+
     	return false;
     }
-    
+
     public static void main(String[] args) {
 		POSTaggerEvaluation eval = new POSTaggerEvaluation();
 		eval.run(new File(args[0]));
 	}
-    
+
 */
 }

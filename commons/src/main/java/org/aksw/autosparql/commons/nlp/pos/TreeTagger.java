@@ -14,18 +14,18 @@ import com.aliasi.tag.Tagging;
 public class TreeTagger implements PartOfSpeechTagger {
 
 	TreeTaggerWrapper<String> tt;
-	
+
 	private String tagging;
-	
+
 	public TreeTagger() throws IOException {
 		System.setProperty("treetagger.home","/home/lorenz/Downloads/TreeTagger");
 		tt = new TreeTaggerWrapper<String>();
 		tt.setModel(this.getClass().getClassLoader().getResource("tbsl/models/treetagger/english.par").getPath());
 	}
-	
+
 	public String tag(String s) {
 		tagging = "";
-		List<String> input = Arrays.asList(s.split(" "));		
+		List<String> input = Arrays.asList(s.split(" "));
 		try {
 		     tt.setHandler(new TokenHandler<String>() {
 		         public void token(String token, String pos, String lemma) {
@@ -38,19 +38,19 @@ public class TreeTagger implements PartOfSpeechTagger {
 		} catch (TreeTaggerException e) {
 			e.printStackTrace();
 		}
-		
+
 		return tagging.trim();
 	}
-	
+
 	public void close(){
 		tt.destroy();
 	}
-	
+
 	@Override
 	public String getName() {
 		return "Tree Tagger";
 	}
-	
+
 	@Override
 	public Tagging<String> getTagging(String sentence) {
 		// TODO Auto-generated method stub

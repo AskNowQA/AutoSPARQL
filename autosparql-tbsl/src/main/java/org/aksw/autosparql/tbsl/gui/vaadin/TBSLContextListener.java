@@ -14,7 +14,7 @@ import org.vaadin.appfoundation.authentication.util.UserUtil;
 import org.vaadin.appfoundation.persistence.facade.FacadeFactory;
 
 public class TBSLContextListener implements ServletContextListener{
-	
+
 
 	@Override
 	public void contextDestroyed(ServletContextEvent e) {
@@ -24,7 +24,7 @@ public class TBSLContextListener implements ServletContextListener{
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		Manager.getInstance().init();
 	}
-	
+
 	private static String getParameter(ServletContext servletContext, String key, String defaultValue) {
         String value = servletContext.getInitParameter(key);
         return value == null ? defaultValue : value;
@@ -42,13 +42,13 @@ public class TBSLContextListener implements ServletContextListener{
 			// Set the properties for the UserUtil
 			prop.setProperty("password.length.min", "4");
 			prop.setProperty("username.length.min", "4");
-			
+
 			System.setProperties(prop);
-			
+
 			UserUtil.registerUser("demo", "demo", "demo");
-			
+
 			System.out.println(FacadeFactory.getFacade().list(User.class));
-			
+
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

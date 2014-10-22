@@ -164,7 +164,7 @@ static final int[] jjnextStates = {
 
 /** Token literal values. */
 public static final String[] jjstrLiteralImages = {
-"", "\133", "\135", "\173", "\175", "\52", "\136", "\50", "\51", "\72", "\47", 
+"", "\133", "\135", "\173", "\175", "\52", "\136", "\50", "\51", "\72", "\47",
 null, null, null, null, null, null, };
 
 /** Lexer state names. */
@@ -172,10 +172,10 @@ public static final String[] lexStateNames = {
    "DEFAULT",
 };
 static final long[] jjtoToken = {
-   0x1fffL, 
+   0x1fffL,
 };
 static final long[] jjtoSkip = {
-   0x1e000L, 
+   0x1e000L,
 };
 protected SimpleCharStream input_stream;
 private final int[] jjrounds = new int[2];
@@ -258,7 +258,7 @@ int jjmatchedPos;
 int jjmatchedKind;
 
 /** Get the next Token. */
-public Token getNextToken() 
+public Token getNextToken()
 {
   Token matchedToken;
   int curPos = 0;

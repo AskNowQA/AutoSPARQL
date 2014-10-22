@@ -9,15 +9,15 @@ import org.aksw.autosparql.commons.search.SolrQueryResultItem;
 public class SolrQueryResultStringSimilarityComparator implements Comparator<SolrQueryResultItem>{
 	private String s;
 	private Map<String, Double> cache;
-	
+
 	public SolrQueryResultStringSimilarityComparator(String s) {
 		this.s = s;
 		cache = new HashMap<String, Double>();
 	}
-	
+
 	@Override
 	public int compare(SolrQueryResultItem item1, SolrQueryResultItem item2) {
-		
+
 		double sim1 = 0;
 		if(cache.containsKey(item1.getLabel())){
 			sim1 = cache.get(item1.getLabel());
@@ -32,7 +32,7 @@ public class SolrQueryResultStringSimilarityComparator implements Comparator<Sol
 			sim2 = Similarity.getSimilarity(s, item2.getLabel());
 			cache.put(item2.getLabel(), sim2);
 		}
-		 
+
 		if(sim1 < sim2){
 			return 1;
 		} else if(sim1 > sim2){
@@ -45,5 +45,5 @@ public class SolrQueryResultStringSimilarityComparator implements Comparator<Sol
 			return val;
 		}
 	}
-	
+
 }

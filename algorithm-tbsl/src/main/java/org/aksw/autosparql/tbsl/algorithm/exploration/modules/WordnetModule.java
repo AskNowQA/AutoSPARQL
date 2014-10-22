@@ -19,9 +19,9 @@ import org.aksw.autosparql.tbsl.algorithm.exploration.exploration_main.Setting;
 import edu.mit.jwi.item.POS;
 
 public class WordnetModule {
-	
+
 	private static int explorationdepthwordnet =1;
-	
+
 	public static ArrayList<Hypothesis> doWordnet(String variable, String property_to_compare_with, HashMap<String, String> properties, SQLiteIndex myindex,WordNet wordnet,StanfordLemmatizer lemmatiser) throws SQLException,
 	JWNLException {
 		ArrayList<Hypothesis> listOfNewHypothesen = new ArrayList<Hypothesis>();
@@ -38,7 +38,7 @@ public class WordnetModule {
 					 semantics.add(lemmatiser.stem(s));
 				 }
 				 catch (Exception e){
-					 
+
 				 }
 			 }
 		 }
@@ -47,9 +47,9 @@ public class WordnetModule {
 			 semantics.add(lemmatiser.stem(property_to_compare_with));
 		 }
 		 catch (Exception e){
-			 
+
 		 }
-		 
+
 		 for(String s: semantics){
 			 //first check, if there is a singular form in the wordnet dictionary.. eg children -> child
 			 //String _temp_=myindex.getWordnetHelp(property);
@@ -62,7 +62,7 @@ public class WordnetModule {
 			 else tmp_semantics.add(s);
 
 		 }
-		 
+
 		 Boolean goOnAfterWordnet = true;
 
 		 for(int i=0;i<=explorationdepthwordnet;i++){
@@ -80,36 +80,36 @@ public class WordnetModule {
 					 if(!semantics.contains(k)) semantics.add(k);
 				 }
 				}
-				
+
 			} catch (IOException e) {
-				
+
 				goOnAfterWordnet=false;
 				System.err.println("Error in searching Wordnet with word "+semantics+" \n End");
-				
+
 			}
-					 
+
 		 }
-		
+
 		 if(goOnAfterWordnet==true){
-			
+
 			 for (Entry<String, String> entry : properties.entrySet()) {
 				    String key = entry.getKey();
 				    String value = entry.getValue();
 				    key=key.replace("\"","");
 				    key=key.replace("@en","");
 				    key=key.toLowerCase();
-				    
+
 				for(String b : semantics){
 					if(key.equals(b)){
 
-						Hypothesis h = new Hypothesis(variable, key, value, "PROPERTY", 1.0); 
-						 
-						
+						Hypothesis h = new Hypothesis(variable, key, value, "PROPERTY", 1.0);
+
+
 						 listOfNewHypothesen.add(h);
-						
+
 					}
 					else if(key.contains(b.toLowerCase())||b.toLowerCase().contains(key)){
-						
+
 						/*System.out.println("Key:"+key);
 						System.out.println("b:"+b);*/
 
@@ -126,51 +126,51 @@ public class WordnetModule {
 								score=0.8+(b.length()/key.length());
 							}
 							//0.95
-							Hypothesis h = new Hypothesis(variable, key, value, "PROPERTY", score); 
+							Hypothesis h = new Hypothesis(variable, key, value, "PROPERTY", score);
 							listOfNewHypothesen.add(h);
 						}
 						else{
 							//System.out.println("FOUND SOMETHING12345");
 							if(!b.contains("_")&&!key.contains("_")){
-								Hypothesis h = new Hypothesis(variable, key, value, "PROPERTY", 0.7); 
+								Hypothesis h = new Hypothesis(variable, key, value, "PROPERTY", 0.7);
 								listOfNewHypothesen.add(h);
 							}
-							
+
 						}
-						 
-						 
-						 
-					
-						 
-						 
+
+
+
+
+
+
 					}
-					
+
 					else if(Levenshtein.nld(key.toLowerCase(), b.toLowerCase())>Setting.getLevenstheinMin()){
-						Hypothesis h = new Hypothesis(variable, key, value, "PROPERTY", (Levenshtein.nld(key.toLowerCase(), b.toLowerCase()))); 
+						Hypothesis h = new Hypothesis(variable, key, value, "PROPERTY", (Levenshtein.nld(key.toLowerCase(), b.toLowerCase())));
 						 /*System.out.println("nld"+Levenshtein.nld(key.toLowerCase(), b.toLowerCase()));
 						 System.out.println("Key:"+key+"DONE");*/
-						
+
 						 listOfNewHypothesen.add(h);
 					}
-						
-						
+
+
 				}
 			}
-			 
+
 		 }
-		 
-		
+
+
 		 return listOfNewHypothesen;
 	}
-	
+
 	private static ArrayList<String> getSemantics (ArrayList<String> semanticsOrig,WordNet wordnet) throws IOException, JWNLException {
 		ArrayList<String> result = new ArrayList<String>();
-		
+
 		//System.out.println("in function get Semantics!");
-		
+
 		ArrayList<String> semantics = new ArrayList<String>();
 		semantics=semanticsOrig;
-		
+
 		try{
 			for(String id :semantics){
 				if(!result.contains(id))result.add(id);
@@ -178,7 +178,7 @@ public class WordnetModule {
 				List<String> array_bestsynonyms=null;
 				List<String> array_bestsynonyms_verb=null;
 				List<String> array_bestsynonyms_adj=null;
-				
+
 				try{
 					array_relatedNouns =wordnet.getRelatedNouns(id);
 				}
@@ -194,8 +194,8 @@ public class WordnetModule {
 					//
 				}
 
-					
-					
+
+
 				if(array_relatedNouns!=null){
 					for(String i:array_relatedNouns){
 						if(!result.contains(i))result.add(i);
@@ -216,9 +216,9 @@ public class WordnetModule {
 						if(!result.contains(i))result.add(i);
 					}
 				}
-				
-				
-					
+
+
+
 			}
 		}
 		catch(Exception e){
@@ -238,7 +238,7 @@ public class WordnetModule {
 							List<String> array_bestsynonyms_adj=null;
 							//add id also to the result, if its not already in there
 							if(!result.contains(advanced_id))result.add(advanced_id);
-							
+
 							try{
 								array_relatedNouns =wordnet.getRelatedNouns(advanced_id);
 							}
@@ -253,7 +253,7 @@ public class WordnetModule {
 							catch(Exception e){
 								//
 							}
-								
+
 							if(array_relatedNouns!=null){
 								for(String i:array_relatedNouns){
 									if(!result.contains(i))result.add(i);
@@ -275,24 +275,24 @@ public class WordnetModule {
 								}
 							}
 
-							
+
 							}
 					}
-						
+
 				}
 				}
 				catch(Exception e){
 					if(result.isEmpty()) return semanticsOrig;
 				}
-			
+
 		}
-		
+
 		if(!result.isEmpty()) return result;
 		else return null;
 	//	else{ return result;}
 	}
-	
-	
-	
+
+
+
 
 }

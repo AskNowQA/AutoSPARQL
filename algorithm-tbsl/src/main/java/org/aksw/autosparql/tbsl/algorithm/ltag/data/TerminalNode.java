@@ -56,7 +56,7 @@ public class TerminalNode implements TreeNode, Cloneable {
 		return output;
 
 	}
-	
+
 	public Category getCategory() {
 		return category;
 	}
@@ -79,7 +79,7 @@ public class TerminalNode implements TreeNode, Cloneable {
 		out.setFeature(feature);
 		return out;
 	}
-	
+
 	public Tree getParent() {
 		return parent;
 	}
@@ -106,7 +106,7 @@ public class TerminalNode implements TreeNode, Cloneable {
 		}
 		return this.getCategory().toString()+caseStr+":'"+getTerminal()+"'";
 	}
-	
+
 	public TreeNode getRightSibling() {
 		int idx = this.parent.children.indexOf(this);
 		// if this is rightmost children of parent,
@@ -182,7 +182,7 @@ public class TerminalNode implements TreeNode, Cloneable {
 	public Feature getFeature() {
 		return feature;
 	}
-	
+
 	public void setFeature(Feature f) {
 		feature = f;
 	}
@@ -203,5 +203,5 @@ public class TerminalNode implements TreeNode, Cloneable {
 			terminal = new_anchor;
 		}
 	}
-	
+
 }

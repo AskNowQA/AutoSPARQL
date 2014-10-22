@@ -9,28 +9,28 @@ import org.aksw.autosparql.tbsl.algorithm.sem.util.Label;
 public class Negated_DRS implements DRS_Condition, Cloneable {
 
 	DRS m_DRS;
-	
-	public Negated_DRS() {	
+
+	public Negated_DRS() {
 	}
-	
+
 	Negated_DRS(DRS drs) {
 		m_DRS = drs;
 	}
-	
+
 	// set methods
 	public void setDRS(DRS drs) {
 		m_DRS = drs;
 	}
-	
-	
+
+
 	// get methods
 	public DRS getDRS()
 	{
 		return m_DRS;
 	}
-	
+
 	// printing methods
-	
+
 	public String toString()
 	{
 		return "NOT "+m_DRS;
@@ -46,33 +46,33 @@ public class Negated_DRS implements DRS_Condition, Cloneable {
 	public void replaceReferent(String ref1, String ref2) {
 		m_DRS.replaceReferent(ref1,ref2);
 	}
-	public void replaceEqualRef(DiscourseReferent dr1, DiscourseReferent dr2, boolean isInUpperUniverse) { 
+	public void replaceEqualRef(DiscourseReferent dr1, DiscourseReferent dr2, boolean isInUpperUniverse) {
 		m_DRS.replaceEqualRef(dr1, dr2, isInUpperUniverse);
 	}
-	
+
 	public Set<String> collectVariables() {
 		return m_DRS.collectVariables();
 	}
-	
+
 	public Set<DRS_Condition> getEqualConditions() {
-		
+
 		Set<DRS_Condition> out = new HashSet<DRS_Condition>();
-		
+
 		for (DRS_Condition c : m_DRS.m_DRS_Conditions) {
 			out.addAll(c.getEqualConditions());
 		}
 		return out;
 	}
-	
+
 	public boolean isComplexCondition() { return false; }
 	public boolean isNegatedCondition() { return true; }
-	
+
 	public List<Label> getAllLabels() {
 		List<Label> result = new ArrayList<Label>();
 		result.add(m_DRS.getLabel());
 		return result;
 	}
-	
+
 	public DRS_Condition clone() {
 		return (new Negated_DRS(m_DRS.clone()));
 	}
@@ -101,7 +101,7 @@ public class Negated_DRS implements DRS_Condition, Cloneable {
 			return false;
 		return true;
 	}
-	
-	
-	
+
+
+
 }

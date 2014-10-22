@@ -28,8 +28,8 @@ public class PosTaggerModelCreation {
     static double LAMBDA_FACTOR = 8.0;
 	/**
 	 * @param args
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
 	 */
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		// set up parser with estimator as handler
@@ -38,7 +38,7 @@ public class PosTaggerModelCreation {
         Parser<ObjectHandler<Tagging<String>>> parser = new BrownPosParser();
         parser.setHandler(estimator);
 
-        // train on files in data directory 
+        // train on files in data directory
         File dataDir = new File(args[0]);
         File[] files = dataDir.listFiles();
         for (File file : files) {
@@ -49,21 +49,21 @@ public class PosTaggerModelCreation {
         // write output to file
         File modelFile = new File(args[1]);
         AbstractExternalizable.compileTo(estimator,modelFile);
-        
+
         InputStream fileIn = new FileInputStream(modelFile);
 		ObjectInputStream objIn = new ObjectInputStream(fileIn);
 		HiddenMarkovModel hmm = (HiddenMarkovModel) objIn.readObject();
 		Streams.closeQuietly(objIn);
 		HmmDecoder tagger = new HmmDecoder(hmm);
-		
+
 		String sentence = "Give me all soccer clubs in Premier League.";
 		System.out.println(tagger.tag(Arrays.asList(IndoEuropeanTokenizerFactory.INSTANCE.tokenizer(sentence.toCharArray(), 0, sentence.length()).tokenize())));
 		sentence = "In which films did Julia Roberts as well as Richard Gere play?";
 		System.out.println(tagger.tag(Arrays.asList(IndoEuropeanTokenizerFactory.INSTANCE.tokenizer(sentence.toCharArray(), 0, sentence.length()).tokenize())));
-		
+
 	}
-	
-	static class BrownPosParser 
+
+	static class BrownPosParser
     extends StringParser<ObjectHandler<Tagging<String>>> {
 
 	int questionCount = 0;
@@ -94,7 +94,7 @@ public class PosTaggerModelCreation {
         if (lastHyphen >= 0) {
             String first = tag.substring(0,lastHyphen);
             String suffix = tag.substring(lastHyphen+1);
-            if (suffix.equalsIgnoreCase("HL") 
+            if (suffix.equalsIgnoreCase("HL")
                 || suffix.equalsIgnoreCase("TL")
                 || suffix.equalsIgnoreCase("NC")) {
                 tag = first;
@@ -128,11 +128,11 @@ public class PosTaggerModelCreation {
         String[] tagTokenPairs = sentence.split(" ");
         List<String> tokenList = new ArrayList<String>(tagTokenPairs.length);
         List<String> tagList = new ArrayList<String>(tagTokenPairs.length);
-    
+
         for (String pair : tagTokenPairs) {
             int j = pair.lastIndexOf('/');
             String token = pair.substring(0,j);
-            String tag = normalizeTag(pair.substring(j+1)); 
+            String tag = normalizeTag(pair.substring(j+1));
             tokenList.add(token);
             tagList.add(tag);
         }
@@ -140,9 +140,9 @@ public class PosTaggerModelCreation {
             = new Tagging<String>(tokenList,tagList);
         getHandler().handle(tagging);
     }
-    
+
 }
-	
-	
+
+
 
 }

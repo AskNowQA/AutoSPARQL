@@ -4,17 +4,17 @@ import java.util.HashMap;
 
 
 /**
- * 
+ *
  * @author swalter
  *
  */
 public class ElementList {
-	
+
 	/**
 	 * Name of the variable, e.g. ?y0
 	 */
 	private String variablename;
-	
+
 	/**
 	 * URI of the Resource or Class, which was used for getting the depending elements with the uri
 	 */
@@ -23,7 +23,7 @@ public class ElementList {
 	 * HashMap with name -uri pairs.
 	 */
 	private HashMap<String,String> hm = new HashMap<String,String>();
-	
+
 	/**
 	 * Resource or Class!
 	 */
@@ -46,13 +46,13 @@ public class ElementList {
 	public void setURI(String resourceURI) {
 		this.uri = resourceURI;
 	}
-	
+
 	public ElementList(String name_new, String resource, HashMap<String,String> hm){
 		this.setHm(hm);
 		this.setURI(resource);
 		this.setVariablename(name_new);
 	}
-	
+
 	public void printAll(){
 		System.out.println("Name: "+this.getVariablename());
 		System.out.println("URI: "+this.getURI());
@@ -61,7 +61,7 @@ public class ElementList {
 			System.out.println( key + ": "+this.hm.get(key));
 		}
 	}
-	
+
 	public String printToString(){
 		String result="";
 		result+="Name: "+this.getVariablename()+"\n";
@@ -70,7 +70,7 @@ public class ElementList {
 		for(String key : this.hm.keySet()){
 			result+=key + ": "+this.hm.get(key)+"\n";
 		}
-		
+
 		return result;
 	}
 }

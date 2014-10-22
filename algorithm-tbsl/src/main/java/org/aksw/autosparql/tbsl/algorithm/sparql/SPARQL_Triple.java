@@ -3,20 +3,20 @@ package org.aksw.autosparql.tbsl.algorithm.sparql;
 import java.io.Serializable;
 
 public class SPARQL_Triple implements Serializable, Cloneable{
-	
+
 	private static final long serialVersionUID = -1681019680404287955L;
-	
+
 	SPARQL_Term variable = new SPARQL_Term("");
 	SPARQL_Property property = new SPARQL_Property("");
 	SPARQL_Value value = new SPARQL_Value();
 	boolean optional;
-	
+
 	@Override public SPARQL_Triple clone()
 	{
 		return new SPARQL_Triple(variable.clone(),property.clone(),value.clone(),optional);
 	}
-	
-	
+
+
 	public boolean isOptional() {
 		return optional;
 	}
@@ -41,32 +41,32 @@ public class SPARQL_Triple implements Serializable, Cloneable{
 	public void setValue(SPARQL_Value value) {
 		this.value = value;
 	}
-	
+
 	public void reverse(){
 		SPARQL_Term newVariable = new SPARQL_Term(this.value.getName());
 		newVariable.setIsVariable(this.value.isVariable());
 		if(value instanceof SPARQL_Term){
 			newVariable.setIsURI(((SPARQL_Term)value).isURI);
 		}
-		
+
 		SPARQL_Term newValue = new SPARQL_Term(this.variable.getName());
 		newValue.setIsVariable(this.variable.isVariable());
 		newValue.setIsURI(variable.isURI);
-		
+
 		this.variable = newVariable;
 		this.value = newValue;
-		
+
 	}
-	
+
 	@Override
 	public String toString() {
 		if (optional) {
 			return "OPTIONAL {"+variable.toString()+" "+property.toString()+" "+value.toString()+".}";
-			
+
 		}
 		return variable.toString()+" "+property.toString()+" "+value.toString()+".";
 	}
-	
+
 	public SPARQL_Triple(SPARQL_Term variable, SPARQL_Property property,
 			SPARQL_Value value) {
 		super();
@@ -74,7 +74,7 @@ public class SPARQL_Triple implements Serializable, Cloneable{
 		this.property = property;
 		this.value = value;
 	}
-	
+
 	public SPARQL_Triple(SPARQL_Term variable, SPARQL_Property property,
 			SPARQL_Value value, boolean optional) {
 		super();
@@ -123,6 +123,6 @@ public class SPARQL_Triple implements Serializable, Cloneable{
 			return false;
 		return true;
 	}
-	
-	
+
+
 }
