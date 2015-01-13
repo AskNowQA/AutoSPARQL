@@ -25,7 +25,7 @@
 		<!--Define the AKSW dependency version -->
 		<aksw.version>0.7.2</aksw.version>
 		<!-- from qa -->
-		<solr.version>4.8.0</solr.version>
+		<solr.version>4.10.3</solr.version>
 		<autosparql.version>1.0-SNAPSHOT</autosparql.version>
 	</properties>
 
