@@ -22,10 +22,12 @@ public class Preprocessor {
         " 16 "," sixteen "," 17 "," seventeen "," 18 "," eighteen "," 19 "," nineteen "," 20 "," twenty "};
 	static boolean USE_NER;
 	static boolean VERBOSE;
-	static NER ner;
+	public static DBpediaSpotlightNER ner;
 
-	public Preprocessor(boolean n) {
-		USE_NER = n;
+	public List<String> usefulnamedentities;
+
+	public Preprocessor(boolean useNer) {
+		USE_NER = useNer;
 		VERBOSE = true;
 		if (USE_NER) {
 //			ner = new LingPipeNER(true); //not case sensitive best solution?
@@ -302,7 +304,7 @@ public class Preprocessor {
 				"GERUNDIN","VPREP","WHEN","WHERE","IN","TO","DT"};
 
 		List<String> namedentities = ner.getNamedEntitites(untagged);
-		List<String> usefulnamedentities = new ArrayList<String>();
+		usefulnamedentities = new ArrayList<String>();
 
 		if (VERBOSE) logger.debug("Proposed NEs: " + namedentities);
 

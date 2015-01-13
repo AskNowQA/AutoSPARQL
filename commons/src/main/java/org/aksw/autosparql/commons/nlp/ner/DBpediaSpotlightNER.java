@@ -9,8 +9,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,12 +31,15 @@ public class DBpediaSpotlightNER implements NER{
 	 */
 	private static final int SUPPORT = 20;
 
+	public final Map<String,String> entityUri = new HashMap<>();
+
 	public DBpediaSpotlightNER(){
 
 	}
 
 	@Override
 	public List<String> getNamedEntitites(String sentence) {
+		entityUri.clear();
 		List<String> namedEntities = new ArrayList<String>();
 		try {
 			URL url = new URL(SERVICE_URL + "text=" + URLEncoder.encode(sentence, "UTF-8") + "&confidence=" + CONFIDENCE + "&support=" + SUPPORT);
@@ -53,9 +57,10 @@ public class DBpediaSpotlightNER implements NER{
 				JSONObject entityObject;
 				for(int i = 0; i < array.length(); i++){
 					entityObject = array.getJSONObject(i);
-					System.out.println("Entity: " + entityObject.getString("@surfaceForm"));
-					System.out.println("DBpedia URI: " + entityObject.getString("@URI"));
-					System.out.println("Types: " + entityObject.getString("@types"));
+//					System.out.println("Entity: " + entityObject.getString("@surfaceForm"));
+//					System.out.println("DBpedia URI: " + entityObject.getString("@URI"));
+					entityUri.put(entityObject.getString("@surfaceForm"),entityObject.getString("@URI"));
+//					System.out.println("Types: " + entityObject.getString("@types"));
 					namedEntities.add(entityObject.getString("@surfaceForm"));
 
 				}
