@@ -11,7 +11,7 @@ There is also "./createcompillelog" for easier error reporting.
 
 Manually: Do "mvn install -N" in the folders in that order: autosparql, commons, algorithm-tbsl. Then go into autosparql-tbsl and run "mvn jetty:run".
 
-Then, go into your browser and access "http://localhost:8080/autosparql-lite".
+Then, go into your browser and access "http://localhost:8080" and click on the link to the application.
 
 REMARKS
 Symmetric properties now properly work again.
