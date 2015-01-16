@@ -18,7 +18,8 @@ public class DBpediaKnowledgebase extends RemoteKnowledgebase
 	{
 		if(dbpediaEndpoint==null)
 		{
-			try{dbpediaEndpoint = new SparqlEndpoint(new URL("http://linkedspending.aksw.org/sparql"),Collections.<String>singletonList("http://dbpedia.org"), Collections.<String>emptyList());}
+			try{dbpediaEndpoint = new SparqlEndpoint(new URL("http://dbpedia.org/sparql"),Collections.<String>singletonList("http://dbpedia.org"), Collections.<String>emptyList());}
+//			try{dbpediaEndpoint = new SparqlEndpoint(new URL("http://linkedspending.aksw.org/sparql"),Collections.<String>singletonList("http://dbpedia.org"), Collections.<String>emptyList());}
 			catch (MalformedURLException e){throw new RuntimeException(e);}
 		}
 		return dbpediaEndpoint;
