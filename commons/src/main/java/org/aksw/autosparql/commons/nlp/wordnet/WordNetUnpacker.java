@@ -33,27 +33,27 @@ public class WordNetUnpacker
 	{
 		try
 		{
-		String codeSource = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
-		logger.debug("WordNetUnpacker.getUnpackedWordNetDir: using code source "+codeSource);
-		if(!codeSource.endsWith(".jar"))
-		{
-//			logger.debug("not running from jar, no unpacking necessary");
-			try{return new File(WordNetUnpacker.class.getClassLoader().getResource(jarDir).toURI());}
-			catch (URISyntaxException e) {throw new IOException(e);}
-		}
-		try(JarFile jarFile = new JarFile(codeSource))
-		{
-			String tempDirString = System.getProperty("java.io.tmpdir");
-			if(tempDirString==null) {throw new IOException("java.io.tmpdir not set");}
-			File tempDir = new File(tempDirString);
-			if(!tempDir.exists()) {throw new IOException("temporary directory does not exist");}
-			if(!tempDir.isDirectory()) {throw new IOException("temporary directory is a file, not a directory ");}
-			File wordNetDir = new File(tempDirString+'/'+"wordnet"+ID);
-			wordNetDir.mkdir();
-			logger.debug("unpacking jarfile "+jarFile.getName());
-			copyResourcesToDirectory(jarFile, jarDir, wordNetDir.getAbsolutePath());
-			return wordNetDir;
-		}
+			String codeSource = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
+			logger.debug("WordNetUnpacker.getUnpackedWordNetDir: using code source "+codeSource);
+			if(!codeSource.endsWith(".jar"))
+			{
+				//			logger.debug("not running from jar, no unpacking necessary");
+				try{return new File(WordNetUnpacker.class.getClassLoader().getResource(jarDir).toURI());}
+				catch (URISyntaxException e) {throw new IOException(e);}
+			}
+			try(JarFile jarFile = new JarFile(codeSource))
+			{
+				String tempDirString = System.getProperty("java.io.tmpdir");
+				if(tempDirString==null) {throw new IOException("java.io.tmpdir not set");}
+				File tempDir = new File(tempDirString);
+				if(!tempDir.exists()) {throw new IOException("temporary directory does not exist");}
+				if(!tempDir.isDirectory()) {throw new IOException("temporary directory is a file, not a directory ");}
+				File wordNetDir = new File(tempDirString+'/'+"wordnet"+ID);
+				wordNetDir.mkdir();
+				logger.debug("unpacking jarfile "+jarFile.getName());
+				copyResourcesToDirectory(jarFile, jarDir, wordNetDir.getAbsolutePath());
+				return wordNetDir;
+			}
 		}
 		catch(IOException e) {throw new RuntimeException(e);}
 	}
@@ -72,30 +72,30 @@ public class WordNetUnpacker
 				if (parent != null) {
 					parent.mkdirs();
 				}
+				if(dest.exists())
+				{
+					logger.warn("file exists already, skipped: "+dest);
+					continue;
+				}
+				try(FileOutputStream out = new FileOutputStream(dest))
+				{
+					try(InputStream in = fromJar.getInputStream(entry))
+					{
+						try {
+							byte[] buffer = new byte[8 * 1024];
 
-				FileOutputStream out = new FileOutputStream(dest);
-				InputStream in = fromJar.getInputStream(entry);
-
-				try {
-					byte[] buffer = new byte[8 * 1024];
-
-					int s = 0;
-					while ((s = in.read(buffer)) > 0) {
-						out.write(buffer, 0, s);
+							int s = 0;
+							while ((s = in.read(buffer)) > 0) {
+								out.write(buffer, 0, s);
+							}
+						} catch (IOException e) {
+							throw new IOException("Could not copy asset from jar file", e);
+						}
 					}
-				} catch (IOException e) {
-					throw new IOException("Could not copy asset from jar file", e);
-				} finally {
-					try {
-						in.close();
-					} catch (IOException ignored) {}
-					try {
-						out.close();
-					} catch (IOException ignored) {}
 				}
 			}
 		}
-//		if(copyCount==0) logger.warn("WordNetUnpacker: No files copied!");
+		//		if(copyCount==0) logger.warn("WordNetUnpacker: No files copied!");
 		if(copyCount==0) throw new IOException("No files copied!");
 	}
 }
