@@ -71,12 +71,17 @@
 	</build>
 
 	<dependencyManagement>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.10</version>
+		</dependency>
 		<dependencies>
-				<dependency>
-					<groupId>com.github.ansell.pellet</groupId>
-					<artifactId>pellet-owlapiv3</artifactId>
-					<version>2.3.6-ansell</version>
-				</dependency>
+			<dependency>
+				<groupId>com.github.ansell.pellet</groupId>
+				<artifactId>pellet-owlapiv3</artifactId>
+				<version>2.3.6-ansell</version>
+			</dependency>
 			<dependency>
 				<groupId>org.aksw.semweb2nl</groupId>
 				<artifactId>sparql2nl</artifactId>
