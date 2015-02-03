@@ -151,7 +151,7 @@
 	<!-- </repository> -->
 	<!-- <repository> -->
 	<!-- <id>maven.aksw.internal</id> -->
-	<!-- <url>http://maven.aksw.org/archiva/repository/internal</url> -->
+	<!-- <url>http://maven.aksw.org/repository/internal</url> -->
 	<!-- </repository> -->
 	<!-- </repositories> -->
 </project>
