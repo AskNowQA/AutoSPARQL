@@ -71,12 +71,12 @@
 	</build>
 
 	<dependencyManagement>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.10</version>
-		</dependency>
 		<dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.7.10</version>
+            </dependency>
 			<dependency>
 				<groupId>com.github.ansell.pellet</groupId>
 				<artifactId>pellet-owlapiv3</artifactId>
