@@ -1,27 +1,17 @@
 package org.aksw.autosparql.tbsl.algorithm;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import junit.framework.TestCase;
-import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
-import org.aksw.autosparql.commons.knowledgebase.LocalKnowledgebase;
-import org.aksw.autosparql.commons.knowledgebase.OxfordKnowledgebase;
-import org.aksw.autosparql.tbsl.algorithm.learning.Entity;
-import org.aksw.autosparql.tbsl.algorithm.learning.TbslDbpedia;
-import org.aksw.autosparql.tbsl.algorithm.learning.TbslOxford;
-import org.aksw.autosparql.tbsl.algorithm.learning.TemplateInstantiation;
+import static org.junit.Assert.*;
+import java.util.*;
+import org.aksw.autosparql.commons.knowledgebase.*;
+import org.aksw.autosparql.tbsl.algorithm.learning.*;
 import org.aksw.autosparql.tbsl.algorithm.learning.ranking.SimpleRankingComputation;
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.util.Prominences;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import com.hp.hpl.jena.query.ResultSet;
 
-public class TBSLTest extends TestCase
+public class TBSLTest
 {
 
 	@Ignore
@@ -31,7 +21,7 @@ public class TBSLTest extends TestCase
 		String question = "Give me all Persons born in Berlin.";
 		TemplateInstantiation ti = TbslDbpedia.INSTANCE.answerQuestion(question);
 		ResultSet rs = DBpediaKnowledgebase.INSTANCE.querySelect(ti.getQuery());
-//		assertTrue(!rs.hasNext());
+		assertTrue(!rs.hasNext());
 	}
 
 	@Test
@@ -47,7 +37,7 @@ public class TBSLTest extends TestCase
 		//		System.out.println(rs.nextSolution());
 	}
 
-	@Test
+	@Before
 	public void testProminence()
 	{
 		Entity bedrooms = new Entity("http://diadem.cs.ox.ac.uk/ontologies/real-estate#bedrooms", "number of bedrooms");
@@ -59,21 +49,12 @@ public class TBSLTest extends TestCase
 	}
 
 	@Test
-	public void testOxford() throws Exception
-	{
-		assertFalse(((LocalKnowledgebase)TbslOxford.INSTANCE.getKnowledgebase()).getModel().isEmpty());
-		String question = "Give me all houses with more than 3 bedrooms.";// and more than 2 bedrooms
-		TemplateInstantiation ti = TbslOxford.INSTANCE.answerQuestion(question);
-		ResultSet rs = OxfordKnowledgebase.INSTANCE.querySelect(ti.getQuery());
-		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
-	}
-
-	@Test
 	public void testOxfordMoreThanTwoBedrooms() throws Exception
 	{
 		assertFalse(((LocalKnowledgebase)TbslOxford.INSTANCE.getKnowledgebase()).getModel().isEmpty());
 		String question = "houses with more than 2 bedrooms.";
 		TemplateInstantiation ti = TbslOxford.INSTANCE.answerQuestion(question);
+		System.out.println(ti.getQuery());
 		ResultSet rs = OxfordKnowledgebase.INSTANCE.querySelect(ti.getQuery());
 		assertTrue(rs.nextSolution().toString().contains("http://diadem.cs.ox.ac.uk/ontologies/real-estate#"));
 	}
