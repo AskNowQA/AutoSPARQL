@@ -2,10 +2,7 @@ package org.aksw.autosparql.commons.index;
 
 import org.aksw.autosparql.commons.search.DbpediaFilter;
 import org.aksw.autosparql.commons.search.FilteredIndex;
-import org.aksw.rdfindex.HierarchicalIndex;
-import org.aksw.rdfindex.Index;
-import org.aksw.rdfindex.Indices;
-import org.aksw.rdfindex.SOLRIndex;
+import org.aksw.rdfindex.*;
 
 /** Capsules the necessary settings for the AKSW SOLR server settings
  *   @author konrad */
@@ -55,6 +52,8 @@ public enum SolrServer
 
 		this.resourcesIndex = new FilteredIndex(resourcesIndex, DbpediaFilter.INSTANCE);
 		this.classesIndex = new FilteredIndex(classesIndex, DbpediaFilter.INSTANCE);
+//		this.dataPropertiesIndex= new FilteredIndex(dataPropertiesIndex,DbpediaFilter.INSTANCE);
+//		this.objectPropertiesIndex = new FilteredIndex(objectPropertiesIndex,DbpediaFilter.INSTANCE);
 		this.dataPropertiesIndex= new FilteredIndex(new HierarchicalIndex(dataPropertiesIndex,boaIndex),DbpediaFilter.INSTANCE);
 		this.objectPropertiesIndex = new FilteredIndex(new HierarchicalIndex(objectPropertiesIndex,boaIndex),DbpediaFilter.INSTANCE);
 

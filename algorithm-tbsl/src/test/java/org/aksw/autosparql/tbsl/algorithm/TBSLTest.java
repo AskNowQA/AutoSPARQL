@@ -17,13 +17,14 @@ import org.aksw.autosparql.tbsl.algorithm.learning.ranking.SimpleRankingComputat
 import org.aksw.autosparql.tbsl.algorithm.sparql.Slot;
 import org.aksw.autosparql.tbsl.algorithm.sparql.SlotType;
 import org.aksw.autosparql.tbsl.algorithm.util.Prominences;
+import org.junit.Ignore;
 import org.junit.Test;
 import com.hp.hpl.jena.query.ResultSet;
 
 public class TBSLTest extends TestCase
 {
 
-	@Test
+	@Ignore
 	public void testDBpediaLorenzBuehmann() throws Exception
 	{
 		//		String question = "Give me soccer clubs in Premier League.";
