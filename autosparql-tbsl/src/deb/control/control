@@ -1,0 +1,11 @@
+Package: autosparql-lite
+Version: [[version]]
+Section: web
+Priority: optional
+Architecture: all
+Depends: tomcat7, openjdk-7-jre | sun-java7-jre
+Maintainer: Konrad Höffner <konrad.hoeffner@uni-leipzig.de>
+Distribution: ldstack-nightly
+Homepage: http://stack.linkeddata.org
+Description: Convert a natural language expression to a SPARQL query
+  The underlying idea of the project is to convert a natural language expression to a SPARQL query, which can then retrieve the answer of a question from a given triple store.
