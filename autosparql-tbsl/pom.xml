@@ -15,11 +15,37 @@
 		<vaadin.version>6.8.0</vaadin.version>
 		<gwt.version>2.3.0</gwt.version>
 		<gwt.plugin.version>2.3.0</gwt.plugin.version>
+		<jdeb.version>0.8</jdeb.version>
 	</properties>
 
 	<build>
 		<finalName>autosparql-lite</finalName>
 		<plugins>
+			<plugin>
+			  <artifactId>jdeb</artifactId>
+			  <groupId>org.vafer</groupId>
+			  <version>${jdeb.version}</version>
+			  <executions>
+			    <execution>
+			      <phase>package</phase>
+			      <goals>
+			        <goal>jdeb</goal>
+			      </goals>
+			      <configuration>
+			      <dataSet>
+			        <data>
+			          <src>${project.build.directory}/${project.build.finalName}.war</src>
+			          <type>file</type>
+			          <mapper>
+			            <type>perm</type>
+			            <prefix>/var/lib/tomcat7/webapps</prefix>
+			          </mapper>
+			        </data>
+			      </dataSet>
+			    </configuration>
+			  </execution>
+			</executions>
+			</plugin>
 			<!-- Duplicate of gwt-maven-plugin from the profiles. Only putting it
 				here properly applies the extraJvmArgs and thus provides sufficient RAM for
 				successful compilation. -->
@@ -245,6 +271,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
 
 
 	<profiles>
