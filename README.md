@@ -8,6 +8,12 @@ implemented in the DL-Learner Semantic Web machine learning framework.
 * Java 7 or higher
 * Maven 3 or higher
 * Git
+* an **IPv6-capable internet connection** (you can use a free IPv6 tunnel service like Miredo or Teredo if your connection does not support it natively)
+
+## Warning
+AutoSPARQL TBSL is a research prototype that is not actively developed anymore.
+As such, getting it to work may need some effort and depends on the availability of several other online services.
+Feel free to create issues if you encounter problems and please share your fixes using pull requests.
 
 ## Installation and Execution
 1. clone the git repository
@@ -20,6 +26,7 @@ Then, go into your browser and access `http://localhost:8080` and click on the l
 If you encounter errors, please look at the issues if the problem is already reported.
 If not, please create a single issue including the command line output.
 If the error occurs during compilation, please use `./createcompillelog` instead of `./compile` to create the compile log.
+Feel free to create issues if you encounter problems and please share your fixes using pull requests.
 
 ## Adding your own Dataset
 Using your own datasource instead of DBpedia or Oxford is nontrivial.
