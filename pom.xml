@@ -115,7 +115,7 @@
 			<dependency>
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-arq</artifactId>
-				<version>2.12.0</version>
+				<version>2.13.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -446,6 +446,13 @@
 				<groupId>net.sf.jwordnet</groupId>
 				<artifactId>jwnl</artifactId>
 				<version>1.4_rc3</version>
+			</dependency>
+			<dependency>
+				<groupId>
+					com.googlecode.concurrentlinkedhashmap
+				</groupId>
+				<artifactId>concurrentlinkedhashmap-lru</artifactId>
+				<version>1.4.2</version>
 			</dependency>
 		</dependencies>
 
