@@ -7,12 +7,16 @@ import com.google.common.collect.Iterables;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.ItemClickListener;
+import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import de.fatalix.vaadin.addon.codemirror.CodeMirror;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorLanguage;
@@ -35,9 +39,7 @@ import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.sparql.algebra.Transformer;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
-import org.apache.jena.sparql.expr.Expr;
-import org.apache.jena.sparql.expr.ExprAggregator;
-import org.apache.jena.sparql.expr.ExprVar;
+import org.apache.jena.sparql.expr.*;
 import org.apache.jena.sparql.expr.aggregate.AggCountVarDistinct;
 import org.apache.jena.sparql.expr.aggregate.Aggregator;
 import org.apache.jena.sparql.expr.aggregate.AggregatorFactory;
@@ -65,6 +67,7 @@ import org.vaadin.sliderpanel.SliderPanelStyles;
 import org.vaadin.sliderpanel.client.SliderMode;
 import org.vaadin.sliderpanel.client.SliderTabPosition;
 
+import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -136,7 +139,8 @@ public class MyUI extends UI {
     CheckBox minimizeCB;
     CheckBox inComingDataCB;
     ComboBox<Dataset> datasetSelector;
-    Grid<String> grid;
+    Grid<RDFNode> grid;
+    SPARQLBasedDataProvider dataProvider;
 
     private static final String SPARQL_SERVICE_ENDPOINT = "http://172.18.160.4:8890/sparql";
     private static final String SPARQL_SERVICE_DEFAULT_GRAPH = "http://dbpedia.org";
@@ -157,6 +161,7 @@ public class MyUI extends UI {
 
     Function<String, RDFResourceTree> uriToQueryTree = (uri) -> qtf.getQueryTree(uri, uriToCBD.apply(uri), maxDepthSlider.getValue().intValue());
 
+    boolean orderByRelevance = true;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -183,6 +188,7 @@ public class MyUI extends UI {
 
 
         HorizontalLayout examplesPanel = new HorizontalLayout();
+        examplesPanel.setSizeFull();
 
         inputField = new TextArea();
         inputField.setSizeFull();
@@ -271,31 +277,47 @@ public class MyUI extends UI {
         panel.setSizeFull();
 
         grid = new Grid<>();
-        grid.setDetailsGenerator(new DetailsGenerator<String>() {
+        grid.setSizeFull();
+        grid.setDetailsGenerator(new DetailsGenerator<RDFNode>() {
             @Override
-            public Component apply(String s) {
+            public Component apply(RDFNode s) {
 
                 VerticalLayout layout = new VerticalLayout();
-
-                Label l = new Label("Details for " + s);
-                return l;
+                StringWriter sw = new StringWriter();
+                describe(s.toString()).write(sw, "TURTLE");
+                Label l = new Label(sw.toString(), ContentMode.PREFORMATTED);
+                layout.addComponent(l);
+                return layout;
             }}
             );
 //        grid.setColumns("");
 //        grid.setDataProvider(dataProvider);
         grid.addItemClickListener(e -> {
             if(e.getMouseEventDetails().isDoubleClick()) {
-                String item = e.getItem();
+                RDFNode item = e.getItem();
                 grid.setDetailsVisible(item, !grid.isDetailsVisible(item));
             }
         });
 
-        grid.addColumn(String::toString);
-        grid.setSizeFull();
+        grid.addColumn(RDFNode::toString);
+//        grid.addColumn(s -> "Omit",
+//                       new ButtonRenderer<>(clickEvent -> {
+//                           RDFNode uri = clickEvent.getItem();
+//                       inputField2.setValue(uri.toString());
+//                   }));
+
+
+
+        dataProvider = new SPARQLBasedDataProvider(qef);
+        grid.setDataProvider(dataProvider);
 
         l.addComponentsAndExpand(panel, grid);
 
         return l;
+    }
+
+    private Model describe(String uri) {
+        return qef.createQueryExecution("CONSTRUCT WHERE { <" + uri + "> ?p ?o }").execConstruct();
     }
 
     private void onComputeSPARQLQuery() {
@@ -368,6 +390,8 @@ public class MyUI extends UI {
         codeMirror.setCode(query.toString());
 
         showResult(query);
+
+//        new Thread(() -> showResult(query)).start();
     }
 
     /**
@@ -375,54 +399,9 @@ public class MyUI extends UI {
      * @param q the SPARQL query
      */
     private void showResult(Query q) {
-        DataProvider<String, Void> dataProvider = DataProvider.fromCallbacks(
-                query -> {
-                    Query copy = q.cloneQuery();
-                    // The index of the first item to load
-                    int offset = query.getOffset();
-
-                    // The number of items to load
-                    int limit = query.getLimit();
-
-                    copy.setLimit(limit);
-                    copy.setOffset(offset);
-
-                    List<String> res = new ArrayList<>();
-
-                    try(QueryExecution qe = qef.createQueryExecution(copy)) {
-                        ResultSet rs = qe.execSelect();
-                        while(rs.hasNext()) {
-                            QuerySolution qs = rs.next();
-                            res.add(qs.getResource("s").getURI());
-                        }
-                    }
-
-                    return res.stream();
-                },
-                query -> {
-                    Query copy = q.cloneQuery();
-                    int cnt = 0;
-                    Var vars = copy.getProject().getVars().iterator().next();
-                    copy.setDistinct(false);
-                    copy.getProject().clear();
-                    Aggregator aggregator = AggregatorFactory.createCountExpr(true,
-                                                                              new ExprVar(vars));
-                    Expr expr = copy.allocAggregate(aggregator);
-                    copy.addResultVar(Var.alloc("cnt"), expr);
-
-                    System.out.println(copy);
-
-                    try(QueryExecution qe = qef.createQueryExecution(copy)) {
-                        ResultSet rs = qe.execSelect();
-                        if(rs.hasNext()) {
-                            cnt = rs.next().getLiteral("cnt").getInt();
-                        }
-                    }
-                    return cnt;
-                }
-        );
-
-        grid.setDataProvider(dataProvider);
+        dataProvider.setQuery(q);
+        dataProvider.refreshAll();
+//        UI.getCurrent().access(() -> grid.setDataProvider(dataProvider));
     }
 
     private List<String> parseExamples() {
@@ -482,6 +461,7 @@ public class MyUI extends UI {
                                               "        <http://xmlns.com/foaf/0.1/homepage>  ?x5\n" +
                                               "  }");
         q.setPrefixMapping(PrefixMapping.Extended);
+        q.addOrderBy(new E_IRI_Rank(new ExprVar("s")), Query.ORDER_DESCENDING);
         System.out.println(q.toString());
 
 
