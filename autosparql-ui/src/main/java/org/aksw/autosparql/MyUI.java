@@ -1,28 +1,22 @@
 package org.aksw.autosparql;
 
 import javax.servlet.annotation.WebServlet;
-import javax.swing.*;
 
-import com.google.common.collect.Iterables;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.data.provider.DataProvider;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.DetailsGenerator;
-import com.vaadin.ui.components.grid.ItemClickListener;
-import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.themes.ValoTheme;
 import de.fatalix.vaadin.addon.codemirror.CodeMirror;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorLanguage;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorTheme;
-import org.aksw.jena_sparql_api.backports.syntaxtransform.ElementTransformer;
-import org.aksw.jena_sparql_api.backports.syntaxtransform.TransformElementLib;
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.aksw.jena_sparql_api.http.QueryExecutionHttpWrapper;
@@ -36,18 +30,9 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.riot.WebContent;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
-import org.apache.jena.sparql.algebra.Transformer;
-import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.sparql.expr.*;
-import org.apache.jena.sparql.expr.aggregate.AggCountVarDistinct;
-import org.apache.jena.sparql.expr.aggregate.Aggregator;
-import org.apache.jena.sparql.expr.aggregate.AggregatorFactory;
-import org.apache.jena.sparql.syntax.syntaxtransform.ElementTransform;
-import org.apache.jena.sparql.util.PrefixMapping2;
-import org.dllearner.algorithms.qtl.QTL2Disjunctive;
 import org.dllearner.algorithms.qtl.QueryTreeUtils;
-import org.dllearner.algorithms.qtl.datastructures.QueryTree;
 import org.dllearner.algorithms.qtl.datastructures.impl.RDFResourceTree;
 import org.dllearner.algorithms.qtl.impl.QueryTreeFactory;
 import org.dllearner.algorithms.qtl.impl.QueryTreeFactoryBase;
@@ -69,11 +54,11 @@ import org.vaadin.sliderpanel.client.SliderTabPosition;
 
 import java.io.StringWriter;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -130,8 +115,8 @@ public class MyUI extends UI {
         }
     }
 
-    TextArea inputField;
-    TextArea inputField2;
+    TextArea posExamplesInputField;
+    TextArea negExamplesInputField;
     TextArea queryField;
     CodeMirror codeMirror;
     Slider maxDepthSlider;
@@ -175,36 +160,14 @@ public class MyUI extends UI {
         datasetSelector.setItems(datasets);
         datasetSelector.setItemCaptionGenerator(Dataset::getLabel);
         datasetSelector.setEmptySelectionAllowed(false);
-        datasetSelector.setSelectedItem(Dataset.DBPEDIA);
         datasetSelector.setWidth(100, Unit.PERCENTAGE);
-        datasetSelector.addValueChangeListener((e) -> inputField.setValue(
-                e.getValue().examples.stream()
-                        .map(uri -> "<" + uri + ">")
-                        .collect(Collectors.joining(" "))));
+        datasetSelector.addValueChangeListener((e) -> onChangeDataset(e.getValue()));
         layout.addComponent(datasetSelector);
 
         final HorizontalLayout top = new HorizontalLayout();
         top.setWidth(100f, Unit.PERCENTAGE);
 
-
-        HorizontalLayout examplesPanel = new HorizontalLayout();
-        examplesPanel.setSizeFull();
-
-        inputField = new TextArea();
-        inputField.setSizeFull();
-        inputField.setValue("<http://dbpedia.org/resource/Dresden> <http://dbpedia.org/resource/Leipzig>");
-        inputField.setCaption("Type the positive examples here:");
-
-        inputField2 = new TextArea();
-        inputField2.setSizeFull();
-        inputField2.setValue("");
-        inputField2.setCaption("Type the negative examples here:");
-
-        examplesPanel.addComponentsAndExpand(inputField, inputField2);
-
-        top.addComponentsAndExpand(examplesPanel);
-
-
+        top.addComponentsAndExpand(createExamplesInputPanel());
 
         maxDepthSlider = new Slider();
         maxDepthSlider.setOrientation(SliderOrientation.VERTICAL);
@@ -255,6 +218,85 @@ public class MyUI extends UI {
         } catch (ComponentInitException e) {
             e.printStackTrace();
         }
+
+        datasetSelector.setSelectedItem(Dataset.DBPEDIA);
+    }
+
+    private void onChangeDataset(Dataset dataset) {
+        posExamplesInputField.setValue(
+                dataset.examples.stream()
+                        .map(uri -> "<" + uri + ">")
+                        .collect(Collectors.joining(" ")));
+    }
+
+    private Component createExamplesInputPanel() {
+        HorizontalLayout examplesPanel = new HorizontalLayout();
+        examplesPanel.setSizeFull();
+
+        posExamplesInputField = new TextArea();
+        posExamplesInputField.setSizeFull();
+        posExamplesInputField.setValue("<http://dbpedia.org/resource/Dresden> <http://dbpedia.org/resource/Leipzig>");
+        posExamplesInputField.setCaption("Type the positive examples here:");
+
+        Button searchButton = new Button("Search", VaadinIcons.SEARCH);
+        searchButton.addClickListener((e) -> {
+            final Window window = new Window("Search");
+            window.setWidth(600.0f, Unit.PIXELS);
+            window.setHeight(600.0f, Unit.PIXELS);
+
+            final VerticalLayout content = new VerticalLayout();
+            content.setSizeFull();
+            content.setMargin(true);
+
+            HorizontalLayout hl = new HorizontalLayout();
+            content.addComponent(hl);
+
+            TextField searchField = new TextField("Enter search term");
+            searchField.setValueChangeMode(ValueChangeMode.EAGER);
+            hl.addComponentsAndExpand(searchField);
+
+            Button runButton = new Button("Run");
+            hl.addComponent(runButton);
+            hl.setComponentAlignment(runButton, Alignment.BOTTOM_CENTER);
+
+
+            ListSelect<RDFNode> resultList = new ListSelect();
+            resultList.setSizeFull();
+            content.addComponentsAndExpand(resultList);
+
+            runButton.addClickListener(new Button.ClickListener() {
+                @Override
+                public void buttonClick(Button.ClickEvent event) {
+                    String searchTerm = searchField.getValue();
+                    Stream<RDFNode> nodes = search(searchTerm);
+                    resultList.setItems(nodes);
+                }
+            });
+
+            searchField.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
+
+                @Override
+                public void handleAction(Object sender, Object target) {
+                    String searchTerm = searchField.getValue();
+                    Stream<RDFNode> nodes = search(searchTerm);
+                    resultList.setItems(nodes);
+                }
+            });
+            window.setContent(content);
+            getCurrent().getUI().addWindow(window);
+        });
+//        searchButton.setSizeUndefined();
+
+        negExamplesInputField = new TextArea();
+        negExamplesInputField.setSizeFull();
+        negExamplesInputField.setValue("");
+        negExamplesInputField.setCaption("Type the negative examples here:");
+
+        examplesPanel.addComponentsAndExpand(posExamplesInputField);
+        examplesPanel.addComponent(searchButton);
+        examplesPanel.addComponentsAndExpand(negExamplesInputField);
+
+        return examplesPanel;
     }
 
     private Component createResultPanel() {
@@ -303,7 +345,7 @@ public class MyUI extends UI {
 //        grid.addColumn(s -> "Omit",
 //                       new ButtonRenderer<>(clickEvent -> {
 //                           RDFNode uri = clickEvent.getItem();
-//                       inputField2.setValue(uri.toString());
+//                       negExamplesInputField.setValue(uri.toString());
 //                   }));
 
 
@@ -405,8 +447,8 @@ public class MyUI extends UI {
     }
 
     private List<String> parseExamples() {
-        List<String> posExamples = parseExamples(inputField.getValue());
-        List<String> negExamples = parseExamples(inputField2.getValue());
+        List<String> posExamples = parseExamples(posExamplesInputField.getValue());
+        List<String> negExamples = parseExamples(negExamplesInputField.getValue());
 
         return posExamples;
     }
@@ -426,12 +468,50 @@ public class MyUI extends UI {
         return examples;
     }
 
+    private Stream<RDFNode> search(String s) {
+        String queryString = "select distinct ?s from <http://dbpedia.org> from <http://dbpedia.org/labels> where " +
+                "{?s <http://www.w3.org/2000/01/rdf-schema#label> ?l. ?l <bif:contains> \"" + s + "\" } " +
+                "ORDER BY DESC(<LONG::IRI_RANK>(?s))";
+
+        System.out.println(queryString);
+
+        Query query = QueryFactory.create(queryString);
+
+        try(QueryExecution qe = qef.createQueryExecution(query)) {
+            ResultSet rs = qe.execSelect();
+            return ResultSetFormatter.toList(rs).stream().map(qs -> qs.get("s"));
+        }
+    }
+
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
     }
 
     public static void main(String[] args) throws Exception {
+//        OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF);
+//        String data = "@prefix : <http://ex.org/> . @prefix owl: <http://www.w3.org/2002/07/owl#> ." +
+//                ":a a :A . :A a owl:Class ." +
+//                ":b a :B . :B a owl:Class ." +
+//                ":a :p :b ." +
+//                ":p a owl:SymmetricProperty .";
+//        model.read(new StringReader(data), null, "TURTLE");
+//
+//        Reasoner reasoner = ReasonerRegistry.getOWLReasoner();
+//        reasoner = reasoner.bindSchema(model);
+//        InfModel infmodel = ModelFactory.createInfModel(reasoner, model);
+//
+////        infmodel.listStatements().toSet().forEach(System.out::println);
+//
+////        model.listIndividuals().toSet().forEach(System.out::println);
+//        model.listIndividuals().toSet().forEach(i -> {
+//            if(i.hasProperty(model.getObjectProperty("http://ex.org/p"))) {
+//                System.out.println(i);
+//            }
+//        });
+
+
+
         String s = "+<http://ex.org#foo>   -<ftp://ex.org/bar> -";
         Pattern pattern = Pattern.compile("(?<=\\<)(.*?)(?=\\>)");
         Matcher matcher = pattern.matcher(s);
