@@ -4,6 +4,7 @@ import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
@@ -14,6 +15,8 @@ import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.DetailsGenerator;
+import com.vaadin.ui.renderers.HtmlRenderer;
+import de.datenhahn.vaadin.componentrenderer.grid.ComponentGrid;
 import de.fatalix.vaadin.addon.codemirror.CodeMirror;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorLanguage;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorTheme;
@@ -27,6 +30,7 @@ import org.apache.jena.graph.Node;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.WebContent;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
@@ -146,8 +150,6 @@ public class MyUI extends UI {
 
     Function<String, RDFResourceTree> uriToQueryTree = (uri) -> qtf.getQueryTree(uri, uriToCBD.apply(uri), maxDepthSlider.getValue().intValue());
 
-    boolean orderByRelevance = true;
-
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         final VerticalLayout layout = new VerticalLayout();
@@ -259,17 +261,23 @@ public class MyUI extends UI {
             hl.addComponent(runButton);
             hl.setComponentAlignment(runButton, Alignment.BOTTOM_CENTER);
 
-
-            ListSelect<RDFNode> resultList = new ListSelect();
-            resultList.setSizeFull();
-            content.addComponentsAndExpand(resultList);
+            ComponentGrid<SearchResult> resultGrid = new ComponentGrid<>(SearchResult.class);
+            resultGrid.addStyleName("resultGrid");
+//            resultGrid.addColumn(SearchResult::getResource).setCaption("URI");
+            resultGrid.
+                    addComponentColumn("TEST", result ->
+                            new Label("<b>" + result.getResource().getURI() + "</b></br><p>" + result.getComment() + "</p>", ContentMode.HTML));
+            resultGrid.setSizeFull();
+//            resultGrid.setStyleGenerator(s -> "heigher");
+            content.addComponentsAndExpand(resultGrid);
 
             runButton.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(Button.ClickEvent event) {
                     String searchTerm = searchField.getValue();
-                    Stream<RDFNode> nodes = search(searchTerm);
-                    resultList.setItems(nodes);
+                    Stream<SearchResult> result = search(searchTerm);
+//                    resultGrid.setItems(result);
+                    resultGrid.setRows(result.collect(Collectors.toList()));
                 }
             });
 
@@ -278,8 +286,9 @@ public class MyUI extends UI {
                 @Override
                 public void handleAction(Object sender, Object target) {
                     String searchTerm = searchField.getValue();
-                    Stream<RDFNode> nodes = search(searchTerm);
-                    resultList.setItems(nodes);
+                    Stream<SearchResult> result = search(searchTerm);
+//                    resultGrid.setItems(result);
+                    resultGrid.setRows(result.collect(Collectors.toList()));
                 }
             });
             window.setContent(content);
@@ -468,20 +477,60 @@ public class MyUI extends UI {
         return examples;
     }
 
-    private Stream<RDFNode> search(String s) {
-        String queryString = "select distinct ?s from <http://dbpedia.org> from <http://dbpedia.org/labels> where " +
-                "{?s <http://www.w3.org/2000/01/rdf-schema#label> ?l. ?l <bif:contains> \"" + s + "\" } " +
-                "ORDER BY DESC(<LONG::IRI_RANK>(?s))";
+    /**
+     *
+     select ?s sample(?l) sample(?c) (GROUP_CONCAT(?type;separator=", ") as ?types)
+     from <http://dbpedia.org>
+     from <http://dbpedia.org/labels>
+     from <http://dbpedia.org/comments>
+     where {
+     ?s <http://www.w3.org/2000/01/rdf-schema#label> ?l.
+     ?l <bif:contains> "leipzig" .
+     ?s rdf:type ?type .
+     ?s rdfs:comment ?c .
+     }
+     GROUP BY ?s
+     ORDER BY DESC(<LONG::IRI_RANK>(?s))
+     LIMIT 100
+     * @param s
+     * @return
+     */
+    private Stream<SearchResult> search(String s) {
+        String queryString =
+                "select ?s (sample(?label) as ?l) (sample(?comment) as ?c) (GROUP_CONCAT(?type;separator=\", \") as ?types)\n" +
+                        "from <http://dbpedia.org> \n" +
+                        "from <http://dbpedia.org/labels> \n" +
+                        "from <http://dbpedia.org/comments> \n" +
+                        "where {\n" +
+                        "?s <http://www.w3.org/2000/01/rdf-schema#label> ?label . \n" +
+                        "?label <bif:contains> \"" + s + "\" .\n" +
+                        "?s a ?type .\n" +
+                        "?s <http://www.w3.org/2000/01/rdf-schema#comment> ?comment .\n" +
+                        "}\n" +
+                        "GROUP BY ?s\n" +
+                        "ORDER BY DESC(<LONG::IRI_RANK>(?s))\n" +
+                        "LIMIT 100";
 
         System.out.println(queryString);
 
         Query query = QueryFactory.create(queryString);
 
-        try(QueryExecution qe = qef.createQueryExecution(query)) {
+        try (QueryExecution qe = qef.createQueryExecution(query)) {
             ResultSet rs = qe.execSelect();
-            return ResultSetFormatter.toList(rs).stream().map(qs -> qs.get("s"));
+            return ResultSetFormatter.toList(rs)
+                    .stream().map(qs -> new SearchResult(qs.getResource("s"),
+                                                         qs.getLiteral("l").getLexicalForm(),
+                                                         qs.getLiteral("c").getLexicalForm(),
+                                                         qs.get("types").isResource()
+                                                                 ? qs.getResource("types").getURI()
+                                                                 : qs.getLiteral("types").getLexicalForm()
+                                  )
+                    );
+
         }
     }
+
+
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)

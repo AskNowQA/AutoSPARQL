@@ -87,6 +87,20 @@
 			<version>5.0.3</version>
 			<scope>compile</scope>
 		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.vaadin</groupId>-->
+			<!--<artifactId>vaadin-compatibility-server</artifactId>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>com.vaadin</groupId>-->
+			<!--<artifactId>vaadin-compatibility-client</artifactId>-->
+			<!--<scope>provided</scope>-->
+		<!--</dependency>-->
+		<dependency>
+			<groupId>de.datenhahn.vaadin</groupId>
+			<artifactId>componentrenderer</artifactId>
+			<version>2.0.0</version>
+		</dependency>
 
 		<!-- DL-Learner -->
 		<dependency>
@@ -121,8 +135,12 @@
 							<!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
 							<goal>compile-theme</goal>
 						</goals>
+						<configuration>
+                            <extraJvmArgs>-Xmx1G</extraJvmArgs>
+                        </configuration>
 					</execution>
 				</executions>
+
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
