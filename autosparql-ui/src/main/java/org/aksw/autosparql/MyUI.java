@@ -1,7 +1,5 @@
 package org.aksw.autosparql;
 
-import javax.servlet.annotation.WebServlet;
-
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
@@ -15,8 +13,6 @@ import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.DetailsGenerator;
-import com.vaadin.ui.renderers.HtmlRenderer;
-import de.datenhahn.vaadin.componentrenderer.grid.ComponentGrid;
 import de.fatalix.vaadin.addon.codemirror.CodeMirror;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorLanguage;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorTheme;
@@ -30,12 +26,11 @@ import org.apache.jena.graph.Node;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.WebContent;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
-import org.apache.jena.sparql.expr.*;
+import org.apache.jena.sparql.expr.ExprVar;
 import org.dllearner.algorithms.qtl.QueryTreeUtils;
 import org.dllearner.algorithms.qtl.datastructures.impl.RDFResourceTree;
 import org.dllearner.algorithms.qtl.impl.QueryTreeFactory;
@@ -56,6 +51,7 @@ import org.vaadin.sliderpanel.SliderPanelStyles;
 import org.vaadin.sliderpanel.client.SliderMode;
 import org.vaadin.sliderpanel.client.SliderTabPosition;
 
+import javax.servlet.annotation.WebServlet;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.function.Function;
@@ -72,6 +68,7 @@ import java.util.stream.Stream;
  * overridden to add component to the user interface and initialize non-component functionality.
  */
 @Theme("mytheme")
+@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
 public class MyUI extends UI {
 
     enum Dataset {
@@ -261,24 +258,22 @@ public class MyUI extends UI {
             hl.addComponent(runButton);
             hl.setComponentAlignment(runButton, Alignment.BOTTOM_CENTER);
 
-            ComponentGrid<SearchResult> resultGrid = new ComponentGrid<>(SearchResult.class);
+            Grid<SearchResult> resultGrid = new Grid<>(SearchResult.class);
             resultGrid.addStyleName("resultGrid");
-//            resultGrid.addColumn(SearchResult::getResource).setCaption("URI");
-            resultGrid.
-                    addComponentColumn("TEST", result ->
-                            new Label("<b>" + result.getResource().getURI() + "</b></br><p>" + result.getComment() + "</p>", ContentMode.HTML));
+            resultGrid.addColumn(SearchResult::getResource).setCaption("URI");
+//            resultGrid.
+//                    addComponentColumn("TEST", result ->
+//                            new Label("<b>" + result.getResource().getURI() + "</b></br><p>" + result.getComment() + "</p>", ContentMode.HTML));
             resultGrid.setSizeFull();
 //            resultGrid.setStyleGenerator(s -> "heigher");
             content.addComponentsAndExpand(resultGrid);
 
-            runButton.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(Button.ClickEvent event) {
-                    String searchTerm = searchField.getValue();
-                    Stream<SearchResult> result = search(searchTerm);
-//                    resultGrid.setItems(result);
-                    resultGrid.setRows(result.collect(Collectors.toList()));
-                }
+            runButton.addClickListener((e2) -> {
+                String searchTerm = searchField.getValue();
+                Stream<SearchResult> result = search(searchTerm);
+                    resultGrid.setItems(result);
+//                resultGrid.setRows(result.collect(Collectors.toList()));
+
             });
 
             searchField.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
@@ -287,8 +282,8 @@ public class MyUI extends UI {
                 public void handleAction(Object sender, Object target) {
                     String searchTerm = searchField.getValue();
                     Stream<SearchResult> result = search(searchTerm);
-//                    resultGrid.setItems(result);
-                    resultGrid.setRows(result.collect(Collectors.toList()));
+                    resultGrid.setItems(result);
+//                    resultGrid.setRows(result.collect(Collectors.toList()));
                 }
             });
             window.setContent(content);
