@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+<vaadin-vertical-layout size-full>
+
+    <vaadin-horizontal-layout _id="dataset">
+        <vaadin-combobox _id="datasetSelector"></vaadin-combobox>
+    </vaadin-horizontal-layout>
+
+    <vaadin-horizontal-layout _id="examples">
+        <vaadin-textarea _id="posExamplesInput" icon="fonticon://VaadinIcons/0xE7FE" caption="Type the positive examples here:"></vaadin-textarea>
+        <vaadin-textarea _id="negExamplesInput" icon="fonticon://VaadinIcons/0xE7F3" caption="Type the negative examples here:"></vaadin-textarea>
+        <vaadin-button _id="runButton">Run</vaadin-button>
+    </vaadin-horizontal-layout>
+
+    <vaadin-horizontal-layout _id="results">
+
+    </vaadin-horizontal-layout>
+
+</vaadin-vertical-layout>
+</body>
+</html>

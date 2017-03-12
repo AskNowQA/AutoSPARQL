@@ -1,6 +1,7 @@
 package org.aksw.autosparql;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.ShortcutAction;
@@ -10,27 +11,34 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.ValueChangeMode;
-import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.DetailsGenerator;
+import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.themes.ValoTheme;
 import de.fatalix.vaadin.addon.codemirror.CodeMirror;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorLanguage;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorTheme;
+import org.aksw.autosparql.search.FulltextSearchSPARQLVirtuoso;
+import org.aksw.autosparql.search.SearchResultExtended;
+import org.aksw.autosparql.widget.NumberField;
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.aksw.jena_sparql_api.http.QueryExecutionHttpWrapper;
 import org.aksw.jena_sparql_api.utils.ElementUtils;
 import org.aksw.jena_sparql_api.utils.transform.NodeTransformCollectNodes;
-import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.graph.Node;
-import org.apache.jena.query.*;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.riot.WebContent;
 import org.apache.jena.shared.PrefixMapping;
-import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.sparql.expr.ExprVar;
+import org.apache.jena.update.UpdateAction;
 import org.dllearner.algorithms.qtl.QueryTreeUtils;
 import org.dllearner.algorithms.qtl.datastructures.impl.RDFResourceTree;
 import org.dllearner.algorithms.qtl.impl.QueryTreeFactory;
@@ -67,54 +75,11 @@ import java.util.stream.Stream;
  * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be 
  * overridden to add component to the user interface and initialize non-component functionality.
  */
+@Title("AutoSPARQL")
 @Theme("mytheme")
-@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
+//@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
+@Widgetset("org.aksw.autosparql.widgetset.AutoSPARQLWidgetSet")
 public class MyUI extends UI {
-
-    enum Dataset {
-        DBPEDIA("DBpedia", "http://dbpedia.org",
-                Lists.newArrayList("http://dbpedia.org/resource/Dresden",
-                                   "http://dbpedia.org/resource/Leipzig"),
-                Lists.newArrayList("dbo,http://dbpedia.org/ontology/",
-                                   "dbp,http://dbpedia.org/property/",
-                                   "dbr,http://dbpedia.org/resource/")),
-        LINKEDMDB("LinkedMDB", "http://linkedmdb.org",
-                  Lists.newArrayList("http://data.linkedmdb.org/resource/film/10283",
-                                     "http://data.linkedmdb.org/resource/film/10459"),
-                  Lists.newArrayList("film,http://data.linkedmdb.org/resource/film/",
-                                     "movie,http://data.linkedmdb.org/resource/movie/")),
-        BIOMEDICAL("Biomedical", "http://biomedical.org",
-                   Lists.newArrayList("http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseases/1003",
-                                      "http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseases/1004"),
-                   Lists.newArrayList("diseasome,http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/",
-                                      "drugbank,http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/",
-                                      "sider,http://www4.wiwiss.fu-berlin.de/sider/resource/sider/drugs"));
-
-        String label;
-        String uri;
-        List<String> examples;
-        PrefixMapping prefixes;
-
-        Dataset(String label, String uri, List<String> examples, List<String> prefixesList) {
-            this.label = label;
-            this.uri = uri;
-            this.examples = examples;
-
-            prefixes = new PrefixMappingImpl();
-            prefixes.withDefaultMappings(PrefixMapping.Standard);
-
-            prefixesList.forEach(e -> {
-                String[] split = e.split(",");
-                String prefix = split[0];
-                String ns = split[1];
-                prefixes.setNsPrefix(prefix, ns);
-            });
-        }
-
-        public String getLabel() {
-            return label;
-        }
-    }
 
     TextArea posExamplesInputField;
     TextArea negExamplesInputField;
@@ -140,6 +105,7 @@ public class MyUI extends UI {
     ConciseBoundedDescriptionGenerator cbdGen = new ConciseBoundedDescriptionGeneratorImpl(qef);
     QueryTreeFactory qtf = new QueryTreeFactoryBase();
     AbstractReasonerComponent reasoner;
+    FulltextSearchSPARQLVirtuoso fulltextSearch;
 
     Function<Query, QueryExecution> queryToQueryExecution = (query) -> qef.createQueryExecution(query);
 
@@ -153,30 +119,18 @@ public class MyUI extends UI {
         layout.setSizeFull();
 
         // KB selector
-        List<Dataset> datasets = Arrays.asList(Dataset.values());
-
-        datasetSelector = new ComboBox<>("Select a dataset");
-        datasetSelector.setItems(datasets);
-        datasetSelector.setItemCaptionGenerator(Dataset::getLabel);
-        datasetSelector.setEmptySelectionAllowed(false);
-        datasetSelector.setWidth(100, Unit.PERCENTAGE);
-        datasetSelector.addValueChangeListener((e) -> onChangeDataset(e.getValue()));
-        layout.addComponent(datasetSelector);
+        HorizontalLayout datasetSelectorAndSettings = new HorizontalLayout();
+        datasetSelectorAndSettings.setWidth(100, Unit.PERCENTAGE);
+        datasetSelectorAndSettings.addComponent(createDatasetSelector());
+        datasetSelectorAndSettings.addComponent(createSettingsPanel());
+        layout.addComponent(datasetSelectorAndSettings);
 
         final HorizontalLayout top = new HorizontalLayout();
         top.setWidth(100f, Unit.PERCENTAGE);
 
         top.addComponentsAndExpand(createExamplesInputPanel());
 
-        maxDepthSlider = new Slider();
-        maxDepthSlider.setOrientation(SliderOrientation.VERTICAL);
-        maxDepthSlider.addStyleName("ticks");
-//        maxDepthSlider.setWidth("200px");
-        maxDepthSlider.setHeight(100, Unit.PERCENTAGE);
-        maxDepthSlider.setMin(1);
-        maxDepthSlider.setMax(3);
-        top.addComponent(maxDepthSlider);
-        top.setComponentAlignment(maxDepthSlider, Alignment.MIDDLE_CENTER);
+//        top.setComponentAlignment(maxDepthSlider, Alignment.MIDDLE_CENTER);
 
         Button button = new Button("Run");
         button.addClickListener( e -> {
@@ -185,6 +139,33 @@ public class MyUI extends UI {
         top.addComponent(button);
         top.setComponentAlignment(button, Alignment.MIDDLE_CENTER);
 
+
+        Component resultPanel = createResultPanel();
+
+        layout.addComponentsAndExpand(top, resultPanel);
+        layout.setExpandRatio(top, 0.3f);
+        layout.setExpandRatio(resultPanel, 0.7f);
+
+        setContent(layout);
+
+        setContent(new AutoSPARQLDesign());
+
+        datasetSelector.setSelectedItem(Dataset.DBPEDIA);
+    }
+
+    private Component createDatasetSelector() {
+        datasetSelector = new ComboBox<>(VaadinIcons.DATABASE.getHtml() + " Select a dataset");
+        datasetSelector.setCaptionAsHtml(true);
+        datasetSelector.setItems(Arrays.asList(Dataset.values()));
+        datasetSelector.setItemCaptionGenerator(Dataset::getLabel);
+        datasetSelector.setEmptySelectionAllowed(false);
+        datasetSelector.setWidth(100, Unit.PERCENTAGE);
+        datasetSelector.addValueChangeListener((e) -> onChangeDataset(e.getValue()));
+
+        return datasetSelector;
+    }
+
+    private Component createAdvancedSettingsMenu() {
         VerticalLayout advancedOptions = new VerticalLayout();
         inferenceCB = new CheckBox();
         inferenceCB.setCaption("Use Inference");
@@ -200,25 +181,56 @@ public class MyUI extends UI {
                 .tabPosition(SliderTabPosition.MIDDLE)
                 .style(SliderPanelStyles.COLOR_WHITE)
                 .build();
-        top.addComponent(sliderPanel);
 
-        Component resultPanel = createResultPanel();
+        return sliderPanel;
+    }
 
-        layout.addComponentsAndExpand(top, resultPanel);
-        layout.setExpandRatio(top, 0.3f);
-        layout.setExpandRatio(resultPanel, 0.7f);
+    private Component createSettingsPanel() {
+        FormLayout settings = new FormLayout();
+        settings.setCaption(VaadinIcons.COG_O.getHtml() + " Settings");
+        settings.setCaptionAsHtml(true);
+        settings.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
 
-        setContent(layout);
+        maxDepthSlider = new Slider();
+        maxDepthSlider.setCaption("Max. Depth");
+//        maxDepthSlider.setOrientation(SliderOrientation.VERTICAL);
+        maxDepthSlider.addStyleName("ticks");
+//        maxDepthSlider.setWidth("200px");
+        maxDepthSlider.setHeight(100, Unit.PERCENTAGE);
+        maxDepthSlider.setMin(1);
+        maxDepthSlider.setMax(3);
 
-        reasoner = new SPARQLReasoner(qef);
-        reasoner.setPrecomputeClassHierarchy(true);
-        try {
-            reasoner.init();
-        } catch (ComponentInitException e) {
-            e.printStackTrace();
-        }
+        HorizontalLayout wrap = new HorizontalLayout();
+        wrap.setSpacing(true);
+        wrap.setCaption("Max. Execution Time");
+        wrap.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
+        CheckBox useMaxExecutionTime = new CheckBox("Set max. execution time to", true);
+        wrap.addComponent(useMaxExecutionTime);
 
-        datasetSelector.setSelectedItem(Dataset.DBPEDIA);
+        final TextField maxExecutionTimeField = new TextField();
+        NumberField.extend(maxExecutionTimeField);
+        maxExecutionTimeField.setValue("10");
+        wrap.addComponent(maxExecutionTimeField);
+
+        useMaxExecutionTime.addValueChangeListener((e) -> maxExecutionTimeField.setEnabled(e.getValue()));
+
+        inferenceCB = new CheckBox();
+        inferenceCB.setCaption("Use Inference");
+        minimizeCB = new CheckBox();
+        minimizeCB.setCaption("Minimize Query");
+        inComingDataCB = new CheckBox();
+        inComingDataCB.setCaption("Use Incoming Data");
+
+        settings.addComponents(maxDepthSlider, wrap, inferenceCB, minimizeCB, inComingDataCB);
+
+        Panel p = new Panel();
+        p.setCaption(VaadinIcons.COG_O.getHtml() + " Settings");
+        p.setCaptionAsHtml(true);
+        p.addStyleName(ValoTheme.PANEL_BORDERLESS);
+        p.setContent(settings);
+
+        return p;
+//        return settings;
     }
 
     private void onChangeDataset(Dataset dataset) {
@@ -226,78 +238,58 @@ public class MyUI extends UI {
                 dataset.examples.stream()
                         .map(uri -> "<" + uri + ">")
                         .collect(Collectors.joining(" ")));
+
+        String datasetURI = datasetSelector.getValue().uri;
+        qef = FluentQueryExecutionFactory
+                .http(SPARQL_SERVICE_ENDPOINT, datasetURI)
+                .config().withPostProcessor(qe -> ((QueryEngineHTTP) ((QueryExecutionHttpWrapper) qe).getDecoratee())
+                        .setModelContentType(WebContent.contentTypeRDFXML))
+                .end()
+                .create();
+
+        fulltextSearch = new FulltextSearchSPARQLVirtuoso(qef);
     }
 
     private Component createExamplesInputPanel() {
         HorizontalLayout examplesPanel = new HorizontalLayout();
         examplesPanel.setSizeFull();
 
+//        VerticalLayout vl = new VerticalLayout();
+//        vl.setSpacing(false);
+//        vl.setMargin(false);
+//        HorizontalLayout hhl = new HorizontalLayout();
+//        hhl.setWidth(100f, Unit.PERCENTAGE);
+//        hhl.setSpacing(false);
+//        hhl.setMargin(false);
+//        Label l = new Label("Type the positive examples here:");
+//        hhl.addComponent(l);
+//        Button search = new Button(VaadinIcons.SEARCH);
+//        search.addStyleName(ValoTheme.BUTTON_LINK);
+//        hhl.addComponent(search);
+//        hhl.setComponentAlignment(search, Alignment.MIDDLE_LEFT);
+//        vl.addComponent(hhl);
+
         posExamplesInputField = new TextArea();
         posExamplesInputField.setSizeFull();
-        posExamplesInputField.setValue("<http://dbpedia.org/resource/Dresden> <http://dbpedia.org/resource/Leipzig>");
+        posExamplesInputField.setIcon(VaadinIcons.PLUS_CIRCLE_O);
         posExamplesInputField.setCaption("Type the positive examples here:");
 
         Button searchButton = new Button("Search", VaadinIcons.SEARCH);
         searchButton.addClickListener((e) -> {
-            final Window window = new Window("Search");
-            window.setWidth(600.0f, Unit.PIXELS);
-            window.setHeight(600.0f, Unit.PIXELS);
-
-            final VerticalLayout content = new VerticalLayout();
-            content.setSizeFull();
-            content.setMargin(true);
-
-            HorizontalLayout hl = new HorizontalLayout();
-            content.addComponent(hl);
-
-            TextField searchField = new TextField("Enter search term");
-            searchField.setValueChangeMode(ValueChangeMode.EAGER);
-            hl.addComponentsAndExpand(searchField);
-
-            Button runButton = new Button("Run");
-            hl.addComponent(runButton);
-            hl.setComponentAlignment(runButton, Alignment.BOTTOM_CENTER);
-
-            Grid<SearchResult> resultGrid = new Grid<>(SearchResult.class);
-            resultGrid.addStyleName("resultGrid");
-            resultGrid.addColumn(SearchResult::getResource).setCaption("URI");
-//            resultGrid.
-//                    addComponentColumn("TEST", result ->
-//                            new Label("<b>" + result.getResource().getURI() + "</b></br><p>" + result.getComment() + "</p>", ContentMode.HTML));
-            resultGrid.setSizeFull();
-//            resultGrid.setStyleGenerator(s -> "heigher");
-            content.addComponentsAndExpand(resultGrid);
-
-            runButton.addClickListener((e2) -> {
-                String searchTerm = searchField.getValue();
-                Stream<SearchResult> result = search(searchTerm);
-                    resultGrid.setItems(result);
-//                resultGrid.setRows(result.collect(Collectors.toList()));
-
-            });
-
-            searchField.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
-
-                @Override
-                public void handleAction(Object sender, Object target) {
-                    String searchTerm = searchField.getValue();
-                    Stream<SearchResult> result = search(searchTerm);
-                    resultGrid.setItems(result);
-//                    resultGrid.setRows(result.collect(Collectors.toList()));
-                }
-            });
-            window.setContent(content);
-            getCurrent().getUI().addWindow(window);
+            getCurrent().getUI().addWindow(createSearchDialog());
         });
 //        searchButton.setSizeUndefined();
 
         negExamplesInputField = new TextArea();
         negExamplesInputField.setSizeFull();
-        negExamplesInputField.setValue("");
+        negExamplesInputField.setIcon(VaadinIcons.MINUS_CIRCLE_O);
         negExamplesInputField.setCaption("Type the negative examples here:");
 
+//        vl.addComponent(hhl);
+//        vl.addComponentsAndExpand(posExamplesInputField);
+
         examplesPanel.addComponentsAndExpand(posExamplesInputField);
-        examplesPanel.addComponent(searchButton);
+//        examplesPanel.addComponent(searchButton);
         examplesPanel.addComponentsAndExpand(negExamplesInputField);
 
         return examplesPanel;
@@ -362,6 +354,69 @@ public class MyUI extends UI {
         return l;
     }
 
+    private Window createSearchDialog() {
+        final Window window = new Window("Search");
+        window.setWidth(600.0f, Unit.PIXELS);
+        window.setHeight(600.0f, Unit.PIXELS);
+
+        final VerticalLayout content = new VerticalLayout();
+        content.setSizeFull();
+        content.setMargin(true);
+
+        HorizontalLayout hl = new HorizontalLayout();
+        content.addComponent(hl);
+
+        TextField searchField = new TextField("Enter search term");
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+        hl.addComponentsAndExpand(searchField);
+
+        Button runButton = new Button("Search");
+        hl.addComponent(runButton);
+        hl.setComponentAlignment(runButton, Alignment.BOTTOM_CENTER);
+
+        Grid<SearchResultExtended> resultGrid = new Grid<>();
+        resultGrid.setStyleGenerator((e) -> "bigRows");
+        resultGrid.addStyleName("resultGrid");
+        resultGrid
+                .addColumn(searchResult ->
+                                   "<b>" + searchResult.getLabel() + "</b> (" + searchResult.getResource().getURI() + ")</br>" +
+//                                           "<p class=\"wrap\">Types: " + searchResult.getTypes() + "</p>" +
+                                           "<p class=\"wrap\">" + searchResult.getComment() + "</p>"
+                        , new HtmlRenderer())
+//                .addColumn(SearchResult::getResource)
+                .setCaption("")
+                .setStyleGenerator((e) -> "bigCell");
+
+//            resultGrid.
+//                    addComponentColumn("TEST", result ->
+//                            new Label("<b>" + result.getResource().getURI() + "</b></br><p>" + result.getComment() + "</p>", ContentMode.HTML));
+                                   resultGrid.setSizeFull();
+//            resultGrid.setStyleGenerator(s -> "heigher");
+        content.addComponentsAndExpand(resultGrid);
+
+        runButton.addClickListener((e2) -> {
+            String searchTerm = searchField.getValue();
+            Stream<SearchResultExtended> result = search(searchTerm);
+            resultGrid.setItems(result);
+//                resultGrid.setRows(result.collect(Collectors.toList()));
+
+        });
+
+        searchField.addShortcutListener(new ShortcutListener("Enter", ShortcutAction.KeyCode.ENTER, null) {
+
+            @Override
+            public void handleAction(Object sender, Object target) {
+                String searchTerm = searchField.getValue();
+                Stream<SearchResultExtended> result = search(searchTerm);
+                resultGrid.setItems(result);
+//                    resultGrid.setRows(result.collect(Collectors.toList()));
+            }
+        });
+        window.setContent(content);
+
+        return window;
+    }
+
     private Model describe(String uri) {
         return qef.createQueryExecution("CONSTRUCT WHERE { <" + uri + "> ?p ?o }").execConstruct();
     }
@@ -371,12 +426,7 @@ public class MyUI extends UI {
         // the selected dataset
         Dataset dataset = datasetSelector.getValue();
         String datasetURI = datasetSelector.getValue().uri;
-        qef = FluentQueryExecutionFactory
-                .http(SPARQL_SERVICE_ENDPOINT, datasetURI)
-                .config().withPostProcessor(qe -> ((QueryEngineHTTP) ((QueryExecutionHttpWrapper) qe).getDecoratee())
-                        .setModelContentType(WebContent.contentTypeRDFXML))
-                .end()
-                .create();
+
         if(inComingDataCB.getValue()) {
             cbdGen = new SymmetricConciseBoundedDescriptionGeneratorImpl(qef);
             qtf = new QueryTreeFactoryBaseInv();
@@ -490,42 +540,9 @@ public class MyUI extends UI {
      * @param s
      * @return
      */
-    private Stream<SearchResult> search(String s) {
-        String queryString =
-                "select ?s (sample(?label) as ?l) (sample(?comment) as ?c) (GROUP_CONCAT(?type;separator=\", \") as ?types)\n" +
-                        "from <http://dbpedia.org> \n" +
-                        "from <http://dbpedia.org/labels> \n" +
-                        "from <http://dbpedia.org/comments> \n" +
-                        "where {\n" +
-                        "?s <http://www.w3.org/2000/01/rdf-schema#label> ?label . \n" +
-                        "?label <bif:contains> \"" + s + "\" .\n" +
-                        "?s a ?type .\n" +
-                        "?s <http://www.w3.org/2000/01/rdf-schema#comment> ?comment .\n" +
-                        "}\n" +
-                        "GROUP BY ?s\n" +
-                        "ORDER BY DESC(<LONG::IRI_RANK>(?s))\n" +
-                        "LIMIT 100";
-
-        System.out.println(queryString);
-
-        Query query = QueryFactory.create(queryString);
-
-        try (QueryExecution qe = qef.createQueryExecution(query)) {
-            ResultSet rs = qe.execSelect();
-            return ResultSetFormatter.toList(rs)
-                    .stream().map(qs -> new SearchResult(qs.getResource("s"),
-                                                         qs.getLiteral("l").getLexicalForm(),
-                                                         qs.getLiteral("c").getLexicalForm(),
-                                                         qs.get("types").isResource()
-                                                                 ? qs.getResource("types").getURI()
-                                                                 : qs.getLiteral("types").getLexicalForm()
-                                  )
-                    );
-
-        }
+    private Stream<SearchResultExtended> search(String s) {
+       return fulltextSearch.search(s);
     }
-
-
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
@@ -533,6 +550,25 @@ public class MyUI extends UI {
     }
 
     public static void main(String[] args) throws Exception {
+        String updateString = "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" +
+                "PREFIX p: <http://www.wikidata.org/prop/>\n" +
+                "PREFIX wd: <http://www.wikidata.org/entity/>\n" +
+                "\n" +
+                "INSERT \n" +
+                "  { ?s ?p ?o }\n" +
+                "WHERE\n" +
+                "  { SERVICE  <https://query.wikidata.org/bigdata/namespace/wdq/sparql> #don't know what to insert here for \"GRAPH\" either\n" +
+                "    {                           #a working example query for wikidata:\n" +
+                "      ?s wdt:P31 wd:Q5.         #humans\n" +
+                "      ?s wdt:P54 wd:Q43310.     #germans\n" +
+                "      ?s wdt:P1344 wd:Q79859.   #part of world cup 2014\n" +
+                "      ?s ?p ?o.\n" +
+                "    }\n" +
+                "  }";
+        Model m = ModelFactory.createDefaultModel();
+        org.apache.jena.query.Dataset dataset = DatasetFactory.create(m);
+        UpdateAction.parseExecute(updateString, dataset);
+        System.out.println(m.size());
 //        OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF);
 //        String data = "@prefix : <http://ex.org/> . @prefix owl: <http://www.w3.org/2002/07/owl#> ." +
 //                ":a a :A . :A a owl:Class ." +
