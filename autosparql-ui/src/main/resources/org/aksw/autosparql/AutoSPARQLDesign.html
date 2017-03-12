@@ -9,9 +9,9 @@
     <vaadin-horizontal-layout _id="dataset" width="100%">
         <vaadin-combo-box _id="datasetSelector" width="100%" icon="fonticon://Vaadin-Icons/e737" caption="Select a dataset"></vaadin-combo-box>
         <vaadin-form-layout style-name="light" caption="Settings" icon="fonticon://Vaadin-Icons/e764">
-            <vaadin-slider _id="maxDepthSlider" caption="Max. depth"></vaadin-slider>
+            <vaadin-slider _id="maxDepthSlider" caption="Max. depth" style-name="ticks"></vaadin-slider>
             <vaadin-horizontal-layout caption="Max. execution time">
-                <vaadin-check-box _id="useMaxExecutionTime" caption="Set max. execution time to" :middle :left></vaadin-check-box>
+                <vaadin-check-box _id="useMaxExecutionTimeCB" caption="Set max. execution time to" :middle :left></vaadin-check-box>
                 <vaadin-text-field _id="maxExecutionTimeField" :middle :left></vaadin-text-field>
             </vaadin-horizontal-layout>
             <vaadin-check-box _id="useInferenceCB" caption="Use inference"></vaadin-check-box>

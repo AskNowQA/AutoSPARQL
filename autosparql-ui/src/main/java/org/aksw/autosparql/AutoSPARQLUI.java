@@ -14,10 +14,8 @@ import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.renderers.HtmlRenderer;
-import com.vaadin.ui.themes.ValoTheme;
 import org.aksw.autosparql.search.FulltextSearchSPARQLVirtuoso;
 import org.aksw.autosparql.search.SearchResultExtended;
-import org.aksw.autosparql.widget.NumberField;
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.aksw.jena_sparql_api.http.QueryExecutionHttpWrapper;
@@ -81,10 +79,6 @@ import java.util.stream.Stream;
 @Widgetset("org.aksw.autosparql.widgetset.AutoSPARQLWidgetSet")
 public class AutoSPARQLUI extends UI {
 
-    Slider maxDepthSlider;
-    CheckBox inferenceCB;
-    CheckBox minimizeCB;
-    CheckBox inComingDataCB;
     SPARQLBasedDataProvider dataProvider;
 
     private static final String SPARQL_SERVICE_ENDPOINT = "http://172.18.160.4:8890/sparql";
@@ -101,13 +95,13 @@ public class AutoSPARQLUI extends UI {
     AbstractReasonerComponent reasoner;
     FulltextSearchSPARQLVirtuoso fulltextSearch;
 
+    AutoSPARQLDesign layout;
+
     Function<Query, QueryExecution> queryToQueryExecution = (query) -> qef.createQueryExecution(query);
 
-    Function<String, Model> uriToCBD = (uri) -> cbdGen.getConciseBoundedDescription(uri, maxDepthSlider.getValue().intValue());
+    Function<String, Model> uriToCBD = (uri) -> cbdGen.getConciseBoundedDescription(uri, layout.maxDepthSlider.getValue().intValue());
 
-    Function<String, RDFResourceTree> uriToQueryTree = (uri) -> qtf.getQueryTree(uri, uriToCBD.apply(uri), maxDepthSlider.getValue().intValue());
-
-    AutoSPARQLDesign layout;
+    Function<String, RDFResourceTree> uriToQueryTree = (uri) -> qtf.getQueryTree(uri, uriToCBD.apply(uri), layout.maxDepthSlider.getValue().intValue());
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -116,8 +110,6 @@ public class AutoSPARQLUI extends UI {
 
         initDatasetSelector();
         initSPARQLResultsGrid();
-
-        createSettingsPanel();
 
         layout.runButton.addClickListener( e -> {
             onComputeSPARQLQuery();
@@ -139,17 +131,8 @@ public class AutoSPARQLUI extends UI {
         layout.datasetSelector.addValueChangeListener((e) -> onChangeDataset(e.getValue()));
     }
 
-    private Component createAdvancedSettingsMenu() {
-        VerticalLayout advancedOptions = new VerticalLayout();
-        inferenceCB = new CheckBox();
-        inferenceCB.setCaption("Use Inference");
-        minimizeCB = new CheckBox();
-        minimizeCB.setCaption("Minimize");
-        inComingDataCB = new CheckBox();
-        inComingDataCB.setCaption("Use Incoming Data");
-        advancedOptions.addComponents(inferenceCB, minimizeCB, inComingDataCB);
-
-        SliderPanel sliderPanel = new SliderPanelBuilder(advancedOptions)
+    private Component createAdvancedSettingsMenu(Component c) {
+        SliderPanel sliderPanel = new SliderPanelBuilder(c)
                 .caption("Advanced Options")
                 .mode(SliderMode.RIGHT)
                 .tabPosition(SliderTabPosition.MIDDLE)
@@ -157,54 +140,6 @@ public class AutoSPARQLUI extends UI {
                 .build();
 
         return sliderPanel;
-    }
-
-    private Component createSettingsPanel() {
-        FormLayout settings = new FormLayout();
-        settings.setCaption(VaadinIcons.COG_O.getHtml() + " Settings");
-        settings.setCaptionAsHtml(true);
-        settings.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-
-        maxDepthSlider = new Slider();
-        maxDepthSlider.setCaption("Max. Depth");
-//        maxDepthSlider.setOrientation(SliderOrientation.VERTICAL);
-        maxDepthSlider.addStyleName("ticks");
-//        maxDepthSlider.setWidth("200px");
-        maxDepthSlider.setHeight(100, Unit.PERCENTAGE);
-        maxDepthSlider.setMin(1);
-        maxDepthSlider.setMax(3);
-
-        HorizontalLayout wrap = new HorizontalLayout();
-        wrap.setSpacing(true);
-        wrap.setCaption("Max. Execution Time");
-        wrap.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-        CheckBox useMaxExecutionTime = new CheckBox("Set max. execution time to", true);
-        wrap.addComponent(useMaxExecutionTime);
-
-        final TextField maxExecutionTimeField = new TextField();
-        NumberField.extend(maxExecutionTimeField);
-        maxExecutionTimeField.setValue("10");
-        wrap.addComponent(maxExecutionTimeField);
-
-        useMaxExecutionTime.addValueChangeListener((e) -> maxExecutionTimeField.setEnabled(e.getValue()));
-
-        inferenceCB = new CheckBox();
-        inferenceCB.setCaption("Use Inference");
-        minimizeCB = new CheckBox();
-        minimizeCB.setCaption("Minimize Query");
-        inComingDataCB = new CheckBox();
-        inComingDataCB.setCaption("Use Incoming Data");
-
-        settings.addComponents(maxDepthSlider, wrap, inferenceCB, minimizeCB, inComingDataCB);
-
-        Panel p = new Panel();
-        p.setCaption(VaadinIcons.COG_O.getHtml() + " Settings");
-        p.setCaptionAsHtml(true);
-        p.addStyleName(ValoTheme.PANEL_BORDERLESS);
-        p.setContent(settings);
-
-        return p;
-//        return settings;
     }
 
     private void onChangeDataset(Dataset dataset) {
@@ -333,7 +268,7 @@ public class AutoSPARQLUI extends UI {
         Dataset dataset = layout.datasetSelector.getValue();
         String datasetURI = layout.datasetSelector.getValue().uri;
 
-        if(inComingDataCB.getValue()) {
+        if(layout.useIncomingDataCB.getValue()) {
             cbdGen = new SymmetricConciseBoundedDescriptionGeneratorImpl(qef);
             qtf = new QueryTreeFactoryBaseInv();
         } else {
@@ -358,7 +293,7 @@ public class AutoSPARQLUI extends UI {
         List<RDFResourceTree> posExampleTrees = posExamples.stream().map(uriToQueryTree).collect(Collectors.toList());
 
         LGGGenerator lggGen;
-        if(inferenceCB.getValue()) {
+        if(layout.useInferenceCB.getValue()) {
             lggGen = new LGGGeneratorRDFS(reasoner);
         } else {
             lggGen = new LGGGeneratorSimple();
