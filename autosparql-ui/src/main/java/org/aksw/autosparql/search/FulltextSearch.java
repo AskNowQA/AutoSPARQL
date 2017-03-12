@@ -1,21 +1,22 @@
-package org.aksw.autosparql;
+package org.aksw.autosparql.search;
 
 import org.apache.jena.rdf.model.Resource;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Fulltext search of RDF resources.
  *
  * @author Lorenz Buehmann
  */
-public interface FulltextSearch {
+public interface FulltextSearch<T extends SearchResult> {
 
 	/**
-	 * Returns a set of resources for the given search term.
+	 * Returns the result of a fulltext search for the given search term.
 	 *
 	 * @param searchTerm the term used for the full text search
-	 * @return a set of RDF resources
+	 * @return a stream of search results
 	 */
-	Set<Resource> search(String searchTerm);
+	Stream<T> search(String searchTerm);
 }
