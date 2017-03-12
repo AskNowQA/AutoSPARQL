@@ -15,9 +15,6 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
-import de.fatalix.vaadin.addon.codemirror.CodeMirror;
-import de.fatalix.vaadin.addon.codemirror.CodeMirrorLanguage;
-import de.fatalix.vaadin.addon.codemirror.CodeMirrorTheme;
 import org.aksw.autosparql.search.FulltextSearchSPARQLVirtuoso;
 import org.aksw.autosparql.search.SearchResultExtended;
 import org.aksw.autosparql.widget.NumberField;
@@ -61,7 +58,10 @@ import org.vaadin.sliderpanel.client.SliderTabPosition;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -79,18 +79,12 @@ import java.util.stream.Stream;
 @Theme("mytheme")
 //@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
 @Widgetset("org.aksw.autosparql.widgetset.AutoSPARQLWidgetSet")
-public class MyUI extends UI {
+public class AutoSPARQLUI extends UI {
 
-    TextArea posExamplesInputField;
-    TextArea negExamplesInputField;
-    TextArea queryField;
-    CodeMirror codeMirror;
     Slider maxDepthSlider;
     CheckBox inferenceCB;
     CheckBox minimizeCB;
     CheckBox inComingDataCB;
-    ComboBox<Dataset> datasetSelector;
-    Grid<RDFNode> grid;
     SPARQLBasedDataProvider dataProvider;
 
     private static final String SPARQL_SERVICE_ENDPOINT = "http://172.18.160.4:8890/sparql";
@@ -113,56 +107,36 @@ public class MyUI extends UI {
 
     Function<String, RDFResourceTree> uriToQueryTree = (uri) -> qtf.getQueryTree(uri, uriToCBD.apply(uri), maxDepthSlider.getValue().intValue());
 
+    AutoSPARQLDesign layout;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        final VerticalLayout layout = new VerticalLayout();
-        layout.setSizeFull();
-
-        // KB selector
-        HorizontalLayout datasetSelectorAndSettings = new HorizontalLayout();
-        datasetSelectorAndSettings.setWidth(100, Unit.PERCENTAGE);
-        datasetSelectorAndSettings.addComponent(createDatasetSelector());
-        datasetSelectorAndSettings.addComponent(createSettingsPanel());
-        layout.addComponent(datasetSelectorAndSettings);
-
-        final HorizontalLayout top = new HorizontalLayout();
-        top.setWidth(100f, Unit.PERCENTAGE);
-
-        top.addComponentsAndExpand(createExamplesInputPanel());
-
-//        top.setComponentAlignment(maxDepthSlider, Alignment.MIDDLE_CENTER);
-
-        Button button = new Button("Run");
-        button.addClickListener( e -> {
-            onComputeSPARQLQuery();
-        });
-        top.addComponent(button);
-        top.setComponentAlignment(button, Alignment.MIDDLE_CENTER);
-
-
-        Component resultPanel = createResultPanel();
-
-        layout.addComponentsAndExpand(top, resultPanel);
-        layout.setExpandRatio(top, 0.3f);
-        layout.setExpandRatio(resultPanel, 0.7f);
-
+        layout = new AutoSPARQLDesign();
         setContent(layout);
 
-        setContent(new AutoSPARQLDesign());
+        initDatasetSelector();
+        initSPARQLResultsGrid();
 
-        datasetSelector.setSelectedItem(Dataset.DBPEDIA);
+        createSettingsPanel();
+
+        layout.runButton.addClickListener( e -> {
+            onComputeSPARQLQuery();
+        });
+
+        Button searchButton = new Button("Search", VaadinIcons.SEARCH);
+        searchButton.addClickListener((e) -> {
+            getCurrent().getUI().addWindow(createSearchDialog());
+        });
+
+        layout.datasetSelector.setSelectedItem(Dataset.DBPEDIA);
     }
 
-    private Component createDatasetSelector() {
-        datasetSelector = new ComboBox<>(VaadinIcons.DATABASE.getHtml() + " Select a dataset");
-        datasetSelector.setCaptionAsHtml(true);
-        datasetSelector.setItems(Arrays.asList(Dataset.values()));
-        datasetSelector.setItemCaptionGenerator(Dataset::getLabel);
-        datasetSelector.setEmptySelectionAllowed(false);
-        datasetSelector.setWidth(100, Unit.PERCENTAGE);
-        datasetSelector.addValueChangeListener((e) -> onChangeDataset(e.getValue()));
-
-        return datasetSelector;
+    private void initDatasetSelector() {
+        layout.datasetSelector.setItems(Arrays.asList(Dataset.values()));
+        layout.datasetSelector.setItemCaptionGenerator(Dataset::getLabel);
+        layout.datasetSelector.setEmptySelectionAllowed(false);
+        layout.datasetSelector.setWidth(100, Unit.PERCENTAGE);
+        layout.datasetSelector.addValueChangeListener((e) -> onChangeDataset(e.getValue()));
     }
 
     private Component createAdvancedSettingsMenu() {
@@ -234,12 +208,12 @@ public class MyUI extends UI {
     }
 
     private void onChangeDataset(Dataset dataset) {
-        posExamplesInputField.setValue(
+        layout.posExamplesInput.setValue(
                 dataset.examples.stream()
                         .map(uri -> "<" + uri + ">")
                         .collect(Collectors.joining(" ")));
 
-        String datasetURI = datasetSelector.getValue().uri;
+        String datasetURI = layout.datasetSelector.getValue().uri;
         qef = FluentQueryExecutionFactory
                 .http(SPARQL_SERVICE_ENDPOINT, datasetURI)
                 .config().withPostProcessor(qe -> ((QueryEngineHTTP) ((QueryExecutionHttpWrapper) qe).getDecoratee())
@@ -250,73 +224,9 @@ public class MyUI extends UI {
         fulltextSearch = new FulltextSearchSPARQLVirtuoso(qef);
     }
 
-    private Component createExamplesInputPanel() {
-        HorizontalLayout examplesPanel = new HorizontalLayout();
-        examplesPanel.setSizeFull();
 
-//        VerticalLayout vl = new VerticalLayout();
-//        vl.setSpacing(false);
-//        vl.setMargin(false);
-//        HorizontalLayout hhl = new HorizontalLayout();
-//        hhl.setWidth(100f, Unit.PERCENTAGE);
-//        hhl.setSpacing(false);
-//        hhl.setMargin(false);
-//        Label l = new Label("Type the positive examples here:");
-//        hhl.addComponent(l);
-//        Button search = new Button(VaadinIcons.SEARCH);
-//        search.addStyleName(ValoTheme.BUTTON_LINK);
-//        hhl.addComponent(search);
-//        hhl.setComponentAlignment(search, Alignment.MIDDLE_LEFT);
-//        vl.addComponent(hhl);
-
-        posExamplesInputField = new TextArea();
-        posExamplesInputField.setSizeFull();
-        posExamplesInputField.setIcon(VaadinIcons.PLUS_CIRCLE_O);
-        posExamplesInputField.setCaption("Type the positive examples here:");
-
-        Button searchButton = new Button("Search", VaadinIcons.SEARCH);
-        searchButton.addClickListener((e) -> {
-            getCurrent().getUI().addWindow(createSearchDialog());
-        });
-//        searchButton.setSizeUndefined();
-
-        negExamplesInputField = new TextArea();
-        negExamplesInputField.setSizeFull();
-        negExamplesInputField.setIcon(VaadinIcons.MINUS_CIRCLE_O);
-        negExamplesInputField.setCaption("Type the negative examples here:");
-
-//        vl.addComponent(hhl);
-//        vl.addComponentsAndExpand(posExamplesInputField);
-
-        examplesPanel.addComponentsAndExpand(posExamplesInputField);
-//        examplesPanel.addComponent(searchButton);
-        examplesPanel.addComponentsAndExpand(negExamplesInputField);
-
-        return examplesPanel;
-    }
-
-    private Component createResultPanel() {
-        HorizontalLayout l = new HorizontalLayout();
-
-        queryField = new TextArea();
-        queryField.setSizeFull();
-        queryField.setReadOnly(true);
-
-        codeMirror = new CodeMirror();
-        codeMirror.setWidth(100f, Unit.PERCENTAGE);
-        codeMirror.setHeight(600, Unit.PIXELS);
-        codeMirror.setReadOnly(true);
-        codeMirror.setCode("");
-//        codeMirror.setWidth(1000, Unit.PIXELS);
-        codeMirror.setLanguage(CodeMirrorLanguage.SPARQL);
-        codeMirror.setTheme(CodeMirrorTheme.DEFAULT);
-
-        Panel panel = new Panel(codeMirror);
-        panel.setSizeFull();
-
-        grid = new Grid<>();
-        grid.setSizeFull();
-        grid.setDetailsGenerator(new DetailsGenerator<RDFNode>() {
+    private void initSPARQLResultsGrid() {
+        layout.sparqlResultsGrid.setDetailsGenerator(new DetailsGenerator<RDFNode>() {
             @Override
             public Component apply(RDFNode s) {
 
@@ -327,17 +237,17 @@ public class MyUI extends UI {
                 layout.addComponent(l);
                 return layout;
             }}
-            );
+        );
 //        grid.setColumns("");
 //        grid.setDataProvider(dataProvider);
-        grid.addItemClickListener(e -> {
+        layout.sparqlResultsGrid.addItemClickListener(e -> {
             if(e.getMouseEventDetails().isDoubleClick()) {
                 RDFNode item = e.getItem();
-                grid.setDetailsVisible(item, !grid.isDetailsVisible(item));
+                layout.sparqlResultsGrid.setDetailsVisible(item, !layout.sparqlResultsGrid.isDetailsVisible(item));
             }
         });
 
-        grid.addColumn(RDFNode::toString);
+        layout.sparqlResultsGrid.addColumn(RDFNode::toString);
 //        grid.addColumn(s -> "Omit",
 //                       new ButtonRenderer<>(clickEvent -> {
 //                           RDFNode uri = clickEvent.getItem();
@@ -347,11 +257,7 @@ public class MyUI extends UI {
 
 
         dataProvider = new SPARQLBasedDataProvider(qef);
-        grid.setDataProvider(dataProvider);
-
-        l.addComponentsAndExpand(panel, grid);
-
-        return l;
+        layout.sparqlResultsGrid.setDataProvider(dataProvider);
     }
 
     private Window createSearchDialog() {
@@ -424,8 +330,8 @@ public class MyUI extends UI {
     private void onComputeSPARQLQuery() {
 
         // the selected dataset
-        Dataset dataset = datasetSelector.getValue();
-        String datasetURI = datasetSelector.getValue().uri;
+        Dataset dataset = layout.datasetSelector.getValue();
+        String datasetURI = layout.datasetSelector.getValue().uri;
 
         if(inComingDataCB.getValue()) {
             cbdGen = new SymmetricConciseBoundedDescriptionGeneratorImpl(qef);
@@ -446,7 +352,7 @@ public class MyUI extends UI {
 
 
         // parse the examples from the input field
-        List<String> posExamples = parseExamples();
+        List<String> posExamples = layout.getPosExamples();
         System.out.println(posExamples);
 
         List<RDFResourceTree> posExampleTrees = posExamples.stream().map(uriToQueryTree).collect(Collectors.toList());
@@ -481,9 +387,7 @@ public class MyUI extends UI {
         });
 
 
-        queryField.setValue(query.toString());
-
-        codeMirror.setCode(query.toString());
+        layout.sparqlQueryField.setCode(query.toString());
 
         showResult(query);
 
@@ -498,28 +402,6 @@ public class MyUI extends UI {
         dataProvider.setQuery(q);
         dataProvider.refreshAll();
 //        UI.getCurrent().access(() -> grid.setDataProvider(dataProvider));
-    }
-
-    private List<String> parseExamples() {
-        List<String> posExamples = parseExamples(posExamplesInputField.getValue());
-        List<String> negExamples = parseExamples(negExamplesInputField.getValue());
-
-        return posExamples;
-    }
-
-    private List<String> parseExamples(String text) {
-        Pattern pattern = Pattern.compile("(?<=\\<)(.*?)(?=\\>)");
-        Matcher matcher = pattern.matcher(text);
-
-        List<String> examples = new ArrayList<>();
-
-        while (matcher.find()) {
-            String uri = matcher.group();
-
-            examples.add(uri);
-        }
-
-        return examples;
     }
 
     /**
@@ -545,7 +427,7 @@ public class MyUI extends UI {
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+    @VaadinServletConfiguration(ui = AutoSPARQLUI.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
     }
 

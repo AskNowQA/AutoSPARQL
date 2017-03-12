@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta name="package-mapping" content="cm:de.fatalix.vaadin.addon.codemirror" />
+</head>
 <body>
 <vaadin-vertical-layout size-full>
 
-    <vaadin-horizontal-layout _id="dataset">
-        <vaadin-combobox _id="datasetSelector"></vaadin-combobox>
+    <vaadin-horizontal-layout _id="dataset" width="100%">
+        <vaadin-combo-box _id="datasetSelector" width="100%" icon="fonticon://Vaadin-Icons/e737" caption="Select a dataset"></vaadin-combo-box>
+        <vaadin-form-layout style-name="light" caption="Settings" icon="fonticon://Vaadin-Icons/e764">
+            <vaadin-slider _id="maxDepthSlider" caption="Max. depth"></vaadin-slider>
+            <vaadin-horizontal-layout caption="Max. execution time">
+                <vaadin-check-box _id="useMaxExecutionTime" caption="Set max. execution time to" :middle :left></vaadin-check-box>
+                <vaadin-text-field _id="maxExecutionTimeField" :middle :left></vaadin-text-field>
+            </vaadin-horizontal-layout>
+            <vaadin-check-box _id="useInferenceCB" caption="Use inference"></vaadin-check-box>
+            <vaadin-check-box _id="useIncomingDataCB" caption="Use incoming data"></vaadin-check-box>
+        </vaadin-form-layout>
     </vaadin-horizontal-layout>
 
-    <vaadin-horizontal-layout _id="examples">
-        <vaadin-textarea _id="posExamplesInput" icon="fonticon://VaadinIcons/0xE7FE" caption="Type the positive examples here:"></vaadin-textarea>
-        <vaadin-textarea _id="negExamplesInput" icon="fonticon://VaadinIcons/0xE7F3" caption="Type the negative examples here:"></vaadin-textarea>
-        <vaadin-button _id="runButton">Run</vaadin-button>
+    <vaadin-horizontal-layout _id="examples" size-full :expand="0.3">
+        <vaadin-text-area _id="posExamplesInput" size-full icon="fonticon://Vaadin-Icons/e7fe" caption="Type the positive examples here:" :expand></vaadin-text-area>
+        <vaadin-text-area _id="negExamplesInput" size-full icon="fonticon://Vaadin-Icons/e7f3" caption="Type the negative examples here:" :expand></vaadin-text-area>
+        <vaadin-button _id="runButton" :middle :center>Run</vaadin-button>
     </vaadin-horizontal-layout>
 
-    <vaadin-horizontal-layout _id="results">
-
+    <vaadin-horizontal-layout _id="results" size-full :expand="0.7">
+        <cm-code-mirror _id="sparqlQueryField" size-full :expand/>
+        <vaadin-grid _id="sparqlResultsGrid" size-full :expand/>
     </vaadin-horizontal-layout>
 
 </vaadin-vertical-layout>
