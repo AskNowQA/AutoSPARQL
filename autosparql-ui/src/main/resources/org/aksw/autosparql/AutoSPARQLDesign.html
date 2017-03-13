@@ -2,31 +2,34 @@
 <html>
 <head>
     <meta name="package-mapping" content="cm:de.fatalix.vaadin.addon.codemirror" />
+    <meta charset="UTF-8" name="package-mapping" content="autosparql:org.aksw.autosparql">
 </head>
 <body>
 <vaadin-vertical-layout size-full>
 
-    <vaadin-horizontal-layout _id="dataset" width="100%">
-        <vaadin-combo-box _id="datasetSelector" width="100%" icon="fonticon://Vaadin-Icons/e737" caption="Select a dataset"></vaadin-combo-box>
-        <vaadin-form-layout style-name="light" caption="Settings" icon="fonticon://Vaadin-Icons/e764">
-            <vaadin-slider _id="maxDepthSlider" caption="Max. depth" style-name="ticks"></vaadin-slider>
-            <vaadin-horizontal-layout caption="Max. execution time">
-                <vaadin-check-box _id="useMaxExecutionTimeCB" caption="Set max. execution time to" :middle :left></vaadin-check-box>
-                <vaadin-text-field _id="maxExecutionTimeField" :middle :left></vaadin-text-field>
-            </vaadin-horizontal-layout>
-            <vaadin-check-box _id="useInferenceCB" caption="Use inference"></vaadin-check-box>
-            <vaadin-check-box _id="useIncomingDataCB" caption="Use incoming data"></vaadin-check-box>
-        </vaadin-form-layout>
-    </vaadin-horizontal-layout>
+    <v-horizontal-layout _id="hl1" size-full :expand="0.4" margin="false">
 
-    <vaadin-horizontal-layout _id="examples" size-full :expand="0.3">
-        <vaadin-text-area _id="posExamplesInput" size-full icon="fonticon://Vaadin-Icons/e7fe" caption="Type the positive examples here:" :expand></vaadin-text-area>
-        <vaadin-text-area _id="negExamplesInput" size-full icon="fonticon://Vaadin-Icons/e7f3" caption="Type the negative examples here:" :expand></vaadin-text-area>
-        <vaadin-button _id="runButton" :middle :center>Run</vaadin-button>
-    </vaadin-horizontal-layout>
+        <vaadin-vertical-layout _id="dataset" size-full margin="false">
+            <vaadin-combo-box _id="datasetSelector" width="100%" icon="fonticon://Vaadin-Icons/e737" caption="Select a dataset"/>
+            <autosparql-settings-form _id="settingsForm" size-full :expand/>
+            <vaadin-button _id="runButton" style-name="primary" :middle :center>Run</vaadin-button>
+        </vaadin-vertical-layout>
 
-    <vaadin-horizontal-layout _id="results" size-full :expand="0.7">
-        <cm-code-mirror _id="sparqlQueryField" size-full :expand/>
+        <vaadin-vertical-layout _id="examples" size-full margin="false">
+            <vaadin-absolute-layout size-full margin="false"  icon="fonticon://Vaadin-Icons/e7fe" caption="Type the positive examples here:"  :expand margin="false">
+                <vaadin-text-area _id="posExamplesInput"  :top="0px" :left="0px"  :z-index="0" size-full :expand margin="false"/>
+                <v-button _id="searchPosButton" :top="0px" :right="0px" :z-index="-1" style-name="borderless" icon="fonticon://Vaadin-Icons/e803"/>
+            </vaadin-absolute-layout>
+            <vaadin-absolute-layout size-full margin="false"  icon="fonticon://Vaadin-Icons/e7fe" caption="Type the negative examples here:"  :expand margin="false">
+                <vaadin-text-area _id="negExamplesInput" size-full icon="fonticon://Vaadin-Icons/e7f3" :expand margin="false"/>
+                <v-button _id="searchNegButton" :top="0px" :right="0px" :z-index="-1" style-name="borderless" icon="fonticon://Vaadin-Icons/e804"/>
+            </vaadin-absolute-layout>
+        </vaadin-vertical-layout>
+
+    </v-horizontal-layout>
+
+    <vaadin-horizontal-layout _id="results" size-full :expand="0.6">
+        <cm-code-mirror _id="sparqlQueryField" caption="The generated SPARQL query will be shown here:" icon="fonticon://Vaadin-Icons/e70a" size-full :expand/>
         <vaadin-grid _id="sparqlResultsGrid" size-full :expand/>
     </vaadin-horizontal-layout>
 

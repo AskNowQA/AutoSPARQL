@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="package-mapping" content="cm:de.fatalix.vaadin.addon.codemirror" />
+    <meta charset="UTF-8" name="package-mapping" content="autosparql:org.aksw.autosparql">
+</head>
+<body>
+<vaadin-vertical-layout size-full>
+
+    <vaadin-horizontal-layout _id="dataset" width="100%">
+        <vaadin-combo-box _id="datasetSelector" width="100%" icon="fonticon://Vaadin-Icons/e737" caption="Select a dataset"></vaadin-combo-box>
+        <autosparql-settings-form _id="settingsForm"/>
+    </vaadin-horizontal-layout>
+
+    <vaadin-horizontal-layout _id="examples" size-full :expand="0.3">
+        <vaadin-text-area _id="posExamplesInput" size-full icon="fonticon://Vaadin-Icons/e7fe" caption="Type the positive examples here:" :expand></vaadin-text-area>
+        <vaadin-text-area _id="negExamplesInput" size-full icon="fonticon://Vaadin-Icons/e7f3" caption="Type the negative examples here:" :expand></vaadin-text-area>
+        <vaadin-button _id="runButton" :middle :center>Run</vaadin-button>
+    </vaadin-horizontal-layout>
+
+    <vaadin-horizontal-layout _id="results" size-full :expand="0.7">
+        <cm-code-mirror _id="sparqlQueryField" caption="The generated SPARQL query will be shown here:"size-full :expand/>
+        <vaadin-grid _id="sparqlResultsGrid" size-full :expand/>
+    </vaadin-horizontal-layout>
+
+</vaadin-vertical-layout>
+</body>
+</html>

@@ -6,7 +6,6 @@ import com.vaadin.ui.declarative.Design;
 import de.fatalix.vaadin.addon.codemirror.CodeMirror;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorLanguage;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorTheme;
-import org.aksw.autosparql.widget.NumberField;
 import org.apache.jena.rdf.model.RDFNode;
 
 import java.util.ArrayList;
@@ -26,6 +25,8 @@ public class AutoSPARQLDesign extends VerticalLayout {
 
 	protected TextArea posExamplesInput;
 	protected TextArea negExamplesInput;
+	protected Button searchPosButton;
+	protected Button searchNegButton;
 
 	protected Button runButton;
 
@@ -34,11 +35,7 @@ public class AutoSPARQLDesign extends VerticalLayout {
 	protected Grid<RDFNode> sparqlResultsGrid;
 
 	// settings
-	protected Slider maxDepthSlider;
-	protected CheckBox useMaxExecutionTimeCB;
-	protected TextField maxExecutionTimeField;
-	protected CheckBox useInferenceCB;
-	protected CheckBox useIncomingDataCB;
+	protected SettingsForm settingsForm;
 
 	public AutoSPARQLDesign() {
 		Design.read(this);
@@ -51,12 +48,6 @@ public class AutoSPARQLDesign extends VerticalLayout {
 		sparqlQueryField.setLanguage(CodeMirrorLanguage.SPARQL);
 		sparqlQueryField.setTheme(CodeMirrorTheme.DEFAULT);
 
-		maxDepthSlider.setMin(1);
-		maxDepthSlider.setMax(3);
-
-		NumberField.extend(maxExecutionTimeField);
-		maxExecutionTimeField.setValue("10");
-		useMaxExecutionTimeCB.addValueChangeListener((e) -> maxExecutionTimeField.setEnabled(e.getValue()));
 	}
 
 	protected List<String> getPosExamples() {

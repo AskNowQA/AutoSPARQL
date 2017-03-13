@@ -7,6 +7,8 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.DefaultErrorHandler;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.ContentMode;
@@ -99,9 +101,9 @@ public class AutoSPARQLUI extends UI {
 
     Function<Query, QueryExecution> queryToQueryExecution = (query) -> qef.createQueryExecution(query);
 
-    Function<String, Model> uriToCBD = (uri) -> cbdGen.getConciseBoundedDescription(uri, layout.maxDepthSlider.getValue().intValue());
+    Function<String, Model> uriToCBD = (uri) -> cbdGen.getConciseBoundedDescription(uri, layout.settingsForm.getMaxDepth());
 
-    Function<String, RDFResourceTree> uriToQueryTree = (uri) -> qtf.getQueryTree(uri, uriToCBD.apply(uri), layout.maxDepthSlider.getValue().intValue());
+    Function<String, RDFResourceTree> uriToQueryTree = (uri) -> qtf.getQueryTree(uri, uriToCBD.apply(uri), layout.settingsForm.getMaxDepth());
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -115,12 +117,26 @@ public class AutoSPARQLUI extends UI {
             onComputeSPARQLQuery();
         });
 
-        Button searchButton = new Button("Search", VaadinIcons.SEARCH);
-        searchButton.addClickListener((e) -> {
-            getCurrent().getUI().addWindow(createSearchDialog());
-        });
+        layout.searchPosButton.addClickListener(e -> getCurrent().getUI().addWindow(createSearchDialog()));
+        layout.searchNegButton.addClickListener(e -> getCurrent().getUI().addWindow(createSearchDialog()));
+
 
         layout.datasetSelector.setSelectedItem(Dataset.DBPEDIA);
+
+        setErrorHandler(new DefaultErrorHandler() {
+            @Override
+            public void error(com.vaadin.server.ErrorEvent event) {
+                // Find the final cause
+                String cause = "<b>The click failed because:</b><br/>";
+                for (Throwable t = event.getThrowable(); t != null;
+                     t = t.getCause())
+                    if (t.getCause() == null) // We're at final cause
+                        cause += t.getClass().getName() + "<br/>";
+
+                new Notification("Error", cause, Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
+
+            }
+        });
     }
 
     private void initDatasetSelector() {
@@ -199,6 +215,8 @@ public class AutoSPARQLUI extends UI {
         final Window window = new Window("Search");
         window.setWidth(600.0f, Unit.PIXELS);
         window.setHeight(600.0f, Unit.PIXELS);
+        window.setModal(true);
+        window.addCloseShortcut(ShortcutAction.KeyCode.ESCAPE);
 
         final VerticalLayout content = new VerticalLayout();
         content.setSizeFull();
@@ -268,7 +286,7 @@ public class AutoSPARQLUI extends UI {
         Dataset dataset = layout.datasetSelector.getValue();
         String datasetURI = layout.datasetSelector.getValue().uri;
 
-        if(layout.useIncomingDataCB.getValue()) {
+        if(layout.settingsForm.isUseIncomingData()) {
             cbdGen = new SymmetricConciseBoundedDescriptionGeneratorImpl(qef);
             qtf = new QueryTreeFactoryBaseInv();
         } else {
@@ -293,7 +311,7 @@ public class AutoSPARQLUI extends UI {
         List<RDFResourceTree> posExampleTrees = posExamples.stream().map(uriToQueryTree).collect(Collectors.toList());
 
         LGGGenerator lggGen;
-        if(layout.useInferenceCB.getValue()) {
+        if(layout.settingsForm.isUseInference()) {
             lggGen = new LGGGeneratorRDFS(reasoner);
         } else {
             lggGen = new LGGGeneratorSimple();
