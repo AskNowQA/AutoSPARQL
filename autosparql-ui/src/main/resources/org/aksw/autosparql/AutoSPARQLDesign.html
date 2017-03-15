@@ -20,8 +20,8 @@
                 <vaadin-text-area _id="posExamplesInput"  :top="0px" :left="0px"  :z-index="0" size-full :expand margin="false"/>
                 <v-button _id="searchPosButton" :top="0px" :right="0px" :z-index="-1" style-name="borderless" icon="fonticon://Vaadin-Icons/e803"/>
             </vaadin-absolute-layout>
-            <vaadin-absolute-layout size-full margin="false"  icon="fonticon://Vaadin-Icons/e7fe" caption="Type the negative examples here:"  :expand margin="false">
-                <vaadin-text-area _id="negExamplesInput" size-full icon="fonticon://Vaadin-Icons/e7f3" :expand margin="false"/>
+            <vaadin-absolute-layout size-full margin="false"  icon="fonticon://Vaadin-Icons/e7f3" caption="Type the negative examples here:"  :expand margin="false">
+                <vaadin-text-area _id="negExamplesInput"  :top="0px" :left="0px"  :z-index="0" size-full :expand margin="false"/>
                 <v-button _id="searchNegButton" :top="0px" :right="0px" :z-index="-1" style-name="borderless" icon="fonticon://Vaadin-Icons/e804"/>
             </vaadin-absolute-layout>
         </vaadin-vertical-layout>
@@ -29,7 +29,9 @@
     </v-horizontal-layout>
 
     <vaadin-horizontal-layout _id="results" size-full :expand="0.6">
-        <cm-code-mirror _id="sparqlQueryField" caption="The generated SPARQL query will be shown here:" icon="fonticon://Vaadin-Icons/e70a" size-full :expand/>
+        <v-panel size-full  :expand>
+            <cm-code-mirror _id="sparqlQueryField" caption="The generated SPARQL query will be shown here:" icon="fonticon://Vaadin-Icons/e70a"/>
+        </v-panel>
         <vaadin-grid _id="sparqlResultsGrid" size-full :expand/>
     </vaadin-horizontal-layout>
 

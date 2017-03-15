@@ -6,11 +6,14 @@
 <vaadin-form-layout style-name="light" caption="Settings" icon="fonticon://Vaadin-Icons/e764">
     <vaadin-slider _id="maxDepthSlider" caption="Max. depth" style-name="ticks"></vaadin-slider>
     <vaadin-horizontal-layout caption="Max. execution time">
-        <vaadin-check-box _id="useMaxExecutionTimeCB" caption="Set max. execution time to" :middle :left></vaadin-check-box>
-        <vaadin-text-field _id="maxExecutionTimeField" :middle :left></vaadin-text-field>
+        <vaadin-check-box _id="useMaxExecutionTimeCB" caption="Set max. execution time to" :middle :left/>
+        <vaadin-text-field _id="maxExecutionTimeField" :middle :left/>
     </vaadin-horizontal-layout>
-    <vaadin-check-box _id="useInferenceCB" caption="Use inference"></vaadin-check-box>
-    <vaadin-check-box _id="useIncomingDataCB" caption="Use incoming data"></vaadin-check-box>
+    <vaadin-check-box _id="useInferenceCB" caption="Use inference"/>
+    <vaadin-check-box _id="useIncomingDataCB" caption="Use incoming data"/>
+    <vaadin-check-box _id="minimizeQueryCB"
+                      caption="Minimize query"
+                      descripton="If enabled, the learned SPARQL query will be minimized, i.e. some trivial triple patterns will be removed."/>
 </vaadin-form-layout>
 </body>
 </html>

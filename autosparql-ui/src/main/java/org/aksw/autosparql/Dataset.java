@@ -12,7 +12,8 @@ public enum Dataset {
 							   "http://dbpedia.org/resource/Leipzig"),
 			Lists.newArrayList("dbo,http://dbpedia.org/ontology/",
 							   "dbp,http://dbpedia.org/property/",
-							   "dbr,http://dbpedia.org/resource/")),
+							   "dbr,http://dbpedia.org/resource/",
+							   "foaf,http://xmlns.com/foaf/0.1/")),
 	LINKEDMDB("LinkedMDB", "http://linkedmdb.org",
 			  Lists.newArrayList("http://data.linkedmdb.org/resource/film/10283",
 								 "http://data.linkedmdb.org/resource/film/10459"),
@@ -23,7 +24,7 @@ public enum Dataset {
 								  "http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseases/1004"),
 			   Lists.newArrayList("diseasome,http://www4.wiwiss.fu-berlin.de/diseasome/resource/diseasome/",
 								  "drugbank,http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/",
-								  "sider,http://www4.wiwiss.fu-berlin.de/sider/resource/sider/drugs"));
+								  "sider,http://www4.wiwiss.fu-berlin.de/sider/resource/sider/drugs/"));
 
 	String label;
 	String uri;
@@ -44,6 +45,7 @@ public enum Dataset {
 			String ns = split[1];
 			prefixes.setNsPrefix(prefix, ns);
 		});
+		prefixes.lock();
 	}
 
 	public String getLabel() {

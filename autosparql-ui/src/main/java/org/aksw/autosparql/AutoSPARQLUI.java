@@ -1,12 +1,12 @@
 package org.aksw.autosparql;
 
+import com.google.common.collect.Sets;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
@@ -33,9 +33,12 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.riot.WebContent;
 import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.sparql.expr.ExprVar;
 import org.apache.jena.update.UpdateAction;
+import org.apache.jena.vocabulary.RDFS;
+import org.dllearner.algorithms.qtl.QTL2Disjunctive;
 import org.dllearner.algorithms.qtl.QueryTreeUtils;
 import org.dllearner.algorithms.qtl.datastructures.impl.RDFResourceTree;
 import org.dllearner.algorithms.qtl.impl.QueryTreeFactory;
@@ -44,24 +47,27 @@ import org.dllearner.algorithms.qtl.impl.QueryTreeFactoryBaseInv;
 import org.dllearner.algorithms.qtl.operations.lgg.LGGGenerator;
 import org.dllearner.algorithms.qtl.operations.lgg.LGGGeneratorRDFS;
 import org.dllearner.algorithms.qtl.operations.lgg.LGGGeneratorSimple;
+import org.dllearner.algorithms.qtl.util.Entailment;
 import org.dllearner.core.AbstractReasonerComponent;
 import org.dllearner.core.ComponentInitException;
+import org.dllearner.kb.SparqlEndpointKS;
 import org.dllearner.kb.sparql.ConciseBoundedDescriptionGenerator;
 import org.dllearner.kb.sparql.ConciseBoundedDescriptionGeneratorImpl;
 import org.dllearner.kb.sparql.SymmetricConciseBoundedDescriptionGeneratorImpl;
+import org.dllearner.learningproblems.PosNegLPStandard;
 import org.dllearner.reasoning.SPARQLReasoner;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLIndividual;
 import org.vaadin.sliderpanel.SliderPanel;
 import org.vaadin.sliderpanel.SliderPanelBuilder;
 import org.vaadin.sliderpanel.SliderPanelStyles;
 import org.vaadin.sliderpanel.client.SliderMode;
 import org.vaadin.sliderpanel.client.SliderTabPosition;
+import uk.ac.manchester.cs.owl.owlapi.OWLNamedIndividualImpl;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -101,7 +107,12 @@ public class AutoSPARQLUI extends UI {
 
     Function<Query, QueryExecution> queryToQueryExecution = (query) -> qef.createQueryExecution(query);
 
-    Function<String, Model> uriToCBD = (uri) -> cbdGen.getConciseBoundedDescription(uri, layout.settingsForm.getMaxDepth());
+    Function<String, Model> uriToCBD = (uri) -> {
+        System.out.println("fetching data for " + uri);
+        Model cbd = cbdGen.getConciseBoundedDescription(uri, layout.settingsForm.getMaxDepth());
+        System.out.println("#cbd(" + uri + ")=" + cbd.size());
+        return cbd;
+    };
 
     Function<String, RDFResourceTree> uriToQueryTree = (uri) -> qtf.getQueryTree(uri, uriToCBD.apply(uri), layout.settingsForm.getMaxDepth());
 
@@ -133,8 +144,9 @@ public class AutoSPARQLUI extends UI {
                     if (t.getCause() == null) // We're at final cause
                         cause += t.getClass().getName() + "<br/>";
 
-                new Notification("Error", cause, Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
+                new Notification("Error", cause, Notification.Type.ERROR_MESSAGE, true).show(Page.getCurrent());
 
+                doDefault(event);
             }
         });
     }
@@ -159,15 +171,21 @@ public class AutoSPARQLUI extends UI {
     }
 
     private void onChangeDataset(Dataset dataset) {
+        // show some examples
         layout.posExamplesInput.setValue(
                 dataset.examples.stream()
                         .map(uri -> "<" + uri + ">")
                         .collect(Collectors.joining(" ")));
 
+        // clear the view, i.e. the SPARQL query tab and the table
+        layout.reset();
+
+        // we have to setup a new SPARQL service
         String datasetURI = layout.datasetSelector.getValue().uri;
         qef = FluentQueryExecutionFactory
                 .http(SPARQL_SERVICE_ENDPOINT, datasetURI)
-                .config().withPostProcessor(qe -> ((QueryEngineHTTP) ((QueryExecutionHttpWrapper) qe).getDecoratee())
+                .config()
+                .withPostProcessor(qe -> ((QueryEngineHTTP) ((QueryExecutionHttpWrapper) qe).getDecoratee())
                         .setModelContentType(WebContent.contentTypeRDFXML))
                 .end()
                 .create();
@@ -284,13 +302,13 @@ public class AutoSPARQLUI extends UI {
 
         // the selected dataset
         Dataset dataset = layout.datasetSelector.getValue();
-        String datasetURI = layout.datasetSelector.getValue().uri;
 
         if(layout.settingsForm.isUseIncomingData()) {
             cbdGen = new SymmetricConciseBoundedDescriptionGeneratorImpl(qef);
             qtf = new QueryTreeFactoryBaseInv();
         } else {
             cbdGen = new ConciseBoundedDescriptionGeneratorImpl(qef);
+            cbdGen.addPropertiesToIgnore(Sets.newHashSet(RDFS.label.getURI(), RDFS.seeAlso.getURI()));
             qtf = new QueryTreeFactoryBase();
         }
 
@@ -302,40 +320,89 @@ public class AutoSPARQLUI extends UI {
             e.printStackTrace();
         }
 
-
-
         // parse the examples from the input field
         List<String> posExamples = layout.getPosExamples();
-        System.out.println(posExamples);
+        System.out.println("E+ = " + posExamples);
+        List<String> negExamples = layout.getNegExamples();
+        System.out.println("E- = " + negExamples);
 
-        List<RDFResourceTree> posExampleTrees = posExamples.stream().map(uriToQueryTree).collect(Collectors.toList());
+        List<RDFResourceTree> posExampleTrees = posExamples.parallelStream().map(uriToQueryTree).collect(Collectors.toList());
+        List<RDFResourceTree> negExampleTrees = negExamples.parallelStream().map(uriToQueryTree).collect(Collectors.toList());
 
-        LGGGenerator lggGen;
-        if(layout.settingsForm.isUseInference()) {
-            lggGen = new LGGGeneratorRDFS(reasoner);
+//        posExamples.parallelStream().flatMap(o -> CompletableFuture.completedFuture(o)
+//                .thenApply(uriToQueryTree)
+//                .handle((x, ex) -> ex != null ? Stream.of(ex) : null)
+//                .join()
+//        ).reduce((ex1, ex2) -> {
+//            ex1.addSuppressed(ex2);
+//            return ex1;
+//        }).ifPresent(ex -> {
+//            throw new RuntimeException(ex);
+//        });
+
+
+        RDFResourceTree result = null;
+        if(negExamples.isEmpty()) {
+            LGGGenerator lggGen;
+            if(layout.settingsForm.isUseInference()) {
+                lggGen = new LGGGeneratorRDFS(reasoner);
+            } else {
+                lggGen = new LGGGeneratorSimple();
+            }
+            result = lggGen.getLGG(posExampleTrees);
         } else {
-            lggGen = new LGGGeneratorSimple();
+            try {
+                QTL2Disjunctive qtl = new QTL2Disjunctive();
+                qtl.setLearningProblem(new PosNegLPStandard());
+                qtl.setEntailment(Entailment.RDFS);
+
+                SparqlEndpointKS ks = new SparqlEndpointKS(qef);
+                qtl.setKs(ks);
+
+                Map<OWLIndividual, RDFResourceTree> map1 = new HashMap<>();
+                for(int i = 0; i < posExamples.size(); i++) {
+					map1.put(new OWLNamedIndividualImpl(IRI.create(posExamples.get(i))), posExampleTrees.get(i));
+				}
+                Map<OWLIndividual, RDFResourceTree> map2 = new HashMap<>();
+                for(int i = 0; i < negExamples.size(); i++) {
+					map2.put(new OWLNamedIndividualImpl(IRI.create(negExamples.get(i))), negExampleTrees.get(i));
+				}
+
+                qtl.setPositiveExampleTrees(map1);
+                qtl.setNegativeExampleTrees(map2);
+                qtl.setReasoner(reasoner);
+                qtl.init();
+                qtl.start();
+
+                result = qtl.getBestSolution().getTree();
+            } catch (ComponentInitException e) {
+                e.printStackTrace();
+            }
         }
 
-        RDFResourceTree lgg = lggGen.getLGG(posExampleTrees);
+        if(layout.settingsForm.isMinimizeQuery()) {
+            QueryTreeUtils.minimize(result);
+            QueryTreeUtils.keepMostSpecificTypes(result, reasoner);
+        }
 
 //        QTL2Disjunctive qtl = new QTL2Disjunctive();
 
-        String queryString = QueryTreeUtils.toSPARQLQueryString(lgg);
+        String queryString = QueryTreeUtils.toSPARQLQueryString(result);
 
         Query query = QueryFactory.create(queryString);
-        query.setPrefixMapping(dataset.prefixes);
+        PrefixMapping pm = new PrefixMappingImpl().withDefaultMappings(dataset.prefixes);
+        query.setPrefixMapping(pm);
         NodeTransformCollectNodes transform = new NodeTransformCollectNodes();
         ElementUtils.applyNodeTransform(query.getQueryPattern(), transform);
         Set<String> namespacesFound = new HashSet<>();
         transform.getNodes().stream().filter(Node::isURI).forEach(n -> {
-            if(dataset.prefixes.qnameFor(n.getURI()) != null) {
+            if(pm.qnameFor(n.getURI()) != null) {
                 namespacesFound.add(n.getNameSpace());
             }
         });
-        query.getPrefixMapping().getNsPrefixMap().entrySet().forEach(entry -> {
+        pm.getNsPrefixMap().entrySet().forEach(entry -> {
             if(!namespacesFound.contains(entry.getValue())) {
-                query.getPrefixMapping().removeNsPrefix(entry.getKey());
+                pm.removeNsPrefix(entry.getKey());
             }
         });
 
@@ -346,6 +413,7 @@ public class AutoSPARQLUI extends UI {
 
 //        new Thread(() -> showResult(query)).start();
     }
+
 
     /**
      * Generate a data provider for a SPARQL query.
@@ -401,6 +469,9 @@ public class AutoSPARQLUI extends UI {
                 "    }\n" +
                 "  }";
         Model m = ModelFactory.createDefaultModel();
+
+
+
         org.apache.jena.query.Dataset dataset = DatasetFactory.create(m);
         UpdateAction.parseExecute(updateString, dataset);
         System.out.println(m.size());
@@ -459,6 +530,7 @@ public class AutoSPARQLUI extends UI {
         q.addOrderBy(new E_IRI_Rank(new ExprVar("s")), Query.ORDER_DESCENDING);
         System.out.println(q.toString());
 
+        System.out.println(Dataset.DBPEDIA.prefixes.qnameFor("http://www.w3.org/2000/01/rdf-schema#subClassOf"));
 
     }
 }

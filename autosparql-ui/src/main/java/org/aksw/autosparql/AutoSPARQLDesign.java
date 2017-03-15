@@ -5,6 +5,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.declarative.Design;
 import de.fatalix.vaadin.addon.codemirror.CodeMirror;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorLanguage;
+import de.fatalix.vaadin.addon.codemirror.CodeMirrorScrollbarStyle;
 import de.fatalix.vaadin.addon.codemirror.CodeMirrorTheme;
 import org.apache.jena.rdf.model.RDFNode;
 
@@ -41,19 +42,26 @@ public class AutoSPARQLDesign extends VerticalLayout {
 		Design.read(this);
 
 		sparqlQueryField.setWidth("100%");
-		sparqlQueryField.setHeight(600, Unit.PIXELS);
+//		sparqlQueryField.setHeight(600, Unit.PIXELS);
 		sparqlQueryField.setReadOnly(true);
 		sparqlQueryField.setCode("");
 //        codeMirror.setWidth(1000, Unit.PIXELS);
 		sparqlQueryField.setLanguage(CodeMirrorLanguage.SPARQL);
 		sparqlQueryField.setTheme(CodeMirrorTheme.DEFAULT);
+		sparqlQueryField.setScrollbarStyle(CodeMirrorScrollbarStyle.HIDDEN);
 
 	}
 
+	/**
+	 * @return the pos. examples
+	 */
 	protected List<String> getPosExamples() {
 		return parseExamples(posExamplesInput.getValue());
 	}
 
+	/**
+	 * @return the neg. examples
+	 */
 	protected List<String> getNegExamples() {
 		return parseExamples(negExamplesInput.getValue());
 	}
@@ -70,5 +78,13 @@ public class AutoSPARQLDesign extends VerticalLayout {
 		}
 
 		return examples;
+	}
+
+	/**
+	 * Reset the view, i.e. remove SPARQL query, table results, etc.
+	 */
+	protected void reset() {
+		sparqlQueryField.setCode("");
+		sparqlResultsGrid.setItems();
 	}
 }

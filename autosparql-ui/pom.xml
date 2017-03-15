@@ -105,6 +105,11 @@
 			<scope>compile</scope>
 		</dependency>
 		<!--<dependency>-->
+			<!--<groupId>org.vaadin.jonatan</groupId>-->
+			<!--<artifactId>contexthelp</artifactId>-->
+			<!--<version>3.0.0</version>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
 			<!--<groupId>com.vaadin</groupId>-->
 			<!--<artifactId>vaadin-compatibility-server</artifactId>-->
 		<!--</dependency>-->

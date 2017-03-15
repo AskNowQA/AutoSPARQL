@@ -21,6 +21,7 @@ public class SettingsForm extends FormLayout {
 	protected TextField maxExecutionTimeField;
 	protected CheckBox useInferenceCB;
 	protected CheckBox useIncomingDataCB;
+	protected CheckBox minimizeQueryCB;
 
 	public SettingsForm() {
 		Design.read(this);
@@ -33,6 +34,11 @@ public class SettingsForm extends FormLayout {
 		NumberField.extend(maxExecutionTimeField);
 		maxExecutionTimeField.setValue("10");
 		useMaxExecutionTimeCB.addValueChangeListener((e) -> maxExecutionTimeField.setEnabled(e.getValue()));
+
+//		CheckBox cb = new CheckBox("Test");
+//		ContextHelp help = new ContextHelp();
+//		help.addHelpForComponent(cb, "Help test");
+//		addComponent(new HelpFieldWrapper<>(cb, help));
 	}
 
 	protected int getMaxDepth() {
@@ -49,5 +55,9 @@ public class SettingsForm extends FormLayout {
 
 	protected boolean isUseIncomingData() {
 		return useIncomingDataCB.getValue();
+	}
+
+	protected boolean isMinimizeQuery() {
+		return minimizeQueryCB.getValue();
 	}
 }
