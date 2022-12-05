@@ -1,4 +1,5 @@
+#/bin/sh
 cd commons
 echo -n "Enter database password > "
-read -s password
-mvn exec:java -Dexec.mainClass="org.aksw.autosparql.commons.metric.DatabaseBackedSPARQLEndpointMetrics" -Dexec.args="$password"
+read password
+mvn compile exec:java -Dexec.mainClass="org.aksw.autosparql.commons.metric.DatabaseBackedSPARQLEndpointMetrics" -Dexec.args="-e http://linkedspending.aksw.org/sparql -g http://dbpedia.org -cacheDir /tmp -dbHost localhost -dbPort 3306 -dbName dbpedia_metrics -dbUser root -dbPassword $password -ns http://dbpedia.org/ontology/" | tee ../metric.log
